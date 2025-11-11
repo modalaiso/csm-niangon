@@ -1,0 +1,123 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  MODERATOR
+  WRITER
+  ADMIN
+}
+
+enum PostType {
+  INFO
+  ARTICLE
+  ACTU
+  INTERVIEW
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  nom       String
+  prenom    String
+  username  String    @unique
+  classe    String
+  role      Role      @default(USER)
+  bio       String?
+  avatar    String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  
+  posts     Post[]
+  comments  Comment[]
+  likes     Like[]
+  
+  @@index([email])
+  @@index([username])
+  @@index([role])
+}
+
+model Post {
+  id          String     @id @default(cuid())
+  type        PostType
+  title       String
+  slug        String     @unique
+  content     String?    @db.Text
+  summary     String
+  thumbnail   String?
+  mediaUrl    String?
+  authorId    String
+  views       Int        @default(0)
+  status      PostStatus @default(DRAFT)
+  tags        String[]
+  info        String?
+  publishedAt DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  
+  author      User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  comments    Comment[]
+  likes       Like[]
+  
+  @@index([slug])
+  @@index([authorId])
+  @@index([type])
+  @@index([status])
+  @@index([publishedAt])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  postId    String
+  userId    String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([postId])
+  @@index([userId])
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  postId    String
+  userId    String
+  createdAt DateTime @default(now())
+  
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([postId, userId])
+  @@index([postId])
+  @@index([userId])
+}
+
+model AccessKey {
+  id        String    @id @default(cuid())
+  key       String    @unique
+  role      Role
+  isUsed    Boolean   @default(false)
+  usedBy    String?
+  usedAt    DateTime?
+  createdBy String?
+  createdAt DateTime  @default(now())
+  expiresAt DateTime?
+  
+  @@index([role])
+  @@index([isUsed])
+}
