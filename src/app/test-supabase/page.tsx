@@ -3,8 +3,7 @@ import { cookies } from 'next/headers'
 import { Database, CheckCircle2, XCircle } from 'lucide-react'
 
 export default async function Page() {
-  const cookieStore = await cookies()
-  const supabase = createClient(cookieStore)
+  const supabase = createClient()
 
   let isConnected = false
   let errorMessage = ''
