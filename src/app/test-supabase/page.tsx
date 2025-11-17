@@ -44,7 +44,7 @@ export default async function Page() {
             <div className="p-3 bg-gray-100 dark:bg-gray-700 rounded-xl">
               <Database className="w-8 h-8 text-gray-700 dark:text-gray-300" />
             </div>
-            <div>
+            <div>              
               <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
                 État de la connexion
               </h2>
