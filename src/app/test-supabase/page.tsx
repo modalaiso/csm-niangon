@@ -1,31 +1,15 @@
+
 import { createClient } from '@/utils/supabase/server'
 import { cookies } from 'next/headers'
-import { Database, CheckCircle2, XCircle } from 'lucide-react'
 
 export default async function Page() {
   const cookieStore = await cookies()
   const supabase = createClient(cookieStore)
 
-  let isConnected = false
-  let errorMessage = ''
-  let todos: any[] = []
-
-  try {
-    const { data, error } = await supabase.from('User').select()
-
-    if (error) {
-      isConnected = false
-      errorMessage = error.message
-    } else {
-      isConnected = true
-      todos = data || []
-    }
-  } catch (error) {
-    isConnected = false
-    errorMessage = error instanceof Error ? error.message : 'Erreur inconnue'
-  }
+  const { data: User } = await supabase.from('User').select()
 
   return (
+<<<<<<< HEAD
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-8">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
@@ -111,5 +95,12 @@ export default async function Page() {
         </div>
       </div>
     </div>
+=======
+    <ul>
+      {User?.map((User) => (
+        User
+      ))}
+    </ul>
+>>>>>>> ad56d17dfcf64b46288c87539a1b0edcc18410f9
   )
 }
