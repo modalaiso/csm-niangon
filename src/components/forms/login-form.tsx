@@ -47,12 +47,9 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
     }
 
     return (
-        <div className="w-full max-w-md space-y-8 rounded-3xl border-2 border-green-500 bg-white p-8 shadow-lg">
+        <div className="w-full max-w-md space-y-8 rounded-3xl border border-green-500 bg-white p-8 shadow-lg">
             <div className="text-center">
                 <h2 className="text-2xl font-bold text-gray-900">Connexion</h2>
-                <p className="mt-2 text-sm text-gray-600">
-                    Entrez vos identifiants pour accéder à votre compte
-                </p>
                 {serverError && (
                     <div className="mt-4 rounded-md bg-red-50 p-3 text-sm text-red-500">
                         {serverError}
@@ -104,12 +101,12 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
                 </div>
             </form>
 
-            {/* Hidden/Subtle Admin Login Link as requested "user-field" button behavior */}
-            <div className="mt-4 flex justify-center opacity-0 hover:opacity-100 transition-opacity">
-                <Button variant="ghost" size="sm" onClick={() => router.push('/admin-login')}>
+            {/* Hidden/Subtle Admin Login Link as requested "user-field" button behavior
+            <div className="mt-4 flex justify-center hover:opacity-100 transition-opacity">
+                <Button variant="outline" size="sm" onClick={() => router.push('/admin-login')}>
                     Admin Access
                 </Button>
-            </div>
+            </div> */}
         </div>
     )
 }

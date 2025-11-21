@@ -40,8 +40,8 @@ interface AdminSignupFormProps {
 
 const ROLE_OPTIONS = [
     "ADMIN",
-    "MODERATOR",
-    "WRITER",
+    "MODERATEUR",
+    "REDACTEUR",
 ]
 
 export function AdminSignupForm({ onSubmit }: AdminSignupFormProps) {
@@ -71,11 +71,11 @@ export function AdminSignupForm({ onSubmit }: AdminSignupFormProps) {
     const selectedRole = watch("role")
 
     return (
-        <div className="w-full max-w-2xl space-y-8 rounded-3xl border-2 border-red-500 bg-white p-8 shadow-lg">
+        <div className="w-full max-w-2xl space-y-8 rounded-3xl border border-red-500 bg-white p-8 shadow-lg">
             <div className="text-center">
-                <h2 className="text-2xl font-bold text-red-900">Création Compte Admin</h2>
-                <p className="mt-2 text-sm text-red-600">
-                    Zone restreinte - Création de compte staff
+                <h2 className="text-2xl font-bold text-red-900">Inscription</h2>
+                <p className="mt-2 text-sm text-gray-600">
+                    Accès réservé aux admins
                 </p>
                 {serverError && (
                     <div className="mt-4 rounded-md bg-red-50 p-3 text-sm text-red-500">
@@ -117,7 +117,7 @@ export function AdminSignupForm({ onSubmit }: AdminSignupFormProps) {
                     <Label htmlFor="username">Nom d'utilisateur</Label>
                     <Input
                         id="username"
-                        placeholder="Pseudo staff"
+                        placeholder="Pseudo"
                         {...register("username")}
                         className={errors.username ? "border-red-500" : ""}
                     />

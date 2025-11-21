@@ -77,13 +77,10 @@ export function SignupForm({ onSubmit }: SignupFormProps) {
     const selectedClass = watch("classe")
 
     return (
-        <div className="w-full max-w-2xl space-y-8 rounded-3xl border-2 border-green-500 bg-white p-8 shadow-lg">
+        <div className="w-full max-w-2xl space-y-8 rounded-3xl border border-green-500 bg-white p-8 shadow-lg">
 
             <div className="text-center">
-                <h2 className="text-2xl font-bold text-gray-900">Créer un compte</h2>
-                <p className="mt-2 text-sm text-gray-600">
-                    Rejoignez la communauté CSM Niangon
-                </p>
+                <h2 className="text-2xl font-bold text-gray-900">Inscription</h2>
                 {serverError && (
                     <div className="mt-4 rounded-md bg-red-50 p-3 text-sm text-red-500">
                         {serverError}

@@ -50,21 +50,17 @@ export function AdminLoginForm({ onSubmit }: AdminLoginFormProps) {
     }
 
     return (
-        <div className="relative w-full max-w-md space-y-8 rounded-3xl border-2 border-green-500 bg-white p-8 shadow-lg">
-            <div className="absolute right-4 top-4 text-gray-400">
-                <Shield className="h-6 w-6" />
-            </div>
-
-            <div className="text-center">
-                <h2 className="text-2xl font-bold text-gray-900">Connexion Administrateur</h2>
+        <div className="relative w-full max-w-md space-y-8 rounded-3xl border border-green-500 bg-white p-8 shadow-lg">
+            <div className="text-center mb-4">
+                <h2 className="text-2xl font-bold text-gray-900">Connexion</h2>
                 <p className="mt-2 text-sm text-gray-600">
-                    Accès réservé au personnel autorisé
+                    Accès réservé aux admins
                 </p>
-                {serverError && (
+                {/*{serverError && (
                     <div className="mt-4 rounded-md bg-red-50 p-3 text-sm text-red-500">
                         {serverError}
                     </div>
-                )}
+                )}*/}
             </div>
 
             <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
@@ -116,6 +112,12 @@ export function AdminLoginForm({ onSubmit }: AdminLoginFormProps) {
                 >
                     {isSubmitting ? "Connexion..." : "Connectez-vous"}
                 </Button>
+
+                {serverError && (
+                    <div className="text-center text-sm text-red-500">
+                        {serverError}
+                    </div>
+                )}
 
                 <div className="text-center text-sm">
                     <Link href="/login" className="font-medium text-blue-600 hover:underline">
