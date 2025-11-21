@@ -199,7 +199,7 @@ export function SignupForm({ onSubmit }: SignupFormProps) {
 
                 <Button
                     type="submit"
-                    className="w-full bg-blue-600 hover:bg-blue-700"
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white"
                     disabled={isSubmitting}
                 >
                     {isSubmitting ? "Création en cours..." : "Créer un compte"}

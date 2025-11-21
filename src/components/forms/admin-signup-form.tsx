@@ -205,10 +205,10 @@ export function AdminSignupForm({ onSubmit }: AdminSignupFormProps) {
 
                 <Button
                     type="submit"
-                    className="w-full bg-red-600 hover:bg-red-700"
+                    className="w-full bg-red-600 hover:bg-red-700 text-white"
                     disabled={isSubmitting}
                 >
-                    {isSubmitting ? "Création..." : "Créer Compte Staff"}
+                    {isSubmitting ? "Création..." : "Créer un compte"}
                 </Button>
 
                 <div className="text-center text-sm">
