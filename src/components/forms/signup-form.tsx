@@ -81,11 +81,11 @@ export function SignupForm({ onSubmit }: SignupFormProps) {
 
             <div className="text-center">
                 <h2 className="text-2xl font-bold text-gray-900">Inscription</h2>
-                {serverError && (
+                {/*{serverError && (
                     <div className="mt-4 rounded-md bg-red-50 p-3 text-sm text-red-500">
                         {serverError}
                     </div>
-                )}
+                )}*/}
             </div>
 
             <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
@@ -201,6 +201,12 @@ export function SignupForm({ onSubmit }: SignupFormProps) {
                 >
                     {isSubmitting ? "Création en cours..." : "Créer un compte"}
                 </Button>
+
+                {serverError && (
+                    <div className="text-center text-sm text-red-500">
+                        {serverError}
+                    </div>
+                )}
 
                 <div className="text-center text-sm">
                     Déjà un compte ?{" "}

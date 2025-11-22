@@ -40,6 +40,25 @@ const adminLoginSchema = z.object({
 export async function signup(formData: z.infer<typeof signupSchema>) {
     const supabase = await createClient()
 
+    // 0. Check if user already exists in Prisma
+    const existingUser = await prisma.user.findFirst({
+        where: {
+            OR: [
+                { email: formData.email },
+                { username: formData.username }
+            ]
+        },
+    })
+
+    if (existingUser) {
+        if (existingUser.email === formData.email) {
+            return { error: "Cet email est déjà utilisé" }
+        }
+        if (existingUser.username === formData.username) {
+            return { error: "Ce nom d'utilisateur est déjà pris" }
+        }
+    }
+
     // 1. Create Supabase User
     const { data: authData, error: authError } = await supabase.auth.signUp({
         email: formData.email,
@@ -86,25 +105,63 @@ export async function signup(formData: z.infer<typeof signupSchema>) {
 export async function login(formData: z.infer<typeof loginSchema>) {
     const supabase = await createClient()
 
-    // For now, we assume the user enters an email. 
-    // If we want to support username login, we'd need to lookup the email by username first.
-    // Since Supabase Auth works with email, we'll pass the input as email.
-    // TODO: Implement username lookup if needed.
+    let email = formData.nameOrEmail
+
+    // Check if input is an email
+    const isEmail = z.string().email().safeParse(email).success
+
+    if (!isEmail) {
+        // Assume it's a username and look up the email
+        const user = await prisma.user.findUnique({
+            where: { username: email },
+            select: { email: true },
+        })
+
+        if (!user) {
+            console.log(`[LOGIN] Username not found: ${email}`)
+            return { error: "Identifiants invalides" }
+        }
+        console.log(`[LOGIN] Username ${email} resolved to email: ${user.email}`)
+        email = user.email
+    } else {
+        console.log(`[LOGIN] Attempting login with email: ${email}`)
+    }
 
     const { error } = await supabase.auth.signInWithPassword({
-        email: formData.nameOrEmail,
+        email: email,
         password: formData.password,
     })
 
     if (error) {
+        console.log(`[LOGIN] Supabase error: ${error.message}`)
         return { error: error.message }
     }
 
+    console.log(`[LOGIN] Login successful for: ${email}`)
     redirect('/')
 }
 
 export async function adminSignup(formData: z.infer<typeof adminSignupSchema>) {
     const supabase = await createClient()
+
+    // 0. Check if user already exists in Prisma
+    const existingUser = await prisma.user.findFirst({
+        where: {
+            OR: [
+                { email: formData.email },
+                { username: formData.username }
+            ]
+        },
+    })
+
+    if (existingUser) {
+        if (existingUser.email === formData.email) {
+            return { error: "Cet email est déjà utilisé" }
+        }
+        if (existingUser.username === formData.username) {
+            return { error: "Ce nom d'utilisateur est déjà pris" }
+        }
+    }
 
     // 1. Verify Access Key
     const accessKeyRecord = await prisma.accessKey.findUnique({
@@ -158,7 +215,7 @@ export async function adminSignup(formData: z.infer<typeof adminSignupSchema>) {
                     nom: formData.lastName,
                     prenom: formData.firstName,
                     username: formData.username,
-                    classe: "STAFF", // Or specific field
+                    classe: "STAFF",
                     role: formData.role as Role,
                 },
             }),
@@ -182,9 +239,27 @@ export async function adminSignup(formData: z.infer<typeof adminSignupSchema>) {
 export async function adminLogin(formData: z.infer<typeof adminLoginSchema>) {
     const supabase = await createClient()
 
+    let email = formData.emailOrUsername
+
+    // Check if input is an email
+    const isEmail = z.string().email().safeParse(email).success
+
+    if (!isEmail) {
+        // Assume it's a username and look up the email
+        const user = await prisma.user.findUnique({
+            where: { username: email },
+            select: { email: true },
+        })
+
+        if (!user) {
+            return { error: "Identifiants invalides" }
+        }
+        email = user.email
+    }
+
     // 1. Sign In
     const { data: authData, error } = await supabase.auth.signInWithPassword({
-        email: formData.emailOrUsername,
+        email: email,
         password: formData.password,
     })
 

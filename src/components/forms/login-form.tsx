@@ -50,11 +50,11 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
         <div className="w-full max-w-md space-y-8 rounded-3xl border border-green-500 bg-white p-8 shadow-lg">
             <div className="text-center">
                 <h2 className="text-2xl font-bold text-gray-900">Connexion</h2>
-                {serverError && (
+                {/*{serverError && (
                     <div className="mt-4 rounded-md bg-red-50 p-3 text-sm text-red-500">
                         {serverError}
                     </div>
-                )}
+                )}*/}
             </div>
 
             <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
@@ -92,6 +92,12 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
                 >
                     {isSubmitting ? "Connexion..." : "Connectez-vous"}
                 </Button>
+
+                {serverError && (
+                    <div className="text-center text-sm text-red-500">
+                        {serverError}
+                    </div>
+                )}
 
                 <div className="text-center text-sm">
                     Pas encore de compte ?{" "}

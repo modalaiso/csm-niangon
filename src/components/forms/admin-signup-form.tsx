@@ -40,8 +40,8 @@ interface AdminSignupFormProps {
 
 const ROLE_OPTIONS = [
     "ADMIN",
-    "MODERATEUR",
-    "REDACTEUR",
+    "MODERATOR",
+    "WRITER",
 ]
 
 export function AdminSignupForm({ onSubmit }: AdminSignupFormProps) {
@@ -77,11 +77,11 @@ export function AdminSignupForm({ onSubmit }: AdminSignupFormProps) {
                 <p className="mt-2 text-sm text-gray-600">
                     Accès réservé aux admins
                 </p>
-                {serverError && (
+                {/*{serverError && (
                     <div className="mt-4 rounded-md bg-red-50 p-3 text-sm text-red-500">
                         {serverError}
                     </div>
-                )}
+                )}*/}
             </div>
 
             <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
@@ -210,7 +210,11 @@ export function AdminSignupForm({ onSubmit }: AdminSignupFormProps) {
                 >
                     {isSubmitting ? "Création..." : "Créer un compte"}
                 </Button>
-
+                {serverError && (
+                    <div className="text-center text-sm text-red-500">
+                        {serverError}
+                    </div>
+                )}
                 <div className="text-center text-sm">
                     <Link href="/login" className="font-medium text-red-600 hover:underline">
                         Retour à la connexion
