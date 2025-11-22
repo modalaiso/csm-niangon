@@ -5,21 +5,23 @@ const prisma = new PrismaClient()
 async function main() {
     console.log('Start seeding...')
 
+    // Helper to get keys from env
+    const getKeys = (envVar: string) => {
+        const keys = process.env[envVar]?.split(',').map(k => k.trim()).filter(k => k.length > 0) || []
+        if (keys.length === 0) {
+            console.warn(`Warning: No keys found for ${envVar}`)
+        }
+        return keys
+    }
+
+    const moderatorKeys = getKeys('MODERATOR_KEYS')
+    const writerKeys = getKeys('WRITER_KEYS')
+    const adminKeys = getKeys('ADMIN_KEYS')
+
     const keys = [
-        // Moderators
-        { key: 'CSM-N-TV-MOD-2025-7K9M-XP4R-QW8N', role: Role.MODERATOR },
-        { key: 'CSM-N-TV-MOD-2025-5H2L-ZV6T-BN9Y', role: Role.MODERATOR },
-        { key: 'CSM-N-TV-MOD-2025-3F8J-CR7M-DK4P', role: Role.MODERATOR },
-
-        // Writers
-        { key: 'CSM-N-TV-WRITER-2025-9R5N-MT8K-LP3X', role: Role.WRITER },
-        { key: 'CSM-N-TV-WRITER-2025-6Q2H-YV9F-ZJ7W', role: Role.WRITER },
-        { key: 'CSM-N-TV-WRITER-2025-4D8B-GN6R-XM2K', role: Role.WRITER },
-
-        // Admins
-        { key: 'CSM-N-TV-ADMIN-2025-8X3P-QK9V-HR6L', role: Role.ADMIN },
-        { key: 'CSM-N-TV-ADMIN-2025-2M7J-WF5N-CT4Y', role: Role.ADMIN },
-        { key: 'CSM-N-TV-ADMIN-2025-5Z9R-BV3K-DP8X', role: Role.ADMIN },
+        ...moderatorKeys.map(key => ({ key, role: Role.MODERATOR })),
+        ...writerKeys.map(key => ({ key, role: Role.WRITER })),
+        ...adminKeys.map(key => ({ key, role: Role.ADMIN })),
     ]
 
     for (const k of keys) {
