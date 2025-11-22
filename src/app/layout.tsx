@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "CSM Niangon",
-  description: " ",
+  description: "La plateforme média officielle du CSM Niangon. Découvrez les actualités et informations du CSM Niangon.",
 };
 
 export default function RootLayout({
