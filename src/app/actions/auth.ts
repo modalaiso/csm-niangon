@@ -37,6 +37,42 @@ const adminLoginSchema = z.object({
     accessKey: z.string().min(1),
 })
 
+
+// Helper to check if password is compromised
+async function checkPasswordCompromise(password: string): Promise<boolean> {
+    try {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(password);
+        const hashBuffer = await crypto.subtle.digest('SHA-1', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
+
+        const prefix = hashHex.substring(0, 5);
+        const suffix = hashHex.substring(5);
+
+        const response = await fetch(`https://api.pwnedpasswords.com/range/${prefix}`);
+        if (!response.ok) {
+            console.error('Error checking password compromise:', response.statusText);
+            return false; // Fail open if API is down
+        }
+
+        const text = await response.text();
+        const lines = text.split('\n');
+
+        for (const line of lines) {
+            const [lineSuffix] = line.split(':');
+            if (lineSuffix.trim() === suffix) {
+                return true;
+            }
+        }
+
+        return false;
+    } catch (error) {
+        console.error('Error in checkPasswordCompromise:', error);
+        return false;
+    }
+}
+
 export async function signup(formData: z.infer<typeof signupSchema>) {
     const supabase = await createClient()
 
@@ -57,6 +93,12 @@ export async function signup(formData: z.infer<typeof signupSchema>) {
         if (existingUser.username === formData.username) {
             return { error: "Ce nom d'utilisateur est déjà pris" }
         }
+    }
+
+    // Check for compromised password
+    const isCompromised = await checkPasswordCompromise(formData.password);
+    if (isCompromised) {
+        return { error: "Veuillez en choisir un mot de passe plus fort" };
     }
 
     // 1. Create Supabase User
@@ -182,6 +224,12 @@ export async function adminSignup(formData: z.infer<typeof adminSignupSchema>) {
     // For strictness:
     if (accessKeyRecord.role !== formData.role as Role) {
         return { error: `Cette clé n'est pas valide pour le rôle ${formData.role}` }
+    }
+
+    // Check for compromised password
+    const isCompromised = await checkPasswordCompromise(formData.password);
+    if (isCompromised) {
+        return { error: "Ce mot de passe a été compromis dans une fuite de données. Veuillez en choisir un autre pour votre sécurité." };
     }
 
     // 3. Create Supabase User
