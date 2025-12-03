@@ -76,7 +76,7 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
                     <Input
                         id="password"
                         type="password"
-                        placeholder="••••••••"
+                        placeholder="••••••••••"
                         {...register("password")}
                         className={errors.password ? "border-red-500" : ""}
                     />
