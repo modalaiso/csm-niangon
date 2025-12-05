@@ -5,7 +5,6 @@ import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
 import { Role } from '@prisma/client'
-import bcrypt from 'bcryptjs'
 
 // Schemas (matching the form schemas)
 const signupSchema = z.object({
@@ -124,7 +123,6 @@ export async function signup(formData: z.infer<typeof signupSchema>) {
 
     // 2. Create Prisma User
     try {
-        const hashedPassword = await bcrypt.hash(formData.password, 10);
         await prisma.user.create({
             data: {
                 id: authData.user.id, // Link to Supabase ID
@@ -134,7 +132,6 @@ export async function signup(formData: z.infer<typeof signupSchema>) {
                 username: formData.username,
                 classe: formData.classe,
                 role: 'USER',
-                password: hashedPassword,
             },
         })
     } catch (error) {
@@ -258,7 +255,6 @@ export async function adminSignup(formData: z.infer<typeof adminSignupSchema>) {
 
     // 4. Create Prisma User & Mark Key Used
     try {
-        const hashedPassword = await bcrypt.hash(formData.password, 10);
         await prisma.$transaction([
             prisma.user.create({
                 data: {
@@ -269,7 +265,6 @@ export async function adminSignup(formData: z.infer<typeof adminSignupSchema>) {
                     username: formData.username,
                     classe: "STAFF",
                     role: formData.role as Role,
-                    password: hashedPassword,
                 },
             }),
             prisma.accessKey.update({
