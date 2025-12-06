@@ -1,6 +1,7 @@
 // src/app/page.tsx
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 export default function Home() {
   return (
@@ -12,6 +13,16 @@ export default function Home() {
       </header>
       <main className="min-h-screen bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 flex items-center justify-center p-4">
         <div className="max-w-2xl w-full text-center">
+
+          {/*Logo*/}
+          <div className="mb-6 inline-block">
+            <img
+              src="../Logo.png"
+              alt="Logo"
+              width={150}
+              height={100}
+            />
+          </div>
 
           {/* Message principal */}
           <div className="p-8 md:p-12 animate-slide-up">
@@ -28,7 +39,7 @@ export default function Home() {
 
           {/* Footer */}
           <div className="mt-8 text-primary-200 text-sm">
-            <p>&copy; 2025 Club NTIC Information et Robotique</p>
+            <p>&copy; 2025 Club NTIC</p>
           </div>
         </div>
       </main>
