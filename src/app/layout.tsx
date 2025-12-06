@@ -18,17 +18,35 @@ export const metadata: Metadata = {
   description: "La plateforme média officielle du CSM Niangon. Découvrez les actualités et informations du CSM Niangon.",
 };
 
-export default function RootLayout({
+import { createClient } from "@/lib/supabase/server";
+import { prisma } from "@/lib/prisma";
+import { BottomNav } from "@/components/nav/bottom-nav";
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  let userRole = undefined;
+
+  if (user) {
+    const dbUser = await prisma.user.findUnique({
+      where: { id: user.id },
+      select: { role: true },
+    });
+    userRole = dbUser?.role;
+  }
+
   return (
     <html lang="fr">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        <BottomNav userRole={userRole} />
       </body>
     </html>
   );

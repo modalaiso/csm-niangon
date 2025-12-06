@@ -10,9 +10,22 @@ export default function Home() {
           <Button variant="outline" className="hover:bg-gray-200">Inscrivez vous maintenant</Button>
         </Link>
       </header>
-      <main className="min-h-screen bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 flex items-center justify-center p-4">
+      <main className="min-h-screen bg-primary flex items-center justify-center p-4">
         <div className="max-w-2xl w-full text-center">
 
+<<<<<<< Updated upstream
+=======
+          {/*Logo*/}
+          <div className="mb-6 inline-block animate-slide-up">
+            <img
+              src="../logo-w.png"
+              alt="Logo"
+              width={150}
+              height={100}
+            />
+          </div>
+
+>>>>>>> Stashed changes
           {/* Message principal */}
           <div className="p-8 md:p-12 animate-slide-up">
             <div className="mb-6">
@@ -27,7 +40,7 @@ export default function Home() {
           </div>
 
           {/* Footer */}
-          <div className="mt-8 text-primary-200 text-sm">
+          <div className="mt-8 text-primarys2-200 text-sm">
             <p>&copy; 2025 Club NTIC</p>
           </div>
         </div>
