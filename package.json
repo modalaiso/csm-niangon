@@ -47,6 +47,7 @@
     "react-youtube": "^10.1.0",
     "slugify": "^1.6.6",
     "tailwind-merge": "^3.4.0",
+    "tailwindcss-animate": "^1.0.7",
     "zod": "^3.25.76",
     "zustand": "^5.0.8"
   },
