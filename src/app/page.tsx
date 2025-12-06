@@ -15,7 +15,7 @@ export default function Home() {
         <div className="max-w-2xl w-full text-center">
 
           {/*Logo*/}
-          <div className="mb-6 inline-block">
+          <div className="mb-6 inline-block animate-slide-up">
             <img
               src="../Logo.png"
               alt="Logo"
