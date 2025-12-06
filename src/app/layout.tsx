@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CSM Niangon",
+  title: "CSM Niangon TV",
   description: "La plateforme média officielle du CSM Niangon. Découvrez les actualités et informations du CSM Niangon.",
 };
 
@@ -42,6 +42,9 @@ export default async function RootLayout({
 
   return (
     <html lang="fr">
+      <head>
+        <meta name="apple-mobile-web-app-title" content="CSM Niangon TV" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

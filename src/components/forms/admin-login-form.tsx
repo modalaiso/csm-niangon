@@ -82,7 +82,7 @@ export function AdminLoginForm({ onSubmit }: AdminLoginFormProps) {
                     <Input
                         id="password"
                         type="password"
-                        placeholder="●●●●●●●●●●"
+                        placeholder="••••••••••"
                         {...register("password")}
                         className={errors.password ? "border-red-500" : ""}
                     />
