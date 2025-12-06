@@ -13,8 +13,6 @@ export default function Home() {
       <main className="min-h-screen bg-primary flex items-center justify-center p-4">
         <div className="max-w-2xl w-full text-center">
 
-<<<<<<< Updated upstream
-=======
           {/*Logo*/}
           <div className="mb-6 inline-block animate-slide-up">
             <img
@@ -25,7 +23,6 @@ export default function Home() {
             />
           </div>
 
->>>>>>> Stashed changes
           {/* Message principal */}
           <div className="p-8 md:p-12 animate-slide-up">
             <div className="mb-6">
