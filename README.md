@@ -69,20 +69,23 @@ Compte Vercel si déploiement prévu
 
 1. Cloner le dépôt
 
-```git clone https://github.com/modalaiso/csm-niangon.git
+```
+git clone https://github.com/modalaiso/csm-niangon.git
 cd csm-niangon
 ```
 
 2. Installer les dépendances
 
-```npm install
+```
+npm install
 ```
 
 3. Configurer les variables d’environnement
 
 Créer un fichier .env ou .env.local :
 
-```NEXT_PUBLIC_SUPABASE_URL=
+```
+NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 DATABASE_URL="postgresql://user:password@host:5432/dbname"
 ```
@@ -93,7 +96,8 @@ DATABASE_URL="postgresql://user:password@host:5432/dbname"
 
 4. Initialiser Prisma
 
-```npm run prisma:generate
+```
+npm run prisma:generate
 npm run prisma:push
 npm run prisma:studio   # interface Prisma Studio
 ```
@@ -103,7 +107,8 @@ npm run prisma:studio   # interface Prisma Studio
 
 🧰 Commandes Utiles
 
-```npm run dev           # Dev local (http://localhost:3000)
+```
+npm run dev           # Dev local (http://localhost:3000)
 npm run build         # Build production
 npm start             # Serveur Next.js en production
 
@@ -113,7 +118,8 @@ npm run format        # Formatage (Biome/Prettier)
 
 Scripts Prisma :
 
-```npm run prisma:generate
+```
+npm run prisma:generate
 npm run prisma:push
 npm run prisma:studio
 npm run prisma:seed   # si un script seed existe
@@ -124,7 +130,8 @@ npm run prisma:seed   # si un script seed existe
 
 📁 Structure recommandée
 
-```src/
+```
+src/
   app/
   components/
   lib/
