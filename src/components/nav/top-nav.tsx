@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { Search, Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
 
@@ -91,6 +91,7 @@ export function TopNav({ user }: TopNavProps) {
                                 </Button>
                             </SheetTrigger>
                             <SheetContent side="right">
+                                <SheetTitle className="sr-only">Menu de navigation</SheetTitle>
                                 <div className="flex flex-col gap-4 py-4">
                                     <img
                                         src="../logo-g.png"
