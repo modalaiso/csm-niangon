@@ -67,20 +67,20 @@ Compte Vercel si déploiement prévu
 
 ## ▶️ Installation (locale)
 
-### 1. Cloner le dépôt
+1. Cloner le dépôt
 
 ```
 git clone https://github.com/modalaiso/csm-niangon.git
 cd csm-niangon
 ```
 
-### 2. Installer les dépendances
+2. Installer les dépendances
 
 ```
 npm install
 ```
 
-### 3. Configurer les variables d’environnement
+3. Configurer les variables d’environnement
 
 Créer un fichier .env ou .env.local :
 
@@ -94,7 +94,7 @@ DATABASE_URL="postgresql://user:password@host:5432/dbname"
 
 
 
-### 4. Initialiser Prisma
+4. Initialiser Prisma
 
 ```
 npm run prisma:generate
