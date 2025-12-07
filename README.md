@@ -82,7 +82,8 @@ Créer un fichier .env ou .env.local :
 
 ```NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
-DATABASE_URL="postgresql://user:password@host:5432/dbname"```
+DATABASE_URL="postgresql://user:password@host:5432/dbname"
+```
 
 > 💡 Fournir un fichier .env.example avec les variables requises est recommandé.
 
