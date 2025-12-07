@@ -11,7 +11,7 @@ Développée avec Next.js, elle offre une base moderne, performante et réutilis
 
 ---
 
-🚩 Fonctionnalités
+## 🚩 Fonctionnalités
 
 Publication d’articles / actualités
 
@@ -29,7 +29,7 @@ Architecture modulaire et facilement extensible
 
 ---
 
-🔧 Stack Technique
+## 🔧 Stack Technique
 
 Next.js 16.0.7
 
@@ -51,7 +51,7 @@ TypeScript
 
 ---
 
-📦 Prérequis
+## 📦 Prérequis
 
 Node.js 18+ (LTS recommandé)
 
@@ -65,22 +65,22 @@ Compte Vercel si déploiement prévu
 
 ---
 
-▶️ Installation (locale)
+## ▶️ Installation (locale)
 
-1. Cloner le dépôt
+### 1. Cloner le dépôt
 
 ```
 git clone https://github.com/modalaiso/csm-niangon.git
 cd csm-niangon
 ```
 
-2. Installer les dépendances
+### 2. Installer les dépendances
 
 ```
 npm install
 ```
 
-3. Configurer les variables d’environnement
+### 3. Configurer les variables d’environnement
 
 Créer un fichier .env ou .env.local :
 
@@ -94,7 +94,7 @@ DATABASE_URL="postgresql://user:password@host:5432/dbname"
 
 
 
-4. Initialiser Prisma
+### 4. Initialiser Prisma
 
 ```
 npm run prisma:generate
@@ -105,7 +105,7 @@ npm run prisma:studio   # interface Prisma Studio
 
 ---
 
-🧰 Commandes Utiles
+## 🧰 Commandes Utiles
 
 ```
 npm run dev           # Dev local (http://localhost:3000)
@@ -128,7 +128,7 @@ npm run prisma:seed   # si un script seed existe
 
 ---
 
-📁 Structure recommandée
+## 📁 Structure recommandée
 
 ```
 src/
@@ -146,7 +146,7 @@ package.json
 
 ---
 
-🚀 Déploiement
+## 🚀 Déploiement
 
 Vercel (recommandé)
 
@@ -176,7 +176,7 @@ Veiller à la compatibilité BDD + variables d’environnement.
 
 ---
 
-🧪 Tests & CI
+## 🧪 Tests & CI
 
 Workflow GitHub Actions (lint + build + tests).
 
@@ -188,7 +188,7 @@ Badges déjà configurés dans l’en-tête du README.
 
 ---
 
-🔒 Sécurité
+## 🔒 Sécurité
 
 Ne jamais committer de clés secrètes.
 
@@ -200,7 +200,7 @@ Garder Prisma, Supabase, Next.js et toutes dépendances critiques à jour.
 
 ---
 
-📝 Contribution
+## 📝 Contribution
 
 1. Fork du projet
 
@@ -225,7 +225,7 @@ feature/<nom-de-feature>
 
 ---
 
-📜 Licence — MIT
+## 📜 Licence — MIT
 
 MIT License
 Copyright (c) 2025 modalaiso
@@ -238,7 +238,7 @@ Le projet est libre d’utilisation, de modification et de distribution, avec ob
 
 ---
 
-👤 Auteur
+## 👤 Auteur
 
 Mainteneur principal : modalaiso
 
