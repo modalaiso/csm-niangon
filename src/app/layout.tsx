@@ -21,6 +21,7 @@ export const metadata: Metadata = {
 import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
 import { BottomNav } from "@/components/nav/bottom-nav";
+import { TopNav } from "@/components/nav/top-nav";
 
 export default async function RootLayout({
   children,
@@ -48,8 +49,10 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <TopNav />
         {children}
         <BottomNav userRole={userRole} />
+        <Analytics />
       </body>
     </html>
   );
