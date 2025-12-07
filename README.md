@@ -200,7 +200,8 @@ Garder Prisma, Supabase, Next.js et toutes dépendances critiques à jour.
 
 2. Nouvelle branche :
 
-```feature/<nom-de-feature>
+```
+feature/<nom-de-feature>
 ```
 
 
