@@ -23,7 +23,7 @@ export function TopNav({ user }: TopNavProps) {
 
     const navLinks = [
         { href: "/", label: "Accueil" },
-        { href: "/live", label: "Articles" },
+        { href: "/article", label: "Articles" },
         { href: "/search", label: "Infos" },
     ]
 

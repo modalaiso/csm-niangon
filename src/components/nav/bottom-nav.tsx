@@ -59,7 +59,7 @@ export function BottomNav({ userRole }: BottomNavProps) {
                                     : "text-muted-foreground hover:text-primary"
                             )}
                         >
-                            <Icon className={cn("h-5 w-5", isActive)} />
+                            <Icon className={cn("h-6 w-6", isActive)} />
                             {/*<span>{item.label}</span>*/}
                         </Link>
                     )
