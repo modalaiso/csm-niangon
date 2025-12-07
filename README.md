@@ -1,4 +1,4 @@
-CSM Niangon TV
+# CSM Niangon TV
 
 - ![Déploiement sur Vercel](https://img.shields.io/badge/deploy-vercel-000000?logo=vercel)
 - ![Actions GitHub](https://img.shields.io/github/actions/workflow/status/modalaiso/csm-niangon/ci.yml?branch=main&label=CI)
