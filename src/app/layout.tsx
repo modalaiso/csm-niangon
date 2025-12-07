@@ -49,7 +49,7 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <TopNav />
+        <TopNav user={user} />
         {children}
         <BottomNav userRole={userRole} />
         <Analytics />
