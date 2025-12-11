@@ -24,7 +24,7 @@ export function TopNav({ user }: TopNavProps) {
     const navLinks = [
         { href: "/", label: "Accueil" },
         { href: "/article", label: "Articles" },
-        { href: "/search", label: "Infos" },
+        { href: "/info", label: "Infos" },
     ]
 
     return (
@@ -73,7 +73,7 @@ export function TopNav({ user }: TopNavProps) {
                                     </Button>
                                 </Link>
                                 <Link href="/signup">
-                                    <Button size="sm" className="text-white">
+                                    <Button size="sm" className="text-white rounded-full">
                                         S'inscrire
                                     </Button>
                                 </Link>

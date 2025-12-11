@@ -55,12 +55,12 @@ export function BottomNav({ userRole }: BottomNavProps) {
                             className={cn(
                                 "flex flex-col items-center justify-center gap-1 rounded-lg p-2 text-xs font-medium transition-colors",
                                 isActive
-                                    ? "text-white bg-primary"
+                                    ? "text-primary"
                                     : "text-muted-foreground hover:text-primary"
                             )}
                         >
                             <Icon className={cn("h-6 w-6", isActive)} />
-                            {/*<span>{item.label}</span>*/}
+                            <span>{item.label}</span>
                         </Link>
                     )
                 })}
