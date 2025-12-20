@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { School, Newspaper, Info, User, LayoutDashboard, FileText, Users, Settings } from "lucide-react"
+import { School, Newspaper, Info, User, LayoutDashboard, FileText, Users, Settings, Plus } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Role } from "@prisma/client"
 
@@ -28,10 +28,11 @@ export function BottomNav({ userRole }: BottomNavProps) {
 
     const navItems = isWriterOrAdmin
         ? [
-            { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
-            { href: "/admin/posts", label: "Posts", icon: FileText },
-            { href: "/admin/users", label: "Utilisateurs", icon: Users },
-            { href: "/admin/settings", label: "Paramètres", icon: Settings },
+            { href: "/", label: "Accueil", icon: School },
+            { href: "/article", label: "Articles", icon: Newspaper },
+            { href: "/admin/posts", label: "Posts", icon: Plus },
+            { href: "/info", label: "Infos", icon: Info },
+            { href: "/profile", label: "Profil", icon: User },
         ]
         : [
             { href: "/", label: "Accueil", icon: School },
@@ -41,7 +42,7 @@ export function BottomNav({ userRole }: BottomNavProps) {
         ]
 
     return (
-        <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background/80 backdrop-blur-lg md:hidden">
+        <nav className="fixed bottom-0 left-0 right-0 z-50 border-t-2 border-primary/20 bg-background/80 backdrop-blur-lg md:hidden">
             <div className="flex h-16 items-center justify-around px-2">
                 {navItems.map((item) => {
                     const Icon = item.icon
@@ -58,7 +59,7 @@ export function BottomNav({ userRole }: BottomNavProps) {
                                     : "text-muted-foreground hover:text-primary"
                             )}
                         >
-                            <Icon className={cn("h-5 w-5", isActive)} />
+                            <Icon className={cn("h-6 w-6", isActive)} />
                             <span>{item.label}</span>
                         </Link>
                     )

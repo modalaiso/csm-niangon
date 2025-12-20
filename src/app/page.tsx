@@ -38,7 +38,7 @@ export default function Home() {
 
           {/* Footer */}
           <div className="mt-8 text-primarys2-200 text-sm">
-            <p>&copy; 2025 Club NTIC</p>
+            <p>&copy; 2025 Club NTIC. Tous droits réservés.</p>
           </div>
         </div>
       </main>
