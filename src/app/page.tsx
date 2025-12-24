@@ -7,20 +7,16 @@ export default function Home() {
     <div className="font-[family-name:var(--font-geist-sans)]">
       <header className="absolute top-4 right-4">
         <Link href="/signup">
-          <Button variant="outline" className="hover:bg-gray-200">Inscrivez vous maintenant</Button>
+          <Button variant="outline" className="hover:bg-gray-200">
+            Inscrivez vous maintenant
+          </Button>
         </Link>
       </header>
       <main className="min-h-screen bg-primary flex items-center justify-center p-4">
         <div className="max-w-2xl w-full text-center">
-
           {/*Logo*/}
           <div className="mb-6 inline-block animate-slide-up">
-            <img
-              src="../logo-w.png"
-              alt="Logo"
-              width={150}
-              height={100}
-            />
+            <img src="../logo-w.png" alt="Logo" width={150} height={100} />
           </div>
 
           {/* Message principal */}

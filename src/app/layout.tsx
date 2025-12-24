@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -15,7 +15,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "CSM Niangon TV",
-  description: "La plateforme média officielle du CSM Niangon. Découvrez les actualités et informations du CSM Niangon.",
+  description:
+    "La plateforme média officielle du CSM Niangon. Découvrez les actualités et informations du CSM Niangon.",
 };
 
 import { createClient } from "@/lib/supabase/server";
@@ -29,7 +30,9 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   let userRole = undefined;
 

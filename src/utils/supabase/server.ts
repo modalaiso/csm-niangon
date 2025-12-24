@@ -20,8 +20,8 @@ export const createClient = () => {
           } catch (err) {
             console.error("Failed to set cookies:", err);
           }
-        }
-      }
-    }
+        },
+      },
+    },
   );
 };
