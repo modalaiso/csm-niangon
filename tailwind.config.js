@@ -61,6 +61,7 @@ module.exports = {
           700: '#1e40af',
           800: '#1e3a8a',
           900: '#1e3a8a',
+          1000: '#838383b7',
         },
         secondary: {
           DEFAULT: '#F59E0B',

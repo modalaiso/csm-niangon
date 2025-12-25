@@ -111,10 +111,10 @@ export function TopNav({ user }: TopNavProps) {
                                         {!user && (
                                             <>
                                                 <div className="h-px bg-border my-2" />
-                                                <Link href="/login" className="text-sm font-medium hover:underline">
+                                                <Link href="/login" className=" text-primary font-medium border-2 border-primary px-3 py-1.5 flex items-center justify-center rounded-full hover:opacity-90">
                                                     Se connecter
                                                 </Link>
-                                                <Link href="/signup" className="text-sm font-medium hover:underline">
+                                                <Link href="/signup" className="font-medium bg-primary text-white rounded-full px-3 py-1.5 flex items-center justify-center hover:opacity-90">
                                                     S'inscrire
                                                 </Link>
                                             </>

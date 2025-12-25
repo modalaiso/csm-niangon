@@ -36,6 +36,7 @@ interface SignupFormProps {
 }
 
 const CLASS_OPTIONS = [
+    "Parent d'élève",
     "Sixième",
     "Cinquième",
     "Quatrième",
