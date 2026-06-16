@@ -89,7 +89,7 @@ export function TopNav({ user }: TopNavProps) {
               onChange={(e) => setSearchQuery(e.target.value)}
               className="bg-transparent border-0 focus-visible:ring-0 w-40 outline-none"
             />
-            <Search className="h-5 w-5 stroke-primary cursor-pointer" />
+            <Search className="h-5 w-5 stroke-primary cursor-pointer px-3" />
           </div>
 
           {/* Desktop Auth Buttons */}
