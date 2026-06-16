@@ -90,7 +90,7 @@ export function TopNav({ user }: TopNavProps) {
             ) : (
               <>
                 <Link href="/login">
-                  <Button variant="ghost" size="sm">
+                  <Button variant="ghost" size="sm" className="rounded-full">
                     Se connecter
                   </Button>
                 </Link>
