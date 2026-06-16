@@ -81,15 +81,17 @@ export function TopNav({ user }: TopNavProps) {
 
         {/* Right: Search & Menu/Auth */}
         <div className="flex items-center gap-2">
-          <div className="hidden md:flex items-center gap-2 px-3 py-2 rounded-full bg-gray-100 dark:bg-gray-800">
+          <div className="hidden md:flex items-center gap-2 rounded-full bg-gray-100 dark:bg-gray-800">
             <Input
               type="text"
               placeholder="Recherche"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-transparent border-0 focus-visible:ring-0 w-40 outline-none px-0 py-0"
+              className="bg-transparent border-0 focus-visible:ring-0 w-40 outline-none"
             />
-            <Search className="h-5 w-5 stroke-primary cursor-pointer" />
+            <div className="px-2">
+              <Search className="h-5 w-5 stroke-primary cursor-pointer" />
+            </div>
           </div>
 
           {/* Desktop Auth Buttons */}
