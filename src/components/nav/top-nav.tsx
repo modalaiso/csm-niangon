@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Search, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Sheet,
   SheetContent,
@@ -11,6 +12,7 @@ import {
 } from "@/components/ui/sheet";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 
 import { User } from "@supabase/supabase-js";
 
@@ -20,6 +22,7 @@ interface TopNavProps {
 
 export function TopNav({ user }: TopNavProps) {
   const pathname = usePathname();
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Hide on auth pages
   if (
@@ -78,10 +81,16 @@ export function TopNav({ user }: TopNavProps) {
 
         {/* Right: Search & Menu/Auth */}
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="h-9 w-9">
-            <Search className="h-5 w-5 stroke-primary" />
-            <span className="sr-only">Rechercher</span>
-          </Button>
+          <div className="hidden md:flex items-center gap-2 px-3 py-2 rounded-full bg-gray-100 dark:bg-gray-800">
+            <Input
+              type="text"
+              placeholder="Recherche"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="bg-transparent border-0 focus-visible:ring-0 w-40 outline-none"
+            />
+            <Search className="h-5 w-5 stroke-primary cursor-pointer" />
+          </div>
 
           {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center gap-2">
