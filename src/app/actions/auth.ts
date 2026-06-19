@@ -56,7 +56,7 @@ async function checkPasswordCompromise(password: string): Promise<boolean> {
       `https://api.pwnedpasswords.com/range/${prefix}`,
     );
     if (!response.ok) {
-      console.error("Error checking password compromise:", response.statusText);
+      console.error("Erreur lors de la vérification de la compromission du mot de passe:", response.statusText);
       return false; // Fail open if API is down
     }
 
@@ -72,7 +72,7 @@ async function checkPasswordCompromise(password: string): Promise<boolean> {
 
     return false;
   } catch (error) {
-    console.error("Error in checkPasswordCompromise:", error);
+    console.error("Erreur dans checkPasswordCompromise:", error);
     return false;
   }
 }
@@ -136,7 +136,7 @@ export async function signup(formData: z.infer<typeof signupSchema>) {
       },
     });
   } catch (error) {
-    console.error("Prisma error:", error);
+    console.error("Erreur Prisma:", error);
     // Rollback Supabase user if Prisma fails?
     // For now, just return error. Ideally we'd delete the auth user.
     return { error: "Erreur lors de la création du profil utilisateur" };
@@ -161,13 +161,13 @@ export async function login(formData: z.infer<typeof loginSchema>) {
     });
 
     if (!user) {
-      console.log(`[LOGIN] Username not found: ${email}`);
+      console.log(`[LOGIN] Nom d'utilisateur non trouvé: ${email}`);
       return { error: "Identifiants invalides" };
     }
-    console.log(`[LOGIN] Username ${email} resolved to email: ${user.email}`);
+    console.log(`[LOGIN] Nom d'utilisateur trouvé: ${user.email}`);
     email = user.email;
   } else {
-    console.log(`[LOGIN] Attempting login with email: ${email}`);
+    console.log(`[LOGIN] Tentative de connexion avec: ${email}`);
   }
 
   const { error } = await supabase.auth.signInWithPassword({
@@ -176,11 +176,11 @@ export async function login(formData: z.infer<typeof loginSchema>) {
   });
 
   if (error) {
-    console.log(`[LOGIN] Supabase error: ${error.message}`);
+    console.log(`[LOGIN] Erreur Supabase: ${error.message}`);
     return { error: error.message };
   }
 
-  console.log(`[LOGIN] Login successful for: ${email}`);
+  console.log(`[LOGIN] Connexion réussie: ${email}`);
   redirect("/");
 }
 
@@ -280,7 +280,7 @@ export async function adminSignup(formData: z.infer<typeof adminSignupSchema>) {
       }),
     ]);
   } catch (error) {
-    console.error("Prisma error:", error);
+    console.error("Erreur Prisma:", error);
     return { error: "Erreur lors de la finalisation du compte" };
   }
 
