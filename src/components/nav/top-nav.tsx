@@ -36,8 +36,8 @@ export function TopNav({ user }: TopNavProps) {
 
   const navLinks = [
     { href: "/", label: "Accueil" },
-    { href: "/article", label: "Articles" },
-    { href: "/info", label: "Infos" },
+    { href: "/articles", label: "Articles" },
+    { href: "/infos", label: "Infos" },
   ];
 
   return (
