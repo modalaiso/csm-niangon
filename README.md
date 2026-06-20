@@ -148,17 +148,18 @@ Créer un fichier `.env.local` à la racine du projet :
 
 ```env
 # Base de données
-DATABASE_URL="postgresql://user:password@localhost:5432/csm_niangon"
-DIRECT_URL="postgresql://user:password@localhost:5432/csm_niangon"
+# Connexion à Postgres via le pooler de mode transactionnel partagé (IPv4 uniquement)
+DATABASE_URL="postgresql://postgres.[ID du projet]:[Mot de passe]@[Region].pooler.supabase.com:6543/postgres?pgbouncer=true"
+# Connexion à Postgres via le pooler en mode session partagé (utilisé pour les migrations)
+DIRECT_URL="postgresql://postgres.[ID du projet]:[Mot de passe]@[Region].pooler.supabase.com:5432/postgres"
 
 # Supabase (authentification)
-NEXT_PUBLIC_SUPABASE_URL="https://your-project.supabase.co"
-NEXT_PUBLIC_SUPABASE_ANON_KEY="your-anon-key"
-SUPABASE_SERVICE_ROLE_KEY="your-service-role-key"
-
-# Application
-NEXT_PUBLIC_APP_URL="http://localhost:3000"
-NODE_ENV="development"
+NEXT_PUBLIC_SUPABASE_URL=https://[ID du projet].supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_XXXX...
+SUPABASE_URL=https://[ID du projet].supabase.co
+SUPABASE_PUBLISHABLE_KEY=sb_publishable_XXXX...
+SUPABASE_SECRET_KEY=sb_secret_XXXX...
+SUPABASE_JWKS_URL=https://[ID du projet].supabase.co/auth/v1/.well-known/jwks.json
 ```
 
 Un fichier `.env.example` est fourni en référence.
@@ -204,7 +205,7 @@ npm run prisma:studio
 
 | Variable | Description | Exemple |
 |----------|-------------|---------|
-| `DATABASE_URL` | URL de connexion PostgreSQL | `postgresql://user:pass@host:5432/db` |
+| `DATABASE_URL` | URL de connexion PostgreSQL | `postgresql://postgres.[ID du projet]` |
 | `DIRECT_URL` | URL directe (pour migrations) | `postgresql://user:pass@host:5432/db` |
 | `NEXT_PUBLIC_SUPABASE_URL` | URL Supabase | `https://xxx.supabase.co` |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Clé publique Supabase | `eyJxxx...` |
