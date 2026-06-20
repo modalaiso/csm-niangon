@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
-import { Inter } from "next/font/google";
+import { Inter, League_Spartan } from "next/font/google";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+});
+
+const leagueSpartan = League_Spartan({
+  subsets: ["latin"],
+  variable: "--font-heading",
 });
 
 export const metadata: Metadata = {
@@ -45,7 +50,7 @@ export default async function RootLayout({
         <meta name="apple-mobile-web-app-title" content="CSM Niangon TV" />
       </head>
       <body
-        className={`${inter.variable} antialiased`}
+        className={`${inter.variable} ${leagueSpartan.variable} antialiased`}
       >
         <TopNav user={user} />
         {children}
