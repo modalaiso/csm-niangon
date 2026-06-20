@@ -5,13 +5,19 @@ import { Button } from "@/components/ui/button";
 export default function Home() {
   return (
     <div className="font-[family-name:var(--font-geist-sans)]">
-      <header className="absolute top-4 right-4">
+      {/*<header className="absolute top-4 right-4">
         <Link href="/signup">
-          <Button variant="outline" className="hover:bg-gray-200">Inscrivez vous maintenant</Button>
+          <Button variant="outline" className="hover:bg-gray-200">
+            Inscrivez vous maintenant
+          </Button>
         </Link>
-      </header>
-      <main className="min-h-screen bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 flex items-center justify-center p-4">
+      </header>*/}
+      <main className="min-h-screen bg-primary flex items-center justify-center p-4">
         <div className="max-w-2xl w-full text-center">
+          {/*Logo*/}
+          <div className="mb-6 inline-block animate-slide-up">
+            <img src="../logo-w.png" alt="Logo" width={150} height={100} />
+          </div>
 
           {/* Message principal */}
           <div className="p-8 md:p-12 animate-slide-up">
@@ -27,8 +33,8 @@ export default function Home() {
           </div>
 
           {/* Footer */}
-          <div className="mt-8 text-primary-200 text-sm">
-            <p>&copy; 2025 Club NTIC Information et Robotique</p>
+          <div className="mt-8 text-primarys2-200 text-sm">
+            <p>&copy; 2025 Club NTIC. Tous droits réservés.</p>
           </div>
         </div>
       </main>
