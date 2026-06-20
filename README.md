@@ -315,6 +315,7 @@ csm-niangon/
 ├── .gitignore
 ├── biome.json
 ├── components.json
+├── LICENSE
 ├── next.config.ts
 ├── next-env.d.ts
 ├── postcss.config.js / postcss.config.mjs
