@@ -152,15 +152,9 @@ SUPABASE_SECRET_KEY=sb_secret_XXXX...
 SUPABASE_JWKS_URL=https://[ID_PROJET].supabase.co/auth/v1/.well-known/jwks.json
 
 # Cles d'acces (a remplir manuellement)
-MODERATOR_KEY_1=
-MODERATOR_KEY_2=
-MODERATOR_KEY_3=
-WRITER_KEY_1=
-WRITER_KEY_2=
-WRITER_KEY_3=
-ADMIN_KEY_1=
-ADMIN_KEY_2=
-ADMIN_KEY_3=
+MODERATOR_KEYS=
+WRITER_KEYS=
+ADMIN_KEYS=
 ```
 
 Important : ces identifiants sont sensibles. Ne jamais les commiter, et regenerer le mot de passe Postgres ou les cles Supabase en cas de doute sur une fuite.
