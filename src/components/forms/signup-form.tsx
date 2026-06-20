@@ -53,11 +53,13 @@ const CLASS_OPTIONS = [
 
 import { signup } from "@/app/actions/auth";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 // ... imports
 
 export function SignupForm({ onSubmit }: SignupFormProps) {
   const [serverError, setServerError] = useState<string | null>(null);
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -74,6 +76,8 @@ export function SignupForm({ onSubmit }: SignupFormProps) {
       const result = await signup(data);
       if (result?.error) {
         setServerError(result.error);
+      } else if (result?.success) {
+        router.push("/");
       }
     } catch (error) {
       setServerError("Une erreur inattendue est survenue");

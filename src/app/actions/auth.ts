@@ -142,7 +142,7 @@ export async function signup(formData: z.infer<typeof signupSchema>) {
     return { error: "Erreur lors de la création du profil utilisateur" };
   }
 
-  redirect("/");
+  return { success: true };
 }
 
 export async function login(formData: z.infer<typeof loginSchema>) {
@@ -181,7 +181,7 @@ export async function login(formData: z.infer<typeof loginSchema>) {
   }
 
   console.log(`[LOGIN] Connexion réussie: ${email}`);
-  redirect("/");
+  return { success: true };
 }
 
 export async function adminSignup(formData: z.infer<typeof adminSignupSchema>) {
@@ -284,7 +284,7 @@ export async function adminSignup(formData: z.infer<typeof adminSignupSchema>) {
     return { error: "Erreur lors de la finalisation du compte" };
   }
 
-  redirect("/");
+  return { success: true };
 }
 
 export async function adminLogin(formData: z.infer<typeof adminLoginSchema>) {
@@ -343,5 +343,5 @@ export async function adminLogin(formData: z.infer<typeof adminLoginSchema>) {
     return { error: "Accès non autorisé" };
   }
 
-  redirect("/");
+  return { success: true };
 }

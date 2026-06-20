@@ -40,6 +40,8 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
       const result = await login(data);
       if (result?.error) {
         setServerError(result.error);
+      } else if (result?.success) {
+        router.push("/");
       }
     } catch (error) {
       setServerError("Une erreur inattendue est survenue");

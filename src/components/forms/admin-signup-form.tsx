@@ -17,6 +17,7 @@ import {
 import Link from "next/link";
 import { adminSignup } from "@/app/actions/auth";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const adminSignupSchema = z
   .object({
@@ -48,6 +49,7 @@ const ROLE_OPTIONS = ["ADMIN", "MODERATOR", "WRITER"];
 
 export function AdminSignupForm({ onSubmit }: AdminSignupFormProps) {
   const [serverError, setServerError] = useState<string | null>(null);
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -64,6 +66,8 @@ export function AdminSignupForm({ onSubmit }: AdminSignupFormProps) {
       const result = await adminSignup(data);
       if (result?.error) {
         setServerError(result.error);
+      } else if (result?.success) {
+        router.push("/");
       }
     } catch (error) {
       setServerError("Une erreur inattendue est survenue");
