@@ -49,6 +49,7 @@ const CLASS_OPTIONS = [
   "Seconde",
   "Premiere",
   "Terminal",
+  "Parent d'élève",
 ];
 
 import { signup } from "@/app/actions/auth";
