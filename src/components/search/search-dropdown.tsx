@@ -86,7 +86,7 @@ export function SearchDropdown() {
     setIsOpen(true);
     setIsLoading(true);
     try {
-      const posts = await getRecentPosts(10);
+      const posts = await getRecentPosts(5);
       setResults(posts);
     } catch (err) {
       console.error("Erreur rechargement récents :", err);
