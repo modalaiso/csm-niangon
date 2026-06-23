@@ -9,11 +9,10 @@ import {
   SheetTrigger,
   SheetTitle,
 } from "@/components/ui/sheet";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { SearchDropdown } from "@/components/search/search-dropdown";
 
-import { User } from "@supabase/supabase-js";
+import type { User } from "@supabase/supabase-js";
 
 interface TopNavProps {
   user?: User | null;
@@ -104,7 +103,7 @@ export function TopNav({ user }: TopNavProps) {
           </div>
 
           {/* Mobile Menu Toggle */}
-          <div className="md:hidden">
+          <div className="flex md:hidden">
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-9 w-9">
