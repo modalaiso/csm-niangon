@@ -104,6 +104,7 @@ export function TopNav({ user }: TopNavProps) {
 
           {/* Mobile Menu Toggle */}
           <div className="flex md:hidden">
+            <SearchDropdown />
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-9 w-9">

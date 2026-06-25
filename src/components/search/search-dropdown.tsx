@@ -161,6 +161,7 @@ export function SearchDropdown() {
 
       {/* Dropdown */}
       {isOpen && (
+        <div>
         <ul
           id="search-listbox"
           role="listbox"
@@ -192,7 +193,7 @@ export function SearchDropdown() {
                       />
                     )}
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-medium text-sm truncate">{result.title}</h3>
+                      <h3 className="font-medium text-base truncate">{result.title}</h3>
                       <p className="text-xs text-muted-foreground truncate">
                         {result.author.username}
                       </p>
@@ -206,6 +207,7 @@ export function SearchDropdown() {
             ))
           )}
         </ul>
+        </div>
       )}
     </div>
   );
