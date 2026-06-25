@@ -1,20 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { Search, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Sheet,
   SheetContent,
   SheetTrigger,
   SheetTitle,
 } from "@/components/ui/sheet";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { SearchDropdown } from "@/components/search/search-dropdown";
 
-import { User } from "@supabase/supabase-js";
+import type { User } from "@supabase/supabase-js";
 
 interface TopNavProps {
   user?: User | null;
@@ -22,7 +20,6 @@ interface TopNavProps {
 
 export function TopNav({ user }: TopNavProps) {
   const pathname = usePathname();
-  const [searchQuery, setSearchQuery] = useState("");
 
   // Hide on auth pages
   if (
@@ -41,7 +38,7 @@ export function TopNav({ user }: TopNavProps) {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b-2 border-primary/20 backdrop-blur supports-[backdrop-filter]:bg-background/95">
+    <header className="sticky top-0 z-50 w-full border-b-2 border-primary/20 backdrop-blur supports-[backdrop-filter]:bg-background/95 shadow-lg">
       <div className="container flex h-14 items-center justify-between px-4">
         {/* Left: Logo */}
         <div className="flex items-center gap-6">
@@ -81,17 +78,8 @@ export function TopNav({ user }: TopNavProps) {
 
         {/* Right: Search & Menu/Auth */}
         <div className="flex items-center gap-2">
-          <div className="hidden md:flex items-center gap-2 rounded-full bg-gray-100 dark:bg-gray-800">
-            <Input
-              type="text"
-              placeholder="Recherche"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-transparent border-0 focus-visible:ring-0 w-40 outline-none"
-            />
-            <div className="px-2">
-              <Search className="h-5 w-5 stroke-primary cursor-pointer" />
-            </div>
+          <div className="hidden md:flex items-center gap-2 flex-1 max-w-sm">
+            <SearchDropdown />
           </div>
 
           {/* Desktop Auth Buttons */}
@@ -115,7 +103,8 @@ export function TopNav({ user }: TopNavProps) {
           </div>
 
           {/* Mobile Menu Toggle */}
-          <div className="md:hidden">
+          <div className="flex md:hidden">
+            <SearchDropdown />
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-9 w-9">

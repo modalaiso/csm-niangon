@@ -6,6 +6,12 @@ body {
   font-family: var(--font-inter);
 }
 
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
