@@ -46,19 +46,17 @@ export function TopNav({ user }: TopNavProps) {
             <img
               src="/logo-g.png"
               alt="CSM Niangon TV"
-              width={85}
-              className="dark:hidden"
+              className="dark:hidden w-auto h-6"
             />
             <img
               src="/logo-w.png"
               alt="CSM Niangon TV"
-              width={85}
-              className="hidden dark:block"
+              className="hidden dark:block w-auto h-6"
             />
           </Link>
         </div>
 
-        <div className="container flex h-14 items-center justify-center px-4">
+        <div className="hidden md:flex container h-14 items-center justify-center px-4">
           <nav className="hidden md:flex items-center gap-6">
             {navLinks.map((link) => (
               <Link
