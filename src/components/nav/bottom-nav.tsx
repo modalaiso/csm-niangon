@@ -57,7 +57,7 @@ export function BottomNav({ userRole }: BottomNavProps) {
       ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t-2 border-primary/20 backdrop-blur supports-[backdrop-filter]:bg-background/95 md:hidden">
+    <nav className="sticky bottom-0 left-0 right-0 z-50 border-t-2 border-primary/20 backdrop-blur supports-[backdrop-filter]:bg-background/95 md:hidden">
       <div className="flex h-16 items-center justify-around px-2">
         {navItems.map((item) => {
           const Icon = item.icon;

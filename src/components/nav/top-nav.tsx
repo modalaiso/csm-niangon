@@ -46,12 +46,12 @@ export function TopNav({ user }: TopNavProps) {
             <img
               src="/logo-g.png"
               alt="CSM Niangon TV"
-              className="dark:hidden w-auto h-6"
+              className="dark:hidden w-auto h-8"
             />
             <img
               src="/logo-w.png"
               alt="CSM Niangon TV"
-              className="hidden dark:block w-auto h-6"
+              className="hidden dark:block w-auto h-8"
             />
           </Link>
         </div>
