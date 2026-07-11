@@ -90,7 +90,7 @@ export function PostsExplorer({ posts }: PostsExplorerProps) {
             return (
               <Link
                 key={post.id}
-                href={`/${post.slug}`}
+                href={`/posts/${post.id}`}
                 className="group overflow-hidden rounded-2xl border border-border bg-white transition-shadow hover:shadow-md"
               >
                 <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">

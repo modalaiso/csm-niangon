@@ -57,31 +57,35 @@ export function HeroCarousel({ posts }: HeroCarouselProps) {
       <div className="absolute inset-0 bg-gradient-to-r from-white via-transparent to-transparent" />
       <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent" />
 
-      <button
-        onClick={() => goTo(index - 1)}
-        aria-label="Publication précédente"
-        className="shadow-sm absolute left-6 md:left-8 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-white/50 backdrop-blur-[3px] transition-colors hover:bg-white/70 hover:backdrop-blur-[3px]"
-      >
-        <ChevronLeft className="h-5 w-5 text-primary" />
-      </button>
-      <button
-        onClick={() => goTo(index + 1)}
-        aria-label="Publication suivante"
-        className="shadow-sm absolute right-6 md:right-8 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-white/50 backdrop-blur-[3px] transition-colors hover:bg-white/70 hover:backdrop-blur-[3px]"
-      >
-        <ChevronRight className="h-5 w-5 text-primary" />
-      </button>
+      {posts.length > 1 && (
+        <>
+          <button
+            onClick={() => goTo(index - 1)}
+            aria-label="Publication précédente"
+            className="shadow-lg absolute left-6 md:left-8 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-white/50 backdrop-blur-[3px] transition-colors hover:bg-white/70 hover:backdrop-blur-[3px]"
+          >
+            <ChevronLeft className="h-5 w-5 text-primary" />
+          </button>
+          <button
+            onClick={() => goTo(index + 1)}
+            aria-label="Publication suivante"
+            className="shadow-lg absolute right-6 md:right-8 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-white/50 backdrop-blur-[3px] transition-colors hover:bg-white/70 hover:backdrop-blur-[3px]"
+          >
+            <ChevronRight className="h-5 w-5 text-primary" />
+          </button>
+        </>
+      )}
 
       <div className="absolute inset-x-0 bottom-0 z-10 px-16 pb-20 sm:px-20 md:px-28 md:pb-26">
         <div className="max-w-xl">
-          <h1 className="text-2xl font-extrabold uppercase leading-tight text-gray-900 sm:text-3xl md:text-2xl">
+          <h1 className="text-2xl font-extrabold uppercase leading-tight text-gray-900 sm:text-3xl md:text-4xl">
             {current.title}
           </h1>
           <p className="mt-3 line-clamp-3 text-sm text-gray-700 sm:text-base md:text-sm">
             {current.summary}
           </p>
           <Link
-            href={`/${current.slug}`}
+            href={`/posts/${current.id}`}
             className="mt-5 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary/90"
           >
             Voir plus

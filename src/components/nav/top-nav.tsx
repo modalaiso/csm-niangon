@@ -41,17 +41,21 @@ export function TopNav({ user }: TopNavProps) {
     <header className="sticky top-0 z-50 w-full border-b-2 border-primary/20 backdrop-blur supports-[backdrop-filter]:bg-background/95 shadow-lg">
       <div className="container flex h-14 items-center justify-between px-4">
         {/* Left: Logo */}
-        <div className="flex items-center gap-6">
+        <div className=" items-center gap-6 inline-block">
           <Link href="/" className="flex items-center gap-2 ml-2">
             <img
               src="/logo-g.png"
               alt="CSM Niangon TV"
-              className="dark:hidden w-auto h-8"
+              className="dark:hidden md:w-[100] md:h-[34]"
+              width={60}
+              height={50}
             />
             <img
               src="/logo-w.png"
               alt="CSM Niangon TV"
-              className="hidden dark:block w-auto h-8"
+              className="hidden dark:block md:w-[100] md:h-[34]"
+              width={60}
+              height={50}
             />
           </Link>
         </div>
