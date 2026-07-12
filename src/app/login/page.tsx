@@ -17,8 +17,9 @@ export default function LoginPage() {
       <div className="mb-8 text-center">
         <Link href="/" className="text-3xl font-bold text-blue-900 hover:opacity-80">
           {/*Logo*/}
-          <div className="mb-4 mt-4 inline-block">
-            <Image src="/logo-g.png" alt="Logo" width={100} height={50} />
+          <div className="mb-4 mt-4 flex flex-col items-center gap-2 justify-center">
+            <Image src="/logo.png" alt="Logo" width={75} height={50} loading="eager"/>
+            <span className="text-[1rem] leading-[1rem] font-bold text-primary hidden sm:block">CSM Niangon</span>
           </div>
         </Link>
       </div>
