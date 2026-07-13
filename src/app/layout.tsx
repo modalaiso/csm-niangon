@@ -14,7 +14,7 @@ const leagueSpartan = League_Spartan({
 });
 
 export const metadata: Metadata = {
-  title: "CSM Niangon TV",
+  title: "CSM Niangon",
   description:
     "La plateforme média officielle du CSM Niangon. Découvrez les actualités et informations du CSM Niangon.",
 };
@@ -23,6 +23,8 @@ import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
 import { BottomNav } from "@/components/nav/bottom-nav";
 import { TopNav } from "@/components/nav/top-nav";
+import { InfoBar } from "@/components/info-bar/info-bar";
+import { getInfoBarItems } from "@/app/actions/infobar";
 
 export default async function RootLayout({
   children,
@@ -44,6 +46,8 @@ export default async function RootLayout({
     userRole = dbUser?.role;
   }
 
+  const infoBarItems = await getInfoBarItems();
+
   return (
     <html lang="fr">
       <head>
@@ -52,6 +56,7 @@ export default async function RootLayout({
       <body
         className={`${inter.variable} ${leagueSpartan.variable} antialiased`}
       >
+        <InfoBar items={infoBarItems} />
         <TopNav user={user} />
         {children}
         <BottomNav userRole={userRole} />
