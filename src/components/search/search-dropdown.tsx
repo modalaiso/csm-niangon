@@ -194,10 +194,10 @@ export function SearchDropdown() {
                     )}
                     <div className="flex-1 min-w-0">
                       <h3 className="font-medium text-base truncate">{result.title}</h3>
-                      <p className="text-xs text-muted-foreground truncate">
+                      {/*<p className="text-xs text-muted-foreground truncate">
                         {result.author.username}
-                      </p>
-                      <p className="text-xs text-muted-foreground truncate">
+                      </p>*/}
+                      <p className="text-xs text-muted-foreground line-clamp-2">
                         {result.summary}
                       </p>
                     </div>
