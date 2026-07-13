@@ -26,7 +26,7 @@ export function HeroCarousel({ posts }: HeroCarouselProps) {
       <section className="relative flex h-[280px] w-full items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5 px-4 text-center md:h-[380px]">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 md:text-3xl">
-            Bienvenue sur CSM Niangon TV
+            Bienvenue sur CSM Niangon
           </h1>
           <p className="mt-2 text-sm text-muted-foreground md:text-base">
             Aucun post pour l&apos;instant. Revenez bientôt !
