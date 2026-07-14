@@ -10,6 +10,7 @@ export interface SearchResult {
   summary: string;
   thumbnail: string | null;
   type: string;
+  views: number;
   author: {
     id: string;
     username: string;
@@ -17,74 +18,62 @@ export interface SearchResult {
   publishedAt: Date | null;
 }
 
+const resultSelect = {
+  id: true,
+  title: true,
+  slug: true,
+  summary: true,
+  thumbnail: true,
+  type: true,
+  views: true,
+  author: {
+    select: {
+      id: true,
+      username: true,
+    },
+  },
+  publishedAt: true,
+} as const;
+
 /**
  * Search posts by query (title, slug, summary, info)
  * Only returns PUBLISHED posts
  */
 export async function searchPosts(
   query: string,
-  limit: number = 10
-): Promise<SearchResult[]> {
+  limit: number = 10,
+  offset: number = 0
+): Promise<{ results: SearchResult[]; total: number }> {
   if (!query || query.trim().length === 0) {
-    return [];
+    return { results: [], total: 0 };
   }
 
   try {
-    const results = await prisma.post.findMany({
-      where: {
-        status: PostStatus.PUBLISHED,
-        OR: [
-          {
-            title: {
-              contains: query,
-              mode: "insensitive",
-            },
-          },
-          {
-            slug: {
-              contains: query,
-              mode: "insensitive",
-            },
-          },
-          {
-            summary: {
-              contains: query,
-              mode: "insensitive",
-            },
-          },
-          {
-            info: {
-              contains: query,
-              mode: "insensitive",
-            },
-          },
-        ],
-      },
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        summary: true,
-        thumbnail: true,
-        type: true,
-        author: {
-          select: {
-            id: true,
-            username: true,
-          },
-        },
-        publishedAt: true,
-      },
-      orderBy: {
-        publishedAt: "desc",
-      },
-      take: limit,
-    });
+    const where = {
+      status: PostStatus.PUBLISHED,
+      OR: [
+        { title: { contains: query, mode: "insensitive" as const } },
+        { slug: { contains: query, mode: "insensitive" as const } },
+        { summary: { contains: query, mode: "insensitive" as const } },
+        { info: { contains: query, mode: "insensitive" as const } },
+      ],
+    };
 
-    return results;
+    const [results, total] = await Promise.all([
+      prisma.post.findMany({
+        where,
+        select: resultSelect,
+        orderBy: { publishedAt: "desc" },
+        skip: offset,
+        take: limit,
+      }),
+      prisma.post.count({ where }),
+    ]);
+
+    return { results, total };
   } catch (error) {
     console.error("Error searching posts:", error);
-    return [];
+    return { results: [], total: 0 };
   }
 }
 
@@ -94,27 +83,9 @@ export async function searchPosts(
 export async function getRecentPosts(limit: number = 10): Promise<SearchResult[]> {
   try {
     const results = await prisma.post.findMany({
-      where: {
-        status: PostStatus.PUBLISHED,
-      },
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        summary: true,
-        thumbnail: true,
-        type: true,
-        author: {
-          select: {
-            id: true,
-            username: true,
-          },
-        },
-        publishedAt: true,
-      },
-      orderBy: {
-        publishedAt: "desc",
-      },
+      where: { status: PostStatus.PUBLISHED },
+      select: resultSelect,
+      orderBy: { publishedAt: "desc" },
       take: limit,
     });
 
@@ -126,15 +97,17 @@ export async function getRecentPosts(limit: number = 10): Promise<SearchResult[]
 }
 
 /**
- * Get full search results (for the search results page)
+ * Get full search results (for the search results page), with pagination
  */
 export async function getSearchResults(
   query: string,
-  limit: number = 50
-): Promise<SearchResult[]> {
+  limit: number = 20,
+  offset: number = 0
+): Promise<{ results: SearchResult[]; total: number }> {
   if (!query || query.trim().length === 0) {
-    return getRecentPosts(limit);
+    const results = await getRecentPosts(limit);
+    return { results, total: results.length };
   }
 
-  return searchPosts(query, limit);
+  return searchPosts(query, limit, offset);
 }

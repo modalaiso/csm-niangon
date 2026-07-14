@@ -61,7 +61,7 @@ export function SearchDropdown() {
       setIsLoading(true);
       try {
         const data = await searchPosts(searchQuery, 10);
-        if (!controller.signal.aborted) setResults(data);
+        if (!controller.signal.aborted) setResults(data.results);
       } catch (err) {
         if (!controller.signal.aborted) console.error("Erreur recherche :", err);
       } finally {

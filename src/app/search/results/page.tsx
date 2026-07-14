@@ -1,156 +1,193 @@
 import { getSearchResults } from "@/app/actions/search";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Eye, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export const metadata = {
   title: "Résultats de recherche | CSM Niangon",
   description: "Résultats de votre recherche",
 };
 
+const PAGE_SIZE = 20;
+
+const TYPE_BADGES: Record<string, { label: string; className: string }> = {
+  ACTU: { label: "Actu", className: "bg-blue-600" },
+  ARTICLE: { label: "Article", className: "bg-emerald-500" },
+  INFO: { label: "Info", className: "bg-amber-500" },
+  INTERVIEW: { label: "Interview", className: "bg-purple-500" },
+};
+
+function formatRelativeTime(date: Date | null): string {
+  if (!date) return "";
+  const seconds = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
+  if (seconds < 60) return "À l'instant";
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `Il y a ${minutes}min`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `Il y a ${hours}h`;
+  const days = Math.floor(hours / 24);
+  if (days < 30) return `Il y a ${days}j`;
+  const months = Math.floor(days / 30);
+  if (months < 12) return `Il y a ${months}m`;
+  const years = Math.floor(months / 12);
+  return `Il y a ${years}an${years > 1 ? "s" : ""}`;
+}
+
 interface SearchResultsPageProps {
-  searchParams: {
+  searchParams: Promise<{
     q?: string;
-    selected?: string;
-  };
+    page?: string;
+  }>;
 }
 
 export default async function SearchResultsPage({
   searchParams,
 }: SearchResultsPageProps) {
-  const query = searchParams.q || "";
-  const selectedId = searchParams.selected;
+  const resolvedSearchParams = await searchParams;
+  const query = resolvedSearchParams.q || "";
+  const currentPage = Math.max(1, Number(resolvedSearchParams.page) || 1);
+  const offset = (currentPage - 1) * PAGE_SIZE;
 
-  const results = await getSearchResults(query, 50);
+  const { results, total } = await getSearchResults(query, PAGE_SIZE, offset);
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
-  const selectedResult = selectedId
-    ? results.find((r) => r.id === selectedId)
-    : null;
+  const pageHref = (page: number) => {
+    const params = new URLSearchParams();
+    if (query) params.set("q", query);
+    params.set("page", String(page));
+    return `/search/results?${params.toString()}`;
+  };
 
   return (
     <main className="min-h-screen bg-background">
       {/* Header */}
       <div className="sticky top-14 z-40 bg-background/95 backdrop-blur border-b border-border">
-        <div className="container px-3 sm:px-4 py-3 sm:py-4 md:py-6">
+        <div className="container py-3 flex flex-row items-start sm:items-center justify-between gap-2">
           <Link href="/">
-            <Button variant="ghost" size="sm" className="gap-2 rounded-full">
+            <Button variant="ghost" size="sm" className="gap-2 rounded-full hover:text-primary hover:underline hover:bg-transparent">
               <ArrowLeft className="h-4 w-4" />
-              <span className="hidden sm:inline">Retour</span>
+              <span className="inline">Retour</span>
             </Button>
           </Link>
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mt-3 sm:mt-4 line-clamp-2">
-            Résultats de recherche
-            {query && <span className="text-primary text-base sm:text-lg"> : {query}</span>}
-          </h1>
           <p className="text-xs sm:text-sm text-muted-foreground mt-2">
-            {results.length === 0
+            {total === 0
               ? "Aucun résultat trouvé"
-              : `${results.length} résultat${results.length > 1 ? "s" : ""} trouvé${results.length > 1 ? "s" : ""}`}
+              : `${total} résultat${total > 1 ? "s" : ""} trouvé${total > 1 ? "s" : ""}`}
           </p>
         </div>
       </div>
 
       {/* Content */}
       <div className="container px-3 sm:px-4 py-6 sm:py-8">
-        {/* Selected Result Highlight */}
-        {selectedResult && (
-          <div className="mb-6 sm:mb-8 p-4 sm:p-6 bg-accent/30 border border-primary/20 rounded-lg">
-            <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Résultat sélectionné</h2>
-            <div className="flex flex-col sm:flex-row gap-4">
-              {selectedResult.thumbnail && (
-                <img
-                  src={selectedResult.thumbnail}
-                  alt={selectedResult.title}
-                  className="w-full sm:w-32 h-32 sm:h-32 object-cover rounded flex-shrink-0"
-                />
-              )}
-              <div className="flex-1 min-w-0">
-                <h3 className="text-lg sm:text-xl font-bold text-primary mb-1 line-clamp-2">
-                  {selectedResult.title}
-                </h3>
-                <p className="text-xs sm:text-sm text-muted-foreground mb-2">
-                  Par {selectedResult.author.username}
-                  {selectedResult.publishedAt && (
-                    <> • {new Date(selectedResult.publishedAt).toLocaleDateString("fr-FR")}</>
-                  )}
-                </p>
-                <p className="text-xs sm:text-sm line-clamp-3 mb-3">{selectedResult.summary}</p>
-                <Link href={`/${selectedResult.slug}`}>
-                  <Button size="sm" className="mt-2 sm:mt-3">
-                    Lire l&apos;article
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Results List */}
         {results.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-lg text-muted-foreground mb-4">
-              Aucun résultat ne correspond à votre recherche
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border py-16 text-center">
+            <p className="text-base font-medium text-muted-foreground mb-4">
+              Aucun post ne correspond à votre recherche
             </p>
             <Link href="/">
               <Button className="text-white">Retour à l&apos;accueil</Button>
             </Link>
           </div>
         ) : (
-          <div className="grid gap-3 sm:gap-4 md:gap-6">
-            {results.map((result, index) => (
-              <div
-                key={result.id}
-                className={`p-3 sm:p-4 md:p-6 border border-border rounded-lg hover:bg-accent/30 transition-colors ${
-                  selectedResult?.id === result.id ? "bg-accent/30 border-primary/40" : ""
-                }`}
-              >
-                <div className="flex flex-col xs:flex-row gap-3 sm:gap-4">
-                  {result.thumbnail && (
-                    <img
-                      src={result.thumbnail}
-                      alt={result.title}
-                      className="w-full xs:w-16 xs:h-16 md:w-20 md:h-20 object-cover rounded flex-shrink-0"
-                    />
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-2 sm:gap-4 mb-2 flex-wrap">
-                      <Link href={`/${result.slug}`}>
-                        <h2 className="text-base sm:text-lg md:text-xl font-bold text-primary hover:underline line-clamp-2">
-                          {result.title}
-                        </h2>
-                      </Link>
-                      <span className="text-xs px-2 py-1 bg-primary/10 text-primary rounded whitespace-nowrap flex-shrink-0">
-                        {result.type}
+          <>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {results.map((result) => {
+                const badge = TYPE_BADGES[result.type] ?? {
+                  label: result.type,
+                  className: "bg-gray-500",
+                };
+                return (
+                  <Link
+                    key={result.id}
+                    href={`/posts/${result.id}`}
+                    className="group overflow-hidden rounded-2xl border border-border bg-white transition-shadow hover:shadow-md"
+                  >
+                    <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
+                      {result.thumbnail ? (
+                        <img
+                          src={result.thumbnail}
+                          alt={result.title}
+                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center text-xs text-muted-foreground">
+                          Pas d&apos;image
+                        </div>
+                      )}
+                      <span
+                        className={cn(
+                          "absolute left-3 top-3 rounded-full px-3 py-1 text-xs font-semibold text-white",
+                          badge.className,
+                        )}
+                      >
+                        {badge.label}
                       </span>
                     </div>
-                    <p className="text-xs sm:text-sm text-muted-foreground mb-2">
-                      Par{" "}
-                      <span className="font-semibold">
-                        {result.author.username}
-                      </span>
-                      {result.publishedAt && (
-                        <>
-                          {" "}
-                          •{" "}
-                          {new Date(result.publishedAt).toLocaleDateString(
-                            "fr-FR"
-                          )}
-                        </>
-                      )}
-                    </p>
-                    <p className="text-xs sm:text-sm text-foreground/90 line-clamp-2 mb-3">
-                      {result.summary}
-                    </p>
-                    <Link href={`/${result.slug}`}>
-                      <Button size="sm" variant="outline">
-                        Lire plus
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
+                    <div className="p-4">
+                      <h3 className="line-clamp-1 text-base font-bold text-foreground">
+                        {result.title}
+                      </h3>
+                      <p className="mt-1 line-clamp-3 text-sm text-muted-foreground">
+                        {result.summary}
+                      </p>
+                      <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                        <span>
+                          Créé par{" "}
+                          <span className="font-medium text-foreground">
+                            {result.author.username}
+                          </span>
+                        </span>
+                        <span className="inline-flex items-center gap-1">
+                          <Eye className="h-3.5 w-3.5" />
+                          {result.views}
+                        </span>
+                        <span className="inline-flex items-center gap-1">
+                          <Calendar className="h-3.5 w-3.5" />
+                          {formatRelativeTime(result.publishedAt)}
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="mt-8 flex items-center justify-center gap-2">
+                <Link
+                  href={pageHref(Math.max(1, currentPage - 1))}
+                  aria-disabled={currentPage === 1}
+                  className={cn(
+                    "pointer-events-auto",
+                    currentPage === 1 && "pointer-events-none opacity-40",
+                  )}
+                >
+                  <Button variant="outline" size="icon" className="rounded-full">
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                </Link>
+
+                <span className="px-3 text-sm text-muted-foreground">
+                  Page {currentPage} / {totalPages}
+                </span>
+
+                <Link
+                  href={pageHref(Math.min(totalPages, currentPage + 1))}
+                  aria-disabled={currentPage === totalPages}
+                  className={cn(
+                    "pointer-events-auto",
+                    currentPage === totalPages && "pointer-events-none opacity-40",
+                  )}
+                >
+                  <Button variant="outline" size="icon" className="rounded-full">
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </Link>
               </div>
-            ))}
-          </div>
+            )}
+          </>
         )}
       </div>
     </main>
