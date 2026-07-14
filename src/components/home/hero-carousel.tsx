@@ -45,7 +45,7 @@ export function HeroCarousel({ posts }: HeroCarouselProps) {
       {posts.map((post, i) => (
         <img
           key={post.id}
-          src={post.thumbnail ?? "/logo-g.png"}
+          src={post.thumbnail ?? "/miniature.png"}
           alt={post.title}
           className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
             i === index ? "opacity-100" : "opacity-0"
