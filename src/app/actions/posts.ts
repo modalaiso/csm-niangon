@@ -47,22 +47,30 @@ const cardSelect = {
   summary: true,
   thumbnail: true,
   publishedAt: true,
-  _count: { select: { postViews: true } },
   author: { select: { username: true } },
 } as const;
 
-// Transformer les données Prisma avec _count en format HomePostCard
-function transformPostCard(data: any): HomePostCard {
+// Récupérer le count de vues pour un post
+async function getPostViewCount(postId: string): Promise<number> {
+  const result = await prisma.postView.count({
+    where: { postId },
+  });
+  return result;
+}
+
+// Transformer les données Prisma en format HomePostCard avec le count de vues
+async function transformPostCard(post: any): Promise<HomePostCard> {
+  const views = await getPostViewCount(post.id);
   return {
-    id: data.id,
-    type: data.type,
-    title: data.title,
-    slug: data.slug,
-    summary: data.summary,
-    thumbnail: data.thumbnail,
-    views: data._count.postViews,
-    publishedAt: data.publishedAt,
-    author: data.author,
+    id: post.id,
+    type: post.type,
+    title: post.title,
+    slug: post.slug,
+    summary: post.summary,
+    thumbnail: post.thumbnail,
+    views,
+    publishedAt: post.publishedAt,
+    author: post.author,
   };
 }
 
@@ -74,7 +82,7 @@ export async function getFeaturedPosts(limit = 5): Promise<HomePostCard[]> {
     take: limit,
     select: cardSelect,
   });
-  return posts.map(transformPostCard);
+  return Promise.all(posts.map(transformPostCard));
 }
 
 /** Toutes les publications récentes, pour la grille */
@@ -85,7 +93,7 @@ export async function getPublishedPosts(limit = 40): Promise<HomePostCard[]> {
     take: limit,
     select: cardSelect,
   });
-  return posts.map(transformPostCard);
+  return Promise.all(posts.map(transformPostCard));
 }
 
 /** Un post publié, avec son contenu complet, pour la page de détail */
@@ -104,7 +112,6 @@ export async function getPostById(id: string): Promise<PostDetail | null> {
         mediaUrl: true,
         tags: true,
         publishedAt: true,
-        _count: { select: { postViews: true } },
         author: { select: { username: true, prenom: true, nom: true, avatar: true } },
       },
     });
@@ -151,6 +158,9 @@ export async function getPostById(id: string): Promise<PostDetail | null> {
       // Ne pas bloquer l'affichage du post en cas d'erreur
     }
 
+    // Récupérer le count de vues
+    const viewCount = await getPostViewCount(post.id);
+
     // Transformer et retourner le post avec le count de vues
     return {
       id: post.id,
@@ -161,7 +171,7 @@ export async function getPostById(id: string): Promise<PostDetail | null> {
       summary: post.summary,
       thumbnail: post.thumbnail,
       mediaUrl: post.mediaUrl,
-      views: post._count.postViews,
+      views: viewCount,
       tags: post.tags,
       publishedAt: post.publishedAt,
       author: post.author,
@@ -189,7 +199,7 @@ export async function getRelatedPosts(
       take: limit,
       select: cardSelect,
     });
-    return posts.map(transformPostCard);
+    return Promise.all(posts.map(transformPostCard));
   } catch (error) {
     console.error("Erreur lors du chargement des publications similaires:", error);
     return [];
