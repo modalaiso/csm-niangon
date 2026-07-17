@@ -114,7 +114,7 @@ export default async function PostPage({ params }: PostPageProps) {
             {badge.label}
           </span>
 
-          <h1 className="mt-4 text-2xl font-bold leading-tight text-slate-900 sm:text-3xl md:text-4xl">
+          <h1 className="mt-4 text-2xl font-bold leading-tight text-slate-900 sm:text-3xl md:text-4xl uppercase">
             {post.title}
           </h1>
 
