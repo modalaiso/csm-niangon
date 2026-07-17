@@ -2,7 +2,10 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Heart } from "lucide-react";
+import {
+  ThumbsUpOutlineIcon,
+  ThumbsUpFilledIcon,
+} from "@/components/icons/icons";
 import { cn } from "@/lib/utils";
 import { toggleLike } from "@/app/actions/likes";
 
@@ -39,13 +42,14 @@ export function LikeButton({ postId, initialCount, initialLiked }: LikeButtonPro
       disabled={isPending}
       aria-pressed={liked}
       className={cn(
-        "flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors disabled:opacity-60",
+        "flex items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors disabled:opacity-60",
         liked
-          ? "border-destructive/50 bg-destructive/10 text-destructive"
-          : "border-border text-muted-foreground hover:border-primary/40 hover:text-primary",
+          ? "text-primary"
+          : "text-muted-foreground hover:text-primary",
       )}
     >
-      <Heart className={cn("h-4 w-4", liked && "fill-destructive")} />
+      <span>{liked ? "Retirer le like" : "Aimer"}</span>
+      {liked ? <ThumbsUpFilledIcon /> : <ThumbsUpOutlineIcon />}
       {count}
     </button>
   );

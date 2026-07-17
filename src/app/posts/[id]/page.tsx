@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { Eye, Calendar, ArrowLeft, User } from "lucide-react";
+import { Eye, Calendar, ArrowLeft, UserRound } from "lucide-react";
 import { getPostById, getRelatedPosts } from "@/app/actions/posts";
 import { getLikeInfo } from "@/app/actions/likes";
 import { getPostComments } from "@/app/actions/comments";
@@ -101,7 +101,7 @@ export default async function PostPage({ params }: PostPageProps) {
       <div className="container max-w-3xl px-4 py-6 sm:py-8">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900"
+          className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900 hover:underline"
         >
           <ArrowLeft className="h-4 w-4" />
           Retour
@@ -125,7 +125,7 @@ export default async function PostPage({ params }: PostPageProps) {
           <div className="mt-5 flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-5">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-emerald-300 bg-emerald-50 text-emerald-600">
-                <User className="h-5 w-5" />
+                <UserRound className="h-5 w-5" />
               </div>
               <div>
                 <p className="text-sm font-semibold text-slate-900">
@@ -192,7 +192,7 @@ export default async function PostPage({ params }: PostPageProps) {
           </h2>
 
           {relatedPosts.length === 0 ? (
-            <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 py-12 text-center">
+            <div className="flex flex-col items-center justify-center rounded-2xl border-slate-300 py-12 text-center">
               <p className="text-sm font-medium text-slate-500">
                 Aucune autre publication pour l&apos;instant
               </p>
@@ -229,10 +229,10 @@ export default async function PostPage({ params }: PostPageProps) {
                       </span>
                     </div>
                     <div className="p-4">
-                      <h3 className="line-clamp-2 text-sm font-bold text-slate-900">
+                      <h3 className="line-clamp-2 text-sm font-bold text-slate-900 uppercase">
                         {related.title}
                       </h3>
-                      <p className="mt-2 line-clamp-2 text-xs text-slate-600">
+                      <p className="line-clamp-3 text-xs text-slate-600">
                         {related.summary}
                       </p>
                     </div>

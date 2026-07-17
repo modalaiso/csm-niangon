@@ -62,13 +62,11 @@ export default async function SearchResultsPage({
   return (
     <main className="min-h-screen bg-background">
       {/* Header */}
-      <div className="sticky top-14 z-40 bg-background/95 backdrop-blur border-b border-border">
+      <div>
         <div className="container py-3 flex flex-row items-start sm:items-center justify-between gap-2">
-          <Link href="/">
-            <Button variant="ghost" size="sm" className="gap-2 rounded-full hover:text-primary hover:underline hover:bg-transparent">
-              <ArrowLeft className="h-4 w-4" />
-              <span className="inline">Retour</span>
-            </Button>
+          <Link href="/" className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900 hover:underline">
+            <ArrowLeft className="h-4 w-4" />
+            <span className="inline">Retour</span>
           </Link>
           <p className="text-xs sm:text-sm text-muted-foreground mt-2">
             {total === 0
@@ -81,7 +79,7 @@ export default async function SearchResultsPage({
       {/* Content */}
       <div className="container px-3 sm:px-4 py-6 sm:py-8">
         {results.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border py-16 text-center">
+          <div className="flex flex-col items-center justify-center rounded-2xl py-16 text-center">
             <p className="text-base font-medium text-muted-foreground mb-4">
               Aucun post ne correspond à votre recherche
             </p>

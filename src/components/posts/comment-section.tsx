@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Send, User, MessageCircle } from "lucide-react";
+import { Send, UserRound, MessageCircle } from "lucide-react";
 import { addComment, type PostComment } from "@/app/actions/comments";
 
 interface CommentSectionProps {
@@ -59,7 +59,7 @@ export function CommentSection({ postId, comments }: CommentSectionProps) {
 
       <div className="mb-6 flex items-center gap-3">
         <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full border border-primary/20 bg-primary/10 text-primary">
-          <User className="h-4 w-4" />
+          <UserRound className="h-4 w-4" />
         </div>
         <div className="flex flex-1 items-center gap-2 rounded-full border border-input bg-background pl-4 pr-1.5">
           <input
@@ -97,7 +97,7 @@ export function CommentSection({ postId, comments }: CommentSectionProps) {
           {comments.map((comment) => (
             <li key={comment.id} className="flex gap-3">
               <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full border border-primary/20 bg-primary/10 text-primary">
-                <User className="h-4 w-4" />
+                <UserRound className="h-4 w-4" />
               </div>
               <div className="flex-1">
                 <div className="flex flex-wrap items-baseline gap-2">
