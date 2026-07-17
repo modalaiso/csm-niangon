@@ -53,6 +53,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.0",
+    "@prisma/engines": "^7.8.0",
     "@types/node": "^20",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
@@ -64,5 +65,13 @@
     "tailwindcss": "^3.4.18",
     "tsx": "^4.20.6",
     "typescript": "^5"
+  },
+  "allowScripts": {
+    "@prisma/client@6.19.3": true,
+    "prisma@6.19.3": true,
+    "@prisma/engines@6.19.3": true,
+    "esbuild@0.25.12": true,
+    "sharp@0.34.5": true,
+    "@prisma/engines@7.8.0": true
   }
 }

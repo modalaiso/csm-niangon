@@ -71,6 +71,7 @@ model Post {
   author      User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
   comments    Comment[]
   likes       Like[]
+  postViews   PostView[]
   
   @@index([slug])
   @@index([authorId])
@@ -104,6 +105,21 @@ model Like {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   
   @@unique([postId, userId])
+  @@index([postId])
+  @@index([userId])
+}
+
+model PostView {
+  id        String   @id @default(cuid())
+  postId    String
+  userId    String?
+  ipAddress String?
+  createdAt DateTime @default(now())
+  
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  
+  @@unique([postId, userId])
+  @@unique([postId, ipAddress])
   @@index([postId])
   @@index([userId])
 }
