@@ -127,12 +127,12 @@ function CommentMenu({ comment, isOpen, onToggle, onEdit, onDelete, onToggleHidd
       </button>
 
       {isOpen && (
-        <div className="absolute left-10 top-0 z-20 w-44 overflow-hidden rounded-2xl border border-border bg-white py-1 shadow-sm">
+        <div className="absolute right-0 top-8 xl:left-10 xl:top-0 z-20 w-44 overflow-hidden rounded-2xl border border-border bg-white py-1 shadow-sm">
           {comment.canEdit && (
             <button
               type="button"
               onClick={onEdit}
-              className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-foreground hover:bg-accent"
+              className="flex w-full items-center gap-2 px-3 py-2 text-left text- text-foreground hover:bg-accent"
             >
               <Pencil className="h-4 w-4" />
               Modifier
