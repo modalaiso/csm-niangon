@@ -49,7 +49,7 @@ export function LikeButton({ postId, initialCount, initialLiked }: LikeButtonPro
       )}
     >
       <span>{liked ? "Retirer le like" : "Aimer"}</span>
-      {liked ? <ThumbsUpFilledIcon /> : <ThumbsUpOutlineIcon />}
+      {liked ? <ThumbsUpFilledIcon className="h-5 w-5" /> : <ThumbsUpOutlineIcon className="h-5 w-5" />}
       {count}
     </button>
   );
