@@ -6,7 +6,7 @@ export default function GlobalError({ error, reset }: { error: any; reset?: () =
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-white text-gray-900">
       <h1 className="text-4xl font-bold">Erreur</h1>
-      <p className="mt-2 text-gray-600">Une erreur est survenue: {error?.message}</p>
+      <p className="mt-2 text-gray-600 w-5/12">Une erreur est survenue: {error?.message}</p>
       <div className="mt-6 flex gap-3">
         <Button
           onClick={() => reset && reset()}
@@ -15,7 +15,7 @@ export default function GlobalError({ error, reset }: { error: any; reset?: () =
         >
           Réessayer
         </Button>
-        <Link href="/" className="px-4 py-2 border rounded">
+        <Link href="/" className="px-4 py-2 border rounded-full">
           Accueil
         </Link>
       </div>

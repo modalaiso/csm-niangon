@@ -12,6 +12,46 @@ interface PostPageProps {
   params: { id: string };
 }
 
+const AVATAR_COLORS = [
+  "bg-blue-500",
+  "bg-orange-500",
+  "bg-pink-500",
+  "bg-purple-500",
+  "bg-teal-500",
+  "bg-red-500",
+  "bg-amber-500",
+  "bg-emerald-500",
+  "bg-indigo-500",
+  "bg-cyan-500",
+];
+
+function colorForUsername(username: string) {
+  let hash = 0;
+  for (let i = 0; i < username.length; i++) {
+    hash = username.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
+}
+
+function Avatar({ username, avatar }: { username: string; avatar: string | null }) {
+  if (avatar) {
+    return (
+      <img
+        src={avatar}
+        alt={username}
+        className="h-9 w-9 flex-shrink-0 rounded-full object-cover"
+      />
+    );
+  }
+  return (
+    <div
+      className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-sm font-semibold text-white ${colorForUsername(username)}`}
+    >
+      {username.charAt(0).toUpperCase()}
+    </div>
+  );
+}
+
 const TYPE_BADGES: Record<string, { label: string; className: string }> = {
   ACTU: { label: "Actu", className: "bg-blue-600" },
   ARTICLE: { label: "Article", className: "bg-emerald-500" },
@@ -78,7 +118,7 @@ export default async function PostPage({ params }: PostPageProps) {
     notFound();
   }
 
-  const [relatedPosts, likeInfo, comments] = await Promise.all([
+  const [relatedPosts, likeInfo, threads] = await Promise.all([
     getRelatedPosts(post.id, post.type, 4),
     getLikeInfo(post.id),
     getPostComments(post.id),
@@ -124,9 +164,7 @@ export default async function PostPage({ params }: PostPageProps) {
 
           <div className="mt-5 flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-5">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-emerald-300 bg-emerald-50 text-emerald-600">
-                <UserRound className="h-5 w-5" />
-              </div>
+              <Avatar username={post.author.username} avatar={post.author.avatar} />
               <div>
                 <p className="text-sm font-semibold text-slate-900">
                   {post.author.prenom} {post.author.nom}
@@ -180,7 +218,7 @@ export default async function PostPage({ params }: PostPageProps) {
             />
           </div>
 
-          <CommentSection postId={post.id} comments={comments} />
+          <CommentSection postId={post.id} threads={threads} />
         </article>
       </div>
 
