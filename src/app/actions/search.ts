@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { getPostViewCount } from "@/lib/viewCount";
 import { PostStatus } from "@prisma/client";
 
 export interface SearchResult {
@@ -13,7 +14,9 @@ export interface SearchResult {
   views: number;
   author: {
     id: string;
-    username: string;
+    username?: string;
+    prenom?: string;
+    nom?: string;
   };
   publishedAt: Date | null;
 }
@@ -25,11 +28,12 @@ const resultSelect = {
   summary: true,
   thumbnail: true,
   type: true,
-  views: true,
   author: {
     select: {
       id: true,
       username: true,
+      prenom: true,
+      nom: true,
     },
   },
   publishedAt: true,
@@ -59,7 +63,7 @@ export async function searchPosts(
       ],
     };
 
-    const [results, total] = await Promise.all([
+    const [rawResults, total] = await Promise.all([
       prisma.post.findMany({
         where,
         select: resultSelect,
@@ -69,6 +73,10 @@ export async function searchPosts(
       }),
       prisma.post.count({ where }),
     ]);
+
+    const results = await Promise.all(
+      rawResults.map(async (r: any) => ({ ...r, views: await getPostViewCount(r.id) }))
+    );
 
     return { results, total };
   } catch (error) {
@@ -89,7 +97,9 @@ export async function getRecentPosts(limit: number = 10): Promise<SearchResult[]
       take: limit,
     });
 
-    return results;
+    const mapped = await Promise.all(results.map(async (r: any) => ({ ...r, views: await getPostViewCount(r.id) })));
+
+    return mapped;
   } catch (error) {
     console.error("Error fetching recent posts:", error);
     return [];

@@ -45,6 +45,15 @@ const AVATAR_COLORS = [
   "bg-emerald-500",
   "bg-indigo-500",
   "bg-cyan-500",
+  "bg-violet-500",
+  "bg-fuchsia-500",
+  "bg-rose-500",
+  "bg-lime-500",
+  "bg-sky-500",
+  "bg-yellow-500",
+  "bg-green-500",
+  "bg-slate-500",
+  "bg-gray-500",
 ];
 
 function colorForUsername(username: string) {
@@ -70,12 +79,12 @@ function formatRelativeTime(date: Date): string {
   return `il y a ${years} an${years > 1 ? "s" : ""}`;
 }
 
-function Avatar({ username, avatar }: { username: string; avatar: string | null }) {
+function Avatar({ nom, prenom, username, avatar }: { nom: string; prenom: string; username: string; avatar: string | null }) {
   if (avatar) {
     return (
       <img
         src={avatar}
-        alt={username}
+        alt={prenom + " " + nom}
         className="h-9 w-9 flex-shrink-0 rounded-full object-cover"
       />
     );
@@ -118,7 +127,7 @@ function CommentMenu({ comment, isOpen, onToggle, onEdit, onDelete, onToggleHidd
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 top-8 z-20 w-44 overflow-hidden rounded-2xl border border-border bg-white py-1 shadow-lg">
+        <div className="absolute left-10 top-0 z-20 w-44 overflow-hidden rounded-2xl border border-border bg-white py-1 shadow-sm">
           {comment.canEdit && (
             <button
               type="button"
@@ -310,11 +319,11 @@ function CommentItem({
 
   return (
     <div className="flex items-start gap-3">
-      <Avatar username={comment.author.username} avatar={comment.author.avatar} />
+      <Avatar username={comment.author.username} avatar={comment.author.avatar} nom={comment.author.nom} prenom={comment.author.prenom} />
       <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between gap-2">
           <p className="text-sm">
-            <span className="font-semibold text-foreground">@{comment.author.username}</span>{" "}
+            <span className="font-semibold text-foreground">{comment.author.prenom} {comment.author.nom}</span>{" "}
             <span className="text-xs text-muted-foreground">
               {formatRelativeTime(comment.createdAt)}
               {comment.isEdited && " · modifié"}

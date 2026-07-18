@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { PostStatus, PostType } from "@prisma/client";
 import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
+import { getPostViewCount } from "@/lib/viewCount";
 
 export interface HomePostCard {
   id: string;
@@ -15,7 +16,11 @@ export interface HomePostCard {
   views: number;
   publishedAt: Date | null;
   author: {
-    username: string;
+    id?: string;
+    username?: string;
+    prenom: string;
+    nom: string;
+    avatar?: string | null;
   };
 }
 
@@ -47,16 +52,8 @@ const cardSelect = {
   summary: true,
   thumbnail: true,
   publishedAt: true,
-  author: { select: { username: true } },
+  author: { select: { id: true, username: true, prenom: true, nom: true, avatar: true } },
 } as const;
-
-// Récupérer le count de vues pour un post
-async function getPostViewCount(postId: string): Promise<number> {
-  const result = await prisma.postView.count({
-    where: { postId },
-  });
-  return result;
-}
 
 // Transformer les données Prisma en format HomePostCard avec le count de vues
 async function transformPostCard(post: any): Promise<HomePostCard> {

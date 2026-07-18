@@ -150,9 +150,9 @@ export function PostsExplorer({ posts }: PostsExplorerProps) {
                   <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
                     <span>
                       Créé par{" "}
-                      <span className="font-medium text-foreground">
-                        {post.author.username}
-                      </span>
+                        <span className="font-medium text-foreground">
+                          {post.author.prenom} {post.author.nom}
+                        </span>
                     </span>
                     <span className="inline-flex items-center gap-1">
                       <Eye className="h-3.5 w-3.5" />
