@@ -3,12 +3,12 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 
-interface globalErrorProps {
+interface Props {
   error: any;
   reset?: () => void
 }
 
-export default function GlobalError(props: globalErrorProps) {
+export default function GlobalError(props: Props) {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-white text-gray-900">
       <h1 className="text-4xl font-bold">Erreur</h1>
