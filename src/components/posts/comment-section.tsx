@@ -79,21 +79,28 @@ function formatRelativeTime(date: Date): string {
   return `il y a ${years} an${years > 1 ? "s" : ""}`;
 }
 
-function Avatar({ nom, prenom, username, avatar }: { nom: string; prenom: string; username: string; avatar: string | null }) {
-  if (avatar) {
+interface avatarProps {
+  nom: string;
+  prenom: string;
+  username: string;
+  avatar: string | null
+}
+
+function Avatar(props: avatarProps){
+  if (props.avatar) {
     return (
       <img
-        src={avatar}
-        alt={prenom + " " + nom}
+        src={props.avatar}
+        alt={props.prenom + " " + props.nom}
         className="h-9 w-9 flex-shrink-0 rounded-full object-cover"
       />
     );
   }
   return (
     <div
-      className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-sm font-semibold text-white ${colorForUsername(username)}`}
+      className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-sm font-semibold text-white ${colorForUsername(props.username)}`}
     >
-      {username.charAt(0).toUpperCase()}
+      {props.username.charAt(0).toUpperCase()}
     </div>
   );
 }
