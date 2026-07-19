@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { Eye, Calendar, ArrowLeft, UserRound } from "lucide-react";
+import { Eye, Calendar, ArrowLeft } from "lucide-react";
 import { getPostById, getRelatedPosts } from "@/app/actions/posts";
 import { getLikeInfo } from "@/app/actions/likes";
 import { getPostComments } from "@/app/actions/comments";
