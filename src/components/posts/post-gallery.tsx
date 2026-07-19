@@ -2,14 +2,13 @@
 
 import { useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 interface PostGalleryProps {
   images: string[];
   alt: string;
 }
 
-export function PostGallery({ images, alt }: PostGalleryProps) {
+export function PostGallery(props: PostGalleryProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -21,7 +20,7 @@ export function PostGallery({ images, alt }: PostGalleryProps) {
   };
 
   const goTo = (index: number) => {
-    const clamped = Math.max(0, Math.min(images.length - 1, index));
+    const clamped = Math.max(0, Math.min(props.images.length - 1, index));
     setActive(clamped);
     scrollToIndex(clamped);
   };
@@ -30,7 +29,7 @@ export function PostGallery({ images, alt }: PostGalleryProps) {
     const container = scrollRef.current;
     if (!container || container.clientWidth === 0) return;
     const index = Math.round(container.scrollLeft / container.clientWidth);
-    const clamped = Math.max(0, Math.min(images.length - 1, index));
+    const clamped = Math.max(0, Math.min(props.images.length - 1, index));
     if (clamped !== active) setActive(clamped);
   };
 
@@ -38,15 +37,15 @@ export function PostGallery({ images, alt }: PostGalleryProps) {
   const closeFullscreen = () => setIsFullscreen(false);
 
   // Une seule image : pas besoin de scroll, juste une belle illustration
-  if (images.length === 1) {
+  if (props.images.length === 1) {
     return (
       <div className="relative overflow-hidden rounded-3xl bg-muted">
         <span className="absolute right-3 top-3 rounded-full bg-black/60 px-3 py-1 text-xs font-semibold text-white shadow-sm">
-          1/{images.length}
+          1/{props.images.length}
         </span>
         <img
-          src={images[0]}
-          alt={alt}
+          src={props.images[0]}
+          alt={props.alt}
           onClick={openFullscreen}
           className="max-h-[480px] w-full cursor-pointer object-cover"
         />
@@ -60,7 +59,7 @@ export function PostGallery({ images, alt }: PostGalleryProps) {
           le scroll (ou les flèches) fait défiler vers la suivante */}
       <div className="relative">
         <span className="absolute right-3 top-3 z-10 rounded-full bg-black/60 px-3 py-1 text-xs font-semibold text-white shadow-sm">
-          {active + 1}/{images.length}
+          {active + 1}/{props.images.length}
         </span>
 
         <div
@@ -68,11 +67,11 @@ export function PostGallery({ images, alt }: PostGalleryProps) {
           onScroll={handleScroll}
           className="flex snap-x rounded-3xl snap-mandatory overflow-x-auto scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
-          {images.map((src, i) => (
+          {props.images.map((src, i) => (
             <img
               key={`${src}-${i}`}
               src={src}
-              alt={`${alt} — image ${i + 1}`}
+              alt={`${props.alt} — image ${i + 1}`}
               onClick={openFullscreen}
               className="h-[280px] w-full flex-shrink-0 snap-center bg-muted object-cover cursor-pointer sm:h-[380px] md:h-[440px]"
             />
@@ -94,7 +93,7 @@ export function PostGallery({ images, alt }: PostGalleryProps) {
         type="button"
         onClick={() => goTo(active + 1)}
         aria-label="Image suivante"
-        disabled={active === images.length - 1}
+        disabled={active === props.images.length - 1}
         className="absolute right-3 top-1/2 hidden -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-white/80 p-2 shadow-lg backdrop-blur transition-opacity hover:bg-white disabled:pointer-events-none disabled:opacity-0 group-hover:sm:flex"
       >
         <ChevronRight className="h-5 w-5 text-primary" />
@@ -141,15 +140,15 @@ export function PostGallery({ images, alt }: PostGalleryProps) {
             type="button"
             onClick={() => goTo(active + 1)}
             aria-label="Image suivante"
-            disabled={active === images.length - 1}
+            disabled={active === props.images.length - 1}
             className="absolute right-4 top-1/2 hidden -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-white/20 p-3 text-white shadow-lg transition-opacity hover:bg-white/30 disabled:pointer-events-none disabled:opacity-0 sm:flex"
           >
             <ChevronRight className="h-6 w-6" />
           </button>
 
           <img
-            src={images[active]}
-            alt={`${alt} — image ${active + 1}`}
+            src={props.images[active]}
+            alt={`${props.alt} — image ${active + 1}`}
             className="max-h-[90vh] max-w-[90vw] object-contain"
           />
         </div>
