@@ -9,7 +9,7 @@ export default function GlobalError({ error, reset }: { error: any; reset?: () =
       <p className="mt-2 text-gray-600 w-5/12">Une erreur est survenue: {error?.message}</p>
       <div className="mt-6 flex gap-3">
         <Button
-          onClick={() => reset && reset()}
+          onClick={() => reset?.()}
           variant="default"
           className="text-white"
         >
