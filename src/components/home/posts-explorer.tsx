@@ -79,6 +79,7 @@ export function PostsExplorer({ posts }: PostsExplorerProps) {
         >
           {FILTERS.map((item) => (
             <button
+            type="button"
               key={item.value}
               onClick={() => setFilter(item.value)}
               className={cn(
