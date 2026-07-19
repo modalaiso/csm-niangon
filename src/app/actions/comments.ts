@@ -111,7 +111,7 @@ export async function getPostComments(postId: string): Promise<CommentThread[]> 
       const mine = userId ? c.reactions.find((r) => r.userId === userId) : undefined;
       const parent = c.parentId ? byId.get(c.parentId) : undefined;
       // On n'affiche la mention "@untel" que si on répond à une réponse (pas au commentaire principal)
-      const replyToUsername = parent && parent.parentId ? parent.user.username : null;
+      const replyToUsername = parent?.parentId ? parent.user.username : null;
 
       const isOwner = userId === c.userId;
       // On garde le contenu visible pour l'auteur et les modérateurs ;
