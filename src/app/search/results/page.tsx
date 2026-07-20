@@ -59,6 +59,11 @@ export default async function SearchResultsPage({
     return `/search/results?${params.toString()}`;
   };
 
+  // Extracted independent ternary statement
+  const resultText = total === 0
+    ? "Aucun résultat trouvé"
+    : `${total} résultat${total > 1 ? "s" : ""} trouvé${total > 1 ? "s" : ""}`;
+
   return (
     <main className="min-h-screen bg-background">
       {/* Header */}
@@ -69,9 +74,7 @@ export default async function SearchResultsPage({
             <span className="inline">Retour</span>
           </Link>
           <p className="text-xs sm:text-sm text-muted-foreground mt-2">
-            {total === 0
-              ? "Aucun résultat trouvé"
-              : `${total} résultat${total > 1 ? "s" : ""} trouvé${total > 1 ? "s" : ""}`}
+            {resultText}
           </p>
         </div>
       </div>
@@ -132,7 +135,7 @@ export default async function SearchResultsPage({
                       <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
                         <span>
                           Créé par{" "}
-                            <span className="font-medium text-foreground">
+                          <span className="font-medium text-foreground">
                             {result.author.prenom} {result.author.nom}
                           </span>
                         </span>
