@@ -47,7 +47,7 @@ interface Avatar {
   avatar: string | null;
 }
 
-function Avatar(props: Avatar) {
+function Avatar(props: Readonly<Avatar>) {
   if (props.avatar) {
     return (
       <img
@@ -114,7 +114,7 @@ function renderLine(line: string, key: number) {
 }
 
 export async function generateMetadata({ params }: PostPageProps) {
-  const resolvedParams = await params;
+  const resolvedParams = params;
   const post = await getPostById(resolvedParams.id);
   if (!post) {
     return { title: "Publication introuvable | CSM Niangon" };
@@ -125,8 +125,8 @@ export async function generateMetadata({ params }: PostPageProps) {
   };
 }
 
-export default async function PostPage({ params }: PostPageProps) {
-  const resolvedParams = await params;
+export default async function PostPage({ params }: Readonly<PostPageProps>) {
+  const resolvedParams = params;
   const post = await getPostById(resolvedParams.id);
 
   if (!post) {
