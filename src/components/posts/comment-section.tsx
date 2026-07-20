@@ -79,14 +79,14 @@ function formatRelativeTime(date: Date): string {
   return `il y a ${years} an${years > 1 ? "s" : ""}`;
 }
 
-interface avatarProps {
+interface Avatar {
   nom: string;
   prenom: string;
   username: string;
   avatar: string | null
 }
 
-function Avatar(props: avatarProps){
+function Avatar(props: Avatar){
   if (props.avatar) {
     return (
       <img
