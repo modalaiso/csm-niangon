@@ -36,8 +36,8 @@ const AVATAR_COLORS = [
 
 function colorForUsername(username: string) {
   let hash = 0;
-  for (let i = 0; i < username.length; i++) {
-    hash = username.charCodeAt(i) + ((hash << 5) - hash);
+  for (const char of username) {
+    hash = (char.codePointAt(0) ?? 0) + ((hash << 5) - hash);
   }
   return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
 }
