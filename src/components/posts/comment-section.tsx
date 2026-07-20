@@ -86,7 +86,7 @@ interface Avatar {
   avatar: string | null
 }
 
-function Avatar(props: Avatar){
+function Avatar(props: Readonly<Avatar>){
   if (props.avatar) {
     return (
       <img
