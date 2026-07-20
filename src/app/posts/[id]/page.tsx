@@ -42,21 +42,26 @@ function colorForUsername(username: string) {
   return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
 }
 
-function Avatar({ username, avatar }: { username: string; avatar: string | null }) {
-  if (avatar) {
+interface Avatar {
+  username: string;
+  avatar: string | null;
+}
+
+function Avatar(props: Avatar) {
+  if (props.avatar) {
     return (
       <img
-        src={avatar}
-        alt={username}
+        src={props.avatar}
+        alt={props.username}
         className="h-9 w-9 flex-shrink-0 rounded-full object-cover"
       />
     );
   }
   return (
     <div
-      className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-sm font-semibold text-white ${colorForUsername(username)}`}
+      className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-sm font-semibold text-white ${colorForUsername(props.username)}`}
     >
-      {username.charAt(0).toUpperCase()}
+      {props.username.charAt(0).toUpperCase()}
     </div>
   );
 }
@@ -87,21 +92,22 @@ function renderLine(line: string, key: number) {
   return (
     <p key={key} className="mb-3 text-[15px] leading-relaxed text-slate-700">
       {parts.map((part, i) => {
+        const partKey = `${part}-${i}`;
         if (part.startsWith("**") && part.endsWith("**")) {
           return (
-            <strong key={i} className="font-semibold text-slate-900">
+            <strong key={partKey} className="font-semibold text-slate-900">
               {part.slice(2, -2)}
             </strong>
           );
         }
         if (part.startsWith("*") && part.endsWith("*") && part.length > 2) {
           return (
-            <em key={i} className="italic text-slate-600">
+            <em key={partKey} className="italic text-slate-600">
               {part.slice(1, -1)}
             </em>
           );
         }
-        return <span key={i}>{part}</span>;
+        return <span key={partKey}>{part}</span>;
       })}
     </p>
   );
