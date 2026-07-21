@@ -79,6 +79,7 @@ export function PostsExplorer({ posts }: PostsExplorerProps) {
         >
           {FILTERS.map((item) => (
             <button
+            type="button"
               key={item.value}
               onClick={() => setFilter(item.value)}
               className={cn(
@@ -95,13 +96,13 @@ export function PostsExplorer({ posts }: PostsExplorerProps) {
       </div>
 
       {posts.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border py-16 text-center">
+        <div className="flex flex-col items-center justify-center rounded-2xl py-16 text-center">
           <p className="text-base font-medium text-muted-foreground">
             Aucun post pour l&apos;instant
           </p>
         </div>
       ) : filteredPosts.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border py-16 text-center">
+        <div className="flex flex-col items-center justify-center rounded-2xl py-16 text-center">
           <p className="text-base font-medium text-muted-foreground">
             Aucun post dans cette catégorie pour l&apos;instant
           </p>
@@ -150,9 +151,9 @@ export function PostsExplorer({ posts }: PostsExplorerProps) {
                   <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
                     <span>
                       Créé par{" "}
-                      <span className="font-medium text-foreground">
-                        {post.author.username}
-                      </span>
+                        <span className="font-medium text-foreground">
+                          {post.author.prenom} {post.author.nom}
+                        </span>
                     </span>
                     <span className="inline-flex items-center gap-1">
                       <Eye className="h-3.5 w-3.5" />

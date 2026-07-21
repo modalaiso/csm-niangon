@@ -44,6 +44,7 @@ model User {
   posts     Post[]
   comments  Comment[]
   likes     Like[]
+  commentReactions CommentReaction[]
   
   @@index([email])
   @@index([username])
@@ -71,6 +72,7 @@ model Post {
   author      User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
   comments    Comment[]
   likes       Like[]
+  postViews   PostView[]
   
   @@index([slug])
   @@index([authorId])
@@ -83,14 +85,41 @@ model Comment {
   id        String   @id @default(cuid())
   postId    String
   userId    String
+  parentId  String?
   content   String
+  isHidden  Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
-  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
+
+  post      Post              @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parent    Comment?          @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   Comment[]         @relation("CommentReplies")
+  reactions CommentReaction[]
+
   @@index([postId])
+  @@index([userId])
+  @@index([parentId])
+  @@index([isHidden])
+}
+
+enum CommentReactionType {
+  LIKE
+  DISLIKE
+}
+
+model CommentReaction {
+  id        String              @id @default(cuid())
+  commentId String
+  userId    String
+  type      CommentReactionType
+  createdAt DateTime            @default(now())
+
+  comment Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([commentId, userId])
+  @@index([commentId])
   @@index([userId])
 }
 
@@ -104,6 +133,21 @@ model Like {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   
   @@unique([postId, userId])
+  @@index([postId])
+  @@index([userId])
+}
+
+model PostView {
+  id        String   @id @default(cuid())
+  postId    String
+  userId    String?
+  ipAddress String?
+  createdAt DateTime @default(now())
+  
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  
+  @@unique([postId, userId])
+  @@unique([postId, ipAddress])
   @@index([postId])
   @@index([userId])
 }

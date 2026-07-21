@@ -61,7 +61,7 @@ export function SearchDropdown() {
       setIsLoading(true);
       try {
         const data = await searchPosts(searchQuery, 10);
-        if (!controller.signal.aborted) setResults(data);
+        if (!controller.signal.aborted) setResults(data.results);
       } catch (err) {
         if (!controller.signal.aborted) console.error("Erreur recherche :", err);
       } finally {
@@ -142,6 +142,7 @@ export function SearchDropdown() {
 
         {searchQuery && (
           <button
+            type="reset"
             onClick={handleClear}
             aria-label="Effacer la recherche"
             className="absolute right-9 px-0 hover:opacity-70 transition-opacity"
@@ -151,6 +152,7 @@ export function SearchDropdown() {
         )}
 
         <button
+          type="submit"
           onClick={handleSearchClick}
           aria-label="Lancer la recherche"
           className="px-3 hover:opacity-70 transition-opacity"
@@ -180,6 +182,7 @@ export function SearchDropdown() {
             results.map((result) => (
               <li key={result.id} role="option">
                 <button
+                type="button"
                   onClick={() => handleResultClick(result.id)}
                   className="w-full text-left px-4 py-3 hover:bg-accent/50 transition-colors focus:outline-none focus:bg-accent/50"
                 >

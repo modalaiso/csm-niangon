@@ -53,16 +53,27 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.0",
+    "@prisma/engines": "^7.8.0",
     "@types/node": "^20",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "autoprefixer": "^10.4.22",
     "babel-plugin-react-compiler": "1.0.0",
     "baseline-browser-mapping": "^2.9.0",
+    "eslint": "^10.7.0",
+    "eslint-plugin-unicorn": "^72.0.0",
     "postcss": "^8.5.6",
     "prisma": "^6.19.3",
     "tailwindcss": "^3.4.18",
     "tsx": "^4.20.6",
     "typescript": "^5"
+  },
+  "allowScripts": {
+    "@prisma/client@6.19.3": true,
+    "prisma@6.19.3": true,
+    "@prisma/engines@6.19.3": true,
+    "esbuild@0.25.12": true,
+    "sharp@0.34.5": true,
+    "@prisma/engines@7.8.0": true
   }
 }
