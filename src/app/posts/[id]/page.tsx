@@ -42,12 +42,12 @@ function colorForUsername(username: string) {
   return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
 }
 
-interface Avatar {
+interface AvatarProps {
   username: string;
   avatar: string | null;
 }
 
-function Avatar(props: Readonly<Avatar>) {
+function Avatar(props: Readonly<AvatarProps>) {
   if (props.avatar) {
     return (
       <img
