@@ -60,6 +60,7 @@ export function HeroCarousel({ posts }: HeroCarouselProps) {
       {posts.length > 1 && (
         <>
           <button
+            type="button"
             onClick={() => goTo(index - 1)}
             aria-label="Publication précédente"
             className="shadow-lg absolute left-6 md:left-8 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-white/50 backdrop-blur-[3px] transition-colors hover:bg-white/70 hover:backdrop-blur-[3px]"
@@ -67,6 +68,7 @@ export function HeroCarousel({ posts }: HeroCarouselProps) {
             <ChevronLeft className="h-5 w-5 text-primary" />
           </button>
           <button
+            type="button"
             onClick={() => goTo(index + 1)}
             aria-label="Publication suivante"
             className="shadow-lg absolute right-6 md:right-8 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-white/50 backdrop-blur-[3px] transition-colors hover:bg-white/70 hover:backdrop-blur-[3px]"
@@ -98,6 +100,7 @@ export function HeroCarousel({ posts }: HeroCarouselProps) {
         <div className="absolute bottom-6 right-6 z-10 flex items-center gap-2 sm:right-10 md:right-16">
           {posts.map((post, i) => (
             <button
+              type="button"
               key={post.id}
               onClick={() => goTo(i)}
               aria-label={`Aller à la publication ${i + 1}`}
