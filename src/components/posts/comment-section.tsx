@@ -222,43 +222,22 @@ interface CommentItemProps {
   disabled: boolean;
 }
 
-function CommentItem({
-  comment,
-  isMenuOpen,
-  onToggleMenu,
-  isEditing,
-  editValue,
-  onEditValueChange,
-  onStartEdit,
-  onCancelEdit,
-  onSubmitEdit,
-  onDelete,
-  onToggleHidden,
-  isReplyOpen,
-  replyValue,
-  onReplyValueChange,
-  onStartReply,
-  onCancelReply,
-  onSubmitReply,
-  onLike,
-  onDislike,
-  disabled,
-}: CommentItemProps) {
+function CommentItem(props: Readonly<CommentItemProps>) {
   // Vue restreinte : un commentaire masqué, pour un visiteur qui n'est ni auteur ni modérateur
-  const isRestrictedView = comment.isHidden && !comment.canEdit && !comment.canModerate;
+  const isRestrictedView = props.comment.isHidden && !props.comment.canEdit && !props.comment.canModerate;
 
   return (
     <div className="flex items-start gap-3">
-      <Avatar username={comment.author.username} avatar={comment.author.avatar} nom={comment.author.nom} prenom={comment.author.prenom} />
+      <Avatar username={props.comment.author.username} avatar={props.comment.author.avatar} nom={props.comment.author.nom} prenom={props.comment.author.prenom} />
       <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between gap-2">
           <p className="text-sm">
-            <span className="font-semibold text-foreground">{comment.author.prenom} {comment.author.nom}</span>{" "}
+            <span className="font-semibold text-foreground">{props.comment.author.prenom} {props.comment.author.nom}</span>{" "}
             <span className="text-xs text-muted-foreground">
-              {formatRelativeTime(comment.createdAt)}
-              {comment.isEdited && " · modifié"}
+              {formatRelativeTime(props.comment.createdAt)}
+              {props.comment.isEdited && " · modifié"}
             </span>
-            {comment.isHidden && comment.canModerate && (
+            {props.comment.isHidden && props.comment.canModerate && (
               <span className="ml-2 inline-flex items-center gap-1 rounded-full bg-secondary/20 px-2 py-0.5 text-[11px] font-medium text-secondary-foreground">
                 <EyeOff className="h-3 w-3" />
                 Masqué
@@ -266,22 +245,22 @@ function CommentItem({
             )}
           </p>
           <CommentMenu
-            comment={comment}
-            isOpen={isMenuOpen}
-            onToggle={onToggleMenu}
-            onEdit={onStartEdit}
-            onDelete={onDelete}
-            onToggleHidden={onToggleHidden}
+            comment={props.comment}
+            isOpen={props.isMenuOpen}
+            onToggle={props.onToggleMenu}
+            onEdit={props.onStartEdit}
+            onDelete={props.onDelete}
+            onToggleHidden={props.onToggleHidden}
           />
         </div>
 
-        {isEditing ? (
+        {props.isEditing ? (
           <ComposerBox
-            value={editValue}
-            onChange={onEditValueChange}
-            onSubmit={onSubmitEdit}
-            onCancel={onCancelEdit}
-            disabled={disabled}
+            value={props.editValue}
+            onChange={props.onEditValueChange}
+            onSubmit={props.onSubmitEdit}
+            onCancel={props.onCancelEdit}
+            disabled={props.disabled}
             submitLabel="Enregistrer"
             autoFocus
           />
@@ -292,24 +271,24 @@ function CommentItem({
               isRestrictedView ? "italic text-muted-foreground" : "text-foreground/90",
             )}
           >
-            {comment.replyToUsername && (
-              <span className="mr-1 font-medium text-primary">@{comment.replyToUsername}</span>
+            {props.comment.replyToUsername && (
+              <span className="mr-1 font-medium text-primary">@{props.comment.replyToUsername}</span>
             )}
-            {comment.content}
+            {props.comment.content}
           </p>
         )}
 
-        {!isEditing && !isRestrictedView && (
-          <ReactionRow comment={comment} onLike={onLike} onDislike={onDislike} onReply={onStartReply} />
+        {!props.isEditing && !isRestrictedView && (
+          <ReactionRow comment={props.comment} onLike={props.onLike} onDislike={props.onDislike} onReply={props.onStartReply} />
         )}
 
-        {isReplyOpen && (
+        {props.isReplyOpen && (
           <ComposerBox
-            value={replyValue}
-            onChange={onReplyValueChange}
-            onSubmit={onSubmitReply}
-            onCancel={onCancelReply}
-            disabled={disabled}
+            value={props.replyValue}
+            onChange={props.onReplyValueChange}
+            onSubmit={props.onSubmitReply}
+            onCancel={props.onCancelReply}
+            disabled={props.disabled}
             submitLabel="Répondre"
             autoFocus
           />
