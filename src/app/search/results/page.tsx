@@ -58,11 +58,14 @@ export default async function SearchResultsPage({
     params.set("page", String(page));
     return `/search/results?${params.toString()}`;
   };
+  
+// 1. Independent statement for pluralization
+const plural = total > 1 ? "s" : "";
 
-  // Extracted independent ternary statement
-  const resultText = total === 0
-    ? "Aucun résultat trouvé"
-    : `${total} résultat${total > 1 ? "s" : ""} trouvé${total > 1 ? "s" : ""}`;
+// 2. Main statement using the extracted variable
+const resultText = total === 0
+  ? "Aucun résultat trouvé"
+  : `${total} résultat${plural} trouvé${plural}`;
 
   return (
     <main className="min-h-screen bg-background">
