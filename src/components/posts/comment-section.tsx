@@ -39,7 +39,7 @@ interface CommentMenuProps {
   onToggleHidden: () => void;
 }
 
-function CommentMenu(props: CommentMenuProps) {
+function CommentMenu(props: Readonly<CommentMenuProps>) {
   if (!props.comment.canEdit && !props.comment.canDelete && !props.comment.canModerate) {
     return null;
   }
@@ -106,7 +106,7 @@ interface ComposerBoxProps {
   autoFocus?: boolean;
 }
 
-function ComposerBox(props: ComposerBoxProps) {
+function ComposerBox(props: Readonly<ComposerBoxProps>) {
   return (
     <div className="mt-3">
       <input
@@ -153,7 +153,7 @@ interface ReactionRowProps {
   onReply: () => void;
 }
 
-function ReactionRow(props: ReactionRowProps) {
+function ReactionRow(props: Readonly<ReactionRowProps>) {
   return (
     <div className="mt-1 flex items-center gap-4">
       <button
@@ -299,8 +299,7 @@ function CommentItem(props: Readonly<CommentItemProps>) {
 }
 
 /* ------------------------------- Section complète ------------------------------- */
-
-export function CommentSection({ postId, threads }: CommentSectionProps) {
+export function CommentSection(props: CommentSectionProps) {
   const router = useRouter();
   const [value, setValue] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -336,25 +335,27 @@ export function CommentSection({ postId, threads }: CommentSectionProps) {
     const reaction = reactionOverrides[comment.id];
     const contentOverride = contentOverrides[comment.id];
     const hiddenOverride = hiddenOverrides[comment.id];
+
     return {
       ...comment,
-      ...(reaction ?? {}),
-      ...(contentOverride
-        ? { content: contentOverride.content, isEdited: contentOverride.isEdited }
-        : {}),
-      ...(hiddenOverride !== undefined ? { isHidden: hiddenOverride } : {}),
+      ...reaction,
+      ...(contentOverride && {
+        content: contentOverride.content,
+        isEdited: contentOverride.isEdited,
+      }),
+      ...(hiddenOverride !== undefined && { isHidden: hiddenOverride }),
     };
   };
 
   const visibleThreads = useMemo(() => {
-    return threads
+    return props.threads
       .filter((t) => !deletedIds.has(t.root.id))
       .map((t) => ({
         root: applyOverrides(t.root),
         replies: t.replies.filter((r) => !deletedIds.has(r.id)).map(applyOverrides),
       }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [threads, deletedIds, reactionOverrides, contentOverrides, hiddenOverrides]);
+  }, [props.threads, deletedIds, reactionOverrides, contentOverrides, hiddenOverrides]);
 
   const totalCount = useMemo(
     () => visibleThreads.reduce((sum, t) => sum + 1 + t.replies.length, 0),
@@ -392,7 +393,7 @@ export function CommentSection({ postId, threads }: CommentSectionProps) {
     if (!value.trim() || isPending) return;
     setError(null);
     startTransition(async () => {
-      const result = await addComment(postId, value);
+      const result = await addComment(props.postId, value);
       if ("error" in result) {
         requireAuthOr(result.error, () => setError("Une erreur est survenue, réessayez."));
         return;
@@ -407,7 +408,7 @@ export function CommentSection({ postId, threads }: CommentSectionProps) {
     setError(null);
     const { rootId, commentId } = replyTarget;
     startTransition(async () => {
-      const result = await addComment(postId, replyValue, commentId);
+      const result = await addComment(props.postId, replyValue, commentId);
       if ("error" in result) {
         requireAuthOr(result.error, () => setError("Une erreur est survenue, réessayez."));
         return;
@@ -560,13 +561,20 @@ export function CommentSection({ postId, threads }: CommentSectionProps) {
         <ul className="space-y-6">
           {visibleThreads.map((thread) => {
             const isExpanded = expanded.has(thread.root.id);
+            const replyCount = thread.replies.length;
+
+            // Independent evaluation of button label logic
+            const pluralSuffix = replyCount > 1 ? "s" : "";
+            const buttonText = isExpanded
+              ? "Masquer les réponses"
+              : `${replyCount} réponse${pluralSuffix}`;
 
             return (
               <li key={thread.root.id}>
                 {renderCommentItem(thread.root, thread.root.id)}
 
                 {/* Réponses */}
-                {thread.replies.length > 0 && (
+                {replyCount > 0 && (
                   <div className="ml-12 mt-2">
                     <button
                       type="button"
@@ -578,15 +586,15 @@ export function CommentSection({ postId, threads }: CommentSectionProps) {
                       ) : (
                         <ChevronDown className="h-4 w-4" />
                       )}
-                      {isExpanded
-                        ? "Masquer les réponses"
-                        : `${thread.replies.length} réponse${thread.replies.length > 1 ? "s" : ""}`}
+                      {buttonText}
                     </button>
 
                     {isExpanded && (
                       <ul className="mt-3 space-y-4 border-l border-border pl-4">
                         {thread.replies.map((reply) => (
-                          <li key={reply.id}>{renderCommentItem(reply, thread.root.id)}</li>
+                          <li key={reply.id}>
+                            {renderCommentItem(reply, thread.root.id)}
+                          </li>
                         ))}
                       </ul>
                     )}
