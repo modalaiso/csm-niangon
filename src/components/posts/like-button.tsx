@@ -12,15 +12,15 @@ interface LikeButtonProps {
   initialLiked: boolean;
 }
 
-export function LikeButton({ postId, initialCount, initialLiked }: LikeButtonProps) {
+export function LikeButton(props: Readonly<LikeButtonProps>) {
   const router = useRouter();
-  const [count, setCount] = useState(initialCount);
-  const [liked, setLiked] = useState(initialLiked);
+  const [count, setCount] = useState(props.initialCount);
+  const [liked, setLiked] = useState(props.initialLiked);
   const [isPending, startTransition] = useTransition();
 
   const handleClick = () => {
     startTransition(async () => {
-      const result = await toggleLike(postId);
+      const result = await toggleLike(props.postId);
       if ("error" in result) {
         if (result.error === "auth_required") {
           router.push("/login");
