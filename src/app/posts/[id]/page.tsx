@@ -7,63 +7,10 @@ import { getPostComments } from "@/app/actions/comments";
 import { PostGallery } from "@/components/posts/post-gallery";
 import { LikeButton } from "@/components/posts/like-button";
 import { CommentSection } from "@/components/posts/comment-section";
+import { Avatar } from "@/components/ui/avatar";
 
 interface PostPageProps {
   params: { id: string };
-}
-
-const AVATAR_COLORS = [
-  "bg-blue-500",
-  "bg-orange-500",
-  "bg-pink-500",
-  "bg-purple-500",
-  "bg-teal-500",
-  "bg-red-500",
-  "bg-amber-500",
-  "bg-emerald-500",
-  "bg-indigo-500",
-  "bg-cyan-500",
-  "bg-violet-500",
-  "bg-fuchsia-500",
-  "bg-rose-500",
-  "bg-lime-500",
-  "bg-sky-500",
-  "bg-yellow-500",
-  "bg-green-500",
-  "bg-slate-500",
-  "bg-gray-500",
-];
-
-function colorForUsername(username: string) {
-  let hash = 0;
-  for (const char of username) {
-    hash = (char.codePointAt(0) ?? 0) + ((hash << 5) - hash);
-  }
-  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
-}
-
-interface AvatarProps {
-  username: string;
-  avatar: string | null;
-}
-
-function Avatar(props: Readonly<AvatarProps>) {
-  if (props.avatar) {
-    return (
-      <img
-        src={props.avatar}
-        alt={props.username}
-        className="h-9 w-9 flex-shrink-0 rounded-full object-cover"
-      />
-    );
-  }
-  return (
-    <div
-      className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-sm font-semibold text-white ${colorForUsername(props.username)}`}
-    >
-      {props.username.charAt(0).toUpperCase()}
-    </div>
-  );
 }
 
 const TYPE_BADGES: Record<string, { label: string; className: string }> = {
@@ -179,7 +126,7 @@ export default async function PostPage({ params }: Readonly<PostPageProps>) {
 
           <div className="mt-5 flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-5">
             <div className="flex items-center gap-3">
-              <Avatar username={post.author.username} avatar={post.author.avatar} />
+            <Avatar username={post.author.username} avatar={post.author.avatar} nom={post.author.nom} prenom={post.author.prenom} />
               <div>
                 <p className="text-sm font-semibold text-slate-900">
                   {post.author.prenom} {post.author.nom}

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 
 interface Props {
   error: any;
-  reset?: () => void
+  reset?: () => void;
 }
 
 export default function GlobalError(props: Props) {

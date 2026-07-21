@@ -2,66 +2,15 @@
 
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import {
-  MoreVertical,
-  ChevronUp,
-  ChevronDown,
-  MessageCircle,
-  Pencil,
-  Trash2,
-  EyeOff,
-  Eye,
-} from "lucide-react";
-import {
-  ThumbsUpOutlineIcon,
-  ThumbsUpFilledIcon,
-  ThumbsDownOutlineIcon,
-  ThumbsDownFilledIcon,
-} from "@/components/icons/icons";
+import { MoreVertical, ChevronUp, ChevronDown, MessageCircle, Pencil, Trash2, EyeOff, Eye } from "lucide-react";
+import { ThumbsUpOutlineIcon, ThumbsUpFilledIcon, ThumbsDownOutlineIcon, ThumbsDownFilledIcon } from "@/components/icons/icons";
+import { Avatar } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
-import {
-  addComment,
-  editComment,
-  deleteComment,
-  setCommentHidden,
-  toggleCommentReaction,
-  type CommentThread,
-  type PostComment,
-} from "@/app/actions/comments";
+import { addComment, editComment, deleteComment, setCommentHidden, toggleCommentReaction, type CommentThread, type PostComment } from "@/app/actions/comments";
 
 interface CommentSectionProps {
   postId: string;
   threads: CommentThread[];
-}
-
-const AVATAR_COLORS = [
-  "bg-blue-500",
-  "bg-orange-500",
-  "bg-pink-500",
-  "bg-purple-500",
-  "bg-teal-500",
-  "bg-red-500",
-  "bg-amber-500",
-  "bg-emerald-500",
-  "bg-indigo-500",
-  "bg-cyan-500",
-  "bg-violet-500",
-  "bg-fuchsia-500",
-  "bg-rose-500",
-  "bg-lime-500",
-  "bg-sky-500",
-  "bg-yellow-500",
-  "bg-green-500",
-  "bg-slate-500",
-  "bg-gray-500",
-];
-
-function colorForUsername(username: string) {
-  let hash = 0;
-  for (const char of username) {
-    hash = (char.codePointAt(0) ?? 0) + ((hash << 5) - hash);
-  }
-  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
 }
 
 function formatRelativeTime(date: Date): string {
@@ -79,32 +28,6 @@ function formatRelativeTime(date: Date): string {
   return `il y a ${years} an${years > 1 ? "s" : ""}`;
 }
 
-interface Avatar {
-  nom: string;
-  prenom: string;
-  username: string;
-  avatar: string | null
-}
-
-function Avatar(props: Readonly<Avatar>){
-  if (props.avatar) {
-    return (
-      <img
-        src={props.avatar}
-        alt={props.prenom + " " + props.nom}
-        className="h-9 w-9 flex-shrink-0 rounded-full object-cover"
-      />
-    );
-  }
-  return (
-    <div
-      className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-sm font-semibold text-white ${colorForUsername(props.username)}`}
-    >
-      {props.username.charAt(0).toUpperCase()}
-    </div>
-  );
-}
-
 /* ------------------------------- Menu "..." ------------------------------- */
 
 interface CommentMenuProps {
@@ -116,8 +39,8 @@ interface CommentMenuProps {
   onToggleHidden: () => void;
 }
 
-function CommentMenu({ comment, isOpen, onToggle, onEdit, onDelete, onToggleHidden }: CommentMenuProps) {
-  if (!comment.canEdit && !comment.canDelete && !comment.canModerate) {
+function CommentMenu(props: CommentMenuProps) {
+  if (!props.comment.canEdit && !props.comment.canDelete && !props.comment.canModerate) {
     return null;
   }
 
@@ -125,40 +48,40 @@ function CommentMenu({ comment, isOpen, onToggle, onEdit, onDelete, onToggleHidd
     <div data-comment-menu className="relative flex-shrink-0">
       <button
         type="button"
-        onClick={onToggle}
+        onClick={props.onToggle}
         aria-label="Options du commentaire"
-        aria-expanded={isOpen}
+        aria-expanded={props.isOpen}
         className="rounded-full p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
       >
         <MoreVertical className="h-4 w-4" />
       </button>
 
-      {isOpen && (
+      {props.isOpen && (
         <div className="absolute right-0 top-8 xl:left-10 xl:top-0 z-20 w-44 overflow-hidden rounded-2xl border border-border bg-white py-1 shadow-sm">
-          {comment.canEdit && (
+          {props.comment.canEdit && (
             <button
               type="button"
-              onClick={onEdit}
+              onClick={props.onEdit}
               className="flex w-full items-center gap-2 px-3 py-2 text-left text- text-foreground hover:bg-accent"
             >
               <Pencil className="h-4 w-4" />
               Modifier
             </button>
           )}
-          {comment.canModerate && (
+          {props.comment.canModerate && (
             <button
               type="button"
-              onClick={onToggleHidden}
+              onClick={props.onToggleHidden}
               className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-foreground hover:bg-accent"
             >
-              {comment.isHidden ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
-              {comment.isHidden ? "Réafficher" : "Masquer"}
+              {props.comment.isHidden ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+              {props.comment.isHidden ? "Réafficher" : "Masquer"}
             </button>
           )}
-          {comment.canDelete && (
+          {props.comment.canDelete && (
             <button
               type="button"
-              onClick={onDelete}
+              onClick={props.onDelete}
               className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-destructive hover:bg-destructive/10"
             >
               <Trash2 className="h-4 w-4" />
@@ -183,17 +106,17 @@ interface ComposerBoxProps {
   autoFocus?: boolean;
 }
 
-function ComposerBox({ value, onChange, onSubmit, onCancel, disabled, submitLabel, autoFocus }: ComposerBoxProps) {
+function ComposerBox(props: ComposerBoxProps) {
   return (
     <div className="mt-3">
       <input
-        autoFocus={autoFocus}
+        autoFocus={props.autoFocus}
         type="text"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
+        value={props.value}
+        onChange={(e) => props.onChange(e.target.value)}
         onKeyDown={(e) => {
-          if (e.key === "Enter") onSubmit();
-          if (e.key === "Escape") onCancel();
+          if (e.key === "Enter") props.onSubmit();
+          if (e.key === "Escape") props.onCancel();
         }}
         placeholder="Ajouter une réponse..."
         className="w-full border-b border-input bg-transparent pb-1.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
@@ -202,18 +125,18 @@ function ComposerBox({ value, onChange, onSubmit, onCancel, disabled, submitLabe
         <div className="flex items-center gap-2">
           <button
             type="button"
-            onClick={onCancel}
+            onClick={props.onCancel}
             className="rounded-full px-3 py-1.5 text-sm font-medium text-muted-foreground hover:bg-accent"
           >
             Annuler
           </button>
           <button
             type="button"
-            onClick={onSubmit}
-            disabled={disabled || !value.trim()}
+            onClick={props.onSubmit}
+            disabled={props.disabled || !props.value.trim()}
             className="rounded-full bg-primary px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground"
           >
-            {submitLabel}
+            {props.submitLabel}
           </button>
         </div>
       </div>
@@ -230,41 +153,41 @@ interface ReactionRowProps {
   onReply: () => void;
 }
 
-function ReactionRow({ comment, onLike, onDislike, onReply }: ReactionRowProps) {
+function ReactionRow(props: ReactionRowProps) {
   return (
     <div className="mt-1 flex items-center gap-4">
       <button
         type="button"
-        onClick={onLike}
+        onClick={props.onLike}
         className={cn(
           "flex items-center gap-1.5 text-muted-foreground hover:text-primary",
-          comment.userReaction === "LIKE" && "text-primary",
+          props.comment.userReaction === "LIKE" && "text-primary",
         )}
       >
-        {comment.userReaction === "LIKE" ? (
-          <ThumbsUpFilledIcon className={cn("h-4 w-4", comment.userReaction === "LIKE" && "fill-primary")} />
+        {props.comment.userReaction === "LIKE" ? (
+          <ThumbsUpFilledIcon className={cn("h-4 w-4", props.comment.userReaction === "LIKE" && "fill-primary")} />
         ) : (
           <ThumbsUpOutlineIcon className="h-4 w-4" />
         )}
-        {comment.likeCount > 0 && <span className="text-xs">{comment.likeCount}</span>}
+        {props.comment.likeCount > 0 && <span className="text-xs">{props.comment.likeCount}</span>}
       </button>
       <button
         type="button"
-        onClick={onDislike}
+        onClick={props.onDislike}
         className={cn(
           "text-muted-foreground hover:text-primary",
-          comment.userReaction === "DISLIKE" && "text-primary",
+          props.comment.userReaction === "DISLIKE" && "text-primary",
         )}
       >
-        {comment.userReaction === "DISLIKE" ? (
-          <ThumbsDownFilledIcon className={cn("h-4 w-4", comment.userReaction === "DISLIKE" && "fill-primary")} />
+        {props.comment.userReaction === "DISLIKE" ? (
+          <ThumbsDownFilledIcon className={cn("h-4 w-4", props.comment.userReaction === "DISLIKE" && "fill-primary")} />
         ) : (
           <ThumbsDownOutlineIcon className="h-4 w-4" />
         )}
       </button>
       <button
         type="button"
-        onClick={onReply}
+        onClick={props.onReply}
         className="text-xs font-semibold text-primary hover:underline"
       >
         Répondre

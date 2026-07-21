@@ -2,10 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import {
-  ThumbsUpOutlineIcon,
-  ThumbsUpFilledIcon,
-} from "@/components/icons/icons";
+import { ThumbsUpOutlineIcon, ThumbsUpFilledIcon } from "@/components/icons/icons";
 import { cn } from "@/lib/utils";
 import { toggleLike } from "@/app/actions/likes";
 
