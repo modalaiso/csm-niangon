@@ -299,7 +299,7 @@ function CommentItem(props: Readonly<CommentItemProps>) {
 }
 
 /* ------------------------------- Section complète ------------------------------- */
-export function CommentSection(props: CommentSectionProps) {
+export function CommentSection(props: Readonly<CommentSectionProps>) {
   const router = useRouter();
   const [value, setValue] = useState("");
   const [error, setError] = useState<string | null>(null);
