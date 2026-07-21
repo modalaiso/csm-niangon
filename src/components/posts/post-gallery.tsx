@@ -8,7 +8,7 @@ interface PostGalleryProps {
   alt: string;
 }
 
-export function PostGallery(props: PostGalleryProps) {
+export function PostGallery(props: Readonly<PostGalleryProps>) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -43,12 +43,18 @@ export function PostGallery(props: PostGalleryProps) {
         <span className="absolute right-3 top-3 rounded-full bg-black/60 px-3 py-1 text-xs font-semibold text-white shadow-sm">
           1/{props.images.length}
         </span>
-        <img
-          src={props.images[0]}
-          alt={props.alt}
+        <button 
+          type="button" 
           onClick={openFullscreen}
-          className="max-h-[480px] w-full cursor-pointer object-cover"
-        />
+          className="w-full focus:outline-none focus:ring-2 focus:ring-primary"
+          aria-label="Ouvrir l'image en plein écran"
+        >
+          <img
+            src={props.images[0]}
+            alt={props.alt}
+            className="max-h-[480px] w-full cursor-pointer object-cover"
+          />
+        </button>
       </div>
     );
   }
@@ -68,13 +74,19 @@ export function PostGallery(props: PostGalleryProps) {
           className="flex snap-x rounded-3xl snap-mandatory overflow-x-auto scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {props.images.map((src, i) => (
-            <img
+            <button
               key={`${src}-${i}`}
-              src={src}
-              alt={`${props.alt} — image ${i + 1}`}
+              type="button"
               onClick={openFullscreen}
-              className="h-[280px] w-full flex-shrink-0 snap-center bg-muted object-cover cursor-pointer sm:h-[380px] md:h-[440px]"
-            />
+              aria-label="Ouvrir l'image en plein écran"
+              className="h-[280px] w-full flex-shrink-0 snap-center bg-muted focus:outline-none focus:ring-2 focus:ring-primary sm:h-[380px] md:h-[440px]"
+            >
+              <img
+                src={src}
+                alt={`${props.alt} ${i + 1}`}
+                className="h-full w-full object-cover cursor-pointer"
+              />
+            </button>
           ))}
         </div>
       </div>
@@ -148,7 +160,7 @@ export function PostGallery(props: PostGalleryProps) {
 
           <img
             src={props.images[active]}
-            alt={`${props.alt} — image ${active + 1}`}
+            alt={`${props.alt} ${active + 1}`}
             className="max-h-[90vh] max-w-[90vw] object-contain"
           />
         </div>
