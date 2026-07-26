@@ -71,7 +71,7 @@ const resultText = total === 0
     <main className="min-h-screen bg-background">
       {/* Header */}
       <div>
-        <div className="container py-3 flex flex-row items-start sm:items-center justify-between gap-2">
+        <div className="container flex flex-row items-start sm:items-center justify-between gap-2 max-w-3xl px-4 py-6 sm:py-8">
           <Link
           href="/"
           className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900 hover:underline"
