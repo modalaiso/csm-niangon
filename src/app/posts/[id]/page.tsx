@@ -8,9 +8,10 @@ import { PostGallery } from "@/components/posts/post-gallery";
 import { LikeButton } from "@/components/posts/like-button";
 import { CommentSection } from "@/components/posts/comment-section";
 import { Avatar } from "@/components/ui/avatar";
+import { renderPostContent } from "@/lib/render-post-content";
 
 interface PostPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 const TYPE_BADGES: Record<string, { label: string; className: string }> = {
@@ -29,39 +30,8 @@ function formatDate(date: Date | null): string {
   });
 }
 
-/**
- * Rendu minimal du **gras** et *italique*, ligne par ligne — le contenu
- * saisi par les rédacteurs utilise cette syntaxe simple pour structurer
- * leurs articles (ex: "**Finale** : 3-1 contre le Lycée Classique").
- */
-function renderLine(line: string, key: number) {
-  const parts = line.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g).filter(Boolean);
-  return (
-    <p key={key} className="mb-3 text-[15px] leading-relaxed text-slate-700">
-      {parts.map((part, i) => {
-        const partKey = `${part}-${i}`;
-        if (part.startsWith("**") && part.endsWith("**")) {
-          return (
-            <strong key={partKey} className="font-semibold text-slate-900">
-              {part.slice(2, -2)}
-            </strong>
-          );
-        }
-        if (part.startsWith("*") && part.endsWith("*") && part.length > 2) {
-          return (
-            <em key={partKey} className="italic text-slate-600">
-              {part.slice(1, -1)}
-            </em>
-          );
-        }
-        return <span key={partKey}>{part}</span>;
-      })}
-    </p>
-  );
-}
-
 export async function generateMetadata({ params }: PostPageProps) {
-  const resolvedParams = params;
+  const resolvedParams = await params;
   const post = await getPostById(resolvedParams.id);
   if (!post) {
     return { title: "Publication introuvable | CSM Niangon" };
@@ -73,7 +43,7 @@ export async function generateMetadata({ params }: PostPageProps) {
 }
 
 export default async function PostPage({ params }: Readonly<PostPageProps>) {
-  const resolvedParams = params;
+  const resolvedParams = await params;
   const post = await getPostById(resolvedParams.id);
 
   if (!post) {
@@ -88,15 +58,12 @@ export default async function PostPage({ params }: Readonly<PostPageProps>) {
 
   const badge = TYPE_BADGES[post.type] ?? { label: post.type, className: "bg-gray-500" };
 
-  // On ne garde que les images réellement disponibles (miniature + média)
   const images = [post.thumbnail, post.mediaUrl].filter(
     (url): url is string => Boolean(url),
   );
 
-  const lines = (post.content && post.content.trim().length > 0 ? post.content : post.summary)
-    .split("\n")
-    .map((line) => line.trim())
-    .filter(Boolean);
+  const rawContent =
+    post.content && post.content.trim().length > 0 ? post.content : post.summary;
 
   return (
     <main className="min-h-screen bg-white text-slate-900">
@@ -155,9 +122,7 @@ export default async function PostPage({ params }: Readonly<PostPageProps>) {
             </div>
           )}
 
-          <div className="mt-8">
-            {lines.map((line, index) => renderLine(line, index))}
-          </div>
+          <div className="mt-8">{renderPostContent(rawContent)}</div>
 
           {post.tags.length > 0 && (
             <div className="mt-6 flex flex-wrap gap-2">

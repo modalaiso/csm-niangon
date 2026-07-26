@@ -46,7 +46,6 @@ export function TopNav({ user }: TopNavProps) {
             <img
               src="/logo.png"
               alt="CSM Niangon TV"
-              className="dark:hidden"
               width={40}
               height={40}
               loading="eager"
@@ -100,7 +99,7 @@ export function TopNav({ user }: TopNavProps) {
           </div>
 
           {/* Mobile Menu Toggle */}
-          <div className="flex md:hidden">
+          <div className="flex md:hidden gap-1">
             <SearchDropdown />
             <Sheet>
               <SheetTrigger asChild>
@@ -112,7 +111,7 @@ export function TopNav({ user }: TopNavProps) {
               <SheetContent side="right">
                 <SheetTitle className="sr-only">Menu de navigation</SheetTitle>
                 <div className="flex flex-col gap-4 py-4">
-                  <img src="../logo-g.png" alt="Logo" width={50} />
+                  <img src="/logo-g.png" alt="Logo" width={50} />
                   <nav className="flex flex-col gap-2">
                     {navLinks.map((link) => (
                       <Link
