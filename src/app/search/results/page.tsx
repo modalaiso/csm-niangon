@@ -72,9 +72,12 @@ const resultText = total === 0
       {/* Header */}
       <div>
         <div className="container py-3 flex flex-row items-start sm:items-center justify-between gap-2">
-          <Link href="/" className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900 hover:underline">
+          <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900 hover:underline"
+          >
             <ArrowLeft className="h-4 w-4" />
-            <span className="inline">Retour</span>
+            Retour
           </Link>
           <p className="text-xs sm:text-sm text-muted-foreground mt-2">
             {resultText}

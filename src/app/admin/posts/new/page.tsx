@@ -27,7 +27,7 @@ export default async function NewPostPage() {
   }
 
   return (
-    <main className="min-h-screen bg-muted/30 px-4 py-8 sm:py-12">
+    <main className="min-h-screen px-4 py-8 sm:py-12">
       <div className="container">
         <h1 className="mb-2 text-center text-2xl font-bold text-foreground sm:text-3xl">
           Créer une publication

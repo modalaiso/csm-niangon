@@ -147,7 +147,7 @@ export function PostCreateWizard() {
         ))}
       </ol>
 
-      <div className="rounded-3xl border border-border bg-white p-6 shadow-sm sm:p-8">
+      <div className="p-6 sm:p-8">
         {/* Étape 1 : type */}
         {step === 1 && (
           <div>
