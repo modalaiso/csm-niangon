@@ -10,20 +10,14 @@ interface AnnouncementPopupProps {
   announcements: AnnouncementItem[];
 }
 
-const SESSION_KEY = "csm-niangon-announcements-seen";
-
 export function AnnouncementPopup(props: Readonly<AnnouncementPopupProps>) {
   const [isOpen, setIsOpen] = useState(false);
   const [index, setIndex] = useState(0);
 
-  // Affichage automatique une fois par session, à l'arrivée sur le site
+  // Affichage automatique à chaque chargement/rechargement de la page
   useEffect(() => {
     if (props.announcements.length === 0) return;
-    const alreadySeen = sessionStorage.getItem(SESSION_KEY);
-    if (!alreadySeen) {
-      setIsOpen(true);
-      sessionStorage.setItem(SESSION_KEY, "1");
-    }
+    setIsOpen(true);
   }, [props.announcements.length]);
 
   // Réouverture depuis l'InfoBar (clic sur une annonce précise)
