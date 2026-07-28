@@ -12,41 +12,41 @@ interface AnnouncementPopupProps {
 
 const SESSION_KEY = "csm-niangon-announcements-seen";
 
-export function AnnouncementPopup({ announcements }: AnnouncementPopupProps) {
+export function AnnouncementPopup(props: Readonly<AnnouncementPopupProps>) {
   const [isOpen, setIsOpen] = useState(false);
   const [index, setIndex] = useState(0);
 
   // Affichage automatique une fois par session, à l'arrivée sur le site
   useEffect(() => {
-    if (announcements.length === 0) return;
+    if (props.announcements.length === 0) return;
     const alreadySeen = sessionStorage.getItem(SESSION_KEY);
     if (!alreadySeen) {
       setIsOpen(true);
       sessionStorage.setItem(SESSION_KEY, "1");
     }
-  }, [announcements.length]);
+  }, [props.announcements.length]);
 
   // Réouverture depuis l'InfoBar (clic sur une annonce précise)
   useEffect(() => {
     const handler = (e: Event) => {
       const detail = (e as CustomEvent<{ id?: string }>).detail;
       if (detail?.id) {
-        const foundIndex = announcements.findIndex((a) => a.id === detail.id);
+        const foundIndex = props.announcements.findIndex((a) => a.id === detail.id);
         if (foundIndex !== -1) setIndex(foundIndex);
       }
       setIsOpen(true);
     };
     window.addEventListener(ANNOUNCEMENT_OPEN_EVENT, handler);
     return () => window.removeEventListener(ANNOUNCEMENT_OPEN_EVENT, handler);
-  }, [announcements]);
+  }, [props.announcements]);
 
-  if (announcements.length === 0 || !isOpen) return null;
+  if (props.announcements.length === 0 || !isOpen) return null;
 
-  const current = announcements[index];
-  const hasMultiple = announcements.length > 1;
+  const current = props.announcements[index];
+  const hasMultiple = props.announcements.length > 1;
 
   const goTo = (i: number) => {
-    setIndex(((i % announcements.length) + announcements.length) % announcements.length);
+    setIndex(((i % props.announcements.length) + props.announcements.length) % props.announcements.length);
   };
 
   const bodyText = current.content?.trim() ? current.content : current.summary;
@@ -93,7 +93,7 @@ export function AnnouncementPopup({ announcements }: AnnouncementPopupProps) {
             </button>
 
             <div className="flex items-center gap-2">
-              {announcements.map((a, i) => (
+              {props.announcements.map((a, i) => (
                 <button
                   key={a.id}
                   type="button"
