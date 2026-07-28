@@ -97,7 +97,7 @@ export function MultiImageUploadField(props: Readonly<MultiImageUploadFieldProps
               key={`${url}-${index}`}
               className="group relative aspect-square overflow-hidden rounded-2xl border border-border bg-muted"
             >
-              <img src={url} alt={`Image ${index + 1}`} className="h-full w-full object-cover" />
+              <img src={url} alt={`Item ${index + 1}`} className="h-full w-full object-cover" />
               {index === 0 && (
                 <span className="absolute left-1.5 top-1.5 rounded-full bg-primary px-2 py-0.5 text-[10px] font-semibold text-white">
                   Miniature

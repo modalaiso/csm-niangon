@@ -56,7 +56,7 @@ export function ContentEditor(props: Readonly<ContentEditorProps>) {
     const selected = value.slice(selectionStart, selectionEnd) || "texte du lien";
 
     const url = window.prompt("Adresse du lien (https://...)", "https://");
-    if (!url || !url.trim()) {
+    if (!url?.trim()) {
       textarea.focus();
       return;
     }
