@@ -18,7 +18,7 @@ const TYPE_BADGES: Record<string, { label: string; className: string }> = {
   ACTU: { label: "Actu", className: "bg-blue-600" },
   ARTICLE: { label: "Article", className: "bg-emerald-500" },
   INFO: { label: "Info", className: "bg-amber-500" },
-  INTERVIEW: { label: "Interview", className: "bg-purple-500" },
+  ANNONCE: { label: "Annonce", className: "bg-rose-500" },
 };
 
 function formatDate(date: Date | null): string {
@@ -58,9 +58,13 @@ export default async function PostPage({ params }: Readonly<PostPageProps>) {
 
   const badge = TYPE_BADGES[post.type] ?? { label: post.type, className: "bg-gray-500" };
 
-  const images = [post.thumbnail, post.mediaUrl].filter(
-    (url): url is string => Boolean(url),
-  );
+  // Galerie complète du post (jusqu'à 15 images uploadées).
+  // Fallback thumbnail/mediaUrl uniquement pour les posts créés avant
+  // l'introduction du champ "images" (compatibilité ascendante).
+  const images =
+    post.images && post.images.length > 0
+      ? post.images
+      : [post.thumbnail, post.mediaUrl].filter((url): url is string => Boolean(url));
 
   const rawContent =
     post.content && post.content.trim().length > 0 ? post.content : post.summary;

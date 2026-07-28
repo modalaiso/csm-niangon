@@ -24,7 +24,9 @@ import { prisma } from "@/lib/prisma";
 import { BottomNav } from "@/components/nav/bottom-nav";
 import { TopNav } from "@/components/nav/top-nav";
 import { InfoBar } from "@/components/info-bar/info-bar";
+import { AnnouncementPopup } from "@/components/announcements/announcement-popup";
 import { getInfoBarItems } from "@/app/actions/infobar";
+import { getActiveAnnouncements } from "@/app/actions/announcements";
 
 export default async function RootLayout({
   children,
@@ -46,7 +48,10 @@ export default async function RootLayout({
     userRole = dbUser?.role;
   }
 
-  const infoBarItems = await getInfoBarItems();
+  const [infoBarItems, announcements] = await Promise.all([
+    getInfoBarItems(),
+    getActiveAnnouncements(),
+  ]);
 
   return (
     <html lang="fr">
@@ -60,6 +65,7 @@ export default async function RootLayout({
         <TopNav user={user} />
         {children}
         <BottomNav userRole={userRole} />
+        <AnnouncementPopup announcements={announcements} />
         <Analytics />
       </body>
     </html>

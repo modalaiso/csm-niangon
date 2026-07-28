@@ -15,7 +15,7 @@ const TYPE_BADGES: Record<string, { label: string; className: string }> = {
   ACTU: { label: "Actu", className: "bg-blue-600" },
   ARTICLE: { label: "Article", className: "bg-emerald-500" },
   INFO: { label: "Info", className: "bg-amber-500" },
-  INTERVIEW: { label: "Interview", className: "bg-purple-500" },
+  ANNONCE: { label: "Annonce", className: "bg-rose-500" },
 };
 
 function formatRelativeTime(date: Date | null): string {

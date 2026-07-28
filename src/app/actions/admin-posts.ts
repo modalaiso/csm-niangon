@@ -8,6 +8,8 @@ import { PostStatus } from "@prisma/client";
 
 type AuthContext = { userId: string | null; role: Role | null };
 
+const MAX_IMAGES = 15;
+
 async function getAuthContext(): Promise<AuthContext> {
   const supabase = await createClient();
   const {
@@ -62,10 +64,12 @@ export interface CreatePostInput {
   title: string;
   summary: string;
   content: string;
-  thumbnail: string | null;
-  mediaUrl: string | null;
+  /** Galerie d'images (max 15). Toujours vide/ignorée pour le type ANNONCE. */
+  images: string[];
   tags: string[];
   status: "DRAFT" | "PUBLISHED";
+  /** Durée de vie du pop-up. Uniquement pris en compte pour le type ANNONCE. */
+  expiresAt: Date | null;
 }
 
 type CreatePostSuccess = { success: true; id: string; slug: string };
@@ -93,6 +97,15 @@ export async function createPost(
     return { error: "invalid" };
   }
 
+  // Procédure différente selon le type : une ANNONCE n'a jamais d'image
+  // et n'utilise expiresAt que dans ce cas-là.
+  const isAnnouncement = input.type === "ANNONCE";
+  const images = isAnnouncement ? [] : input.images.slice(0, MAX_IMAGES);
+  const expiresAt =
+    isAnnouncement && input.expiresAt && input.expiresAt.getTime() > Date.now()
+      ? input.expiresAt
+      : null;
+
   try {
     const slug = await generateUniqueSlug(title);
     const uniqueTags = Array.from(new Set(input.tags.map((t) => t.trim()).filter(Boolean)));
@@ -104,17 +117,20 @@ export async function createPost(
         slug,
         content: input.content.trim() || null,
         summary,
-        thumbnail: input.thumbnail,
-        mediaUrl: input.mediaUrl,
+        images,
+        // La miniature (cartes, carrousel) reste dérivée de la première image
+        thumbnail: images[0] ?? null,
+        mediaUrl: null,
         authorId: userId,
         status: input.status as PostStatus,
         tags: uniqueTags,
+        expiresAt,
         publishedAt: input.status === "PUBLISHED" ? new Date() : null,
       },
       select: { id: true, slug: true },
     });
 
-    // Garde la barre d'information à jour dès qu'un post est publié
+    // Garde la barre d'information (et le pop-up d'annonces) à jour
     if (input.status === "PUBLISHED") {
       revalidatePath("/");
     }

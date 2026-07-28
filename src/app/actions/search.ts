@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { getPostViewCount } from "@/lib/viewCount";
-import { PostStatus } from "@prisma/client";
+import { PostStatus, PostType } from "@prisma/client";
 
 export interface SearchResult {
   id: string;
@@ -41,7 +41,8 @@ const resultSelect = {
 
 /**
  * Search posts by query (title, slug, summary, info)
- * Only returns PUBLISHED posts
+ * Only returns PUBLISHED posts — les ANNONCE ne sont jamais indexées :
+ * elles ne s'affichent qu'en pop-up, pas dans les résultats de recherche.
  */
 export async function searchPosts(
   query: string,
@@ -55,6 +56,7 @@ export async function searchPosts(
   try {
     const where = {
       status: PostStatus.PUBLISHED,
+      type: { not: PostType.ANNONCE },
       OR: [
         { title: { contains: query, mode: "insensitive" as const } },
         { slug: { contains: query, mode: "insensitive" as const } },
@@ -86,12 +88,13 @@ export async function searchPosts(
 }
 
 /**
- * Get recent published posts
+ * Get recent published posts — hors ANNONCE, également non indexées ici
+ * (barre de recherche "posts récents").
  */
 export async function getRecentPosts(limit: number = 10): Promise<SearchResult[]> {
   try {
     const results = await prisma.post.findMany({
-      where: { status: PostStatus.PUBLISHED },
+      where: { status: PostStatus.PUBLISHED, type: { not: PostType.ANNONCE } },
       select: resultSelect,
       orderBy: { publishedAt: "desc" },
       take: limit,

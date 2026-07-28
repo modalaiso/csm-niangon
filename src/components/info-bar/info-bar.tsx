@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AlertTriangle, Megaphone } from "lucide-react";
+import { AlertTriangle, Megaphone, Info } from "lucide-react";
 import type { InfoBarItem } from "@/app/actions/infobar";
+import { openAnnouncementPopup } from "@/components/announcements/announcement-events";
 
 interface InfoBarProps {
   items: InfoBarItem[];
@@ -12,7 +13,6 @@ interface InfoBarProps {
 export function InfoBar({ items }: InfoBarProps) {
   const pathname = usePathname();
 
-  // Masquée sur les pages d'auth, comme TopNav/BottomNav
   if (
     pathname.startsWith("/login") ||
     pathname.startsWith("/signup") ||
@@ -25,7 +25,6 @@ export function InfoBar({ items }: InfoBarProps) {
   if (!items || items.length === 0) return null;
 
   const hasUrgent = items.some((item) => item.isUrgent);
-  // On duplique la liste pour un défilement en boucle sans coupure
   const track = [...items, ...items];
 
   return (
@@ -40,20 +39,32 @@ export function InfoBar({ items }: InfoBarProps) {
     >
       <div className="group flex py-2">
         <div className="flex w-max animate-marquee items-center whitespace-nowrap group-hover:[animation-play-state:paused]">
-          {track.map((item, index) => (
-            <Link
-              key={`${item.id}-${index}`}
-              href={`/posts/${item.id}`}
-              className="flex items-center gap-2 px-6 text-sm font-medium hover:underline"
-            >
-              {item.isUrgent ? (
-                <AlertTriangle className="h-4 w-4 flex-shrink-0" />
-              ) : (
+          {track.map((item, index) =>
+            item.kind === "ANNONCE" ? (
+              <button
+                key={`${item.id}-${index}`}
+                type="button"
+                onClick={() => openAnnouncementPopup(item.id)}
+                className="flex items-center gap-2 px-6 text-sm font-medium hover:underline"
+              >
                 <Megaphone className="h-4 w-4 flex-shrink-0" />
-              )}
-              {item.title}
-            </Link>
-          ))}
+                {item.title}
+              </button>
+            ) : (
+              <Link
+                key={`${item.id}-${index}`}
+                href={`/posts/${item.id}`}
+                className="flex items-center gap-2 px-6 text-sm font-medium hover:underline"
+              >
+                {item.isUrgent ? (
+                  <AlertTriangle className="h-4 w-4 flex-shrink-0" />
+                ) : (
+                  <Info className="h-4 w-4 flex-shrink-0" />
+                )}
+                {item.title}
+              </Link>
+            ),
+          )}
         </div>
       </div>
     </div>

@@ -9,13 +9,14 @@ import {
   Newspaper,
   FileText,
   Info,
-  Mic,
+  Megaphone,
   Loader2,
 } from "lucide-react";
 import type { PostType } from "@prisma/client";
 import { cn } from "@/lib/utils";
 import { ContentEditor } from "@/components/admin/content-editor";
-import { ImageUploadField } from "@/components/admin/image-upload-field";
+import { MultiImageUploadField } from "@/components/admin/multi-image-upload-field";
+import { AnnouncementDurationSelect } from "@/components/admin/announcement-duration-select";
 import { createPost } from "@/app/actions/admin-posts";
 
 const STEPS = [
@@ -35,8 +36,15 @@ const TYPE_OPTIONS: {
   { value: "ACTU", label: "Actu", description: "Actualité récente du CSM Niangon", Icon: Newspaper },
   { value: "ARTICLE", label: "Article", description: "Contenu approfondi, dossier ou reportage", Icon: FileText },
   { value: "INFO", label: "Info", description: "Information courte, visible dans la barre défilante", Icon: Info },
-  { value: "INTERVIEW", label: "Interview", description: "Échange avec un membre ou invité", Icon: Mic },
+  {
+    value: "ANNONCE",
+    label: "Annonce",
+    description: "S'affiche en pop-up à l'arrivée sur le site, avec une durée de vie définie",
+    Icon: Megaphone,
+  },
 ];
+
+const MAX_IMAGES = 15;
 
 export function PostCreateWizard() {
   const router = useRouter();
@@ -47,11 +55,13 @@ export function PostCreateWizard() {
   const [title, setTitle] = useState("");
   const [summary, setSummary] = useState("");
   const [content, setContent] = useState("");
-  const [thumbnail, setThumbnail] = useState<string | null>(null);
-  const [mediaUrl, setMediaUrl] = useState<string | null>(null);
+  const [images, setImages] = useState<string[]>([]);
+  const [expiresAt, setExpiresAt] = useState<Date | null>(null);
   const [tagsInput, setTagsInput] = useState("");
   const [isUrgent, setIsUrgent] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const isAnnouncement = type === "ANNONCE";
 
   const canGoNext = () => {
     if (step === 1) return type !== null;
@@ -88,8 +98,9 @@ export function PostCreateWizard() {
         title: title.trim(),
         summary: summary.trim(),
         content: content.trim(),
-        thumbnail,
-        mediaUrl,
+        // Procédure différente selon le type : jamais d'image pour une ANNONCE
+        images: isAnnouncement ? [] : images,
+        expiresAt: isAnnouncement ? expiresAt : null,
         tags: buildTags(),
         status,
       });
@@ -100,6 +111,13 @@ export function PostCreateWizard() {
           return;
         }
         setError("Impossible d'enregistrer ce post. Vérifiez les champs et réessayez.");
+        return;
+      }
+
+      // Les annonces n'ont pas de page dédiée : elles ne vivent qu'en pop-up.
+      // On redirige vers l'accueil pour voir le pop-up apparaître directement.
+      if (type === "ANNONCE") {
+        router.push("/");
         return;
       }
 
@@ -239,6 +257,7 @@ export function PostCreateWizard() {
             <h2 className="text-lg font-bold text-foreground">Rédigez le contenu complet</h2>
             <p className="mt-1 text-sm text-muted-foreground">
               Utilisez la barre d&apos;outils pour mettre en forme : sous-titres, gras, italique, notes et listes.
+              {isAnnouncement && " Ce contenu s'affichera dans le pop-up de l'annonce."}
             </p>
             <div className="mt-6">
               <ContentEditor value={content} onChange={setContent} />
@@ -246,29 +265,32 @@ export function PostCreateWizard() {
           </div>
         )}
 
-        {/* Étape 5 : visuels */}
+        {/* Étape 5 : visuels — procédure différente selon le type */}
         {step === 5 && (
           <div>
-            <h2 className="text-lg font-bold text-foreground">Ajoutez vos visuels</h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              La miniature apparaît sur les cartes, la bannière dans le contenu de l&apos;article.
-            </p>
-            <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2">
-              <ImageUploadField
-                label="Miniature"
-                hint="Format carte, ratio 4:3 recommandé"
-                value={thumbnail}
-                onChange={setThumbnail}
-                aspectClassName="aspect-[4/3]"
-              />
-              <ImageUploadField
-                label="Bannière"
-                hint="Grande image affichée en tête de l'article"
-                value={mediaUrl}
-                onChange={setMediaUrl}
-                aspectClassName="aspect-video"
-              />
-            </div>
+            {isAnnouncement ? (
+              <>
+                <h2 className="text-lg font-bold text-foreground">Durée de vie de l&apos;annonce</h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Les annonces ne comportent pas d&apos;image : elles s&apos;affichent en pop-up dès l&apos;arrivée
+                  sur le site, pour la durée que vous choisissez.
+                </p>
+                <div className="mt-6 max-w-sm">
+                  <AnnouncementDurationSelect value={expiresAt} onChange={setExpiresAt} />
+                </div>
+              </>
+            ) : (
+              <>
+                <h2 className="text-lg font-bold text-foreground">Ajoutez vos visuels</h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  La première image sert de miniature sur les cartes. Vous pouvez en ajouter jusqu&apos;à{" "}
+                  {MAX_IMAGES} et en supprimer à tout moment.
+                </p>
+                <div className="mt-6">
+                  <MultiImageUploadField value={images} onChange={setImages} max={MAX_IMAGES} />
+                </div>
+              </>
+            )}
 
             <div className="mt-6">
               <label htmlFor="tags" className="mb-2 block text-sm font-medium text-foreground">
