@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Bold, Italic, Heading2, Quote, List, Eye, Pencil } from "lucide-react";
+import { Bold, Italic, Heading2, Quote, List, Link2, Eye, Pencil } from "lucide-react";
 import { renderPostContent } from "@/lib/render-post-content";
 import { cn } from "@/lib/utils";
 
@@ -49,12 +49,35 @@ export function ContentEditor(props: Readonly<ContentEditorProps>) {
     requestAnimationFrame(() => textarea.focus());
   };
 
+  const applyLink = () => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+    const { selectionStart, selectionEnd, value } = textarea;
+    const selected = value.slice(selectionStart, selectionEnd) || "texte du lien";
+
+    const url = window.prompt("Adresse du lien (https://...)", "https://");
+    if (!url || !url.trim()) {
+      textarea.focus();
+      return;
+    }
+
+    const markdown = `[${selected}](${url.trim()})`;
+    const nextValue = value.slice(0, selectionStart) + markdown + value.slice(selectionEnd);
+    props.onChange(nextValue);
+    requestAnimationFrame(() => {
+      textarea.focus();
+      const cursor = selectionStart + markdown.length;
+      textarea.setSelectionRange(cursor, cursor);
+    });
+  };
+
   const toolbarButtons = [
     { label: "Gras", icon: Bold, action: () => applyWrap("**") },
     { label: "Italique", icon: Italic, action: () => applyWrap("*") },
     { label: "Sous-titre", icon: Heading2, action: () => applyLinePrefix("## ") },
     { label: "Note", icon: Quote, action: () => applyLinePrefix("> ") },
     { label: "Liste à puces", icon: List, action: () => applyLinePrefix("- ") },
+    { label: "Lien", icon: Link2, action: applyLink },
   ];
 
   return (
@@ -106,7 +129,7 @@ export function ContentEditor(props: Readonly<ContentEditorProps>) {
           value={props.value}
           onChange={(e) => props.onChange(e.target.value)}
           placeholder={
-            "Rédigez le contenu ici...\n\nUtilisez la barre d'outils ou tapez directement :\n**gras**, *italique*, ## Sous-titre, > Note, - Point"
+            "Rédigez le contenu ici...\n\nUtilisez la barre d'outils ou tapez directement :\n**gras**, *italique*, ## Sous-titre, > Note, - Point, https://exemple.com"
           }
           className="min-h-[320px] w-full resize-y rounded-b-2xl px-4 py-3 text-sm leading-relaxed text-foreground placeholder:text-muted-foreground focus:outline-none"
         />

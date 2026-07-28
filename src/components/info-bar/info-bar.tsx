@@ -40,17 +40,7 @@ export function InfoBar({ items }: InfoBarProps) {
       <div className="group flex py-2">
         <div className="flex w-max animate-marquee items-center whitespace-nowrap group-hover:[animation-play-state:paused]">
           {track.map((item, index) =>
-            item.kind === "ANNONCE" ? (
-              <button
-                key={`${item.id}-${index}`}
-                type="button"
-                onClick={() => openAnnouncementPopup(item.id)}
-                className="flex items-center gap-2 px-6 text-sm font-medium hover:underline"
-              >
-                <Megaphone className="h-4 w-4 flex-shrink-0" />
-                {item.title}
-              </button>
-            ) : (
+            (
               <Link
                 key={`${item.id}-${index}`}
                 href={`/posts/${item.id}`}

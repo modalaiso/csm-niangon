@@ -4,50 +4,13 @@ import { useEffect, useState } from "react";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import type { AnnouncementItem } from "@/app/actions/announcements";
 import { ANNOUNCEMENT_OPEN_EVENT } from "@/components/announcements/announcement-events";
+import { renderPostContent } from "@/lib/render-post-content";
 
 interface AnnouncementPopupProps {
   announcements: AnnouncementItem[];
 }
 
 const SESSION_KEY = "csm-niangon-announcements-seen";
-
-/**
- * Rendu minimal du **gras** et *italique*, ligne par ligne — identique à
- * la logique utilisée sur la page de détail d'un post.
- */
-function renderLine(line: string, key: number) {
-  const parts = line.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g).filter(Boolean);
-  return (
-    <p key={key} className="mb-3 text-sm leading-relaxed text-slate-700">
-      {parts.map((part, i) => {
-        const partKey = `${part}-${i}`;
-        if (part.startsWith("**") && part.endsWith("**")) {
-          return (
-            <strong key={partKey} className="font-semibold text-slate-900">
-              {part.slice(2, -2)}
-            </strong>
-          );
-        }
-        if (part.startsWith("*") && part.endsWith("*") && part.length > 2) {
-          return (
-            <em key={partKey} className="italic text-slate-600">
-              {part.slice(1, -1)}
-            </em>
-          );
-        }
-        return <span key={partKey}>{part}</span>;
-      })}
-    </p>
-  );
-}
-
-function renderContent(content: string) {
-  const lines = content
-    .split("\n")
-    .map((line) => line.trim())
-    .filter(Boolean);
-  return lines.map((line, index) => renderLine(line, index));
-}
 
 export function AnnouncementPopup({ announcements }: AnnouncementPopupProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -115,7 +78,7 @@ export function AnnouncementPopup({ announcements }: AnnouncementPopupProps) {
         </div>
 
         <div className="flex-1 overflow-y-auto px-6 py-1 sm:px-8">
-          {renderContent(bodyText)}
+          {renderPostContent(bodyText)}
         </div>
 
         {hasMultiple && (
