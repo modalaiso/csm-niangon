@@ -2,9 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AlertTriangle, Megaphone, Info } from "lucide-react";
+import { AlertTriangle, Info } from "lucide-react";
 import type { InfoBarItem } from "@/app/actions/infobar";
-import { openAnnouncementPopup } from "@/components/announcements/announcement-events";
 
 interface InfoBarProps {
   items: InfoBarItem[];

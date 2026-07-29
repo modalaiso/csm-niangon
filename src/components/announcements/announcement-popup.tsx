@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import type { AnnouncementItem } from "@/app/actions/announcements";
 import { ANNOUNCEMENT_OPEN_EVENT } from "@/components/announcements/announcement-events";
@@ -13,6 +13,23 @@ interface AnnouncementPopupProps {
 export function AnnouncementPopup(props: Readonly<AnnouncementPopupProps>) {
   const [isOpen, setIsOpen] = useState(false);
   const [index, setIndex] = useState(0);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  // Synchronize native <dialog> state with isOpen state
+  useEffect(() => {
+    const dialogNode = dialogRef.current;
+    if (!dialogNode) return;
+
+    if (isOpen) {
+      if (!dialogNode.open) {
+        dialogNode.showModal();
+      }
+    } else {
+      if (dialogNode.open) {
+        dialogNode.close();
+      }
+    }
+  }, [isOpen]);
 
   // Affichage automatique à chaque chargement/rechargement de la page
   useEffect(() => {
@@ -34,7 +51,7 @@ export function AnnouncementPopup(props: Readonly<AnnouncementPopupProps>) {
     return () => window.removeEventListener(ANNOUNCEMENT_OPEN_EVENT, handler);
   }, [props.announcements]);
 
-  if (props.announcements.length === 0 || !isOpen) return null;
+  if (props.announcements.length === 0) return null;
 
   const current = props.announcements[index];
   const hasMultiple = props.announcements.length > 1;
@@ -45,20 +62,24 @@ export function AnnouncementPopup(props: Readonly<AnnouncementPopupProps>) {
 
   const bodyText = current.content?.trim() ? current.content : current.summary;
 
+  // Handles clicking on the backdrop or pressing ESC natively
+  const handleDialogClick = (e: React.MouseEvent<HTMLDialogElement>) => {
+    if (e.target === dialogRef.current) {
+      setIsOpen(false);
+    }
+  };
+
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
+    <dialog
+      ref={dialogRef}
       aria-label={current.title}
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4"
-      onClick={() => setIsOpen(false)}
+      onClick={handleDialogClick}
+      onClose={() => setIsOpen(false)}
+      className="m-auto rounded-3xl p-0 backdrop:bg-black/50 open:flex open:flex-col"
     >
-      <div
-        className="relative flex h-full max-h-96 w-full max-w-2xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between px-6 pt-4 pb-2 sm:px-8">
-          <h2 className="container text-lg text-center font-extrabold uppercase text-slate-900 sm:text-xl">
+      <div className="relative flex h-full max-h-96 w-full max-w-2xl flex-col overflow-hidden bg-white shadow-2xl">
+        <div className="flex items-center justify-between px-6 pb-2 pt-4 sm:px-8">
+          <h2 className="container text-center text-lg font-extrabold uppercase text-slate-900 sm:text-xl">
             {current.title}
           </h2>
           <button
@@ -111,6 +132,6 @@ export function AnnouncementPopup(props: Readonly<AnnouncementPopupProps>) {
           </div>
         )}
       </div>
-    </div>
+    </dialog>
   );
 }
