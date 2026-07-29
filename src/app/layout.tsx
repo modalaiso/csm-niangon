@@ -62,7 +62,7 @@ export default async function RootLayout({
         className={`${inter.variable} ${leagueSpartan.variable} antialiased`}
       >
         <InfoBar items={infoBarItems} />
-        <TopNav user={user} />
+        <TopNav user={user} userRole={userRole} />
         {children}
         <BottomNav userRole={userRole} />
         <AnnouncementPopup announcements={announcements} />
