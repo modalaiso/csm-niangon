@@ -5,7 +5,7 @@ import React from "react";
  * liens Markdown [texte](url) et URLs brutes (https://...).
  */
 function renderInline(text: string, keyPrefix: string): React.ReactNode[] {
-  const pattern = /(\*\*[^*]+?\*\*|\*(?!\*)[^*]+?\*|\[[^\]]+\]\([^)\s]+\)|https?:\/\/[^\s\s]+)/g;
+  const pattern = /(\*\*[^*]+\*\*|\*[^*]+\*|\[[^\]]+\]\([^\s)]+\)|https?:\/\/[^\s]+)/g;
   const parts = text.split(pattern).filter((part) => part !== "");
 
   return parts.map((part, i) => {
@@ -44,8 +44,8 @@ function renderInline(text: string, keyPrefix: string): React.ReactNode[] {
     }
 
     if (/^https?:\/\//.test(part)) {
-      // Option B: Optimized regex execution
-      const trailingMatch = /(?<=[^.,;:!?)]|^)[.,;:!?)]+$/.exec(part);
+      // On retire la ponctuation finale (., ,, ;, ), etc.) du lien lui-même
+      const trailingMatch = /[.,;:!?)]+$/.exec(part);
       const trailing = trailingMatch ? trailingMatch[0] : "";
       const url = trailing ? part.slice(0, -trailing.length) : part;
       return (
