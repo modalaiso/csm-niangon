@@ -33,6 +33,7 @@ export interface PostDetail {
   summary: string;
   thumbnail: string | null;
   mediaUrl: string | null;
+  images: string[];
   views: number;
   tags: string[];
   publishedAt: Date | null;
@@ -74,7 +75,7 @@ async function transformPostCard(post: any): Promise<HomePostCard> {
 /** Les 5 dernières publications, pour le carrousel héro */
 export async function getFeaturedPosts(limit = 5): Promise<HomePostCard[]> {
   const posts = await prisma.post.findMany({
-    where: { status: PostStatus.PUBLISHED },
+    where: { status: PostStatus.PUBLISHED, type: { not: PostType.ANNONCE } },
     orderBy: { publishedAt: "desc" },
     take: limit,
     select: cardSelect,
@@ -85,7 +86,7 @@ export async function getFeaturedPosts(limit = 5): Promise<HomePostCard[]> {
 /** Toutes les publications récentes, pour la grille */
 export async function getPublishedPosts(limit = 40): Promise<HomePostCard[]> {
   const posts = await prisma.post.findMany({
-    where: { status: PostStatus.PUBLISHED },
+    where: { status: PostStatus.PUBLISHED, type: { not: PostType.ANNONCE } },
     orderBy: { publishedAt: "desc" },
     take: limit,
     select: cardSelect,
@@ -107,6 +108,7 @@ export async function getPostById(id: string): Promise<PostDetail | null> {
         summary: true,
         thumbnail: true,
         mediaUrl: true,
+        images: true,
         tags: true,
         publishedAt: true,
         author: { select: { username: true, prenom: true, nom: true, avatar: true } },
@@ -168,6 +170,7 @@ export async function getPostById(id: string): Promise<PostDetail | null> {
       summary: post.summary,
       thumbnail: post.thumbnail,
       mediaUrl: post.mediaUrl,
+      images: post.images,
       views: viewCount,
       tags: post.tags,
       publishedAt: post.publishedAt,

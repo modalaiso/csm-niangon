@@ -15,7 +15,7 @@ const TYPE_BADGES: Record<string, { label: string; className: string }> = {
   ACTU: { label: "Actu", className: "bg-blue-600" },
   ARTICLE: { label: "Article", className: "bg-emerald-500" },
   INFO: { label: "Info", className: "bg-amber-500" },
-  INTERVIEW: { label: "Interview", className: "bg-purple-500" },
+  ANNONCE: { label: "Annonce", className: "bg-rose-500" },
 };
 
 function formatRelativeTime(date: Date | null): string {
@@ -71,10 +71,13 @@ const resultText = total === 0
     <main className="min-h-screen bg-background">
       {/* Header */}
       <div>
-        <div className="container py-3 flex flex-row items-start sm:items-center justify-between gap-2">
-          <Link href="/" className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900 hover:underline">
+        <div className="container flex flex-row items-start sm:items-center justify-between gap-2 max-w-3xl px-4 py-6 sm:py-8">
+          <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900 hover:underline"
+          >
             <ArrowLeft className="h-4 w-4" />
-            <span className="inline">Retour</span>
+            Retour
           </Link>
           <p className="text-xs sm:text-sm text-muted-foreground mt-2">
             {resultText}

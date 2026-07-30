@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Menu } from "lucide-react";
+import { Menu, PenSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -13,12 +13,14 @@ import { usePathname } from "next/navigation";
 import { SearchDropdown } from "@/components/search/search-dropdown";
 
 import type { User } from "@supabase/supabase-js";
+import type { Role } from "@prisma/client";
 
 interface TopNavProps {
   user?: User | null;
+  userRole?: Role;
 }
 
-export function TopNav({ user }: TopNavProps) {
+export function TopNav(props: Readonly<TopNavProps>) {
   const pathname = usePathname();
 
   // Hide on auth pages
@@ -31,10 +33,14 @@ export function TopNav({ user }: TopNavProps) {
     return null;
   }
 
+  const isWriterOrAdmin = props.userRole === "WRITER" || props.userRole === "ADMIN";
+
   const navLinks = [
     { href: "/", label: "Accueil" },
-    { href: "/articles", label: "Articles" },
+    { href: "/actus", label: "Actualités" },
     { href: "/infos", label: "Infos" },
+    { href: "/timetables", label: "Emplois du temps" },
+    { href: "/devoirs", label: "Calendriers des devoirs" },
   ];
 
   return (
@@ -46,7 +52,6 @@ export function TopNav({ user }: TopNavProps) {
             <img
               src="/logo.png"
               alt="CSM Niangon TV"
-              className="dark:hidden"
               width={40}
               height={40}
               loading="eager"
@@ -56,7 +61,7 @@ export function TopNav({ user }: TopNavProps) {
         </div>
 
         <div className="hidden md:flex container h-14 items-center justify-center px-4">
-          <nav className="hidden md:flex items-center gap-6">
+          <nav className="hidden lg:flex items-center gap-8">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -79,9 +84,19 @@ export function TopNav({ user }: TopNavProps) {
             <SearchDropdown />
           </div>
 
+          {/* Bouton de création de post, réservé aux rédacteurs et admins */}
+          {isWriterOrAdmin && (
+            <Link href="/admin/posts/new" className="hidden md:block">
+              <Button size="sm" className="rounded-full text-white gap-1.5">
+                <PenSquare className="h-4 w-4" />
+                Créer un post
+              </Button>
+            </Link>
+          )}
+
           {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center gap-2">
-            {user ? (
+            {props.user ? (
               <Link href="/profile"></Link>
             ) : (
               <>
@@ -100,7 +115,7 @@ export function TopNav({ user }: TopNavProps) {
           </div>
 
           {/* Mobile Menu Toggle */}
-          <div className="flex md:hidden">
+          <div className="flex md:hidden gap-1">
             <SearchDropdown />
             <Sheet>
               <SheetTrigger asChild>
@@ -112,7 +127,7 @@ export function TopNav({ user }: TopNavProps) {
               <SheetContent side="right">
                 <SheetTitle className="sr-only">Menu de navigation</SheetTitle>
                 <div className="flex flex-col gap-4 py-4">
-                  <img src="../logo-g.png" alt="Logo" width={50} />
+                  <img src="/logo-g.png" alt="Logo" width={50} />
                   <nav className="flex flex-col gap-2">
                     {navLinks.map((link) => (
                       <Link
@@ -123,7 +138,19 @@ export function TopNav({ user }: TopNavProps) {
                         {link.label}
                       </Link>
                     ))}
-                    {!user && (
+                    {isWriterOrAdmin && (
+                      <>
+                        <div className="h-px bg-border my-2" />
+                        <Link
+                          href="/admin/posts/new"
+                          className="flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+                        >
+                          <PenSquare className="h-4 w-4" />
+                          Créer un post
+                        </Link>
+                      </>
+                    )}
+                    {!props.user && (
                       <>
                         <div className="h-px bg-border my-2" />
                         <Link

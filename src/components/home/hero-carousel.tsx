@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, ArrowUpRight } from "lucide-react";
 import type { HomePostCard } from "@/app/actions/posts";
@@ -9,8 +9,14 @@ interface HeroCarouselProps {
   posts: HomePostCard[];
 }
 
+// Distance minimale (en px) pour considérer le geste comme un swipe volontaire
+const SWIPE_THRESHOLD = 40;
+
 export function HeroCarousel({ posts }: HeroCarouselProps) {
   const [index, setIndex] = useState(0);
+  const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
+  const touchDeltaX = useRef(0);
 
   useEffect(() => {
     if (posts.length <= 1) return;
@@ -40,8 +46,46 @@ export function HeroCarousel({ posts }: HeroCarouselProps) {
   const goTo = (i: number) =>
     setIndex(((i % posts.length) + posts.length) % posts.length);
 
+  const handleTouchStart = (e: React.TouchEvent<HTMLElement>) => {
+    if (posts.length <= 1) return;
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+    touchDeltaX.current = 0;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLElement>) => {
+    if (touchStartX.current === null) return;
+    touchDeltaX.current = e.touches[0].clientX - touchStartX.current;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent<HTMLElement>) => {
+    if (touchStartX.current === null || touchStartY.current === null) return;
+
+    const deltaX = touchDeltaX.current;
+    const deltaY = e.changedTouches[0].clientY - touchStartY.current;
+
+    // On ignore les gestes trop verticaux (scroll de page) pour ne réagir
+    // qu'aux swipes réellement horizontaux
+    if (Math.abs(deltaX) > SWIPE_THRESHOLD && Math.abs(deltaX) > Math.abs(deltaY)) {
+      if (deltaX < 0) {
+        goTo(index + 1);
+      } else {
+        goTo(index - 1);
+      }
+    }
+
+    touchStartX.current = null;
+    touchStartY.current = null;
+    touchDeltaX.current = 0;
+  };
+
   return (
-    <section className="relative h-[420px] w-full overflow-hidden sm:h-[480px] md:h-[560px]">
+    <section
+      className="relative h-[420px] w-full touch-pan-y overflow-hidden sm:h-[480px] md:h-[560px]"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       {posts.map((post, i) => (
         <img
           key={post.id}
@@ -63,7 +107,7 @@ export function HeroCarousel({ posts }: HeroCarouselProps) {
             type="button"
             onClick={() => goTo(index - 1)}
             aria-label="Publication précédente"
-            className="shadow-lg absolute left-6 md:left-8 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-white/50 backdrop-blur-[3px] transition-colors hover:bg-white/70 hover:backdrop-blur-[3px]"
+            className="shadow-lg absolute hidden left-6 md:left-8 top-1/2 z-20 sm:flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-white/50 backdrop-blur-[3px] transition-colors hover:bg-white/70 hover:backdrop-blur-[3px]"
           >
             <ChevronLeft className="h-5 w-5 text-primary" />
           </button>
@@ -71,14 +115,14 @@ export function HeroCarousel({ posts }: HeroCarouselProps) {
             type="button"
             onClick={() => goTo(index + 1)}
             aria-label="Publication suivante"
-            className="shadow-lg absolute right-6 md:right-8 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-white/50 backdrop-blur-[3px] transition-colors hover:bg-white/70 hover:backdrop-blur-[3px]"
+            className="shadow-lg absolute hidden right-6 md:right-8 top-1/2 z-20 sm:flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-white/50 backdrop-blur-[3px] transition-colors hover:bg-white/70 hover:backdrop-blur-[3px]"
           >
             <ChevronRight className="h-5 w-5 text-primary" />
           </button>
         </>
       )}
 
-      <div className="absolute inset-x-0 bottom-0 z-10 px-16 pb-20 sm:px-20 md:px-28 md:pb-26">
+      <div className="absolute inset-x-0 bottom-0 z-10 px-8 pb-20 sm:px-20 md:px-28 md:pb-26">
         <div className="max-w-xl">
           <h1 className="text-2xl font-extrabold uppercase leading-tight text-gray-900 sm:text-3xl md:text-4xl">
             {current.title}

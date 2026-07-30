@@ -40,7 +40,7 @@ export function BottomNav({ userRole }: BottomNavProps) {
     ? [
         { href: "/", label: "Accueil", Outline: HomeOutlineIcon, Filled: HomeFilledIcon },
         { href: "/articles", label: "Articles", Outline: ArticleOutlineIcon, Filled: ArticleFilledIcon },
-        { href: "/admin/posts", label: "Posts", Outline: PencilOutlineIcon, Filled: PencilFilledIcon },
+        { href: "/admin/posts/new", label: "Posts", Outline: PencilOutlineIcon, Filled: PencilFilledIcon },
         { href: "/infos", label: "Infos", Outline: InfoOutlineIcon, Filled: InfoFilledIcon },
         { href: "/profile", label: "Profil", Outline: UserOutlineIcon, Filled: UserFilledIcon },
       ]

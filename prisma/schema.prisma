@@ -19,7 +19,7 @@ enum PostType {
   INFO
   ARTICLE
   ACTU
-  INTERVIEW
+  ANNONCE
 }
 
 enum PostStatus {
@@ -60,11 +60,13 @@ model Post {
   summary     String
   thumbnail   String?
   mediaUrl    String?
+  images      String[]   @default([])
   authorId    String
   views       Int        @default(0)
   status      PostStatus @default(DRAFT)
   tags        String[]
   info        String?
+  expiresAt   DateTime?
   publishedAt DateTime?
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
@@ -79,6 +81,7 @@ model Post {
   @@index([type])
   @@index([status])
   @@index([publishedAt])
+  @@index([expiresAt])
 }
 
 model Comment {
