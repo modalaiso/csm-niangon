@@ -24,8 +24,8 @@ export function AnnouncementPopup(props: Readonly<AnnouncementPopupProps>) {
       if (!dialogNode.open) {
         dialogNode.showModal();
       }
-    } else {
-      if (dialogNode.open) {
+    } else if (dialogNode.open) {
+      {
         dialogNode.close();
       }
     }
