@@ -35,7 +35,7 @@ function renderInline(text: string, keyPrefix: string): React.ReactNode[] {
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          style={{ textDecoration: 'underline', textUnderlineOffset: '2px' }}
+          style={{ textDecoration: 'underline' }}
           className="text-primary hover:text-primary/80"
         >
           {label}

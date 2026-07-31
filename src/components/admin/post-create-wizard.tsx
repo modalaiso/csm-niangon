@@ -12,12 +12,12 @@ import {
   Megaphone,
   Loader2,
 } from "lucide-react";
-import type { PostType } from "@prisma/client";
+import type { PostStatus, PostType } from "@prisma/client";
 import { cn } from "@/lib/utils";
 import { ContentEditor } from "@/components/admin/content-editor";
 import { MultiImageUploadField } from "@/components/admin/multi-image-upload-field";
 import { AnnouncementDurationSelect } from "@/components/admin/announcement-duration-select";
-import { createPost } from "@/app/actions/admin-posts";
+import { createPost, updatePost } from "@/app/actions/admin-posts";
 
 const STEPS = [
   { id: 1, label: "Type" },
@@ -45,20 +45,49 @@ const TYPE_OPTIONS: {
 ];
 
 const MAX_IMAGES = 15;
+const URGENT_TAG = "urgent";
 
-export function PostCreateWizard() {
+export interface PostWizardInitialData {
+  id: string;
+  type: PostType;
+  title: string;
+  summary: string;
+  content: string;
+  images: string[];
+  tags: string[];
+  status: PostStatus;
+  expiresAt: Date | null;
+}
+
+interface PostCreateWizardProps {
+  mode?: "create" | "edit";
+  initial?: PostWizardInitialData;
+}
+
+function buildInitialTagsInput(tags: string[]): string {
+  return tags.filter((t) => t.toLowerCase() !== URGENT_TAG).join(", ");
+}
+
+export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
+  const mode = props.mode ?? "create";
+  const isEdit = mode === "edit" && props.initial;
+
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   const [step, setStep] = useState(1);
-  const [type, setType] = useState<PostType | null>(null);
-  const [title, setTitle] = useState("");
-  const [summary, setSummary] = useState("");
-  const [content, setContent] = useState("");
-  const [images, setImages] = useState<string[]>([]);
-  const [expiresAt, setExpiresAt] = useState<Date | null>(null);
-  const [tagsInput, setTagsInput] = useState("");
-  const [isUrgent, setIsUrgent] = useState(false);
+  const [type, setType] = useState<PostType | null>(props.initial?.type ?? null);
+  const [title, setTitle] = useState(props.initial?.title ?? "");
+  const [summary, setSummary] = useState(props.initial?.summary ?? "");
+  const [content, setContent] = useState(props.initial?.content ?? "");
+  const [images, setImages] = useState<string[]>(props.initial?.images ?? []);
+  const [expiresAt, setExpiresAt] = useState<Date | null>(props.initial?.expiresAt ?? null);
+  const [tagsInput, setTagsInput] = useState(
+    props.initial ? buildInitialTagsInput(props.initial.tags) : "",
+  );
+  const [isUrgent, setIsUrgent] = useState(
+    props.initial?.tags.some((t) => t.toLowerCase() === URGENT_TAG) ?? false,
+  );
   const [error, setError] = useState<string | null>(null);
 
   const isAnnouncement = type === "ANNONCE";
@@ -83,26 +112,51 @@ export function PostCreateWizard() {
       .split(",")
       .map((t) => t.trim())
       .filter(Boolean);
-    if (type === "INFO" && isUrgent && !parsed.some((t) => t.toLowerCase() === "urgent")) {
-      parsed.push("urgent");
+    if (type === "INFO" && isUrgent && !parsed.some((t) => t.toLowerCase() === URGENT_TAG)) {
+      parsed.push(URGENT_TAG);
     }
     return parsed;
   };
 
-  const handleSubmit = (status: "DRAFT" | "PUBLISHED") => {
+  const handleSubmit = (status: "DRAFT" | "PUBLISHED" | "ARCHIVED") => {
     if (!type || !canGoNext()) return;
     setError(null);
+
     startTransition(async () => {
+      if (isEdit && props.initial) {
+        const result = await updatePost(props.initial.id, {
+          type,
+          title: title.trim(),
+          summary: summary.trim(),
+          content: content.trim(),
+          images: isAnnouncement ? [] : images,
+          expiresAt: isAnnouncement ? expiresAt : null,
+          tags: buildTags(),
+          status,
+        });
+
+        if ("error" in result) {
+          if (result.error === "auth_required") {
+            router.push("/login");
+            return;
+          }
+          setError("Impossible d'enregistrer les modifications. Vérifiez les champs et réessayez.");
+          return;
+        }
+
+        router.push("/admin/posts");
+        return;
+      }
+
       const result = await createPost({
         type,
         title: title.trim(),
         summary: summary.trim(),
         content: content.trim(),
-        // Procédure différente selon le type : jamais d'image pour une ANNONCE
         images: isAnnouncement ? [] : images,
         expiresAt: isAnnouncement ? expiresAt : null,
         tags: buildTags(),
-        status,
+        status: status === "ARCHIVED" ? "DRAFT" : status,
       });
 
       if ("error" in result) {
@@ -114,8 +168,6 @@ export function PostCreateWizard() {
         return;
       }
 
-      // Les annonces n'ont pas de page dédiée : elles ne vivent qu'en pop-up.
-      // On redirige vers l'accueil pour voir le pop-up apparaître directement.
       if (type === "ANNONCE") {
         router.push("/");
         return;
@@ -333,7 +385,17 @@ export function PostCreateWizard() {
               <ChevronRight className="h-4 w-4" />
             </button>
           ) : (
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center justify-end gap-2">
+              {isEdit && (
+                <button
+                  type="button"
+                  onClick={() => handleSubmit("ARCHIVED")}
+                  disabled={isPending}
+                  className="rounded-full border border-input bg-white px-5 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  Archiver
+                </button>
+              )}
               <button
                 type="button"
                 onClick={() => handleSubmit("DRAFT")}
@@ -349,7 +411,7 @@ export function PostCreateWizard() {
                 className="flex items-center gap-2 rounded-full bg-primary px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
-                Publier
+                {isEdit ? "Enregistrer et publier" : "Publier"}
               </button>
             </div>
           )}

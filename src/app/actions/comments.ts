@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import type { CommentReactionType, Role } from "@prisma/client";
+import { checkContentAgainstKeywords } from "@/app/actions/moderation";
 
 export interface PostComment {
   id: string;
@@ -110,12 +111,9 @@ export async function getPostComments(postId: string): Promise<CommentThread[]> 
       const dislikeCount = c.reactions.filter((r) => r.type === "DISLIKE").length;
       const mine = userId ? c.reactions.find((r) => r.userId === userId) : undefined;
       const parent = c.parentId ? byId.get(c.parentId) : undefined;
-      // On n'affiche la mention "@untel" que si on répond à une réponse (pas au commentaire principal)
       const replyToUsername = parent?.parentId ? parent.user.username : null;
 
       const isOwner = userId === c.userId;
-      // On garde le contenu visible pour l'auteur et les modérateurs ;
-      // les autres voient un message générique tant que le commentaire est masqué.
       const visibleContent =
         c.isHidden && !isOwner && !canModerate
           ? "Ce commentaire a été masqué par la modération."
@@ -155,7 +153,6 @@ export async function getPostComments(postId: string): Promise<CommentThread[]> 
       replies: repliesByRoot.get(root.id) ?? [],
     }));
 
-    // Commentaires principaux les plus récents en premier
     return threads.sort(
       (a, b) => b.root.createdAt.getTime() - a.root.createdAt.getTime(),
     );
@@ -169,7 +166,14 @@ type AddCommentSuccess = { success: true };
 type AddCommentError = { error: "empty" | "auth_required" | "unknown" };
 type AddCommentResult = AddCommentSuccess | AddCommentError;
 
-/** Publie un commentaire (ou une réponse si parentId est fourni) */
+/**
+ * Publie un commentaire (ou une réponse si parentId est fourni).
+ * Vérifie automatiquement le contenu contre la liste de mots-clés surveillés :
+ * - AUTO_DELETE : le commentaire n'est jamais persisté (suppression silencieuse,
+ *   l'auteur voit un succès pour ne pas l'inciter à reformuler et contourner le filtre).
+ * - FLAG_FOR_REVIEW : le commentaire est créé mais masqué, en attente de revue
+ *   dans la file de modération du dashboard.
+ */
 export async function addComment(
   postId: string,
   content: string,
@@ -186,9 +190,47 @@ export async function addComment(
       return { error: "auth_required" };
     }
 
+    const match = await checkContentAgainstKeywords(trimmed);
+
+    if (match?.action === "AUTO_DELETE") {
+      await prisma.moderationLog.create({
+        data: {
+          type: "AUTO_DELETED",
+          content: trimmed,
+          matchedKeyword: match.phrase,
+          authorId: userId,
+          postId,
+        },
+      });
+      revalidatePath(`/posts/${postId}`);
+      return { success: true };
+    }
+
+    const isFlagged = match?.action === "FLAG_FOR_REVIEW";
+
     await prisma.comment.create({
-      data: { postId, userId, content: trimmed, parentId: parentId ?? null },
+      data: {
+        postId,
+        userId,
+        content: trimmed,
+        parentId: parentId ?? null,
+        isFlagged,
+        isHidden: isFlagged,
+        flaggedKeyword: isFlagged ? match!.phrase : null,
+      },
     });
+
+    if (isFlagged) {
+      await prisma.moderationLog.create({
+        data: {
+          type: "FLAGGED",
+          content: trimmed,
+          matchedKeyword: match!.phrase,
+          authorId: userId,
+          postId,
+        },
+      });
+    }
 
     revalidatePath(`/posts/${postId}`);
     return { success: true };
@@ -265,7 +307,6 @@ export async function deleteComment(commentId: string): Promise<DeleteCommentRes
       return { error: "forbidden" };
     }
 
-    // La cascade Prisma (onDelete: Cascade sur parentId) supprime aussi les réponses
     await prisma.comment.delete({ where: { id: commentId } });
 
     revalidatePath(`/posts/${comment.postId}`);

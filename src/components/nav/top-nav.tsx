@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Menu, PenSquare } from "lucide-react";
+import { Menu, PenSquare, ShieldUser, } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -28,7 +28,8 @@ export function TopNav(props: Readonly<TopNavProps>) {
     pathname.startsWith("/login") ||
     pathname.startsWith("/signup") ||
     pathname.startsWith("/admin-login") ||
-    pathname.startsWith("/admin-signup")
+    pathname.startsWith("/admin-signup") ||
+    pathname.startsWith("/admin")
   ) {
     return null;
   }
@@ -86,10 +87,10 @@ export function TopNav(props: Readonly<TopNavProps>) {
 
           {/* Bouton de création de post, réservé aux rédacteurs et admins */}
           {isWriterOrAdmin && (
-            <Link href="/admin/posts/new" className="hidden md:block">
+            <Link href="/admin" className="hidden md:block">
               <Button size="sm" className="rounded-full text-white gap-1.5">
-                <PenSquare className="h-4 w-4" />
-                Créer un post
+                <ShieldUser className="h-4 w-4" />
+                Admin
               </Button>
             </Link>
           )}
