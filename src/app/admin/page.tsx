@@ -2,6 +2,7 @@ import Link from "next/link";
 import { TrendingUp, Eye, FileText, MessageCircle, Megaphone, Users } from "lucide-react";
 import { getAllVisitStats, getVisitTrend, getTopPages, type VisitPeriod } from "@/app/actions/analytics";
 import { getDashboardSummary } from "@/app/actions/admin-dashboard";
+import { requireDashboardAccess } from "@/lib/auth/admin-guard";
 import { VisitTrendChart } from "@/components/admin/visit-trend-chart";
 
 export const metadata = {
@@ -18,6 +19,11 @@ const PERIOD_ORDER: { key: VisitPeriod; short: string }[] = [
 ];
 
 export default async function AdminDashboardPage() {
+  const currentUser = await requireDashboardAccess();
+  const canManagePosts = currentUser.role === "WRITER" || currentUser.role === "ADMIN";
+  const canModerate = currentUser.role === "MODERATOR" || currentUser.role === "ADMIN";
+  const isAdmin = currentUser.role === "ADMIN";
+
   const [visitStats, trend, topPages, summaryResult] = await Promise.all([
     getAllVisitStats(),
     getVisitTrend(14),
@@ -82,45 +88,53 @@ export default async function AdminDashboardPage() {
       </section>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <Link
-          href="/admin/posts"
-          className="rounded-2xl border border-border bg-white p-5 transition-shadow hover:shadow-md"
-        >
-          <div className="flex items-center justify-between">
-            <FileText className="h-5 w-5 text-primary" />
-            <span className="text-xs text-muted-foreground">{summary.totalPosts} au total</span>
-          </div>
-          <p className="mt-3 text-2xl font-bold text-foreground">{summary.publishedPosts}</p>
-          <p className="text-sm text-muted-foreground">Publications publiées</p>
-          <p className="mt-2 text-xs text-muted-foreground">
-            {summary.draftPosts} brouillon{summary.draftPosts > 1 ? "s" : ""} ·{" "}
-            {summary.archivedPosts} archivé{summary.archivedPosts > 1 ? "s" : ""}
-          </p>
-        </Link>
+        {canManagePosts && (
+          <Link
+            href="/admin/posts"
+            className="rounded-2xl border border-border bg-white p-5 transition-shadow hover:shadow-md"
+          >
+            <div className="flex items-center justify-between">
+              <FileText className="h-5 w-5 text-primary" />
+              <span className="text-xs text-muted-foreground">{summary.totalPosts} au total</span>
+            </div>
+            <p className="mt-3 text-2xl font-bold text-foreground">{summary.publishedPosts}</p>
+            <p className="text-sm text-muted-foreground">Publications publiées</p>
+            <p className="mt-2 text-xs text-muted-foreground">
+              {summary.draftPosts} brouillon{summary.draftPosts > 1 ? "s" : ""} ·{" "}
+              {summary.archivedPosts} archivé{summary.archivedPosts > 1 ? "s" : ""}
+            </p>
+          </Link>
+        )}
 
-        <Link
-          href="/admin/moderation"
-          className="rounded-2xl border border-border bg-white p-5 transition-shadow hover:shadow-md"
-        >
-          <div className="flex items-center justify-between">
-            <MessageCircle className="h-5 w-5 text-secondary" />
-            <span className="text-xs text-muted-foreground">{summary.totalComments} au total</span>
-          </div>
-          <p className="mt-3 text-2xl font-bold text-foreground">{summary.pendingComments}</p>
-          <p className="text-sm text-muted-foreground">Commentaires à modérer</p>
-        </Link>
+        {canModerate && (
+          <Link
+            href="/admin/moderation"
+            className="rounded-2xl border border-border bg-white p-5 transition-shadow hover:shadow-md"
+          >
+            <div className="flex items-center justify-between">
+              <MessageCircle className="h-5 w-5 text-secondary" />
+              <span className="text-xs text-muted-foreground">{summary.totalComments} au total</span>
+            </div>
+            <p className="mt-3 text-2xl font-bold text-foreground">{summary.pendingComments}</p>
+            <p className="text-sm text-muted-foreground">Commentaires à modérer</p>
+          </Link>
+        )}
 
-        <div className="rounded-2xl border border-border bg-white p-5">
-          <div className="flex items-center justify-between">
-            <Megaphone className="h-5 w-5 text-rose-500" />
-            <Users className="h-4 w-4 text-muted-foreground" />
+        {(canManagePosts || isAdmin) && (
+          <div className="rounded-2xl border border-border bg-white p-5">
+            <div className="flex items-center justify-between">
+              <Megaphone className="h-5 w-5 text-rose-500" />
+              {isAdmin && <Users className="h-4 w-4 text-muted-foreground" />}
+            </div>
+            <p className="mt-3 text-2xl font-bold text-foreground">{summary.activeAnnouncements}</p>
+            <p className="text-sm text-muted-foreground">Annonces actives</p>
+            {isAdmin && (
+              <p className="mt-2 text-xs text-muted-foreground">
+                {summary.totalUsers} utilisateurs inscrits
+              </p>
+            )}
           </div>
-          <p className="mt-3 text-2xl font-bold text-foreground">{summary.activeAnnouncements}</p>
-          <p className="text-sm text-muted-foreground">Annonces actives</p>
-          <p className="mt-2 text-xs text-muted-foreground">
-            {summary.totalUsers} utilisateurs inscrits
-          </p>
-        </div>
+        )}
       </div>
 
       {/* Pages les plus visitées */}
@@ -141,9 +155,7 @@ export default async function AdminDashboardPage() {
                   <span className="flex h-5 w-5 items-center justify-center rounded-full bg-muted text-[11px] font-semibold text-muted-foreground">
                     {index + 1}
                   </span>
-                  <Link href={page.path} className="hover:underline">
-                    {page.path}
-                  </Link>
+                  {page.path}
                 </span>
                 <span className="text-sm font-medium text-foreground">{page.count}</span>
               </li>

@@ -33,7 +33,7 @@ export function TopNav(props: Readonly<TopNavProps>) {
     return null;
   }
 
-  const isWriterOrAdmin = props.userRole === "WRITER" || props.userRole === "ADMIN";
+  const isWriterOrAdminOrModerator = props.userRole === "WRITER" || props.userRole === "ADMIN" || props.userRole === "MODERATOR";
 
   const navLinks = [
     { href: "/", label: "Accueil" },
@@ -85,7 +85,7 @@ export function TopNav(props: Readonly<TopNavProps>) {
           </div>
 
           {/* Bouton de création de post, réservé aux rédacteurs et admins */}
-          {isWriterOrAdmin && (
+          {isWriterOrAdminOrModerator && (
             <Link href="/admin" className="hidden md:block">
               <Button size="sm" className="rounded-full text-white gap-1.5">
                 <ShieldUser className="h-4 w-4" />
@@ -138,7 +138,7 @@ export function TopNav(props: Readonly<TopNavProps>) {
                         {link.label}
                       </Link>
                     ))}
-                    {isWriterOrAdmin && (
+                    {isWriterOrAdminOrModerator && (
                       <>
                         <div className="h-px bg-border my-2" />
                         <Link

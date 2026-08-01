@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { PostStatus, PostType } from "@prisma/client";
-import { getAdminAuthContext } from "@/lib/auth/admin-guard";
+import { getDashboardAuthContext } from "@/lib/auth/admin-guard";
 
 export interface DashboardSummary {
   totalPosts: number;
@@ -19,7 +19,7 @@ type DashboardSummaryResult = DashboardSummary | { error: "auth_required" | "for
 
 /** Résumé de la plateforme pour les cartes KPI de la vue d'ensemble */
 export async function getDashboardSummary(): Promise<DashboardSummaryResult> {
-  const auth = await getAdminAuthContext();
+  const auth = await getDashboardAuthContext();
   if (!auth.ok) {
     return { error: auth.error };
   }

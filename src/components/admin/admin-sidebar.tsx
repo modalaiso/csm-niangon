@@ -20,14 +20,21 @@ interface AdminSidebarProps {
   role: Role;
 }
 
-const BASE_NAV_ITEMS = [
-  { href: "/admin", label: "Vue d'ensemble", Icon: LayoutDashboard },
-  { href: "/admin/posts", label: "Publications", Icon: FileText },
+const OVERVIEW_ITEM = { href: "/admin", label: "Vue d'ensemble", Icon: LayoutDashboard };
+const POST_ITEMS = [{ href: "/admin/posts", label: "Publications", Icon: FileText }];
+const MODERATION_ITEMS = [
   { href: "/admin/comments", label: "Commentaires", Icon: MessageCircle },
   { href: "/admin/moderation", label: "Modération", Icon: ShieldAlert },
 ];
+const ADMIN_ITEMS = [{ href: "/admin/users", label: "Utilisateurs", Icon: Users }];
 
-const ADMIN_ONLY_ITEMS = [{ href: "/admin/users", label: "Utilisateurs", Icon: Users }];
+function getNavItems(role: Role) {
+  const items = [OVERVIEW_ITEM];
+  if (role === "WRITER" || role === "ADMIN") items.push(...POST_ITEMS);
+  if (role === "MODERATOR" || role === "ADMIN") items.push(...MODERATION_ITEMS);
+  if (role === "ADMIN") items.push(...ADMIN_ITEMS);
+  return items;
+}
 
 interface SidebarLinksProps {
   role: Role;
@@ -36,7 +43,7 @@ interface SidebarLinksProps {
 
 function SidebarLinks(props: Readonly<SidebarLinksProps>) {
   const pathname = usePathname();
-  const items = props.role === "ADMIN" ? [...BASE_NAV_ITEMS, ...ADMIN_ONLY_ITEMS] : BASE_NAV_ITEMS;
+  const items = getNavItems(props.role);
 
   return (
     <nav className="flex flex-col gap-1">
@@ -49,7 +56,7 @@ function SidebarLinks(props: Readonly<SidebarLinksProps>) {
             href={item.href}
             onClick={props.onNavigate}
             className={cn(
-              "flex items-center gap-3 rounded-full px-3 py-2.5 text-sm font-medium transition-colors",
+              "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
               isActive
                 ? "bg-primary/10 text-primary"
                 : "text-muted-foreground hover:bg-accent hover:text-foreground",
@@ -81,7 +88,6 @@ export function AdminSidebar(props: Readonly<AdminSidebarProps>) {
       {/* Desktop */}
       <aside className="sticky top-0 hidden h-screen w-60 flex-shrink-0 border-r border-border bg-white px-3 py-6 md:block">
         <Link href="/admin" className="mb-6 flex items-center gap-2 px-3">
-          <img src="/logo.png" alt="CSM Niangon" width={32} height={32} />
           <span className="text-sm font-bold text-primary">Dashboard</span>
         </Link>
         <SidebarLinks role={props.role} />
@@ -90,7 +96,6 @@ export function AdminSidebar(props: Readonly<AdminSidebarProps>) {
       {/* Mobile topbar + menu */}
       <div className="flex items-center justify-between border-b border-border bg-white px-4 py-3 md:hidden">
         <Link href="/admin" className="flex items-center gap-2">
-          <img src="/logo.png" alt="CSM Niangon" width={28} height={28} />
           <span className="text-sm font-bold text-primary">Dashboard</span>
         </Link>
         <button

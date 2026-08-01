@@ -3,7 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import type { ModerationAction, ModerationLogType } from "@prisma/client";
-import { getAdminAuthContext } from "@/lib/auth/admin-guard";
+import { getModeratorAuthContext } from "@/lib/auth/admin-guard";
 
 /* --------------------------- Mots-clés de modération --------------------------- */
 
@@ -20,7 +20,7 @@ type ListKeywordsResult =
   | { error: "auth_required" | "forbidden" | "unknown" };
 
 export async function listModerationKeywords(): Promise<ListKeywordsResult> {
-  const auth = await getAdminAuthContext();
+  const auth = await getModeratorAuthContext();
   if (!auth.ok) return { error: auth.error };
 
   try {
@@ -40,7 +40,7 @@ export async function addModerationKeyword(
   phrase: string,
   action: ModerationAction,
 ): Promise<AddKeywordSuccess | AddKeywordError> {
-  const auth = await getAdminAuthContext();
+  const auth = await getModeratorAuthContext();
   if (!auth.ok) return { error: auth.error };
 
   const trimmed = phrase.trim().toLowerCase();
@@ -69,7 +69,7 @@ export async function toggleModerationKeyword(
   id: string,
   isActive: boolean,
 ): Promise<SimpleSuccess | SimpleError> {
-  const auth = await getAdminAuthContext();
+  const auth = await getModeratorAuthContext();
   if (!auth.ok) return { error: auth.error };
 
   try {
@@ -86,7 +86,7 @@ export async function toggleModerationKeyword(
 }
 
 export async function deleteModerationKeyword(id: string): Promise<SimpleSuccess | SimpleError> {
-  const auth = await getAdminAuthContext();
+  const auth = await getModeratorAuthContext();
   if (!auth.ok) return { error: auth.error };
 
   try {
@@ -145,7 +145,7 @@ type ListFlaggedResult =
 
 /** Commentaires masqués automatiquement en attente de revue manuelle (action FLAG_FOR_REVIEW) */
 export async function listFlaggedComments(): Promise<ListFlaggedResult> {
-  const auth = await getAdminAuthContext();
+  const auth = await getModeratorAuthContext();
   if (!auth.ok) return { error: auth.error };
 
   try {
@@ -182,7 +182,7 @@ export async function listFlaggedComments(): Promise<ListFlaggedResult> {
 
 /** Approuve un commentaire signalé : redevient visible normalement */
 export async function approveFlaggedComment(commentId: string): Promise<SimpleSuccess | SimpleError> {
-  const auth = await getAdminAuthContext();
+  const auth = await getModeratorAuthContext();
   if (!auth.ok) return { error: auth.error };
 
   try {
@@ -219,7 +219,7 @@ export async function approveFlaggedComment(commentId: string): Promise<SimpleSu
 
 /** Rejette un commentaire signalé : suppression définitive */
 export async function rejectFlaggedComment(commentId: string): Promise<SimpleSuccess | SimpleError> {
-  const auth = await getAdminAuthContext();
+  const auth = await getModeratorAuthContext();
   if (!auth.ok) return { error: auth.error };
 
   try {
@@ -266,7 +266,7 @@ type ListLogsResult = { logs: ModerationLogRow[] } | { error: "auth_required" | 
 
 /** Historique de toutes les actions de modération (auto-suppressions incluses) — traçabilité */
 export async function listModerationLogs(limit: number = 50): Promise<ListLogsResult> {
-  const auth = await getAdminAuthContext();
+  const auth = await getModeratorAuthContext();
   if (!auth.ok) return { error: auth.error };
 
   try {

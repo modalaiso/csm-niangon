@@ -13,7 +13,10 @@ export interface AuthenticatedUser {
   avatar: string | null;
 }
 
-/** Récupère l'utilisateur connecté avec son rôle DB, ou null s'il n'est pas authentifié */
+const DASHBOARD_ROLES: Role[] = ["WRITER", "MODERATOR", "ADMIN"];
+const POST_MANAGER_ROLES: Role[] = ["WRITER", "ADMIN"];
+const MODERATOR_ROLES: Role[] = ["MODERATOR", "ADMIN"];
+
 export async function getCurrentUser(): Promise<AuthenticatedUser | null> {
   const supabase = await createClient();
   const {
@@ -30,15 +33,31 @@ export async function getCurrentUser(): Promise<AuthenticatedUser | null> {
   return dbUser;
 }
 
-/** Exige un rôle WRITER ou ADMIN, redirige sinon. À utiliser dans les layouts/pages du dashboard. */
-export async function requireWriterOrAdmin(): Promise<AuthenticatedUser> {
+/** Accès de base au dashboard : WRITER, MODERATOR ou ADMIN. À utiliser dans le layout /admin. */
+export async function requireDashboardAccess(): Promise<AuthenticatedUser> {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
-  if (user.role !== "WRITER" && user.role !== "ADMIN") redirect("/");
+  if (!DASHBOARD_ROLES.includes(user.role)) redirect("/");
   return user;
 }
 
-/** Exige le rôle ADMIN strictement (gestion des utilisateurs, clés d'accès...) */
+/** Gestion des publications : WRITER ou ADMIN uniquement. */
+export async function requirePostManager(): Promise<AuthenticatedUser> {
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
+  if (!POST_MANAGER_ROLES.includes(user.role)) redirect("/admin");
+  return user;
+}
+
+/** Modération des commentaires : MODERATOR ou ADMIN uniquement. */
+export async function requireModerator(): Promise<AuthenticatedUser> {
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
+  if (!MODERATOR_ROLES.includes(user.role)) redirect("/admin");
+  return user;
+}
+
+/** Administration complète (utilisateurs...) : ADMIN strictement. */
 export async function requireAdmin(): Promise<AuthenticatedUser> {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
@@ -46,14 +65,39 @@ export async function requireAdmin(): Promise<AuthenticatedUser> {
   return user;
 }
 
-type AdminAuthContext =
+type BasicAuthError = "auth_required" | "forbidden";
+type AuthContext =
   | { ok: true; user: AuthenticatedUser }
-  | { ok: false; error: "auth_required" | "forbidden" };
+  | { ok: false; error: BasicAuthError };
 
-/** Variante pour server actions : retourne un objet d'erreur au lieu de rediriger */
-export async function getAdminAuthContext(): Promise<AdminAuthContext> {
+/** Variante server action : accès dashboard de base (WRITER/MODERATOR/ADMIN) */
+export async function getDashboardAuthContext(): Promise<AuthContext> {
   const user = await getCurrentUser();
   if (!user) return { ok: false, error: "auth_required" };
-  if (user.role !== "WRITER" && user.role !== "ADMIN") return { ok: false, error: "forbidden" };
+  if (!DASHBOARD_ROLES.includes(user.role)) return { ok: false, error: "forbidden" };
+  return { ok: true, user };
+}
+
+/** Variante server action : gestion des publications (WRITER/ADMIN) */
+export async function getPostManagerAuthContext(): Promise<AuthContext> {
+  const user = await getCurrentUser();
+  if (!user) return { ok: false, error: "auth_required" };
+  if (!POST_MANAGER_ROLES.includes(user.role)) return { ok: false, error: "forbidden" };
+  return { ok: true, user };
+}
+
+/** Variante server action : modération (MODERATOR/ADMIN) */
+export async function getModeratorAuthContext(): Promise<AuthContext> {
+  const user = await getCurrentUser();
+  if (!user) return { ok: false, error: "auth_required" };
+  if (!MODERATOR_ROLES.includes(user.role)) return { ok: false, error: "forbidden" };
+  return { ok: true, user };
+}
+
+/** Variante server action : administration stricte (ADMIN) */
+export async function getAdminAuthContext(): Promise<AuthContext> {
+  const user = await getCurrentUser();
+  if (!user) return { ok: false, error: "auth_required" };
+  if (user.role !== "ADMIN") return { ok: false, error: "forbidden" };
   return { ok: true, user };
 }

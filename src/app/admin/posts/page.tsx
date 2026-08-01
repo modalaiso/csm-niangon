@@ -1,13 +1,16 @@
 import Link from "next/link";
-import { Ghost, PenSquare } from "lucide-react";
+import { PenSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AdminPostsTable } from "@/components/admin/admin-posts-table";
+import { requirePostManager } from "@/lib/auth/admin-guard";
 
 export const metadata = {
   title: "Publications | Dashboard admin",
 };
 
-export default function AdminPostsPage() {
+export default async function AdminPostsPage() {
+  await requirePostManager();
+
   return (
     <div>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
@@ -18,7 +21,7 @@ export default function AdminPostsPage() {
           </p>
         </div>
         <Link href="/admin/posts/new">
-          <Button size="sm" className="gap-1.5 text-white rounded-full">
+          <Button size="sm" className="rounded-full gap-1.5 text-white">
             <PenSquare className="h-4 w-4" />
             Nouveau post
           </Button>

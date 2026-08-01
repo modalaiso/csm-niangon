@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import type { PostType, Role } from "@prisma/client";
 import { PostStatus } from "@prisma/client";
-import { getAdminAuthContext } from "@/lib/auth/admin-guard";
+import { getPostManagerAuthContext } from "@/lib/auth/admin-guard";
 
 type AuthContext = { userId: string | null; role: Role | null };
 
@@ -65,11 +65,9 @@ export interface CreatePostInput {
   title: string;
   summary: string;
   content: string;
-  /** Galerie d'images (max 15). Toujours vide/ignorée pour le type ANNONCE. */
   images: string[];
   tags: string[];
   status: "DRAFT" | "PUBLISHED";
-  /** Durée de vie du pop-up. Uniquement pris en compte pour le type ANNONCE. */
   expiresAt: Date | null;
 }
 
@@ -98,8 +96,6 @@ export async function createPost(
     return { error: "invalid" };
   }
 
-  // Procédure différente selon le type : une ANNONCE n'a jamais d'image
-  // et n'utilise expiresAt que dans ce cas-là.
   const isAnnouncement = input.type === "ANNONCE";
   const images = isAnnouncement ? [] : input.images.slice(0, MAX_IMAGES);
   const expiresAt =
@@ -119,7 +115,6 @@ export async function createPost(
         content: input.content.trim() || null,
         summary,
         images,
-        // La miniature (cartes, carrousel) reste dérivée de la première image
         thumbnail: images[0] ?? null,
         mediaUrl: null,
         authorId: userId,
@@ -131,7 +126,6 @@ export async function createPost(
       select: { id: true, slug: true },
     });
 
-    // Garde la barre d'information (et le pop-up d'annonces) à jour
     if (input.status === "PUBLISHED") {
       revalidatePath("/");
     }
@@ -183,11 +177,10 @@ type ListAdminPostsSuccess = {
 type ListAdminPostsError = { error: "auth_required" | "forbidden" | "unknown" };
 type ListAdminPostsResult = ListAdminPostsSuccess | ListAdminPostsError;
 
-/** Liste paginée/filtrée des posts pour le dashboard, avec vues du jour et réactions */
 export async function listAdminPosts(
   input: ListAdminPostsInput = {},
 ): Promise<ListAdminPostsResult> {
-  const auth = await getAdminAuthContext();
+  const auth = await getPostManagerAuthContext();
   if (!auth.ok) {
     return { error: auth.error };
   }
@@ -275,11 +268,10 @@ type DeletePostError = {
   error: "auth_required" | "forbidden" | "not_found" | "unknown";
 };
 
-/** Supprime un post définitivement — réservé aux WRITER/ADMIN */
 export async function deletePost(
   postId: string,
 ): Promise<DeletePostSuccess | DeletePostError> {
-  const auth = await getAdminAuthContext();
+  const auth = await getPostManagerAuthContext();
   if (!auth.ok) {
     return { error: auth.error };
   }
@@ -318,12 +310,11 @@ type UpdateStatusError = {
   error: "auth_required" | "forbidden" | "not_found" | "unknown";
 };
 
-/** Change la visibilité d'un post (DRAFT / PUBLISHED / ARCHIVED) */
 export async function updatePostStatus(
   postId: string,
   status: PostStatus,
 ): Promise<UpdateStatusSuccess | UpdateStatusError> {
-  const auth = await getAdminAuthContext();
+  const auth = await getPostManagerAuthContext();
   if (!auth.ok) {
     return { error: auth.error };
   }
@@ -339,7 +330,6 @@ export async function updatePostStatus(
       where: { id: postId },
       data: {
         status,
-        // On fixe publishedAt uniquement la première fois qu'un post est publié
         publishedAt:
           status === "PUBLISHED" && !existing.publishedAt ? new Date() : existing.publishedAt,
       },
@@ -369,12 +359,11 @@ export async function updatePostStatus(
 type BulkStatusSuccess = { success: true; updated: number };
 type BulkStatusError = { error: "auth_required" | "forbidden" | "unknown" };
 
-/** Change la visibilité de plusieurs posts d'un coup */
 export async function bulkUpdatePostStatus(
   postIds: string[],
   status: PostStatus,
 ): Promise<BulkStatusSuccess | BulkStatusError> {
-  const auth = await getAdminAuthContext();
+  const auth = await getPostManagerAuthContext();
   if (!auth.ok) {
     return { error: auth.error };
   }
@@ -412,11 +401,10 @@ export async function bulkUpdatePostStatus(
 type BulkDeleteSuccess = { success: true; deleted: number };
 type BulkDeleteError = { error: "auth_required" | "forbidden" | "unknown" };
 
-/** Supprime plusieurs posts d'un coup */
 export async function bulkDeletePosts(
   postIds: string[],
 ): Promise<BulkDeleteSuccess | BulkDeleteError> {
-  const auth = await getAdminAuthContext();
+  const auth = await getPostManagerAuthContext();
   if (!auth.ok) {
     return { error: auth.error };
   }
@@ -445,8 +433,6 @@ export async function bulkDeletePosts(
   }
 }
 
-// ── à ajouter à la fin du fichier src/app/actions/admin-posts.ts ──
-
 export interface AdminPostEditData {
   id: string;
   type: PostType;
@@ -463,9 +449,8 @@ type GetPostForEditResult =
   | { post: AdminPostEditData }
   | { error: "auth_required" | "forbidden" | "not_found" | "unknown" };
 
-/** Charge un post pour le formulaire d'édition */
 export async function getPostForEdit(postId: string): Promise<GetPostForEditResult> {
-  const auth = await getAdminAuthContext();
+  const auth = await getPostManagerAuthContext();
   if (!auth.ok) {
     return { error: auth.error };
   }
@@ -522,12 +507,11 @@ type UpdatePostError = {
   error: "auth_required" | "forbidden" | "invalid" | "not_found" | "unknown";
 };
 
-/** Met à jour un post existant — le slug n'est jamais régénéré pour ne pas casser les liens */
 export async function updatePost(
   postId: string,
   input: UpdatePostInput,
 ): Promise<UpdatePostSuccess | UpdatePostError> {
-  const auth = await getAdminAuthContext();
+  const auth = await getPostManagerAuthContext();
   if (!auth.ok) {
     return { error: auth.error };
   }

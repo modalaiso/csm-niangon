@@ -1,4 +1,4 @@
-import { requireWriterOrAdmin } from "@/lib/auth/admin-guard";
+import { requireDashboardAccess } from "@/lib/auth/admin-guard";
 import { AdminSidebar } from "@/components/admin/admin-sidebar";
 import { AdminTopbar } from "@/components/admin/admin-topbar";
 
@@ -9,7 +9,7 @@ export const metadata = {
 export default async function AdminLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const user = await requireWriterOrAdmin();
+  const user = await requireDashboardAccess();
 
   return (
     <div className="flex min-h-screen bg-muted/30">

@@ -13,6 +13,7 @@ export interface PostComment {
   parentId: string | null;
   authorId: string;
   isHidden: boolean;
+  isFlagged: boolean;
   isEdited: boolean;
   likeCount: number;
   dislikeCount: number;
@@ -42,6 +43,7 @@ type RawComment = {
   parentId: string | null;
   userId: string;
   isHidden: boolean;
+  isFlagged: boolean;
   user: { username: string; prenom: string; nom: string; avatar: string | null };
   reactions: { userId: string; type: CommentReactionType }[];
 };
@@ -97,6 +99,7 @@ export async function getPostComments(postId: string): Promise<CommentThread[]> 
         parentId: true,
         userId: true,
         isHidden: true,
+        isFlagged: true,
         user: {
           select: { username: true, prenom: true, nom: true, avatar: true },
         },
@@ -111,9 +114,12 @@ export async function getPostComments(postId: string): Promise<CommentThread[]> 
       const dislikeCount = c.reactions.filter((r) => r.type === "DISLIKE").length;
       const mine = userId ? c.reactions.find((r) => r.userId === userId) : undefined;
       const parent = c.parentId ? byId.get(c.parentId) : undefined;
+      // On n'affiche la mention "@untel" que si on répond à une réponse (pas au commentaire principal)
       const replyToUsername = parent?.parentId ? parent.user.username : null;
 
       const isOwner = userId === c.userId;
+      // On garde le contenu visible pour l'auteur et les modérateurs ;
+      // les autres voient un message générique tant que le commentaire est masqué.
       const visibleContent =
         c.isHidden && !isOwner && !canModerate
           ? "Ce commentaire a été masqué par la modération."
@@ -126,6 +132,7 @@ export async function getPostComments(postId: string): Promise<CommentThread[]> 
         parentId: c.parentId,
         authorId: c.userId,
         isHidden: c.isHidden,
+        isFlagged: c.isFlagged,
         isEdited: c.updatedAt.getTime() - c.createdAt.getTime() > 1000,
         likeCount,
         dislikeCount,
@@ -153,6 +160,7 @@ export async function getPostComments(postId: string): Promise<CommentThread[]> 
       replies: repliesByRoot.get(root.id) ?? [],
     }));
 
+    // Commentaires principaux les plus récents en premier
     return threads.sort(
       (a, b) => b.root.createdAt.getTime() - a.root.createdAt.getTime(),
     );
@@ -169,8 +177,7 @@ type AddCommentResult = AddCommentSuccess | AddCommentError;
 /**
  * Publie un commentaire (ou une réponse si parentId est fourni).
  * Vérifie automatiquement le contenu contre la liste de mots-clés surveillés :
- * - AUTO_DELETE : le commentaire n'est jamais persisté (suppression silencieuse,
- *   l'auteur voit un succès pour ne pas l'inciter à reformuler et contourner le filtre).
+ * - AUTO_DELETE : le commentaire n'est jamais persisté (suppression silencieuse).
  * - FLAG_FOR_REVIEW : le commentaire est créé mais masqué, en attente de revue
  *   dans la file de modération du dashboard.
  */

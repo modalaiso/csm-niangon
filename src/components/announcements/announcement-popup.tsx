@@ -82,7 +82,7 @@ export function AnnouncementPopup(props: Readonly<AnnouncementPopupProps>) {
       ref={dialogRef}
       aria-label={current.title}
       onClose={() => setIsOpen(false)}
-      className="m-auto rounded-3xl p-0 backdrop:bg-black/50 open:flex open:flex-col"
+      className="m-auto h-full max-h-96 w-full max-w-2xl rounded-3xl p-0 backdrop:bg-black/50 open:flex open:flex-col"
     >
       <div className="relative flex h-full max-h-96 w-full max-w-2xl flex-col overflow-hidden bg-white shadow-2xl">
         <div className="flex items-center justify-between px-6 pb-2 pt-4 sm:px-8">

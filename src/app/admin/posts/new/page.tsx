@@ -1,10 +1,13 @@
 import { PostCreateWizard } from "@/components/admin/post-create-wizard";
+import { requirePostManager } from "@/lib/auth/admin-guard";
 
 export const metadata = {
   title: "Créer un post | CSM Niangon",
 };
 
-export default function NewPostPage() {
+export default async function NewPostPage() {
+  await requirePostManager();
+
   return (
     <div>
       <h1 className="mb-2 text-center text-2xl font-bold text-foreground sm:text-3xl">

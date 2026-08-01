@@ -152,7 +152,7 @@ export function renderPostContent(content: string): React.ReactNode {
         }
 
         return (
-          <p key={key} className="mb-3 text-sm leading-relaxed text-foreground/90">
+          <p key={key} className="mb-1 text-sm leading-relaxed text-foreground/90">
             {renderInline(block.text, key)}
           </p>
         );

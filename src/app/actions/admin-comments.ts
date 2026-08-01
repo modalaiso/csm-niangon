@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { getAdminAuthContext } from "@/lib/auth/admin-guard";
+import { getModeratorAuthContext } from "@/lib/auth/admin-guard";
 
 export interface AdminCommentRow {
   id: string;
@@ -40,7 +40,7 @@ type ListAdminCommentsResult =
 export async function listAdminComments(
   input: ListAdminCommentsInput = {},
 ): Promise<ListAdminCommentsResult> {
-  const auth = await getAdminAuthContext();
+  const auth = await getModeratorAuthContext();
   if (!auth.ok) return { error: auth.error };
 
   const page = Math.max(1, input.page ?? 1);
@@ -108,7 +108,7 @@ type SimpleError = { error: "auth_required" | "forbidden" | "not_found" | "unkno
 
 /** Supprime un commentaire (et trace l'action dans le journal de modération) */
 export async function deleteCommentAdmin(commentId: string): Promise<SimpleSuccess | SimpleError> {
-  const auth = await getAdminAuthContext();
+  const auth = await getModeratorAuthContext();
   if (!auth.ok) return { error: auth.error };
 
   try {
@@ -154,7 +154,7 @@ export async function setCommentHiddenAdmin(
   commentId: string,
   hidden: boolean,
 ): Promise<SimpleSuccess | SimpleError> {
-  const auth = await getAdminAuthContext();
+  const auth = await getModeratorAuthContext();
   if (!auth.ok) return { error: auth.error };
 
   try {
@@ -189,7 +189,7 @@ type BulkSuccess = { success: true; count: number };
 type BulkError = { error: "auth_required" | "forbidden" | "unknown" };
 
 export async function bulkDeleteComments(commentIds: string[]): Promise<BulkSuccess | BulkError> {
-  const auth = await getAdminAuthContext();
+  const auth = await getModeratorAuthContext();
   if (!auth.ok) return { error: auth.error };
   if (commentIds.length === 0) return { success: true, count: 0 };
 
