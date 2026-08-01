@@ -28,8 +28,7 @@ export function TopNav(props: Readonly<TopNavProps>) {
     pathname.startsWith("/login") ||
     pathname.startsWith("/signup") ||
     pathname.startsWith("/admin-login") ||
-    pathname.startsWith("/admin-signup") ||
-    pathname.startsWith("/admin")
+    pathname.startsWith("/admin-signup")
   ) {
     return null;
   }
