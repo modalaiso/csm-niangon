@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Menu, PenSquare, ShieldUser, } from "lucide-react";
+import { Menu, PenSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -23,17 +23,18 @@ interface TopNavProps {
 export function TopNav(props: Readonly<TopNavProps>) {
   const pathname = usePathname();
 
-  // Hide on auth pages
+  // Hide on auth pages and on the whole admin dashboard (qui a sa propre topbar)
   if (
     pathname.startsWith("/login") ||
     pathname.startsWith("/signup") ||
     pathname.startsWith("/admin-login") ||
-    pathname.startsWith("/admin-signup")
+    pathname.startsWith("/admin-signup") ||
+    pathname.startsWith("/admin")
   ) {
     return null;
   }
 
-  const isWriterOrAdminOrModerator = props.userRole === "WRITER" || props.userRole === "ADMIN" || props.userRole === "MODERATOR";
+  const isWriterOrAdmin = props.userRole === "WRITER" || props.userRole === "ADMIN";
 
   const navLinks = [
     { href: "/", label: "Accueil" },
@@ -85,11 +86,11 @@ export function TopNav(props: Readonly<TopNavProps>) {
           </div>
 
           {/* Bouton de création de post, réservé aux rédacteurs et admins */}
-          {isWriterOrAdminOrModerator && (
-            <Link href="/admin" className="hidden md:block">
+          {isWriterOrAdmin && (
+            <Link href="/admin/posts/new" className="hidden md:block">
               <Button size="sm" className="rounded-full text-white gap-1.5">
-                <ShieldUser className="h-4 w-4" />
-                Dashboard
+                <PenSquare className="h-4 w-4" />
+                Créer un post
               </Button>
             </Link>
           )}
@@ -138,7 +139,7 @@ export function TopNav(props: Readonly<TopNavProps>) {
                         {link.label}
                       </Link>
                     ))}
-                    {isWriterOrAdminOrModerator && (
+                    {isWriterOrAdmin && (
                       <>
                         <div className="h-px bg-border my-2" />
                         <Link

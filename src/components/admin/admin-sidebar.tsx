@@ -88,6 +88,7 @@ export function AdminSidebar(props: Readonly<AdminSidebarProps>) {
       {/* Desktop */}
       <aside className="sticky top-0 hidden h-screen w-60 flex-shrink-0 border-r border-border bg-white px-3 py-6 md:block">
         <Link href="/admin" className="mb-6 flex items-center gap-2 px-3">
+          <img src="/logo.png" alt="Logo" className="h-8 w-8" />
           <span className="text-sm font-bold text-primary">Dashboard</span>
         </Link>
         <SidebarLinks role={props.role} />
@@ -96,6 +97,7 @@ export function AdminSidebar(props: Readonly<AdminSidebarProps>) {
       {/* Mobile topbar + menu */}
       <div className="flex items-center justify-between border-b border-border bg-white px-4 py-3 md:hidden">
         <Link href="/admin" className="flex items-center gap-2">
+          <img src="/logo.png" alt="Logo" className="h-7 w-7" />
           <span className="text-sm font-bold text-primary">Dashboard</span>
         </Link>
         <button
