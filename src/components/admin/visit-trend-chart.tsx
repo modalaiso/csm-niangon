@@ -12,7 +12,7 @@ const MIN_BAR_HEIGHT_PX = 3;
 export function VisitTrendChart(props: Readonly<VisitTrendChartProps>) {
   const max = Math.max(1, ...props.data.map((d) => d.count));
 
-  if (props.data.length === 0 || props.data.every((d) => d.count === 0)) {
+  if (props.data.every((d) => d.count === 0)) {
     return (
       <p className="flex h-40 items-center justify-center text-sm text-muted-foreground">
         Pas encore de visites enregistrées sur cette période.
