@@ -1,7 +1,6 @@
 "use client";
 
 import type { AuthenticatedUser } from "@/lib/auth/admin-guard";
-import { usePathname } from "next/navigation";
 import { Avatar } from "@/components/ui/avatar";
 
 interface AdminTopbarProps {

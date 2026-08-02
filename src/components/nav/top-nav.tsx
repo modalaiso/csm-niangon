@@ -89,7 +89,7 @@ export function TopNav(props: Readonly<TopNavProps>) {
             <Link href="/admin" className="hidden md:block">
               <Button size="sm" className="rounded-full text-white gap-1.5">
                 <ShieldUser className="h-4 w-4" />
-                Admin
+                Dashboard
               </Button>
             </Link>
           )}

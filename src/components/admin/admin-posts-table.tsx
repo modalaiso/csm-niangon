@@ -14,7 +14,7 @@ import {
   Pencil,
   Loader2,
 } from "lucide-react";
-import type { PostStatus, PostType } from "@prisma/client";
+import type { PostStatus } from "@prisma/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {

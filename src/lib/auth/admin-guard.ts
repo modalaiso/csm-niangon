@@ -13,9 +13,9 @@ export interface AuthenticatedUser {
   avatar: string | null;
 }
 
-const DASHBOARD_ROLES: Role[] = ["WRITER", "MODERATOR", "ADMIN"];
-const POST_MANAGER_ROLES: Role[] = ["WRITER", "ADMIN"];
-const MODERATOR_ROLES: Role[] = ["MODERATOR", "ADMIN"];
+const DASHBOARD_ROLES: ReadonlySet<Role> = new Set(["WRITER", "MODERATOR", "ADMIN"]);
+const POST_MANAGER_ROLES: ReadonlySet<Role> = new Set(["WRITER", "ADMIN"]);
+const MODERATOR_ROLES: ReadonlySet<Role> = new Set(["MODERATOR", "ADMIN"]);
 
 export async function getCurrentUser(): Promise<AuthenticatedUser | null> {
   const supabase = await createClient();
@@ -37,7 +37,7 @@ export async function getCurrentUser(): Promise<AuthenticatedUser | null> {
 export async function requireDashboardAccess(): Promise<AuthenticatedUser> {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
-  if (!DASHBOARD_ROLES.includes(user.role)) redirect("/");
+  if (!DASHBOARD_ROLES.has(user.role)) redirect("/");
   return user;
 }
 
@@ -45,7 +45,7 @@ export async function requireDashboardAccess(): Promise<AuthenticatedUser> {
 export async function requirePostManager(): Promise<AuthenticatedUser> {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
-  if (!POST_MANAGER_ROLES.includes(user.role)) redirect("/admin");
+  if (!POST_MANAGER_ROLES.has(user.role)) redirect("/admin");
   return user;
 }
 
@@ -53,7 +53,7 @@ export async function requirePostManager(): Promise<AuthenticatedUser> {
 export async function requireModerator(): Promise<AuthenticatedUser> {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
-  if (!MODERATOR_ROLES.includes(user.role)) redirect("/admin");
+  if (!MODERATOR_ROLES.has(user.role)) redirect("/admin");
   return user;
 }
 
@@ -74,7 +74,7 @@ type AuthContext =
 export async function getDashboardAuthContext(): Promise<AuthContext> {
   const user = await getCurrentUser();
   if (!user) return { ok: false, error: "auth_required" };
-  if (!DASHBOARD_ROLES.includes(user.role)) return { ok: false, error: "forbidden" };
+  if (!DASHBOARD_ROLES.has(user.role)) return { ok: false, error: "forbidden" };
   return { ok: true, user };
 }
 
@@ -82,7 +82,7 @@ export async function getDashboardAuthContext(): Promise<AuthContext> {
 export async function getPostManagerAuthContext(): Promise<AuthContext> {
   const user = await getCurrentUser();
   if (!user) return { ok: false, error: "auth_required" };
-  if (!POST_MANAGER_ROLES.includes(user.role)) return { ok: false, error: "forbidden" };
+  if (!POST_MANAGER_ROLES.has(user.role)) return { ok: false, error: "forbidden" };
   return { ok: true, user };
 }
 
@@ -90,7 +90,7 @@ export async function getPostManagerAuthContext(): Promise<AuthContext> {
 export async function getModeratorAuthContext(): Promise<AuthContext> {
   const user = await getCurrentUser();
   if (!user) return { ok: false, error: "auth_required" };
-  if (!MODERATOR_ROLES.includes(user.role)) return { ok: false, error: "forbidden" };
+  if (!MODERATOR_ROLES.has(user.role)) return { ok: false, error: "forbidden" };
   return { ok: true, user };
 }
 

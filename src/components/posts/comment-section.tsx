@@ -7,7 +7,6 @@ import { ThumbsUpOutlineIcon, ThumbsUpFilledIcon, ThumbsDownOutlineIcon, ThumbsD
 import { Avatar } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { addComment, editComment, deleteComment, setCommentHidden, toggleCommentReaction, type CommentThread, type PostComment } from "@/app/actions/comments";
-import { number } from "zod";
 
 interface CommentSectionProps {
   postId: string;
@@ -250,7 +249,7 @@ function CommentItem(props: Readonly<CommentItemProps>) {
             {isPendingForOwner && (
               <span className="ml-2 inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-medium text-amber-700">
                 <EyeOff className="h-3 w-3" />
-                En attente de modération — visible par vous seul
+                En attente de modération (visible par vous seul)
               </span>
             )}
           </p>
