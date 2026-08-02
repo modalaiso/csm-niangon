@@ -58,7 +58,7 @@ import { useRouter } from "next/navigation";
 
 // ... imports
 
-export function SignupForm({ onSubmit }: SignupFormProps) {
+export function SignupForm(props: Readonly<SignupFormProps>) {
   const [serverError, setServerError] = useState<string | null>(null);
   const router = useRouter();
   const {
@@ -80,7 +80,7 @@ export function SignupForm({ onSubmit }: SignupFormProps) {
       } else if (result?.success) {
         router.push("/");
       }
-    } catch (error) {
+    } catch (err) {
       setServerError("Une erreur inattendue est survenue");
     }
   };

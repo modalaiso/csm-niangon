@@ -41,10 +41,8 @@ interface SearchResultsPageProps {
   }>;
 }
 
-export default async function SearchResultsPage({
-  searchParams,
-}: SearchResultsPageProps) {
-  const resolvedSearchParams = await searchParams;
+export default async function SearchResultsPage(props: Readonly<SearchResultsPageProps>) {
+  const resolvedSearchParams = await props.searchParams;
   const query = resolvedSearchParams.q || "";
   const currentPage = Math.max(1, Number(resolvedSearchParams.page) || 1);
   const offset = (currentPage - 1) * PAGE_SIZE;

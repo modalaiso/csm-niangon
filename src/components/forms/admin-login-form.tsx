@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -8,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { Shield } from "lucide-react";
 
 const adminLoginSchema = z.object({
   emailOrUsername: z
@@ -30,7 +28,7 @@ import { useRouter } from "next/navigation";
 
 // ... imports
 
-export function AdminLoginForm({ onSubmit }: AdminLoginFormProps) {
+export function AdminLoginForm(props: Readonly<AdminLoginFormProps>) {
   const [serverError, setServerError] = useState<string | null>(null);
   const router = useRouter();
   const {
@@ -50,7 +48,7 @@ export function AdminLoginForm({ onSubmit }: AdminLoginFormProps) {
       } else if (result?.success) {
         router.push("/");
       }
-    } catch (error) {
+    } catch (err) {
       setServerError("Une erreur inattendue est survenue");
     }
   };
@@ -60,11 +58,6 @@ export function AdminLoginForm({ onSubmit }: AdminLoginFormProps) {
       <div className="text-center mb-4">
         <h2 className="text-2xl font-bold text-gray-900">Connexion</h2>
         <p className="mt-2 text-sm text-gray-600">Accès réservé aux admins</p>
-        {/*{serverError && (
-                    <div className="mt-4 rounded-md bg-red-50 p-3 text-sm text-red-500">
-                        {serverError}
-                    </div>
-                )}*/}
       </div>
 
       <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">

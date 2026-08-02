@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -47,7 +46,7 @@ interface AdminSignupFormProps {
 
 const ROLE_OPTIONS = ["ADMIN", "MODERATOR", "WRITER"];
 
-export function AdminSignupForm({ onSubmit }: AdminSignupFormProps) {
+export function AdminSignupForm(props: Readonly<AdminSignupFormProps>) {
   const [serverError, setServerError] = useState<string | null>(null);
   const router = useRouter();
   const {
@@ -69,7 +68,7 @@ export function AdminSignupForm({ onSubmit }: AdminSignupFormProps) {
       } else if (result?.success) {
         router.push("/");
       }
-    } catch (error) {
+    } catch (err) {
       setServerError("Une erreur inattendue est survenue");
     }
   };
@@ -81,11 +80,6 @@ export function AdminSignupForm({ onSubmit }: AdminSignupFormProps) {
       <div className="text-center">
         <h2 className="text-2xl font-bold text-red-900">Inscription</h2>
         <p className="mt-2 text-sm text-gray-600">Accès réservé aux admins</p>
-        {/*{serverError && (
-                    <div className="mt-4 rounded-md bg-red-50 p-3 text-sm text-red-500">
-                        {serverError}
-                    </div>
-                )}*/}
       </div>
 
       <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
