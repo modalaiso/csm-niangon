@@ -113,6 +113,76 @@ export function AdminUsersTable(props: Readonly<AdminUsersTableProps>) {
     });
   };
 
+  const renderTableBody = () => {
+    if (isLoading) {
+      return (
+        <tr>
+          <td colSpan={5} className="px-4 py-10 text-center text-muted-foreground">
+            <Loader2 className="mx-auto h-5 w-5 animate-spin" />
+          </td>
+        </tr>
+      );
+    }
+
+    if (rows.length === 0) {
+      return (
+        <tr>
+          <td colSpan={5} className="px-4 py-10 text-center text-muted-foreground">
+            Aucun utilisateur ne correspond à ces filtres.
+          </td>
+        </tr>
+      );
+    }
+
+    return rows.map((row) => {
+      const isSelf = row.id === props.currentUserId;
+      return (
+        <tr key={row.id} className="hover:bg-accent/30">
+          <td className="px-4 py-3">
+            <p className="font-medium text-foreground">
+              {row.prenom} {row.nom}
+              {isSelf && <span className="ml-1.5 text-xs text-muted-foreground">(vous)</span>}
+            </p>
+            <p className="text-xs text-muted-foreground">@{row.username}</p>
+          </td>
+          <td className="px-4 py-3 text-muted-foreground">{row.email}</td>
+          <td className="px-4 py-3 text-muted-foreground">{row.classe}</td>
+          <td className="px-4 py-3">
+            {isSelf ? (
+              <span
+                className={cn(
+                  "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium",
+                  ROLE_BADGES[row.role],
+                )}
+              >
+                <ShieldCheck className="h-3 w-3" />
+                {ROW_ROLE_OPTIONS.find((o) => o.value === row.role)?.label}
+              </span>
+            ) : (
+              <Select
+                value={row.role}
+                onValueChange={(v) => handleRoleChange(row, v as Role)}
+                disabled={isPending}
+              >
+                <SelectTrigger className={cn("h-8 w-40 border-0 text-xs font-medium", ROLE_BADGES[row.role])}>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {ROW_ROLE_OPTIONS.map((o) => (
+                    <SelectItem key={o.value} value={o.value}>
+                      {o.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          </td>
+          <td className="px-4 py-3 text-muted-foreground">{formatDate(row.createdAt)}</td>
+        </tr>
+      );
+    });
+  };
+
   return (
     <div>
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -152,69 +222,7 @@ export function AdminUsersTable(props: Readonly<AdminUsersTableProps>) {
               <th className="px-4 py-3">Inscrit le</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-border">
-            {isLoading ? (
-              <tr>
-                <td colSpan={5} className="px-4 py-10 text-center text-muted-foreground">
-                  <Loader2 className="mx-auto h-5 w-5 animate-spin" />
-                </td>
-              </tr>
-            ) : rows.length === 0 ? (
-              <tr>
-                <td colSpan={5} className="px-4 py-10 text-center text-muted-foreground">
-                  Aucun utilisateur ne correspond à ces filtres.
-                </td>
-              </tr>
-            ) : (
-              rows.map((row) => {
-                const isSelf = row.id === props.currentUserId;
-                return (
-                  <tr key={row.id} className="hover:bg-accent/30">
-                    <td className="px-4 py-3">
-                      <p className="font-medium text-foreground">
-                        {row.prenom} {row.nom}
-                        {isSelf && <span className="ml-1.5 text-xs text-muted-foreground">(vous)</span>}
-                      </p>
-                      <p className="text-xs text-muted-foreground">@{row.username}</p>
-                    </td>
-                    <td className="px-4 py-3 text-muted-foreground">{row.email}</td>
-                    <td className="px-4 py-3 text-muted-foreground">{row.classe}</td>
-                    <td className="px-4 py-3">
-                      {isSelf ? (
-                        <span
-                          className={cn(
-                            "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium",
-                            ROLE_BADGES[row.role],
-                          )}
-                        >
-                          <ShieldCheck className="h-3 w-3" />
-                          {ROW_ROLE_OPTIONS.find((o) => o.value === row.role)?.label}
-                        </span>
-                      ) : (
-                        <Select
-                          value={row.role}
-                          onValueChange={(v) => handleRoleChange(row, v as Role)}
-                          disabled={isPending}
-                        >
-                          <SelectTrigger className={cn("h-8 w-40 border-0 text-xs font-medium", ROLE_BADGES[row.role])}>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {ROW_ROLE_OPTIONS.map((o) => (
-                              <SelectItem key={o.value} value={o.value}>
-                                {o.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      )}
-                    </td>
-                    <td className="px-4 py-3 text-muted-foreground">{formatDate(row.createdAt)}</td>
-                  </tr>
-                );
-              })
-            )}
-          </tbody>
+          <tbody className="divide-y divide-border">{renderTableBody()}</tbody>
         </table>
       </div>
 
