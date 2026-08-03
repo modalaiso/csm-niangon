@@ -68,7 +68,7 @@ export function AdminSignupForm(_props: Readonly<AdminSignupFormProps>) {
       } else if (result?.success) {
         router.push("/");
       }
-    } catch (error) {
+    } catch {
       setServerError("Une erreur inattendue est survenue");
     }
   };

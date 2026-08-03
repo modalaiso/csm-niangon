@@ -48,7 +48,7 @@ export function AdminLoginForm(_props: Readonly<AdminLoginFormProps>) {
       } else if (result?.success) {
         router.push("/");
       }
-    } catch (error) {
+    } catch {
       setServerError("Une erreur inattendue est survenue");
     }
   };

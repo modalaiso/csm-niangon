@@ -47,6 +47,8 @@ const TYPE_OPTIONS: {
 const MAX_IMAGES = 15;
 const URGENT_TAG = "urgent";
 
+type PostSubmissionStatus = "DRAFT" | "PUBLISHED" | "ARCHIVED";
+
 export interface PostWizardInitialData {
   id: string;
   type: PostType;
@@ -118,53 +120,51 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
     return parsed;
   };
 
-  const handleSubmit = (status: "DRAFT" | "PUBLISHED" | "ARCHIVED") => {
+  const buildPayload = (status: PostSubmissionStatus) => ({
+    type: type!,
+    title: title.trim(),
+    summary: summary.trim(),
+    content: content.trim(),
+    images: isAnnouncement ? [] : images,
+    expiresAt: isAnnouncement ? expiresAt : null,
+    tags: buildTags(),
+    status,
+  });
+
+  const handleEditRequest = async (status: PostSubmissionStatus) => {
+    return await updatePost(props.initial!.id, buildPayload(status));
+  };
+
+  const handleCreateRequest = async (status: PostSubmissionStatus) => {
+    return await createPost({
+      ...buildPayload(status),
+      status: status === "ARCHIVED" ? "DRAFT" : status,
+    });
+  };
+
+  const handleSubmit = (status: PostSubmissionStatus) => {
     if (!type || !canGoNext()) return;
     setError(null);
 
     startTransition(async () => {
-      if (isEdit && props.initial) {
-        const result = await updatePost(props.initial.id, {
-          type,
-          title: title.trim(),
-          summary: summary.trim(),
-          content: content.trim(),
-          images: isAnnouncement ? [] : images,
-          expiresAt: isAnnouncement ? expiresAt : null,
-          tags: buildTags(),
-          status,
-        });
-
-        if ("error" in result) {
-          if (result.error === "auth_required") {
-            router.push("/login");
-            return;
-          }
-          setError("Impossible d'enregistrer les modifications. Vérifiez les champs et réessayez.");
-          return;
-        }
-
-        router.push("/admin/posts");
-        return;
-      }
-
-      const result = await createPost({
-        type,
-        title: title.trim(),
-        summary: summary.trim(),
-        content: content.trim(),
-        images: isAnnouncement ? [] : images,
-        expiresAt: isAnnouncement ? expiresAt : null,
-        tags: buildTags(),
-        status: status === "ARCHIVED" ? "DRAFT" : status,
-      });
+      const result = await (isEdit && props.initial ? handleEditRequest(status) : handleCreateRequest(status));
 
       if ("error" in result) {
         if (result.error === "auth_required") {
           router.push("/login");
           return;
         }
-        setError("Impossible d'enregistrer ce post. Vérifiez les champs et réessayez.");
+
+        setError(
+          isEdit
+            ? "Impossible d'enregistrer les modifications. Vérifiez les champs et réessayez."
+            : "Impossible d'enregistrer ce post. Vérifiez les champs et réessayez.",
+        );
+        return;
+      }
+
+      if (isEdit && props.initial) {
+        router.push("/admin/posts");
         return;
       }
 
@@ -181,21 +181,26 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
     <div className="mx-auto w-full max-w-3xl">
       {/* Indicateur d'étapes */}
       <ol className="mb-8 flex items-center justify-between">
-        {STEPS.map((s, index) => (
-          <li key={s.id} className="flex flex-1 items-center">
-            <div className="flex flex-col items-center gap-1.5">
-              <span
-                className={cn(
-                  "flex h-8 w-8 items-center justify-center rounded-full border-2 text-sm font-semibold transition-colors",
-                  step === s.id
-                    ? "border-primary bg-primary text-white"
-                    : step > s.id
-                      ? "border-primary bg-primary/10 text-primary"
-                      : "border-border bg-white text-muted-foreground",
-                )}
-              >
-                {step > s.id ? <Check className="h-4 w-4" /> : s.id}
-              </span>
+        {STEPS.map((s, index) => {
+          let stepClassName = "border-border bg-white text-muted-foreground";
+
+          if (step === s.id) {
+            stepClassName = "border-primary bg-primary text-white";
+          } else if (step > s.id) {
+            stepClassName = "border-primary bg-primary/10 text-primary";
+          }
+
+          return (
+            <li key={s.id} className="flex flex-1 items-center">
+              <div className="flex flex-col items-center gap-1.5">
+                <span
+                  className={cn(
+                    "flex h-8 w-8 items-center justify-center rounded-full border-2 text-sm font-semibold transition-colors",
+                    stepClassName,
+                  )}
+                >
+                  {step > s.id ? <Check className="h-4 w-4" /> : s.id}
+                </span>
               <span
                 className={cn(
                   "hidden text-xs font-medium sm:block",
@@ -214,7 +219,7 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
               />
             )}
           </li>
-        ))}
+        )})}
       </ol>
 
       <div className="p-6 sm:p-8">
@@ -262,7 +267,7 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
                   onChange={(e) => setIsUrgent(e.target.checked)}
                   className="h-4 w-4 rounded border-input accent-secondary"
                 />
-                Marquer comme urgent (mis en avant dans la barre d&apos;information)
+                <span>Marquer comme urgent (mis en avant dans la barre d&apos;information)</span>
               </label>
             )}
           </div>
