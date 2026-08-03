@@ -134,6 +134,101 @@ export function AdminCommentsTable() {
     });
   };
 
+  const tableBody = (() => {
+    if (isLoading) {
+      return (
+        <tr>
+          <td colSpan={8} className="px-4 py-10 text-center text-muted-foreground">
+            <Loader2 className="mx-auto h-5 w-5 animate-spin" />
+          </td>
+        </tr>
+      );
+    }
+
+    if (rows.length === 0) {
+      return (
+        <tr>
+          <td colSpan={8} className="px-4 py-10 text-center text-muted-foreground">
+            Aucun commentaire ne correspond à ces filtres.
+          </td>
+        </tr>
+      );
+    }
+
+    return rows.map((row) => (
+      <tr key={row.id} className="align-top hover:bg-accent/30">
+        <td className="px-4 py-3">
+          <input
+            type="checkbox"
+            checked={selected.has(row.id)}
+            onChange={() => toggleSelected(row.id)}
+            aria-label="Sélectionner"
+            className="h-4 w-4 rounded border-input accent-primary"
+          />
+        </td>
+        <td className="max-w-[280px] px-4 py-3">
+          <p className="line-clamp-2 text-foreground">{row.content}</p>
+          {row.flaggedKeyword && (
+            <span className="mt-1 inline-block rounded-full bg-rose-100 px-2 py-0.5 text-[10px] font-semibold text-rose-700">
+              mot-clé : {row.flaggedKeyword}
+            </span>
+          )}
+        </td>
+        <td className="max-w-[180px] px-4 py-3">
+          <Link href={`/posts/${row.postId}`} className="line-clamp-2 text-primary hover:underline">
+            {row.postTitle}
+          </Link>
+        </td>
+        <td className="px-4 py-3 text-muted-foreground">
+          {row.author.prenom} {row.author.nom}
+        </td>
+        <td className="px-4 py-3">
+          <span
+            className={cn(
+              "rounded-full px-2 py-1 text-[11px] font-medium",
+              row.isHidden ? "bg-slate-100 text-slate-600" : "bg-primary/10 text-primary",
+            )}
+          >
+            {row.isHidden ? "Masqué" : "Visible"}
+          </span>
+        </td>
+        <td className="px-4 py-3">
+          <span className="mr-3 inline-flex items-center gap-1 text-muted-foreground">
+            <ThumbsUp className="h-3.5 w-3.5" />
+            {row.likeCount}
+          </span>
+          <span className="inline-flex items-center gap-1 text-muted-foreground">
+            <ThumbsDown className="h-3.5 w-3.5" />
+            {row.dislikeCount}
+          </span>
+        </td>
+        <td className="px-4 py-3 text-xs text-muted-foreground">{formatDate(row.createdAt)}</td>
+        <td className="px-4 py-3">
+          <div className="flex items-center justify-end gap-1">
+            <button
+              type="button"
+              onClick={() => handleToggleHidden(row)}
+              disabled={isPending}
+              aria-label={row.isHidden ? "Réafficher" : "Masquer"}
+              className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            >
+              {row.isHidden ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+            </button>
+            <button
+              type="button"
+              onClick={() => handleDelete(row)}
+              disabled={isPending}
+              aria-label="Supprimer"
+              className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+          </div>
+        </td>
+      </tr>
+    ));
+  })();
+
   return (
     <div>
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -202,94 +297,7 @@ export function AdminCommentsTable() {
               <th className="px-4 py-3 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-border">
-            {isLoading ? (
-              <tr>
-                <td colSpan={8} className="px-4 py-10 text-center text-muted-foreground">
-                  <Loader2 className="mx-auto h-5 w-5 animate-spin" />
-                </td>
-              </tr>
-            ) : rows.length === 0 ? (
-              <tr>
-                <td colSpan={8} className="px-4 py-10 text-center text-muted-foreground">
-                  Aucun commentaire ne correspond à ces filtres.
-                </td>
-              </tr>
-            ) : (
-              rows.map((row) => (
-                <tr key={row.id} className="align-top hover:bg-accent/30">
-                  <td className="px-4 py-3">
-                    <input
-                      type="checkbox"
-                      checked={selected.has(row.id)}
-                      onChange={() => toggleSelected(row.id)}
-                      aria-label="Sélectionner"
-                      className="h-4 w-4 rounded border-input accent-primary"
-                    />
-                  </td>
-                  <td className="max-w-[280px] px-4 py-3">
-                    <p className="line-clamp-2 text-foreground">{row.content}</p>
-                    {row.flaggedKeyword && (
-                      <span className="mt-1 inline-block rounded-full bg-rose-100 px-2 py-0.5 text-[10px] font-semibold text-rose-700">
-                        mot-clé : {row.flaggedKeyword}
-                      </span>
-                    )}
-                  </td>
-                  <td className="max-w-[180px] px-4 py-3">
-                    <Link href={`/posts/${row.postId}`} className="line-clamp-2 text-primary hover:underline">
-                      {row.postTitle}
-                    </Link>
-                  </td>
-                  <td className="px-4 py-3 text-muted-foreground">
-                    {row.author.prenom} {row.author.nom}
-                  </td>
-                  <td className="px-4 py-3">
-                    <span
-                      className={cn(
-                        "rounded-full px-2 py-1 text-[11px] font-medium",
-                        row.isHidden ? "bg-slate-100 text-slate-600" : "bg-primary/10 text-primary",
-                      )}
-                    >
-                      {row.isHidden ? "Masqué" : "Visible"}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="mr-3 inline-flex items-center gap-1 text-muted-foreground">
-                      <ThumbsUp className="h-3.5 w-3.5" />
-                      {row.likeCount}
-                    </span>
-                    <span className="inline-flex items-center gap-1 text-muted-foreground">
-                      <ThumbsDown className="h-3.5 w-3.5" />
-                      {row.dislikeCount}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-xs text-muted-foreground">{formatDate(row.createdAt)}</td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center justify-end gap-1">
-                      <button
-                        type="button"
-                        onClick={() => handleToggleHidden(row)}
-                        disabled={isPending}
-                        aria-label={row.isHidden ? "Réafficher" : "Masquer"}
-                        className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-                      >
-                        {row.isHidden ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(row)}
-                        disabled={isPending}
-                        aria-label="Supprimer"
-                        className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
+          <tbody className="divide-y divide-border">{tableBody}</tbody>
         </table>
       </div>
 

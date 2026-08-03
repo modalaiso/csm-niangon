@@ -131,53 +131,59 @@ export function ModerationKeywordsPanel() {
 
       {/* Liste */}
       <div className="mt-5">
-        {isLoading ? (
-          <Loader2 className="mx-auto h-5 w-5 animate-spin text-muted-foreground" />
-        ) : keywords.length === 0 ? (
-          <p className="text-sm text-muted-foreground">Aucun mot-clé configuré pour le moment.</p>
-        ) : (
-          <ul className="divide-y divide-border">
-            {keywords.map((k) => (
-              <li key={k.id} className="flex items-center justify-between gap-3 py-2.5">
-                <div className="min-w-0 flex-1">
-                  <p className={cn("truncate text-sm font-medium", !k.isActive && "text-muted-foreground line-through")}>
-                    {k.phrase}
-                  </p>
-                  <span
-                    className={cn(
-                      "mt-0.5 inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold",
-                      k.action === "AUTO_DELETE" ? "bg-destructive/10 text-destructive" : "bg-amber-100 text-amber-700",
-                    )}
-                  >
-                    {k.action === "AUTO_DELETE" ? "Suppression auto" : "Revue manuelle"}
-                  </span>
-                </div>
-                <div className="flex flex-shrink-0 items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => handleToggle(k)}
-                    disabled={isPending}
-                    className={cn(
-                      "rounded-full px-3 py-1 text-xs font-medium transition-colors",
-                      k.isActive ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground",
-                    )}
-                  >
-                    {k.isActive ? "Actif" : "Inactif"}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleDelete(k)}
-                    disabled={isPending}
-                    aria-label="Supprimer"
-                    className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
+        {(() => {
+          if (isLoading) {
+            return <Loader2 className="mx-auto h-5 w-5 animate-spin text-muted-foreground" />;
+          }
+
+          if (keywords.length === 0) {
+            return <p className="text-sm text-muted-foreground">Aucun mot-clé configuré pour le moment.</p>;
+          }
+
+          return (
+            <ul className="divide-y divide-border">
+              {keywords.map((k) => (
+                <li key={k.id} className="flex items-center justify-between gap-3 py-2.5">
+                  <div className="min-w-0 flex-1">
+                    <p className={cn("truncate text-sm font-medium", !k.isActive && "text-muted-foreground line-through")}>
+                      {k.phrase}
+                    </p>
+                    <span
+                      className={cn(
+                        "mt-0.5 inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold",
+                        k.action === "AUTO_DELETE" ? "bg-destructive/10 text-destructive" : "bg-amber-100 text-amber-700",
+                      )}
+                    >
+                      {k.action === "AUTO_DELETE" ? "Suppression auto" : "Revue manuelle"}
+                    </span>
+                  </div>
+                  <div className="flex flex-shrink-0 items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleToggle(k)}
+                      disabled={isPending}
+                      className={cn(
+                        "rounded-full px-3 py-1 text-xs font-medium transition-colors",
+                        k.isActive ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground",
+                      )}
+                    >
+                      {k.isActive ? "Actif" : "Inactif"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(k)}
+                      disabled={isPending}
+                      aria-label="Supprimer"
+                      className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          );
+        })()}
       </div>
     </div>
   );

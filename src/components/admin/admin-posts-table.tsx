@@ -186,6 +186,120 @@ export function AdminPostsTable() {
     });
   };
 
+  let tableBodyContent = null;
+
+  if (isLoading) {
+    tableBodyContent = (
+      <tr>
+        <td colSpan={9} className="px-4 py-10 text-center text-muted-foreground">
+          <Loader2 className="mx-auto h-5 w-5 animate-spin" />
+        </td>
+      </tr>
+    );
+  } else if (rows.length === 0) {
+    tableBodyContent = (
+      <tr>
+        <td colSpan={9} className="px-4 py-10 text-center text-muted-foreground">
+          Aucune publication ne correspond à ces filtres.
+        </td>
+      </tr>
+    );
+  } else {
+    tableBodyContent = rows.map((row) => {
+      const typeBadge = TYPE_BADGES[row.type] ?? { label: row.type, className: "bg-gray-500" };
+      const statusBadge = STATUS_BADGES[row.status] ?? {
+        label: row.status,
+        className: "bg-gray-100 text-gray-600",
+      };
+      return (
+        <tr key={row.id} className="align-middle hover:bg-accent/30">
+          <td className="px-4 py-3">
+            <input
+              type="checkbox"
+              checked={selected.has(row.id)}
+              onChange={() => toggleSelected(row.id)}
+              aria-label={`Sélectionner ${row.title}`}
+              className="h-4 w-4 rounded border-input accent-primary"
+            />
+          </td>
+          <td className="max-w-[260px] px-4 py-3">
+            <Link href={`/posts/${row.id}`} className="line-clamp-1 font-medium text-foreground hover:underline">
+              {row.title}
+            </Link>
+            <span
+              className={cn(
+                "mt-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold text-white",
+                typeBadge.className,
+              )}
+            >
+              {typeBadge.label}
+            </span>
+          </td>
+          <td className="px-4 py-3">
+            <Select
+              value={row.status}
+              onValueChange={(v) => handleStatusChange(row, v as PostStatus)}
+            >
+              <SelectTrigger
+                className={cn("h-8 w-32 border-0 text-xs font-medium", statusBadge.className)}
+              >
+                <SelectValue>{statusBadge.label}</SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                {ROW_STATUS_OPTIONS.map((o) => (
+                  <SelectItem key={o.value} value={o.value}>
+                    {o.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </td>
+          <td className="px-4 py-3 text-muted-foreground">
+            {row.author.prenom} {row.author.nom}
+          </td>
+          <td className="px-4 py-3">
+            <span className="inline-flex items-center gap-1 font-medium text-foreground">
+              <Eye className="h-3.5 w-3.5 text-muted-foreground" />
+              {row.viewsToday}
+            </span>
+          </td>
+          <td className="px-4 py-3 text-muted-foreground">{row.viewsTotal}</td>
+          <td className="px-4 py-3">
+            <span className="mr-3 inline-flex items-center gap-1 text-muted-foreground">
+              <Heart className="h-3.5 w-3.5" />
+              {row.likesCount}
+            </span>
+            <span className="inline-flex items-center gap-1 text-muted-foreground">
+              <MessageCircle className="h-3.5 w-3.5" />
+              {row.commentsCount}
+            </span>
+          </td>
+          <td className="px-4 py-3 text-muted-foreground">{formatDate(row.publishedAt ?? row.createdAt)}</td>
+          <td className="px-4 py-3">
+            <div className="flex items-center justify-end gap-1">
+              <Link
+                href={`/admin/posts/${row.id}/edit`}
+                aria-label="Modifier"
+                className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+              >
+                <Pencil className="h-4 w-4" />
+              </Link>
+              <button
+                type="button"
+                onClick={() => handleDelete(row)}
+                disabled={isPending}
+                aria-label="Supprimer"
+                className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
+            </div>
+          </td>
+        </tr>
+      );
+    });
+  }
+
   return (
     <div>
       {/* Filtres */}
@@ -285,113 +399,7 @@ export function AdminPostsTable() {
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {isLoading ? (
-              <tr>
-                <td colSpan={9} className="px-4 py-10 text-center text-muted-foreground">
-                  <Loader2 className="mx-auto h-5 w-5 animate-spin" />
-                </td>
-              </tr>
-            ) : rows.length === 0 ? (
-              <tr>
-                <td colSpan={9} className="px-4 py-10 text-center text-muted-foreground">
-                  Aucune publication ne correspond à ces filtres.
-                </td>
-              </tr>
-            ) : (
-              rows.map((row) => {
-                const typeBadge = TYPE_BADGES[row.type] ?? { label: row.type, className: "bg-gray-500" };
-                const statusBadge = STATUS_BADGES[row.status] ?? {
-                  label: row.status,
-                  className: "bg-gray-100 text-gray-600",
-                };
-                return (
-                  <tr key={row.id} className="align-middle hover:bg-accent/30">
-                    <td className="px-4 py-3">
-                      <input
-                        type="checkbox"
-                        checked={selected.has(row.id)}
-                        onChange={() => toggleSelected(row.id)}
-                        aria-label={`Sélectionner ${row.title}`}
-                        className="h-4 w-4 rounded border-input accent-primary"
-                      />
-                    </td>
-                    <td className="max-w-[260px] px-4 py-3">
-                      <Link href={`/posts/${row.id}`} className="line-clamp-1 font-medium text-foreground hover:underline">
-                        {row.title}
-                      </Link>
-                      <span
-                        className={cn(
-                          "mt-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold text-white",
-                          typeBadge.className,
-                        )}
-                      >
-                        {typeBadge.label}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <Select
-                        value={row.status}
-                        onValueChange={(v) => handleStatusChange(row, v as PostStatus)}
-                      >
-                        <SelectTrigger
-                          className={cn("h-8 w-32 border-0 text-xs font-medium", statusBadge.className)}
-                        >
-                          <SelectValue>{statusBadge.label}</SelectValue>
-                        </SelectTrigger>
-                        <SelectContent>
-                          {ROW_STATUS_OPTIONS.map((o) => (
-                            <SelectItem key={o.value} value={o.value}>
-                              {o.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </td>
-                    <td className="px-4 py-3 text-muted-foreground">
-                      {row.author.prenom} {row.author.nom}
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className="inline-flex items-center gap-1 font-medium text-foreground">
-                        <Eye className="h-3.5 w-3.5 text-muted-foreground" />
-                        {row.viewsToday}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-muted-foreground">{row.viewsTotal}</td>
-                    <td className="px-4 py-3">
-                      <span className="mr-3 inline-flex items-center gap-1 text-muted-foreground">
-                        <Heart className="h-3.5 w-3.5" />
-                        {row.likesCount}
-                      </span>
-                      <span className="inline-flex items-center gap-1 text-muted-foreground">
-                        <MessageCircle className="h-3.5 w-3.5" />
-                        {row.commentsCount}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-muted-foreground">{formatDate(row.publishedAt ?? row.createdAt)}</td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center justify-end gap-1">
-                        <Link
-                          href={`/admin/posts/${row.id}/edit`}
-                          aria-label="Modifier"
-                          className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </Link>
-                        <button
-                          type="button"
-                          onClick={() => handleDelete(row)}
-                          disabled={isPending}
-                          aria-label="Supprimer"
-                          className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })
-            )}
+            {tableBodyContent}
           </tbody>
         </table>
       </div>

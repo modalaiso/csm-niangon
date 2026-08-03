@@ -327,7 +327,7 @@ export async function adminLogin(formData: z.infer<typeof adminLoginSchema>) {
     where: { key: formData.accessKey },
   });
 
-  if (!accessKeyRecord || accessKeyRecord.usedBy !== authData.user.id) {
+  if (accessKeyRecord?.usedBy !== authData.user.id) {
     await supabase.auth.signOut();
     return { error: "Clé d'accès invalide pour cet utilisateur" };
   }
