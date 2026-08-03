@@ -46,7 +46,6 @@ async function main() {
       console.log(`Key already exists: ${k.key}`);
     }
   }
-
   console.log("Seeding finished.");
 }
 

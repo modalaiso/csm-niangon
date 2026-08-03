@@ -25,6 +25,7 @@ import { BottomNav } from "@/components/nav/bottom-nav";
 import { TopNav } from "@/components/nav/top-nav";
 import { InfoBar } from "@/components/info-bar/info-bar";
 import { AnnouncementPopup } from "@/components/announcements/announcement-popup";
+import { VisitTracker } from "@/components/analytics/visit-tracker";
 import { getInfoBarItems } from "@/app/actions/infobar";
 import { getActiveAnnouncements } from "@/app/actions/announcements";
 
@@ -56,11 +57,12 @@ export default async function RootLayout({
   return (
     <html lang="fr">
       <head>
-        <meta name="apple-mobile-web-app-title" content="CSM Niangon TV" />
+        <meta name="apple-mobile-web-app-title" content="CSM Niangon" />
       </head>
       <body
         className={`${inter.variable} ${leagueSpartan.variable} antialiased`}
       >
+        <VisitTracker />
         <InfoBar items={infoBarItems} />
         <TopNav user={user} userRole={userRole} />
         {children}

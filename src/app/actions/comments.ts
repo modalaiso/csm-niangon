@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import type { CommentReactionType, Role } from "@prisma/client";
+import { checkContentAgainstKeywords } from "@/app/actions/moderation";
 
 export interface PostComment {
   id: string;
@@ -12,6 +13,7 @@ export interface PostComment {
   parentId: string | null;
   authorId: string;
   isHidden: boolean;
+  isFlagged: boolean;
   isEdited: boolean;
   likeCount: number;
   dislikeCount: number;
@@ -41,6 +43,7 @@ type RawComment = {
   parentId: string | null;
   userId: string;
   isHidden: boolean;
+  isFlagged: boolean;
   user: { username: string; prenom: string; nom: string; avatar: string | null };
   reactions: { userId: string; type: CommentReactionType }[];
 };
@@ -96,6 +99,7 @@ export async function getPostComments(postId: string): Promise<CommentThread[]> 
         parentId: true,
         userId: true,
         isHidden: true,
+        isFlagged: true,
         user: {
           select: { username: true, prenom: true, nom: true, avatar: true },
         },
@@ -128,6 +132,7 @@ export async function getPostComments(postId: string): Promise<CommentThread[]> 
         parentId: c.parentId,
         authorId: c.userId,
         isHidden: c.isHidden,
+        isFlagged: c.isFlagged,
         isEdited: c.updatedAt.getTime() - c.createdAt.getTime() > 1000,
         likeCount,
         dislikeCount,
@@ -169,7 +174,13 @@ type AddCommentSuccess = { success: true };
 type AddCommentError = { error: "empty" | "auth_required" | "unknown" };
 type AddCommentResult = AddCommentSuccess | AddCommentError;
 
-/** Publie un commentaire (ou une réponse si parentId est fourni) */
+/**
+ * Publie un commentaire (ou une réponse si parentId est fourni).
+ * Vérifie automatiquement le contenu contre la liste de mots-clés surveillés :
+ * - AUTO_DELETE : le commentaire n'est jamais persisté (suppression silencieuse).
+ * - FLAG_FOR_REVIEW : le commentaire est créé mais masqué, en attente de revue
+ *   dans la file de modération du dashboard.
+ */
 export async function addComment(
   postId: string,
   content: string,
@@ -186,9 +197,47 @@ export async function addComment(
       return { error: "auth_required" };
     }
 
+    const match = await checkContentAgainstKeywords(trimmed);
+
+    if (match?.action === "AUTO_DELETE") {
+      await prisma.moderationLog.create({
+        data: {
+          type: "AUTO_DELETED",
+          content: trimmed,
+          matchedKeyword: match.phrase,
+          authorId: userId,
+          postId,
+        },
+      });
+      revalidatePath(`/posts/${postId}`);
+      return { success: true };
+    }
+
+    const isFlagged = match?.action === "FLAG_FOR_REVIEW";
+
     await prisma.comment.create({
-      data: { postId, userId, content: trimmed, parentId: parentId ?? null },
+      data: {
+        postId,
+        userId,
+        content: trimmed,
+        parentId: parentId ?? null,
+        isFlagged,
+        isHidden: isFlagged,
+        flaggedKeyword: isFlagged ? match!.phrase : null,
+      },
     });
+
+    if (isFlagged) {
+      await prisma.moderationLog.create({
+        data: {
+          type: "FLAGGED",
+          content: trimmed,
+          matchedKeyword: match!.phrase,
+          authorId: userId,
+          postId,
+        },
+      });
+    }
 
     revalidatePath(`/posts/${postId}`);
     return { success: true };
@@ -265,7 +314,6 @@ export async function deleteComment(commentId: string): Promise<DeleteCommentRes
       return { error: "forbidden" };
     }
 
-    // La cascade Prisma (onDelete: Cascade sur parentId) supprime aussi les réponses
     await prisma.comment.delete({ where: { id: commentId } });
 
     revalidatePath(`/posts/${comment.postId}`);

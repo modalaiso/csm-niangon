@@ -35,7 +35,7 @@ function renderInline(text: string, keyPrefix: string): React.ReactNode[] {
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          style={{ textDecoration: 'underline', textUnderlineOffset: '2px' }}
+          style={{ textDecoration: 'underline' }}
           className="text-primary hover:text-primary/80"
         >
           {label}
@@ -152,7 +152,7 @@ export function renderPostContent(content: string): React.ReactNode {
         }
 
         return (
-          <p key={key} className="mb-3 text-sm leading-relaxed text-foreground/90">
+          <p key={key} className="mb-1 text-sm leading-relaxed text-foreground/90">
             {renderInline(block.text, key)}
           </p>
         );

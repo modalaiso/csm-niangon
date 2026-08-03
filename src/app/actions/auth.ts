@@ -2,7 +2,6 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
-import { redirect } from "next/navigation";
 import { z } from "zod";
 import { Role } from "@prisma/client";
 
@@ -42,7 +41,7 @@ async function checkPasswordCompromise(password: string): Promise<boolean> {
   try {
     const encoder = new TextEncoder();
     const data = encoder.encode(password);
-    const hashBuffer = await crypto.subtle.digest("SHA-1", data);
+    const hashBuffer = await crypto.subtle.digest("SHA-512", data);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     const hashHex = hashArray
       .map((b) => b.toString(16).padStart(2, "0"))
@@ -328,7 +327,7 @@ export async function adminLogin(formData: z.infer<typeof adminLoginSchema>) {
     where: { key: formData.accessKey },
   });
 
-  if (!accessKeyRecord || accessKeyRecord.usedBy !== authData.user.id) {
+  if (accessKeyRecord?.usedBy !== authData.user.id) {
     await supabase.auth.signOut();
     return { error: "Clé d'accès invalide pour cet utilisateur" };
   }

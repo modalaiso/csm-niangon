@@ -225,6 +225,9 @@ interface CommentItemProps {
 function CommentItem(props: Readonly<CommentItemProps>) {
   // Vue restreinte : un commentaire masqué, pour un visiteur qui n'est ni auteur ni modérateur
   const isRestrictedView = props.comment.isHidden && !props.comment.canEdit && !props.comment.canModerate;
+  // L'auteur voit son propre commentaire pendant qu'il est masqué : on l'avertit
+  // que personne d'autre ne le voit pour l'instant, sinon rien ne le distingue d'un post normal.
+  const isPendingForOwner = props.comment.isHidden && props.comment.canEdit && !props.comment.canModerate;
 
   return (
     <div className="flex items-start gap-3">
@@ -241,6 +244,12 @@ function CommentItem(props: Readonly<CommentItemProps>) {
               <span className="ml-2 inline-flex items-center gap-1 rounded-full bg-secondary/20 px-2 py-0.5 text-[11px] font-medium text-secondary-foreground">
                 <EyeOff className="h-3 w-3" />
                 Masqué
+              </span>
+            )}
+            {isPendingForOwner && (
+              <span className="ml-2 inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-medium text-amber-700">
+                <EyeOff className="h-3 w-3" />
+                En attente de modération (visible par vous seul)
               </span>
             )}
           </p>
@@ -311,9 +320,7 @@ export function CommentSection(props: Readonly<CommentSectionProps>) {
   const [editValue, setEditValue] = useState("");
   const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
 
-  const [reactionOverrides, setReactionOverrides] = useState<
-    Record<string, { likeCount: number; dislikeCount: number; userReaction: "LIKE" | "DISLIKE" | null }>
-  >({});
+  const [reactionOverrides, setReactionOverrides] = useState<Record<string, { likeCount: number; dislikeCount: number; userReaction: "LIKE" | "DISLIKE" | null }>>({});
   const [contentOverrides, setContentOverrides] = useState<Record<string, { content: string; isEdited: boolean }>>({});
   const [hiddenOverrides, setHiddenOverrides] = useState<Record<string, boolean>>({});
   const [deletedIds, setDeletedIds] = useState<Set<string>>(new Set());
@@ -562,8 +569,6 @@ export function CommentSection(props: Readonly<CommentSectionProps>) {
           {visibleThreads.map((thread) => {
             const isExpanded = expanded.has(thread.root.id);
             const replyCount = thread.replies.length;
-
-            // Independent evaluation of button label logic
             const pluralSuffix = replyCount > 1 ? "s" : "";
             const buttonText = isExpanded
               ? "Masquer les réponses"
@@ -573,7 +578,6 @@ export function CommentSection(props: Readonly<CommentSectionProps>) {
               <li key={thread.root.id}>
                 {renderCommentItem(thread.root, thread.root.id)}
 
-                {/* Réponses */}
                 {replyCount > 0 && (
                   <div className="ml-12 mt-2">
                     <button

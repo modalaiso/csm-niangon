@@ -23,12 +23,13 @@ interface TopNavProps {
 export function TopNav(props: Readonly<TopNavProps>) {
   const pathname = usePathname();
 
-  // Hide on auth pages
+  // Hide on auth pages and on the whole admin dashboard (qui a sa propre topbar)
   if (
     pathname.startsWith("/login") ||
     pathname.startsWith("/signup") ||
     pathname.startsWith("/admin-login") ||
-    pathname.startsWith("/admin-signup")
+    pathname.startsWith("/admin-signup") ||
+    pathname.startsWith("/admin")
   ) {
     return null;
   }

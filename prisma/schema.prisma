@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
@@ -28,6 +28,23 @@ enum PostStatus {
   ARCHIVED
 }
 
+enum CommentReactionType {
+  LIKE
+  DISLIKE
+}
+
+enum ModerationAction {
+  AUTO_DELETE
+  FLAG_FOR_REVIEW
+}
+
+enum ModerationLogType {
+  AUTO_DELETED
+  FLAGGED
+  APPROVED
+  REJECTED
+}
+
 model User {
   id        String    @id @default(cuid())
   email     String    @unique
@@ -40,12 +57,16 @@ model User {
   avatar    String?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  
-  posts     Post[]
-  comments  Comment[]
-  likes     Like[]
-  commentReactions CommentReaction[]
-  
+
+  posts             Post[]
+  comments          Comment[]
+  likes             Like[]
+  commentReactions  CommentReaction[]
+  visitLogs         VisitLog[]
+  moderationKeywords ModerationKeyword[] @relation("KeywordCreator")
+  moderationLogsAsModerator ModerationLog[] @relation("ModerationModerator")
+  auditLogs         AuditLog[]
+
   @@index([email])
   @@index([username])
   @@index([role])
@@ -70,12 +91,12 @@ model Post {
   publishedAt DateTime?
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
-  
+
   author      User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
   comments    Comment[]
   likes       Like[]
   postViews   PostView[]
-  
+
   @@index([slug])
   @@index([authorId])
   @@index([type])
@@ -85,14 +106,16 @@ model Post {
 }
 
 model Comment {
-  id        String   @id @default(cuid())
-  postId    String
-  userId    String
-  parentId  String?
-  content   String
-  isHidden  Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id             String   @id @default(cuid())
+  postId         String
+  userId         String
+  parentId       String?
+  content        String
+  isHidden       Boolean  @default(false)
+  isFlagged      Boolean  @default(false)
+  flaggedKeyword String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   post      Post              @relation(fields: [postId], references: [id], onDelete: Cascade)
   user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -104,11 +127,7 @@ model Comment {
   @@index([userId])
   @@index([parentId])
   @@index([isHidden])
-}
-
-enum CommentReactionType {
-  LIKE
-  DISLIKE
+  @@index([isFlagged])
 }
 
 model CommentReaction {
@@ -131,10 +150,10 @@ model Like {
   postId    String
   userId    String
   createdAt DateTime @default(now())
-  
-  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([postId, userId])
   @@index([postId])
   @@index([userId])
@@ -146,13 +165,90 @@ model PostView {
   userId    String?
   ipAddress String?
   createdAt DateTime @default(now())
-  
-  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
   @@unique([postId, userId])
   @@unique([postId, ipAddress])
   @@index([postId])
   @@index([userId])
+}
+
+/// Visites site-wide (toutes les pages), distinct de PostView qui ne
+/// compte que les vues d'un post précis. Sert au dashboard de stats
+/// (journalière, hebdomadaire, mensuelle, trimestrielle, semestrielle, annuelle).
+model VisitLog {
+  id        String   @id @default(cuid())
+  path      String
+  sessionId String
+  userId    String?
+  referrer  String?
+  device    String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([path])
+  @@index([userId])
+  @@index([sessionId])
+  @@index([createdAt])
+}
+
+/// Liste des mots-clés/phrases surveillés pour la modération automatique
+/// des commentaires. AUTO_DELETE = supprimé silencieusement à la création.
+/// FLAG_FOR_REVIEW = masqué et mis en file d'attente pour un modérateur.
+model ModerationKeyword {
+  id        String            @id @default(cuid())
+  phrase    String            @unique
+  action    ModerationAction  @default(AUTO_DELETE)
+  isActive  Boolean           @default(true)
+  createdBy String?
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  creator User? @relation("KeywordCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+
+  @@index([isActive])
+}
+
+/// Trace de toute action de modération automatique ou manuelle, pour
+/// audit et pour pouvoir contester/annuler un faux positif.
+model ModerationLog {
+  id             String            @id @default(cuid())
+  type           ModerationLogType
+  content        String            @db.Text
+  matchedKeyword String?
+  authorId       String?
+  postId         String?
+  moderatorId    String?
+  createdAt      DateTime          @default(now())
+
+  moderator User? @relation("ModerationModerator", fields: [moderatorId], references: [id], onDelete: SetNull)
+
+  @@index([type])
+  @@index([authorId])
+  @@index([postId])
+  @@index([createdAt])
+}
+
+/// Journal des actions admin (suppression de post, changement de statut,
+/// changement de rôle, suppression de commentaire, etc.) pour traçabilité.
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String
+  actorRole  Role
+  action     String
+  targetType String
+  targetId   String
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  actor User @relation(fields: [actorId], references: [id], onDelete: Cascade)
+
+  @@index([actorId])
+  @@index([targetType, targetId])
+  @@index([createdAt])
 }
 
 model AccessKey {
@@ -165,7 +261,7 @@ model AccessKey {
   createdBy String?
   createdAt DateTime  @default(now())
   expiresAt DateTime?
-  
+
   @@index([role])
   @@index([isUsed])
 }

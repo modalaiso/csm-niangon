@@ -45,7 +45,6 @@ export function LikeButton(props: Readonly<LikeButtonProps>) {
           : "text-muted-foreground hover:text-primary",
       )}
     >
-      <span>{liked ? "Retirer le like" : "Aimer"}</span>
       {liked ? <ThumbsUpFilledIcon className="h-5 w-5" /> : <ThumbsUpOutlineIcon className="h-5 w-5" />}
       {count}
     </button>

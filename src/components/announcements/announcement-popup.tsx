@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import type { AnnouncementItem } from "@/app/actions/announcements";
 import { ANNOUNCEMENT_OPEN_EVENT } from "@/components/announcements/announcement-events";
@@ -11,11 +12,11 @@ interface AnnouncementPopupProps {
 }
 
 export function AnnouncementPopup(props: Readonly<AnnouncementPopupProps>) {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [index, setIndex] = useState(0);
   const dialogRef = useRef<HTMLDialogElement>(null);
 
-  // Synchronisation de l'état de l'élément native <dialog>
   useEffect(() => {
     const dialogNode = dialogRef.current;
     if (!dialogNode) return;
@@ -29,7 +30,6 @@ export function AnnouncementPopup(props: Readonly<AnnouncementPopupProps>) {
     }
   }, [isOpen]);
 
-  // Écouteur de clic sur le backdrop attaché directement au nœud DOM pour éviter les alertes linter
   useEffect(() => {
     const dialogNode = dialogRef.current;
     if (!dialogNode) return;
@@ -46,13 +46,12 @@ export function AnnouncementPopup(props: Readonly<AnnouncementPopupProps>) {
     };
   }, []);
 
-  // Affichage automatique à chaque chargement/rechargement de la page
   useEffect(() => {
     if (props.announcements.length === 0) return;
+    if (pathname.startsWith("/admin")) return;
     setIsOpen(true);
-  }, [props.announcements.length]);
+  }, [props.announcements.length, pathname]);
 
-  // Réouverture depuis l'InfoBar (clic sur une annonce précise)
   useEffect(() => {
     const handler = (e: Event) => {
       const detail = (e as CustomEvent<{ id?: string }>).detail;
@@ -66,6 +65,8 @@ export function AnnouncementPopup(props: Readonly<AnnouncementPopupProps>) {
     return () => window.removeEventListener(ANNOUNCEMENT_OPEN_EVENT, handler);
   }, [props.announcements]);
 
+  // Jamais de pop-up d'annonce par-dessus le dashboard admin
+  if (pathname.startsWith("/admin")) return null;
   if (props.announcements.length === 0) return null;
 
   const current = props.announcements[index];

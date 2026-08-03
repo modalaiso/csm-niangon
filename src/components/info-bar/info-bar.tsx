@@ -9,22 +9,23 @@ interface InfoBarProps {
   items: InfoBarItem[];
 }
 
-export function InfoBar({ items }: InfoBarProps) {
+export function InfoBar(props: InfoBarProps) {
   const pathname = usePathname();
 
   if (
     pathname.startsWith("/login") ||
     pathname.startsWith("/signup") ||
     pathname.startsWith("/admin-login") ||
-    pathname.startsWith("/admin-signup")
+    pathname.startsWith("/admin-signup") ||
+    pathname.startsWith("/admin")
   ) {
     return null;
   }
 
-  if (!items || items.length === 0) return null;
+  if (!props.items || props.items.length === 0) return null;
 
-  const hasUrgent = items.some((item) => item.isUrgent);
-  const track = [...items, ...items];
+  const hasUrgent = props.items.some((item) => item.isUrgent);
+  const track = [...props.items, ...props.items];
 
   return (
     <div

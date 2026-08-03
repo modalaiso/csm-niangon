@@ -40,15 +40,15 @@ function formatRelativeTime(date: Date | null): string {
   return `Il y a ${years}an${years > 1 ? "s" : ""}`;
 }
 
-export function PostsExplorer({ posts }: PostsExplorerProps) {
+export function PostsExplorer(props: Readonly<PostsExplorerProps>) {
   const [filter, setFilter] = useState<(typeof FILTERS)[number]["value"]>("ALL");
   // Contrôle l'affichage des boutons de filtre sur mobile (repliés par défaut)
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const filteredPosts = useMemo(() => {
-    if (filter === "ALL") return posts;
-    return posts.filter((post) => post.type === filter);
-  }, [posts, filter]);
+    if (filter === "ALL") return props.posts;
+    return props.posts.filter((post) => post.type === filter);
+  }, [props.posts, filter]);
 
   return (
     <section className="container px-4 py-8 md:py-12">
@@ -95,7 +95,7 @@ export function PostsExplorer({ posts }: PostsExplorerProps) {
         </div>
       </div>
 
-      {posts.length === 0 ? (
+      {props.posts.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-2xl py-16 text-center">
           <p className="text-base font-medium text-muted-foreground">
             Aucun post pour l&apos;instant

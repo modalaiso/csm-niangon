@@ -12,22 +12,22 @@ interface HeroCarouselProps {
 // Distance minimale (en px) pour considérer le geste comme un swipe volontaire
 const SWIPE_THRESHOLD = 40;
 
-export function HeroCarousel({ posts }: HeroCarouselProps) {
+export function HeroCarousel(props: Readonly<HeroCarouselProps>) {
   const [index, setIndex] = useState(0);
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
   const touchDeltaX = useRef(0);
 
   useEffect(() => {
-    if (posts.length <= 1) return;
+    if (props.posts.length <= 1) return;
     const timer = setInterval(() => {
-      setIndex((prev) => (prev + 1) % posts.length);
+      setIndex((prev) => (prev + 1) % props.posts.length);
     }, 6000);
     return () => clearInterval(timer);
-  }, [posts.length]);
+  }, [props.posts.length]);
 
   // Aucune publication : pas de post inventé, message d'accueil sobre
-  if (posts.length === 0) {
+  if (props.posts.length === 0) {
     return (
       <section className="relative flex h-[280px] w-full items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5 px-4 text-center md:h-[380px]">
         <div>
@@ -42,12 +42,12 @@ export function HeroCarousel({ posts }: HeroCarouselProps) {
     );
   }
 
-  const current = posts[index];
+  const current = props.posts[index];
   const goTo = (i: number) =>
-    setIndex(((i % posts.length) + posts.length) % posts.length);
+    setIndex(((i % props.posts.length) + props.posts.length) % props.posts.length);
 
   const handleTouchStart = (e: React.TouchEvent<HTMLElement>) => {
-    if (posts.length <= 1) return;
+    if (props.posts.length <= 1) return;
     touchStartX.current = e.touches[0].clientX;
     touchStartY.current = e.touches[0].clientY;
     touchDeltaX.current = 0;
@@ -86,7 +86,7 @@ export function HeroCarousel({ posts }: HeroCarouselProps) {
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      {posts.map((post, i) => (
+      {props.posts.map((post, i) => (
         <img
           key={post.id}
           src={post.thumbnail ?? "/miniature.png"}
@@ -101,7 +101,7 @@ export function HeroCarousel({ posts }: HeroCarouselProps) {
       <div className="absolute inset-0 bg-gradient-to-r from-white via-transparent to-transparent" />
       <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent" />
 
-      {posts.length > 1 && (
+      {props.posts.length > 1 && (
         <>
           <button
             type="button"
@@ -140,9 +140,9 @@ export function HeroCarousel({ posts }: HeroCarouselProps) {
         </div>
       </div>
 
-      {posts.length > 1 && (
+      {props.posts.length > 1 && (
         <div className="absolute bottom-6 right-6 z-10 flex items-center gap-2 sm:right-10 md:right-16">
-          {posts.map((post, i) => (
+          {props.posts.map((post, i) => (
             <button
               type="button"
               key={post.id}

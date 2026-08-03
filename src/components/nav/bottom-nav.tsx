@@ -24,12 +24,13 @@ interface BottomNavProps {
 export function BottomNav({ userRole }: BottomNavProps) {
   const pathname = usePathname();
 
-  // Hide on auth pages
+  // Hide on auth pages and on the whole admin dashboard
   if (
     pathname.startsWith("/login") ||
     pathname.startsWith("/signup") ||
     pathname.startsWith("/admin-login") ||
-    pathname.startsWith("/admin-signup")
+    pathname.startsWith("/admin-signup") ||
+    pathname.startsWith("/admin")
   ) {
     return null;
   }

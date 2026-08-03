@@ -23,7 +23,7 @@ interface LoginFormProps {
   onSubmit?: (data: LoginFormData) => void;
 }
 
-export function LoginForm({ onSubmit }: LoginFormProps) {
+export function LoginForm(props: Readonly<LoginFormProps>) {
   const [serverError, setServerError] = useState<string | null>(null);
   const router = useRouter();
   const {
@@ -43,7 +43,7 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
       } else if (result?.success) {
         router.push("/");
       }
-    } catch (error) {
+    } catch (err) {
       setServerError("Une erreur inattendue est survenue");
     }
   };
