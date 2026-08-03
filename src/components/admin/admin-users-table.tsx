@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState, useTransition } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Search, Loader2, ChevronLeft, ChevronRight, ShieldCheck } from "lucide-react";
 import type { Role } from "@prisma/client";
@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAdminList } from "@/components/admin/useAdminList";
 import { cn } from "@/lib/utils";
 import { listUsers, updateUserRole, type AdminUserRow } from "@/app/actions/admin-users";
 
@@ -50,49 +51,40 @@ function formatDate(date: Date): string {
   });
 }
 
-const PAGE_SIZE = 15;
-
 export function AdminUsersTable(props: Readonly<AdminUsersTableProps>) {
   const router = useRouter();
-  const [rows, setRows] = useState<AdminUserRow[]>([]);
-  const [total, setTotal] = useState(0);
-  const [page, setPage] = useState(1);
   const [roleFilter, setRoleFilter] = useState<Role | "ALL">("ALL");
-  const [search, setSearch] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [isPending, startTransition] = useTransition();
 
-  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const fetchUsers = useCallback(
+    async ({ search, page, pageSize }: { search: string; page: number; pageSize: number }) => {
+      const result = await listUsers({ search, role: roleFilter, page, pageSize });
+      if ("error" in result) {
+        if (result.error === "auth_required") return { error: "auth_required" };
+        return { error: "Impossible de charger les utilisateurs." };
+      }
+      return { items: result.users, total: result.total };
+    },
+    [roleFilter],
+  );
 
-  const load = useCallback(() => {
-    setIsLoading(true);
-    listUsers({ search, role: roleFilter, page, pageSize: PAGE_SIZE })
-      .then((result) => {
-        if ("error" in result) {
-          if (result.error === "auth_required") router.push("/login");
-          else setError("Impossible de charger les utilisateurs.");
-          return;
-        }
-        setError(null);
-        setRows(result.users);
-        setTotal(result.total);
-      })
-      .catch(() => setError("Une erreur est survenue."))
-      .finally(() => setIsLoading(false));
-  }, [search, roleFilter, page, router]);
+  const {
+    rows,
+    page,
+    setPage,
+    search,
+    setSearch,
+    isLoading,
+    error,
+    setError,
+    isPending,
+    startTransition,
+    load,
+    totalPages,
+  } = useAdminList<AdminUserRow>(fetchUsers, { pageSize: 15 });
 
   useEffect(() => {
-    load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [roleFilter, page]);
-
-  useEffect(() => {
-    setPage(1);
-    const timeout = setTimeout(load, 300);
-    return () => clearTimeout(timeout);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search]);
+    if (error === "auth_required") router.push("/login");
+  }, [error, router]);
 
   const handleRoleChange = (row: AdminUserRow, nextRole: Role) => {
     if (row.id === props.currentUserId) return;

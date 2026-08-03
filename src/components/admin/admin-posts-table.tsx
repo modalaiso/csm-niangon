@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -24,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAdminList, useRowSelection } from "@/components/admin/useAdminList";
 import { cn } from "@/lib/utils";
 import {
   listAdminPosts,
@@ -83,62 +84,44 @@ const PAGE_SIZE = 15;
 
 export function AdminPostsTable() {
   const router = useRouter();
-  const [rows, setRows] = useState<AdminPostRow[]>([]);
-  const [total, setTotal] = useState(0);
-  const [page, setPage] = useState(1);
   const [status, setStatus] = useState<AdminPostStatusFilter>("ALL");
   const [type, setType] = useState<AdminPostTypeFilter>("ALL");
-  const [search, setSearch] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [selected, setSelected] = useState<Set<string>>(new Set());
-  const [isPending, startTransition] = useTransition();
-
-  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
-
-  const load = useCallback(() => {
-    setIsLoading(true);
-    listAdminPosts({ status, type, search, page, pageSize: PAGE_SIZE })
-      .then((result) => {
+  const {
+    rows,
+    page,
+    setPage,
+    search,
+    setSearch,
+    isLoading,
+    error,
+    setError,
+    isPending,
+    startTransition,
+    load,
+    totalPages,
+  } = useAdminList<AdminPostRow>(
+    useCallback(
+      async ({ search, page, pageSize }) => {
+        const result = await listAdminPosts({ status, type, search, page, pageSize });
         if ("error" in result) {
-          if (result.error === "auth_required") router.push("/login");
-          else setError("Impossible de charger les publications.");
-          return;
+          if (result.error === "auth_required") return { error: "auth_required" };
+          return { error: "Impossible de charger les publications." };
         }
-        setError(null);
-        setRows(result.posts);
-        setTotal(result.total);
-        setSelected(new Set());
-      })
-      .catch(() => setError("Une erreur est survenue."))
-      .finally(() => setIsLoading(false));
-  }, [status, type, search, page, router]);
+        return { items: result.posts, total: result.total };
+      },
+      [status, type],
+    ),
+    { pageSize: PAGE_SIZE },
+  );
+  const { selected, toggleSelected, toggleSelectAll, clearSelection } = useRowSelection();
 
   useEffect(() => {
-    const timeout = setTimeout(load, search ? 300 : 0);
-    return () => clearTimeout(timeout);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status, type, page]);
+    if (error === "auth_required") router.push("/login");
+  }, [error, router]);
 
   useEffect(() => {
-    setPage(1);
-    const timeout = setTimeout(load, 300);
-    return () => clearTimeout(timeout);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search]);
-
-  const toggleSelected = (id: string) => {
-    setSelected((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  };
-
-  const toggleSelectAll = () => {
-    setSelected((prev) => (prev.size === rows.length ? new Set() : new Set(rows.map((r) => r.id))));
-  };
+    clearSelection();
+  }, [rows, clearSelection]);
 
   const handleDelete = (row: AdminPostRow) => {
     if (!window.confirm(`Supprimer définitivement "${row.title}" ? Cette action est irréversible.`)) return;
@@ -383,7 +366,7 @@ export function AdminPostsTable() {
                 <input
                   type="checkbox"
                   checked={rows.length > 0 && selected.size === rows.length}
-                  onChange={toggleSelectAll}
+                  onChange={() => toggleSelectAll(rows.map((r) => r.id))}
                   aria-label="Tout sélectionner"
                   className="h-4 w-4 rounded border-input accent-primary"
                 />
