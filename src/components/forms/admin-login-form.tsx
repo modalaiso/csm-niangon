@@ -28,7 +28,7 @@ import { useRouter } from "next/navigation";
 
 // ... imports
 
-export function AdminLoginForm(props: Readonly<AdminLoginFormProps>) {
+export function AdminLoginForm(_props: Readonly<AdminLoginFormProps>) {
   const [serverError, setServerError] = useState<string | null>(null);
   const router = useRouter();
   const {
@@ -48,7 +48,7 @@ export function AdminLoginForm(props: Readonly<AdminLoginFormProps>) {
       } else if (result?.success) {
         router.push("/");
       }
-    } catch (err) {
+    } catch (error) {
       setServerError("Une erreur inattendue est survenue");
     }
   };

@@ -46,7 +46,7 @@ interface AdminSignupFormProps {
 
 const ROLE_OPTIONS = ["ADMIN", "MODERATOR", "WRITER"];
 
-export function AdminSignupForm(props: Readonly<AdminSignupFormProps>) {
+export function AdminSignupForm(_props: Readonly<AdminSignupFormProps>) {
   const [serverError, setServerError] = useState<string | null>(null);
   const router = useRouter();
   const {
@@ -68,7 +68,7 @@ export function AdminSignupForm(props: Readonly<AdminSignupFormProps>) {
       } else if (result?.success) {
         router.push("/");
       }
-    } catch (err) {
+    } catch (error) {
       setServerError("Une erreur inattendue est survenue");
     }
   };
