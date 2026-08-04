@@ -143,7 +143,7 @@ export function TopNav(props: Readonly<TopNavProps>) {
                       <>
                         <div className="h-px bg-border my-2" />
                         <Link
-                          href="/admin/posts/new"
+                          href="/admin"
                           className="flex items-center gap-2 text-sm font-medium text-primary hover:underline"
                         >
                           <ShieldUser className="h-4 w-4" />
