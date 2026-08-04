@@ -9,7 +9,7 @@ interface InfoBarProps {
   items: InfoBarItem[];
 }
 
-export function InfoBar(props: InfoBarProps) {
+export function InfoBar(props: Readonly<InfoBarProps>) {
   const pathname = usePathname();
 
   if (
