@@ -72,26 +72,26 @@ async function transformPostCard(post: any): Promise<HomePostCard> {
   };
 }
 
-/** Les 5 dernières publications, pour le carrousel héro */
-export async function getFeaturedPosts(limit = 5): Promise<HomePostCard[]> {
+/** Récupère les publications publiées excluant les annonces */
+async function fetchPublishedPostCards({ limit }: { limit: number; }): Promise<HomePostCard[]> {
   const posts = await prisma.post.findMany({
     where: { status: PostStatus.PUBLISHED, type: { not: PostType.ANNONCE } },
     orderBy: { publishedAt: "desc" },
     take: limit,
     select: cardSelect,
   });
+
   return Promise.all(posts.map(transformPostCard));
+}
+
+/** Les 5 dernières publications, pour le carrousel héro */
+export async function getFeaturedPosts(limit = 5): Promise<HomePostCard[]> {
+  return fetchPublishedPostCards({ limit });
 }
 
 /** Toutes les publications récentes, pour la grille */
 export async function getPublishedPosts(limit = 40): Promise<HomePostCard[]> {
-  const posts = await prisma.post.findMany({
-    where: { status: PostStatus.PUBLISHED, type: { not: PostType.ANNONCE } },
-    orderBy: { publishedAt: "desc" },
-    take: limit,
-    select: cardSelect,
-  });
-  return Promise.all(posts.map(transformPostCard));
+  return fetchPublishedPostCards({ limit });
 }
 
 /** Un post publié, avec son contenu complet, pour la page de détail */

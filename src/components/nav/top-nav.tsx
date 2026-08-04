@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Menu, PenSquare } from "lucide-react";
+import { Menu, ShieldUser } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -89,8 +89,8 @@ export function TopNav(props: Readonly<TopNavProps>) {
           {isWriterOrAdmin && (
             <Link href="/admin/posts/new" className="hidden md:block">
               <Button size="sm" className="rounded-full text-white gap-1.5">
-                <PenSquare className="h-4 w-4" />
-                Créer un post
+                <ShieldUser className="h-4 w-4" />
+                Dashboard
               </Button>
             </Link>
           )}
@@ -146,8 +146,8 @@ export function TopNav(props: Readonly<TopNavProps>) {
                           href="/admin/posts/new"
                           className="flex items-center gap-2 text-sm font-medium text-primary hover:underline"
                         >
-                          <PenSquare className="h-4 w-4" />
-                          Créer un post
+                          <ShieldUser className="h-4 w-4" />
+                          Dashboard
                         </Link>
                       </>
                     )}
