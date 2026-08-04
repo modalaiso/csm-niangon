@@ -67,6 +67,11 @@ export function AnnouncementPopup(props: Readonly<AnnouncementPopupProps>) {
 
   // Jamais de pop-up d'annonce par-dessus le dashboard admin
   if (pathname.startsWith("/admin")) return null;
+  if (pathname.startsWith("/actus")) return null;
+  if (pathname.startsWith("/infos")) return null;
+  if (pathname.startsWith("/emplois-du-temps")) return null;
+  if (pathname.startsWith("/devoirs")) return null;
+  if (pathname.startsWith("/posts")) return null;
   if (props.announcements.length === 0) return null;
 
   const current = props.announcements[index];
@@ -83,9 +88,9 @@ export function AnnouncementPopup(props: Readonly<AnnouncementPopupProps>) {
       ref={dialogRef}
       aria-label={current.title}
       onClose={() => setIsOpen(false)}
-      className="m-auto h-full max-h-96 w-full max-w-2xl rounded-3xl p-0 backdrop:bg-black/50 open:flex open:flex-col"
+      className="m-auto h-full w-full max-h-[30rem] max-w-[50rem] rounded-3xl p-0 backdrop:bg-black/50 open:flex open:flex-col"
     >
-      <div className="relative flex h-full max-h-96 w-full max-w-2xl flex-col overflow-hidden bg-white shadow-2xl">
+      <div className="relative flex h-full w-full max-h-[30rem] max-w-[50rem] flex-col overflow-hidden bg-white shadow-2xl">
         <div className="flex items-center justify-between px-6 pb-2 pt-4 sm:px-8">
           <h2 className="container text-center text-lg font-extrabold uppercase text-slate-900 sm:text-xl">
             {current.title}

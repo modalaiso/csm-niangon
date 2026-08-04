@@ -15,6 +15,7 @@ export interface HomePostCard {
   thumbnail: string | null;
   views: number;
   publishedAt: Date | null;
+  tags: string[];
   author: {
     id?: string;
     username?: string;
@@ -53,6 +54,7 @@ const cardSelect = {
   summary: true,
   thumbnail: true,
   publishedAt: true,
+  tags: true,
   author: { select: { id: true, username: true, prenom: true, nom: true, avatar: true } },
 } as const;
 
@@ -68,6 +70,7 @@ async function transformPostCard(post: any): Promise<HomePostCard> {
     thumbnail: post.thumbnail,
     views,
     publishedAt: post.publishedAt,
+    tags: post.tags ?? [],
     author: post.author,
   };
 }
@@ -202,6 +205,64 @@ export async function getRelatedPosts(
     return Promise.all(posts.map(transformPostCard));
   } catch (error) {
     console.error("Erreur lors du chargement des publications similaires:", error);
+    return [];
+  }
+}
+
+/**
+ * Publications publiées d'un type donné, paginées, avec filtre optionnel par tag —
+ * utilisé par /actus, /articles, /infos
+ */
+export async function getPostsByType(
+  type: PostType,
+  limit: number = 20,
+  offset: number = 0,
+  tag?: string | null,
+): Promise<{ posts: HomePostCard[]; total: number }> {
+  try {
+    const where = {
+      status: PostStatus.PUBLISHED,
+      type,
+      ...(tag ? { tags: { has: tag } } : {}),
+    };
+
+    const [posts, total] = await Promise.all([
+      prisma.post.findMany({
+        where,
+        orderBy: { publishedAt: "desc" },
+        skip: offset,
+        take: limit,
+        select: cardSelect,
+      }),
+      prisma.post.count({ where }),
+    ]);
+
+    const results = await Promise.all(posts.map(transformPostCard));
+    return { posts: results, total };
+  } catch (error) {
+    console.error("Erreur lors du chargement des publications par type:", error);
+    return { posts: [], total: 0 };
+  }
+}
+
+/** Liste des tags distincts utilisés par les publications publiées d'un type donné */
+export async function getPostTagsByType(type: PostType): Promise<string[]> {
+  try {
+    const posts = await prisma.post.findMany({
+      where: { status: PostStatus.PUBLISHED, type },
+      select: { tags: true },
+    });
+
+    const unique = new Set<string>();
+    for (const post of posts) {
+      for (const t of post.tags) {
+        if (t.trim()) unique.add(t.trim());
+      }
+    }
+
+    return Array.from(unique).sort((a, b) => a.localeCompare(b, "fr"));
+  } catch (error) {
+    console.error("Erreur lors du chargement des tags:", error);
     return [];
   }
 }

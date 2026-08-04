@@ -7,7 +7,7 @@ import {
   Search,
   Trash2,
   Eye,
-  Heart,
+  ThumbsUp,
   MessageCircle,
   ChevronLeft,
   ChevronRight,
@@ -249,7 +249,7 @@ export function AdminPostsTable() {
           <td className="px-4 py-3 text-muted-foreground">{row.viewsTotal}</td>
           <td className="px-4 py-3">
             <span className="mr-3 inline-flex items-center gap-1 text-muted-foreground">
-              <Heart className="h-3.5 w-3.5" />
+              <ThumbsUp className="h-3.5 w-3.5" />
               {row.likesCount}
             </span>
             <span className="inline-flex items-center gap-1 text-muted-foreground">

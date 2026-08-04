@@ -36,12 +36,7 @@ const TYPE_OPTIONS: {
   { value: "ACTU", label: "Actu", description: "Actualité récente du CSM Niangon", Icon: Newspaper },
   { value: "ARTICLE", label: "Article", description: "Contenu approfondi, dossier ou reportage", Icon: FileText },
   { value: "INFO", label: "Info", description: "Information courte, visible dans la barre défilante", Icon: Info },
-  {
-    value: "ANNONCE",
-    label: "Annonce",
-    description: "S'affiche en pop-up à l'arrivée sur le site, avec une durée de vie définie",
-    Icon: Megaphone,
-  },
+  { value: "ANNONCE", label: "Annonce", description: "Annonce publique", Icon: Megaphone }
 ];
 
 const MAX_IMAGES = 15;

@@ -6,7 +6,7 @@ import { requireDashboardAccess } from "@/lib/auth/admin-guard";
 import { VisitTrendChart } from "@/components/admin/visit-trend-chart";
 
 export const metadata = {
-  title: "Vue d'ensemble | Dashboard admin",
+  title: "Vue d'ensemble | Dashboard | CSM Niangon",
 };
 
 const PERIOD_ORDER: { key: VisitPeriod; short: string }[] = [
@@ -155,7 +155,9 @@ export default async function AdminDashboardPage() {
                   <span className="flex h-5 w-5 items-center justify-center rounded-full bg-muted text-[11px] font-semibold text-muted-foreground">
                     {index + 1}
                   </span>
-                  {page.path}
+                  <Link href={page.path} className="truncate hover:underline">
+                    {page.path}
+                  </Link>
                 </span>
                 <span className="text-sm font-medium text-foreground">{page.count}</span>
               </li>

@@ -69,7 +69,7 @@ const resultText = total === 0
     <main className="min-h-screen bg-background">
       {/* Header */}
       <div>
-        <div className="container flex flex-row items-start sm:items-center justify-between gap-2 max-w-3xl px-4 py-6 sm:py-8">
+        <div className="container flex flex-row items-start sm:items-center justify-between gap-2 px-4 py-6 sm:py-8">
           <Link
           href="/"
           className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900 hover:underline"
@@ -83,8 +83,12 @@ const resultText = total === 0
         </div>
       </div>
 
+      <div className="container px-4 pb-2">
+        <h1 className="text-2xl font-bold text-foreground">Résultats de recherche</h1>
+      </div>
+
       {/* Content */}
-      <div className="container px-3 sm:px-4 py-6 sm:py-8">
+      <div className="container px-3 sm:px-4 py-6">
         {results.length === 0 ? (
           <div className="flex flex-col items-center justify-center rounded-2xl py-16 text-center">
             <p className="text-base font-medium text-muted-foreground mb-4">

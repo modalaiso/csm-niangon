@@ -2,7 +2,7 @@ import { AdminCommentsTable } from "@/components/admin/admin-comments-table";
 import { requireModerator } from "@/lib/auth/admin-guard";
 
 export const metadata = {
-  title: "Commentaires | Dashboard admin",
+  title: "Commentaires | Dashboard | CSM Niangon",
 };
 
 export default async function AdminCommentsPage() {

@@ -56,7 +56,7 @@ function SidebarLinks(props: Readonly<SidebarLinksProps>) {
             href={item.href}
             onClick={props.onNavigate}
             className={cn(
-              "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
+              "flex items-center gap-3 rounded-full px-3 py-2.5 text-sm font-medium transition-colors",
               isActive
                 ? "bg-primary/10 text-primary"
                 : "text-muted-foreground hover:bg-accent hover:text-foreground",
@@ -71,7 +71,7 @@ function SidebarLinks(props: Readonly<SidebarLinksProps>) {
       <Link
         href="/"
         onClick={props.onNavigate}
-        className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+        className="flex items-center gap-3 rounded-full px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
       >
         <ArrowLeft className="h-4 w-4" />
         Retour au site

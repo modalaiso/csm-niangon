@@ -3,7 +3,7 @@ import { AdminSidebar } from "@/components/admin/admin-sidebar";
 import { AdminTopbar } from "@/components/admin/admin-topbar";
 
 export const metadata = {
-  title: "Dashboard admin | CSM Niangon",
+  title: "Dashboard | CSM Niangon",
 };
 
 export default async function AdminLayout({
