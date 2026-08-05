@@ -40,7 +40,7 @@ export function TopNav(props: Readonly<TopNavProps>) {
     { href: "/", label: "Accueil" },
     { href: "/actus", label: "Actualités" },
     { href: "/infos", label: "Infos" },
-    { href: "/timetables", label: "Emplois du temps" },
+    { href: "/emplois-du-temps", label: "Emplois du temps" },
     { href: "/devoirs", label: "Calendriers des devoirs" },
   ];
 
@@ -87,7 +87,7 @@ export function TopNav(props: Readonly<TopNavProps>) {
 
           {/* Bouton de création de post, réservé aux rédacteurs et admins */}
           {isWriterOrAdmin && (
-            <Link href="/admin/posts/new" className="hidden md:block">
+            <Link href="/admin" className="hidden md:block">
               <Button size="sm" className="rounded-full text-white gap-1.5">
                 <ShieldUser className="h-4 w-4" />
                 Dashboard
@@ -143,7 +143,7 @@ export function TopNav(props: Readonly<TopNavProps>) {
                       <>
                         <div className="h-px bg-border my-2" />
                         <Link
-                          href="/admin/posts/new"
+                          href="/admin"
                           className="flex items-center gap-2 text-sm font-medium text-primary hover:underline"
                         >
                           <ShieldUser className="h-4 w-4" />

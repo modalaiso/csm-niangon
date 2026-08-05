@@ -7,7 +7,7 @@ import {
   Search,
   Trash2,
   Eye,
-  Heart,
+  ThumbsUp,
   MessageCircle,
   ChevronLeft,
   ChevronRight,
@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/select";
 import { useAdminList, useRowSelection } from "@/components/admin/useAdminList";
 import { cn } from "@/lib/utils";
+import { TablePagination } from "@/components/admin/table-pagination";
 import {
   listAdminPosts,
   deletePost,
@@ -249,7 +250,7 @@ export function AdminPostsTable() {
           <td className="px-4 py-3 text-muted-foreground">{row.viewsTotal}</td>
           <td className="px-4 py-3">
             <span className="mr-3 inline-flex items-center gap-1 text-muted-foreground">
-              <Heart className="h-3.5 w-3.5" />
+              <ThumbsUp className="h-3.5 w-3.5" />
               {row.likesCount}
             </span>
             <span className="inline-flex items-center gap-1 text-muted-foreground">
@@ -388,33 +389,7 @@ export function AdminPostsTable() {
       </div>
 
       {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="mt-4 flex items-center justify-center gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            className="rounded-full"
-            disabled={page === 1}
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <span className="px-3 text-sm text-muted-foreground">
-            Page {page} / {totalPages}
-          </span>
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            className="rounded-full"
-            disabled={page === totalPages}
-            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-      )}
+      <TablePagination page={page} totalPages={totalPages} onPageChange={setPage} />
     </div>
   );
 }

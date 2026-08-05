@@ -56,7 +56,7 @@ function SidebarLinks(props: Readonly<SidebarLinksProps>) {
             href={item.href}
             onClick={props.onNavigate}
             className={cn(
-              "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
+              "flex items-center gap-3 rounded-full px-3 py-2.5 text-sm font-medium transition-colors",
               isActive
                 ? "bg-primary/10 text-primary"
                 : "text-muted-foreground hover:bg-accent hover:text-foreground",
@@ -71,7 +71,7 @@ function SidebarLinks(props: Readonly<SidebarLinksProps>) {
       <Link
         href="/"
         onClick={props.onNavigate}
-        className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+        className="flex items-center gap-3 rounded-full px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
       >
         <ArrowLeft className="h-4 w-4" />
         Retour au site
@@ -86,7 +86,7 @@ export function AdminSidebar(props: Readonly<AdminSidebarProps>) {
   return (
     <>
       {/* Desktop */}
-      <aside className="sticky top-0 hidden h-screen w-60 flex-shrink-0 border-r border-border bg-white px-3 py-6 md:block">
+      <aside className="sticky top-0 hidden h-screen w-60 flex-shrink-0 border-r border-border bg-white px-3 py-6 md:block z-40">
         <Link href="/admin" className="mb-6 flex items-center gap-2 px-3">
           <img src="/logo.png" alt="Logo" className="h-8 w-8" />
           <span className="text-sm font-bold text-primary">Dashboard</span>
@@ -95,7 +95,7 @@ export function AdminSidebar(props: Readonly<AdminSidebarProps>) {
       </aside>
 
       {/* Mobile topbar + menu */}
-      <div className="flex items-center justify-between border-b border-border bg-white px-4 py-3 md:hidden">
+      <div className="sticky top-0 flex items-center justify-between border-b border-border bg-white px-4 py-3 md:hidden z-40">
         <Link href="/admin" className="flex items-center gap-2">
           <img src="/logo.png" alt="Logo" className="h-7 w-7" />
           <span className="text-sm font-bold text-primary">Dashboard</span>

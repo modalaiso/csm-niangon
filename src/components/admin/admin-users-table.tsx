@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import { useAdminList } from "@/components/admin/useAdminList";
 import { cn } from "@/lib/utils";
+import { TablePagination } from "@/components/admin/table-pagination";
 import { listUsers, updateUserRole, type AdminUserRow } from "@/app/actions/admin-users";
 
 interface AdminUsersTableProps {
@@ -218,33 +219,7 @@ export function AdminUsersTable(props: Readonly<AdminUsersTableProps>) {
         </table>
       </div>
 
-      {totalPages > 1 && (
-        <div className="mt-4 flex items-center justify-center gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            className="rounded-full"
-            disabled={page === 1}
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <span className="px-3 text-sm text-muted-foreground">
-            Page {page} / {totalPages}
-          </span>
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            className="rounded-full"
-            disabled={page === totalPages}
-            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-      )}
+      <TablePagination page={page} totalPages={totalPages} onPageChange={setPage} />
     </div>
   );
 }

@@ -7,27 +7,7 @@ import type { PostType, Role } from "@prisma/client";
 import { PostStatus } from "@prisma/client";
 import { getPostManagerAuthContext } from "@/lib/auth/admin-guard";
 
-type AuthContext = { userId: string | null; role: Role | null };
-
 const MAX_IMAGES = 15;
-
-async function getAuthContext(): Promise<AuthContext> {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return { userId: null, role: null };
-  }
-
-  const dbUser = await prisma.user.findUnique({
-    where: { id: user.id },
-    select: { role: true },
-  });
-
-  return { userId: user.id, role: dbUser?.role ?? null };
-}
 
 function canCreatePosts(role: Role | null): boolean {
   return role === "WRITER" || role === "ADMIN";
@@ -80,14 +60,12 @@ type CreatePostResult = CreatePostSuccess | CreatePostError;
 export async function createPost(
   input: CreatePostInput,
 ): Promise<CreatePostResult> {
-  const { userId, role } = await getAuthContext();
+  const auth = await getPostManagerAuthContext();
+  if (!auth.ok) {
+    return { error: auth.error };
+  }
 
-  if (!userId) {
-    return { error: "auth_required" };
-  }
-  if (!canCreatePosts(role)) {
-    return { error: "forbidden" };
-  }
+  const { id: userId, role } = auth.user;
 
   const title = input.title.trim();
   const summary = input.summary.trim();

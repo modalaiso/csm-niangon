@@ -5,7 +5,7 @@ import { AdminPostsTable } from "@/components/admin/admin-posts-table";
 import { requirePostManager } from "@/lib/auth/admin-guard";
 
 export const metadata = {
-  title: "Publications | Dashboard admin",
+  title: "Publications | Dashboard | CSM Niangon",
 };
 
 export default async function AdminPostsPage() {

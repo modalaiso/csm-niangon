@@ -128,18 +128,18 @@ export default async function PostPage({ params }: Readonly<PostPageProps>) {
 
           <div className="mt-8">{renderPostContent(rawContent)}</div>
 
-          {post.tags.length > 0 && (
+          {/*post.tags.length > 0 && (
             <div className="mt-6 flex flex-wrap gap-2">
               {post.tags.map((tag) => (
                 <span
                   key={tag}
                   className="rounded-full border border-slate-300 px-3 py-1 text-xs text-slate-700"
                 >
-                  #{tag}
+                  {tag}
                 </span>
               ))}
             </div>
-          )}
+          )*/}
 
           <div className="mt-6 border-t border-slate-200 pt-5">
             <LikeButton
