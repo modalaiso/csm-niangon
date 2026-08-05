@@ -201,7 +201,7 @@ export function ActuExplorer(props: Readonly<ActuExplorerProps>) {
               <Link
                 key={post.id}
                 href={`/posts/${post.id}`}
-                className="group overflow-hidden rounded-2xl border border-border bg-white transition-shadow hover:shadow-md"
+                className="group overflow-hidden rounded-2xl border border-border transition-all hover:border-primary/40 bg-white"
               >
                 <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
                   {post.thumbnail ? (
@@ -250,7 +250,7 @@ export function ActuExplorer(props: Readonly<ActuExplorerProps>) {
                   href={`/posts/${post.id}`}
                   className="flex items-start gap-4 p-4 transition-colors hover:bg-accent/40"
                 >
-                  <div className="relative h-16 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-muted sm:h-20 sm:w-28">
+                  {/*div className="relative h-16 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-muted sm:h-20 sm:w-28">
                     {post.thumbnail ? (
                       <img src={post.thumbnail} alt={post.title} className="h-full w-full object-cover" />
                     ) : (
@@ -258,7 +258,7 @@ export function ActuExplorer(props: Readonly<ActuExplorerProps>) {
                         Pas d&apos;image
                       </div>
                     )}
-                  </div>
+                  </div>*/}
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
                       <span className="flex-shrink-0 rounded-full bg-blue-600 px-2.5 py-0.5 text-[10px] font-semibold text-white">

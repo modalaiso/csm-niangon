@@ -102,7 +102,7 @@ export function PostsExplorer(props: Readonly<PostsExplorerProps>) {
               <Link
                 key={post.id}
                 href={`/posts/${post.id}`}
-                className="group overflow-hidden rounded-2xl border border-border bg-white transition-shadow hover:shadow-md"
+                className="group overflow-hidden rounded-2xl border border-border transition-all hover:border-primary/40 bg-white"
               >
                 <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
                   {post.thumbnail ? (

@@ -90,7 +90,7 @@ export function AnnouncementPopup(props: Readonly<AnnouncementPopupProps>) {
       onClose={() => setIsOpen(false)}
       className="m-auto h-full w-full max-h-[30rem] max-w-[50rem] rounded-3xl p-0 backdrop:bg-black/50 open:flex open:flex-col"
     >
-      <div className="relative flex h-full w-full max-h-[30rem] max-w-[50rem] flex-col overflow-hidden bg-white shadow-2xl">
+      <div className="relative flex h-full w-full max-h-[30rem] max-w-[50rem] flex-col overflow-hidden bg-white">
         <div className="flex items-center justify-between px-6 pb-2 pt-4 sm:px-8">
           <h2 className="container text-center text-lg font-extrabold uppercase text-slate-900 sm:text-xl">
             {current.title}

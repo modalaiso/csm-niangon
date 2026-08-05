@@ -20,7 +20,7 @@ export function SearchDropdown() {
   const containerRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // ─── Fermer dropdown au clic extérieur ────────────────────────────────────
+  // Fermer dropdown au clic extérieur
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
@@ -31,7 +31,7 @@ export function SearchDropdown() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // ─── Posts récents au montage ──────────────────────────────────────────────
+  // Posts récents au montage
   useEffect(() => {
     let cancelled = false;
     const load = async () => {
@@ -49,7 +49,7 @@ export function SearchDropdown() {
     return () => { cancelled = true; };
   }, []);
 
-  // ─── Recherche avec debounce + AbortController ────────────────────────────
+  // Recherche avec debounce + AbortController
   useEffect(() => {
     if (!searchQuery.trim()) return; // géré par l'effect du montage + handleClear
 
@@ -75,7 +75,7 @@ export function SearchDropdown() {
     };
   }, [searchQuery]);
 
-  // ─── Handlers ─────────────────────────────────────────────────────────────
+  // Handlers
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
     setIsOpen(true);
@@ -117,7 +117,7 @@ export function SearchDropdown() {
     setSearchQuery("");
   };
 
-  // ─── Render ───────────────────────────────────────────────────────────────
+  // Render
   return (
     <div ref={containerRef} className="relative flex-1">
       {/* Barre de recherche */}
@@ -168,7 +168,7 @@ export function SearchDropdown() {
           id="search-listbox"
           role="listbox"
           aria-label="Résultats de recherche"
-          className="absolute top-full left-[55%] mt-4 w-[64vw] max-w-[24rem] -translate-x-2/3 sm:left-auto sm:right-0 sm:translate-x-0 sm:transform-none sm:w-96 bg-background border border-border rounded-lg shadow-lg z-40 max-h-[400px] overflow-y-auto divide-y divide-border"
+          className="absolute top-full left-[55%] mt-4 w-[64vw] max-w-[24rem] -translate-x-2/3 sm:left-auto sm:right-0 sm:translate-x-0 sm:transform-none sm:w-96 bg-background border border-border rounded-lg z-40 max-h-[400px] overflow-y-auto divide-y divide-border"
         >
           {isLoading ? (
             <li className="p-4 text-center text-sm text-muted-foreground" role="status">

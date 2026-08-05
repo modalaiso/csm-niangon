@@ -45,7 +45,7 @@ export function TopNav(props: Readonly<TopNavProps>) {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b-2 border-primary/20 backdrop-blur supports-[backdrop-filter]:bg-background/95 shadow-lg">
+    <header className="sticky top-0 z-50 w-full border-b-2 border-primary/20 backdrop-blur supports-[backdrop-filter]:bg-background/95">
       <div className="container flex h-14 items-center justify-between px-4">
         {/* Left: Logo */}
         <div className=" items-center inline-block">
