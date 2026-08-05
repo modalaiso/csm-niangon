@@ -3,27 +3,11 @@
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import {
-  Search,
-  Trash2,
-  Eye,
-  ThumbsUp,
-  MessageCircle,
-  ChevronLeft,
-  ChevronRight,
-  Pencil,
-  Loader2,
-} from "lucide-react";
+import { Search, Trash2, Eye, ThumbsUp, MessageCircle, Pencil, Loader2 } from "lucide-react";
 import type { PostStatus } from "@prisma/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAdminList, useRowSelection } from "@/components/admin/useAdminList";
 import { cn } from "@/lib/utils";
 import { TablePagination } from "@/components/admin/table-pagination";

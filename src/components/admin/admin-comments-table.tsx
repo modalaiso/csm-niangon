@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Search, Trash2, Eye, EyeOff, ChevronLeft, ChevronRight, Loader2, ThumbsUp, ThumbsDown } from "lucide-react";
+import { Search, Trash2, Eye, EyeOff, Loader2, ThumbsUp, ThumbsDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {

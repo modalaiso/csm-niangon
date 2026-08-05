@@ -21,7 +21,7 @@ interface BottomNavProps {
   userRole?: Role;
 }
 
-export function BottomNav({ userRole }: BottomNavProps) {
+export function BottomNav(props: Readonly<BottomNavProps>) {
   const pathname = usePathname();
 
   // Hide on auth pages and on the whole admin dashboard
@@ -35,7 +35,7 @@ export function BottomNav({ userRole }: BottomNavProps) {
     return null;
   }
 
-  const isWriterOrAdmin = userRole === "WRITER" || userRole === "ADMIN";
+  const isWriterOrAdmin = props.userRole === "WRITER" || props.userRole === "ADMIN";
 
   const navItems = isWriterOrAdmin
     ? [

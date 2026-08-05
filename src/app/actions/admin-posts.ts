@@ -1,17 +1,12 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
-import type { PostType, Role } from "@prisma/client";
+import type { PostType } from "@prisma/client";
 import { PostStatus } from "@prisma/client";
 import { getPostManagerAuthContext } from "@/lib/auth/admin-guard";
 
 const MAX_IMAGES = 15;
-
-function canCreatePosts(role: Role | null): boolean {
-  return role === "WRITER" || role === "ADMIN";
-}
 
 function slugify(title: string): string {
   return title
@@ -65,7 +60,7 @@ export async function createPost(
     return { error: auth.error };
   }
 
-  const { id: userId, role } = auth.user;
+  const { id: userId } = auth.user;
 
   const title = input.title.trim();
   const summary = input.summary.trim();
