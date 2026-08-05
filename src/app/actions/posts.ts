@@ -266,3 +266,133 @@ export async function getPostTagsByType(type: PostType): Promise<string[]> {
     return [];
   }
 }
+
+/* ------------------------------ Page Informations ------------------------------ */
+
+export interface InfoPostCard extends HomePostCard {
+  isUrgent: boolean;
+}
+
+export type InfoUrgencyFilter = "ALL" | "URGENT" | "NORMAL";
+
+const URGENT_TAG = "urgent";
+
+export interface GetInfoPostsParams {
+  search?: string;
+  urgency?: InfoUrgencyFilter;
+  limit?: number;
+  offset?: number;
+}
+
+/**
+ * Publications de type INFO publiées, avec recherche (titre/résumé/info)
+ * et filtre par urgence — dédié à la page /infos.
+ */
+export async function getInfoPosts(
+  params: GetInfoPostsParams = {},
+): Promise<{ posts: InfoPostCard[]; total: number }> {
+  const { search, urgency = "ALL", limit = 20, offset = 0 } = params;
+
+  try {
+    const where: Record<string, unknown> = {
+      status: PostStatus.PUBLISHED,
+      type: PostType.INFO,
+    };
+
+    if (urgency === "URGENT") {
+      where.tags = { has: URGENT_TAG };
+    } else if (urgency === "NORMAL") {
+      where.NOT = { tags: { has: URGENT_TAG } };
+    }
+
+    const trimmedSearch = search?.trim();
+    if (trimmedSearch) {
+      where.OR = [
+        { title: { contains: trimmedSearch, mode: "insensitive" } },
+        { summary: { contains: trimmedSearch, mode: "insensitive" } },
+        { info: { contains: trimmedSearch, mode: "insensitive" } },
+      ];
+    }
+
+    const [posts, total] = await Promise.all([
+      prisma.post.findMany({
+        where,
+        orderBy: { publishedAt: "desc" },
+        skip: offset,
+        take: limit,
+        select: cardSelect,
+      }),
+      prisma.post.count({ where }),
+    ]);
+
+    const results = await Promise.all(
+      posts.map(async (p: any) => {
+        const card = await transformPostCard(p);
+        return {
+          ...card,
+          isUrgent: (p.tags ?? []).some((t: string) => t.toLowerCase() === URGENT_TAG),
+        };
+      }),
+    );
+
+    return { posts: results, total };
+  } catch (error) {
+    console.error("Erreur lors du chargement des informations:", error);
+    return { posts: [], total: 0 };
+  }
+}
+
+/* ------------------------------ Page Actualités ------------------------------ */
+
+export interface GetActuPostsParams {
+  search?: string;
+  tag?: string | null;
+  limit?: number;
+  offset?: number;
+}
+
+/**
+ * Publications de type ACTU publiées, avec recherche (titre/résumé)
+ * et filtre par tag — dédié à la page /actus.
+ */
+export async function getActuPosts(
+  params: GetActuPostsParams = {},
+): Promise<{ posts: HomePostCard[]; total: number }> {
+  const { search, tag, limit = 20, offset = 0 } = params;
+
+  try {
+    const where: Record<string, unknown> = {
+      status: PostStatus.PUBLISHED,
+      type: PostType.ACTU,
+    };
+
+    if (tag) {
+      where.tags = { has: tag };
+    }
+
+    const trimmedSearch = search?.trim();
+    if (trimmedSearch) {
+      where.OR = [
+        { title: { contains: trimmedSearch, mode: "insensitive" } },
+        { summary: { contains: trimmedSearch, mode: "insensitive" } },
+      ];
+    }
+
+    const [posts, total] = await Promise.all([
+      prisma.post.findMany({
+        where,
+        orderBy: { publishedAt: "desc" },
+        skip: offset,
+        take: limit,
+        select: cardSelect,
+      }),
+      prisma.post.count({ where }),
+    ]);
+
+    const results = await Promise.all(posts.map(transformPostCard));
+    return { posts: results, total };
+  } catch (error) {
+    console.error("Erreur lors du chargement des actualités:", error);
+    return { posts: [], total: 0 };
+  }
+}
