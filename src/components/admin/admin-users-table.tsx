@@ -2,10 +2,9 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Search, Loader2, ChevronLeft, ChevronRight, ShieldCheck } from "lucide-react";
+import { Search, Loader2, ShieldCheck } from "lucide-react";
 import type { Role } from "@prisma/client";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
