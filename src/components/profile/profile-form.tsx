@@ -2,11 +2,10 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, Trash2 } from "lucide-react";
+import { Loader2, Trash2, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { LogOut, Settings, UserRound } from "lucide-react";
 import { logout } from "@/app/actions/auth";
 import {
   Select,
@@ -47,7 +46,6 @@ export function ProfileForm(props: Readonly<ProfileFormProps>) {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [isPending, startTransition] = useTransition();
-  const [isOpen, setIsOpen] = useState(false);
 
   const [isDeleting, startDeleteTransition] = useTransition();
   const [deleteError, setDeleteError] = useState<string | null>(null);
@@ -77,7 +75,6 @@ export function ProfileForm(props: Readonly<ProfileFormProps>) {
   };
 
   const handleLogout = () => {
-    setIsOpen(false);
     startTransition(async () => {
       await logout();
       router.push("/");
