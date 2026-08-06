@@ -40,7 +40,7 @@ export function BottomNav(props: Readonly<BottomNavProps>) {
   const navItems = isWriterOrAdmin
     ? [
         { href: "/", label: "Accueil", Outline: HomeOutlineIcon, Filled: HomeFilledIcon },
-        { href: "/articles", label: "Articles", Outline: ArticleOutlineIcon, Filled: ArticleFilledIcon },
+        { href: "/actus", label: "Actualités", Outline: ArticleOutlineIcon, Filled: ArticleFilledIcon },
         { href: "/admin/posts/new", label: "Posts", Outline: PencilOutlineIcon, Filled: PencilFilledIcon },
         { href: "/infos", label: "Infos", Outline: InfoOutlineIcon, Filled: InfoFilledIcon },
         { href: "/profile", label: "Profil", Outline: UserOutlineIcon, Filled: UserFilledIcon },

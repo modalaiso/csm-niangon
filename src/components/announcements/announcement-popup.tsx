@@ -66,12 +66,17 @@ export function AnnouncementPopup(props: Readonly<AnnouncementPopupProps>) {
   }, [props.announcements]);
 
   // Jamais de pop-up d'annonce par-dessus le dashboard admin
+  if (pathname.startsWith("/signup")) return null;
+  if (pathname.startsWith("/login")) return null;
+  if (pathname.startsWith("/admin-signup")) return null;
+  if (pathname.startsWith("/admin-login")) return null;
   if (pathname.startsWith("/admin")) return null;
   if (pathname.startsWith("/actus")) return null;
   if (pathname.startsWith("/infos")) return null;
   if (pathname.startsWith("/emplois-du-temps")) return null;
   if (pathname.startsWith("/devoirs")) return null;
   if (pathname.startsWith("/posts")) return null;
+  if (pathname.startsWith("/profile")) return null;
   if (props.announcements.length === 0) return null;
 
   const current = props.announcements[index];

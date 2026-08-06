@@ -91,7 +91,7 @@ export default async function AdminDashboardPage() {
         {canManagePosts && (
           <Link
             href="/admin/posts"
-            className="rounded-2xl border border-border bg-white p-5 transition-shadow hover:shadow-md"
+            className="rounded-2xl border border-border bg-white p-5 transition-all hover:border-primary/40"
           >
             <div className="flex items-center justify-between">
               <FileText className="h-5 w-5 text-primary" />
@@ -109,7 +109,7 @@ export default async function AdminDashboardPage() {
         {canModerate && (
           <Link
             href="/admin/moderation"
-            className="rounded-2xl border border-border bg-white p-5 transition-shadow hover:shadow-md"
+            className="rounded-2xl border border-border bg-white p-5 transition-all hover:border-primary/40"
           >
             <div className="flex items-center justify-between">
               <MessageCircle className="h-5 w-5 text-secondary" />

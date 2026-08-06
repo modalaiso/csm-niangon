@@ -52,6 +52,7 @@ model User {
   prenom    String
   username  String    @unique
   classe    String
+  matricule String?   @unique
   role      Role      @default(USER)
   bio       String?
   avatar    String?
@@ -174,9 +175,6 @@ model PostView {
   @@index([userId])
 }
 
-/// Visites site-wide (toutes les pages), distinct de PostView qui ne
-/// compte que les vues d'un post précis. Sert au dashboard de stats
-/// (journalière, hebdomadaire, mensuelle, trimestrielle, semestrielle, annuelle).
 model VisitLog {
   id        String   @id @default(cuid())
   path      String
@@ -195,9 +193,6 @@ model VisitLog {
   @@index([createdAt])
 }
 
-/// Liste des mots-clés/phrases surveillés pour la modération automatique
-/// des commentaires. AUTO_DELETE = supprimé silencieusement à la création.
-/// FLAG_FOR_REVIEW = masqué et mis en file d'attente pour un modérateur.
 model ModerationKeyword {
   id        String            @id @default(cuid())
   phrase    String            @unique
@@ -212,8 +207,6 @@ model ModerationKeyword {
   @@index([isActive])
 }
 
-/// Trace de toute action de modération automatique ou manuelle, pour
-/// audit et pour pouvoir contester/annuler un faux positif.
 model ModerationLog {
   id             String            @id @default(cuid())
   type           ModerationLogType
@@ -232,8 +225,6 @@ model ModerationLog {
   @@index([createdAt])
 }
 
-/// Journal des actions admin (suppression de post, changement de statut,
-/// changement de rôle, suppression de commentaire, etc.) pour traçabilité.
 model AuditLog {
   id         String   @id @default(cuid())
   actorId    String

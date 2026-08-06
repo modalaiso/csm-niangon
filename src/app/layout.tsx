@@ -40,13 +40,30 @@ export default async function RootLayout({
   } = await supabase.auth.getUser();
 
   let userRole = undefined;
+  let userProfile = null;
 
   if (user) {
     const dbUser = await prisma.user.findUnique({
       where: { id: user.id },
-      select: { role: true },
+      select: {
+        role: true,
+        nom: true,
+        prenom: true,
+        username: true,
+        avatar: true,
+        email: true,
+      },
     });
     userRole = dbUser?.role;
+    if (dbUser) {
+      userProfile = {
+        nom: dbUser.nom,
+        prenom: dbUser.prenom,
+        username: dbUser.username,
+        avatar: dbUser.avatar,
+        email: dbUser.email,
+      };
+    }
   }
 
   const [infoBarItems, announcements] = await Promise.all([
@@ -64,7 +81,7 @@ export default async function RootLayout({
       >
         <VisitTracker />
         <InfoBar items={infoBarItems} />
-        <TopNav user={user} userRole={userRole} />
+        <TopNav user={user} userRole={userRole} userProfile={userProfile} />
         {children}
         <BottomNav userRole={userRole} />
         <AnnouncementPopup announcements={announcements} />

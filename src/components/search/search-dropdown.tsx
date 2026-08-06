@@ -164,52 +164,52 @@ export function SearchDropdown() {
       {/* Dropdown */}
       {isOpen && (
         <div>
-        <ul
-          id="search-listbox"
-          role="listbox"
-          aria-label="Résultats de recherche"
-          className="absolute top-full left-[55%] mt-4 w-[64vw] max-w-[24rem] -translate-x-2/3 sm:left-auto sm:right-0 sm:translate-x-0 sm:transform-none sm:w-96 bg-background border border-border rounded-lg z-40 max-h-[400px] overflow-y-auto divide-y divide-border"
-        >
-          {isLoading ? (
-            <li className="p-4 text-center text-sm text-muted-foreground" role="status">
-              Chargement...
-            </li>
-          ) : results.length === 0 ? (
-            <li className="p-4 text-center text-sm text-muted-foreground">
-              {searchQuery.trim() ? "Aucun résultat trouvé" : "Aucun post disponible"}
-            </li>
-          ) : (
-            results.map((result) => (
-              <li key={result.id} role="option">
-                <button
-                type="button"
-                  onClick={() => handleResultClick(result.id)}
-                  className="w-full text-left px-4 py-3 hover:bg-accent/50 transition-colors focus:outline-none focus:bg-accent/50"
-                >
-                  <div className="flex items-start gap-3">
-                    {result.thumbnail && (
-                      <img
-                        src={result.thumbnail}
-                        alt=""
-                        aria-hidden="true"
-                        className="w-20 h-14 object-cover rounded flex-shrink-0"
-                      />
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-medium text-base truncate">{result.title}</h3>
-                      {/*<p className="text-xs text-muted-foreground truncate">
-                        {result.author.username}
-                      </p>*/}
-                      <p className="text-xs text-muted-foreground line-clamp-2">
-                        {result.summary}
-                      </p>
-                    </div>
-                  </div>
-                </button>
+          <ul
+            id="search-listbox"
+            role="listbox"
+            aria-label="Résultats de recherche"
+            className="absolute top-full left-[55%] mt-4 w-[71vw] max-w-[24rem] -translate-x-2/3 sm:left-auto sm:right-0 sm:translate-x-0 sm:transform-none sm:w-96 bg-background border border-border rounded-lg z-40 max-h-[400px] overflow-y-auto divide-y divide-border"
+          >
+            {isLoading ? (
+              <li className="p-4 text-center text-sm text-muted-foreground" role="status">
+                Chargement...
               </li>
-            ))
-          )}
-        </ul>
+            ) : results.length === 0 ? (
+              <li className="p-4 text-center text-sm text-muted-foreground">
+                {searchQuery.trim() ? "Aucun résultat trouvé" : "Aucun post disponible"}
+              </li>
+            ) : (
+              results.map((result) => (
+                <li key={result.id} role="option">
+                  <button
+                    type="button"
+                    onClick={() => handleResultClick(result.id)}
+                    className="w-full text-left px-4 py-3 hover:bg-accent/50 transition-colors focus:outline-none focus:bg-accent/50"
+                  >
+                    <div className="flex items-start gap-3">
+                      {/*result.thumbnail && (
+                        <img
+                          src={result.thumbnail}
+                          alt=""
+                          aria-hidden="true"
+                          className="w-20 h-14 object-cover rounded flex-shrink-0"
+                        />
+                      )*/}
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-medium text-base truncate">{result.title}</h3>
+                        {/*<p className="text-xs text-muted-foreground truncate">
+                          {result.author.username}
+                        </p>*/}
+                        <p className="text-xs text-muted-foreground line-clamp-2">
+                          {result.summary}
+                        </p>
+                      </div>
+                    </div>
+                  </button>
+                </li>
+              ))
+            )}
+          </ul>
         </div>
       )}
     </div>

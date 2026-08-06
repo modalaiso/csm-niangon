@@ -11,13 +11,23 @@ import {
 } from "@/components/ui/sheet";
 import { usePathname } from "next/navigation";
 import { SearchDropdown } from "@/components/search/search-dropdown";
+import { ProfileMenu } from "@/components/nav/profile-menu";
 
 import type { User } from "@supabase/supabase-js";
 import type { Role } from "@prisma/client";
 
+interface TopNavProfile {
+  nom: string;
+  prenom: string;
+  username: string;
+  avatar: string | null;
+  email: string | null;
+}
+
 interface TopNavProps {
   user?: User | null;
   userRole?: Role;
+  userProfile?: TopNavProfile | null;
 }
 
 export function TopNav(props: Readonly<TopNavProps>) {
@@ -95,10 +105,16 @@ export function TopNav(props: Readonly<TopNavProps>) {
             </Link>
           )}
 
-          {/* Desktop Auth Buttons */}
+          {/* Desktop Auth / Profile */}
           <div className="hidden md:flex items-center gap-2">
-            {props.user ? (
-              <Link href="/profile"></Link>
+            {props.user && props.userProfile ? (
+              <ProfileMenu
+                nom={props.userProfile.nom}
+                prenom={props.userProfile.prenom}
+                username={props.userProfile.username}
+                avatar={props.userProfile.avatar}
+                email={props.userProfile.email}
+              />
             ) : (
               <>
                 <Link href="/login">

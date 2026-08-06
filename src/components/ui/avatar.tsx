@@ -33,21 +33,26 @@ interface AvatarProps {
   prenom: string;
   username: string;
   avatar: string | null;
+  className?: string;
+  textClassName?: string;
 }
 
 function Avatar(props: Readonly<AvatarProps>){
+  const sizeClasses = props.className ? props.className : "h-9 w-9";
+  const textClasses = props.textClassName ? props.textClassName : "text-sm";
+
   if (props.avatar) {
     return (
       <img
         src={props.avatar}
         alt={props.prenom + " " + props.nom}
-        className="h-9 w-9 flex-shrink-0 rounded-full object-cover"
+        className={`${sizeClasses} flex-shrink-0 rounded-full object-cover`}
       />
     );
   }
   return (
     <div
-      className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-sm font-semibold text-white ${colorForUsername(props.username)}`}
+      className={`flex ${sizeClasses} flex-shrink-0 items-center justify-center rounded-full ${textClasses} font-semibold leading-none text-white ${colorForUsername(props.username)}`}
     >
       {props.username.charAt(0).toUpperCase()}
     </div>
