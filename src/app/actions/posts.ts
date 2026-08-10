@@ -245,7 +245,7 @@ export async function getPostsByType(
       ...(tag ? { tags: { has: tag } } : {}),
     };
 
-    return fetchPostCards(where, limit, offset);
+    return await fetchPostCards(where, limit, offset);
   } catch (error) {
     console.error("Erreur lors du chargement des publications par type:", error);
     return { posts: [], total: 0 };
