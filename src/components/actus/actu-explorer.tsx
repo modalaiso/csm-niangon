@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
-import Link from "next/link";
 import {
   Eye,
   Calendar,
@@ -14,7 +13,8 @@ import {
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ViewModeToggle } from "@/components/ui/view-mode-toggle";
+import { ViewModeToggle, type ViewMode } from "@/components/ui/view-mode-toggle";
+import { PostResults } from "@/components/posts/post-results";
 import { cn, formatRelativeTime } from "@/lib/utils";
 import { getActuPosts, type HomePostCard } from "@/app/actions/posts";
 
@@ -25,7 +25,6 @@ interface ActuExplorerProps {
 }
 
 const PAGE_SIZE = 20;
-type ViewMode = "grid" | "list";
 
 export function ActuExplorer(props: Readonly<ActuExplorerProps>) {
   const [posts, setPosts] = useState<HomePostCard[]>(props.initialPosts);
@@ -80,132 +79,32 @@ export function ActuExplorer(props: Readonly<ActuExplorerProps>) {
   const plural = total > 1 ? "s" : "";
   const countText = total === 0 ? "Aucune actualité" : `${total} actualité${plural}`;
 
-  let emptyStateMessage = "Aucune actualité pour l'instant";
-  if (debouncedSearch) {
-    emptyStateMessage = `Aucune actualité ne correspond à "${debouncedSearch}"`;
-  } else if (activeTag) {
-    emptyStateMessage = `Aucune actualité avec le tag ${activeTag}`;
-  }
+  const emptyStateMessage = debouncedSearch
+    ? `Aucune actualité ne correspond à "${debouncedSearch}"`
+    : activeTag
+      ? `Aucune actualité avec le tag ${activeTag}`
+      : "Aucune actualité pour l'instant";
 
-  const resultsContent = (() => {
-    if (posts.length === 0) {
-      return (
-        <div className="flex flex-col items-center justify-center rounded-2xl py-16 text-center">
-          <p className="text-base font-medium text-muted-foreground">
-            {emptyStateMessage}
-          </p>
-          {activeTag && !debouncedSearch && (
-            <Button variant="outline" className="mt-4 rounded-full" onClick={() => setActiveTag(null)}>
-              Réinitialiser le filtre
-            </Button>
-          )}
-        </div>
-      );
-    }
-
-    if (viewMode === "grid") {
-      return (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {posts.map((post) => (
-            <Link
-              key={post.id}
-              href={`/posts/${post.id}`}
-              className="group overflow-hidden rounded-2xl border border-border transition-all hover:border-primary/40 bg-white"
-            >
-              <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
-                {post.thumbnail ? (
-                  <img
-                    src={post.thumbnail}
-                    alt={post.title}
-                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center text-xs text-muted-foreground">
-                    Pas d&apos;image
-                  </div>
-                )}
-                <span className="absolute left-3 top-3 rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white">
-                  Actu
-                </span>
-              </div>
-              <div className="p-4">
-                <h3 className="line-clamp-1 text-base font-bold text-foreground">{post.title}</h3>
-                <p className="mt-1 line-clamp-3 text-sm text-muted-foreground">{post.summary}</p>
-                <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
-                  <span>
-                    Créé par{" "}
-                    <span className="font-medium text-foreground">
-                      {post.author.prenom} {post.author.nom}
-                    </span>
-                  </span>
-                  <span className="inline-flex items-center gap-1">
-                    <Eye className="h-3.5 w-3.5" />
-                    {post.views}
-                  </span>
-                  <span className="inline-flex items-center gap-1">
-                    <Calendar className="h-3.5 w-3.5" />
-                    {formatRelativeTime(post.publishedAt)}
-                  </span>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      );
-    }
-
-    return (
-      <ul className="divide-y divide-border overflow-hidden rounded-2xl border border-border bg-white">
-        {posts.map((post) => (
-          <li key={post.id}>
-            <Link
-              href={`/posts/${post.id}`}
-              className="flex items-start gap-4 p-4 transition-colors hover:bg-accent/40"
-            >
-              {/*div className="relative h-16 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-muted sm:h-20 sm:w-28">
-                {post.thumbnail ? (
-                  <img src={post.thumbnail} alt={post.title} className="h-full w-full object-cover" />
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center text-[10px] text-muted-foreground">
-                    Pas d&apos;image
-                  </div>
-                )}
-              </div>*/}
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2">
-                  <span className="flex-shrink-0 rounded-full bg-blue-600 px-2.5 py-0.5 text-[10px] font-semibold text-white">
-                    Actu
-                  </span>
-                  <h3 className="truncate text-sm font-bold text-foreground sm:text-base">
-                    {post.title}
-                  </h3>
-                </div>
-                <p className="mt-1 line-clamp-2 text-xs text-muted-foreground sm:text-sm">
-                  {post.summary}
-                </p>
-                <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground sm:text-xs">
-                  <span>
-                    Créé par{" "}
-                    <span className="font-medium text-foreground">
-                      {post.author.prenom} {post.author.nom}
-                    </span>
-                  </span>
-                  <span className="inline-flex items-center gap-1">
-                    <Eye className="h-3 w-3" />
-                    {post.views}
-                  </span>
-                  <span className="inline-flex items-center gap-1">
-                    <Calendar className="h-3 w-3" />
-                    {formatRelativeTime(post.publishedAt)}
-                  </span>
-                </div>
-              </div>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    );
-  })();
+  const resultsContent = (
+    <PostResults
+      posts={posts}
+      viewMode={viewMode}
+      emptyStateMessage={emptyStateMessage}
+      emptyStateAction={
+        activeTag && !debouncedSearch
+          ? {
+              label: "Réinitialiser le filtre",
+              onClick: () => setActiveTag(null),
+            }
+          : undefined
+      }
+      renderBadge={() => (
+        <span className="absolute left-3 top-3 rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white">
+          Actu
+        </span>
+      )}
+    />
+  );
 
   return (
     <div>

@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
-import Link from "next/link";
 import {
   Eye,
   Calendar,
@@ -14,7 +13,8 @@ import {
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ViewModeToggle } from "@/components/ui/view-mode-toggle";
+import { PostResults } from "@/components/posts/post-results";
+import { ViewModeToggle, type ViewMode } from "@/components/ui/view-mode-toggle";
 import { cn, formatRelativeTime } from "@/lib/utils";
 import {
   getInfoPosts,
@@ -34,8 +34,6 @@ const URGENCY_FILTERS: { label: string; value: InfoUrgencyFilter }[] = [
   { label: "Normales", value: "NORMAL" },
   { label: "Urgentes", value: "URGENT" },
 ];
-
-type ViewMode = "grid" | "list";
 
 export function InfoExplorer(props: Readonly<InfoExplorerProps>) {
   const [posts, setPosts] = useState<InfoPostCard[]>(props.initialPosts);
@@ -104,131 +102,28 @@ export function InfoExplorer(props: Readonly<InfoExplorerProps>) {
   const plural = total > 1 ? "s" : "";
   const countText = total === 0 ? "Aucune information" : `${total} information${plural}`;
 
-  let resultsContent = null;
-  if (posts.length === 0) {
-    resultsContent = (
-      <div className="flex flex-col items-center justify-center rounded-2xl py-16 text-center">
-        <p className="text-base font-medium text-muted-foreground">
-          {debouncedSearch
-            ? `Aucune information ne correspond à "${debouncedSearch}"`
-            : "Aucune information pour l'instant"}
-        </p>
-      </div>
-    );
-  } else if (viewMode === "grid") {
-    resultsContent = (
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {posts.map((post) => (
-          <Link
-            key={post.id}
-            href={`/posts/${post.id}`}
-            className="group overflow-hidden rounded-2xl border border-border bg-white transition-all hover:border-primary/40"
-          >
-            <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
-              {post.thumbnail ? (
-                <img
-                  src={post.thumbnail}
-                  alt={post.title}
-                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                />
-              ) : (
-                <div className="flex h-full w-full items-center justify-center text-xs text-muted-foreground">
-                  Pas d&apos;image
-                </div>
-              )}
-              <span
-                className={cn(
-                  "absolute left-3 top-3 flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold text-white",
-                  post.isUrgent ? "bg-secondary text-secondary-foreground" : "bg-amber-500",
-                )}
-              >
-                {post.isUrgent && <AlertTriangle className="h-3 w-3" />}
-                {post.isUrgent ? "Urgent" : "Info"}
-              </span>
-            </div>
-            <div className="p-4">
-              <h3 className="line-clamp-1 text-base font-bold text-foreground">{post.title}</h3>
-              <p className="mt-1 line-clamp-3 text-sm text-muted-foreground">{post.summary}</p>
-              <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
-                <span>
-                  Créé par{" "}
-                  <span className="font-medium text-foreground">
-                    {post.author.prenom} {post.author.nom}
-                  </span>
-                </span>
-                <span className="inline-flex items-center gap-1">
-                  <Eye className="h-3.5 w-3.5" />
-                  {post.views}
-                </span>
-                <span className="inline-flex items-center gap-1">
-                  <Calendar className="h-3.5 w-3.5" />
-                  {formatRelativeTime(post.publishedAt)}
-                </span>
-              </div>
-            </div>
-          </Link>
-        ))}
-      </div>
-    );
-  } else {
-    resultsContent = (
-      <ul className="divide-y divide-border overflow-hidden rounded-2xl border border-border bg-white">
-        {posts.map((post) => (
-          <li key={post.id}>
-            <Link
-              href={`/posts/${post.id}`}
-              className="flex items-start gap-4 p-4 transition-colors hover:bg-accent/40"
-            >
-              {/*<div className="relative h-16 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-muted sm:h-20 sm:w-28">
-                {post.thumbnail ? (
-                  <img src={post.thumbnail} alt={post.title} className="h-full w-full object-cover" />
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center text-[10px] text-muted-foreground">
-                    Pas d&apos;image
-                  </div>
-                )}
-              </div>*/}
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2">
-                  <span
-                    className={cn(
-                      "flex flex-shrink-0 items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-semibold text-white",
-                      post.isUrgent ? "bg-secondary text-secondary-foreground" : "bg-amber-500",
-                    )}
-                  >
-                    {post.isUrgent && <AlertTriangle className="h-3 w-3" />}
-                    {post.isUrgent ? "Urgent" : "Info"}
-                  </span>
-                  <h3 className="truncate text-sm font-bold text-foreground sm:text-base">
-                    {post.title}
-                  </h3>
-                </div>
-                <p className="mt-1 line-clamp-2 text-xs text-muted-foreground sm:text-sm">
-                  {post.summary}
-                </p>
-                <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground sm:text-xs">
-                  <span>
-                    Créé par{" "}
-                    <span className="font-medium text-foreground">
-                      {post.author.prenom} {post.author.nom}
-                    </span>
-                  </span>
-                  <span className="inline-flex items-center gap-1">
-                    <Eye className="h-3 w-3" />
-                    {post.views}
-                  </span>
-                  <span className="inline-flex items-center gap-1">
-                    <Calendar className="h-3 w-3" />
-                    {formatRelativeTime(post.publishedAt)}
-                  </span>
-                </div>
-              </div>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    );
-  }
+  const emptyStateMessage = debouncedSearch
+    ? `Aucune information ne correspond à "${debouncedSearch}"`
+    : "Aucune information pour l'instant";
+
+  const resultsContent = (
+    <PostResults
+      posts={posts}
+      viewMode={viewMode}
+      emptyStateMessage={emptyStateMessage}
+      renderBadge={(post) => (
+        <span
+          className={cn(
+            "absolute left-3 top-3 flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold text-white",
+            post.isUrgent ? "bg-secondary text-secondary-foreground" : "bg-amber-500",
+          )}
+        >
+          {post.isUrgent && <AlertTriangle className="h-3 w-3" />}
+          {post.isUrgent ? "Urgent" : "Info"}
+        </span>
+      )}
+    />
+  );
 
   return (
     <div>
