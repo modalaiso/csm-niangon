@@ -89,6 +89,18 @@ export function InfoExplorer(props: Readonly<InfoExplorerProps>) {
 
   const handleClearSearch = () => setSearchInput("");
 
+  const getUrgencyButtonClass = (item: { label: string; value: InfoUrgencyFilter }) => {
+    if (urgency !== item.value) {
+      return "border-border bg-white text-foreground hover:border-primary/40";
+    }
+
+    if (item.value === "URGENT") {
+      return "border-secondary bg-secondary text-secondary-foreground";
+    }
+
+    return "border-primary bg-primary text-white";
+  };
+
   const plural = total > 1 ? "s" : "";
   const countText = total === 0 ? "Aucune information" : `${total} information${plural}`;
 
@@ -130,11 +142,7 @@ export function InfoExplorer(props: Readonly<InfoExplorerProps>) {
               onClick={() => setUrgency(item.value)}
               className={cn(
                 "flex items-center gap-1.5 whitespace-nowrap rounded-full border px-4 py-2 text-sm font-medium transition-colors",
-                urgency === item.value
-                  ? item.value === "URGENT"
-                    ? "border-secondary bg-secondary text-secondary-foreground"
-                    : "border-primary bg-primary text-white"
-                  : "border-border bg-white text-foreground hover:border-primary/40",
+                getUrgencyButtonClass(item),
               )}
             >
               {item.value === "URGENT" && <AlertTriangle className="h-3.5 w-3.5" />}
