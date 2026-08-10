@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { PostStatus, PostType } from "@prisma/client";
+import { PostStatus, PostType, type Prisma } from "@prisma/client";
 import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { getPostViewCount } from "@/lib/viewCount";
@@ -73,6 +73,25 @@ async function transformPostCard(post: any): Promise<HomePostCard> {
     tags: post.tags ?? [],
     author: post.author,
   };
+}
+
+async function fetchPostCards(
+  where: Prisma.PostWhereInput,
+  limit: number,
+  offset = 0,
+): Promise<{ posts: HomePostCard[]; total: number }> {
+  const [posts, total] = await Promise.all([
+    prisma.post.findMany({
+      where,
+      orderBy: { publishedAt: "desc" },
+      skip: offset,
+      take: limit,
+      select: cardSelect,
+    }),
+    prisma.post.count({ where }),
+  ]);
+
+  return { posts: await Promise.all(posts.map(transformPostCard)), total };
 }
 
 /** Récupère les publications publiées excluant les annonces */
@@ -220,25 +239,13 @@ export async function getPostsByType(
   tag?: string | null,
 ): Promise<{ posts: HomePostCard[]; total: number }> {
   try {
-    const where = {
+    const where: Prisma.PostWhereInput = {
       status: PostStatus.PUBLISHED,
       type,
       ...(tag ? { tags: { has: tag } } : {}),
     };
 
-    const [posts, total] = await Promise.all([
-      prisma.post.findMany({
-        where,
-        orderBy: { publishedAt: "desc" },
-        skip: offset,
-        take: limit,
-        select: cardSelect,
-      }),
-      prisma.post.count({ where }),
-    ]);
-
-    const results = await Promise.all(posts.map(transformPostCard));
-    return { posts: results, total };
+    return fetchPostCards(where, limit, offset);
   } catch (error) {
     console.error("Erreur lors du chargement des publications par type:", error);
     return { posts: [], total: 0 };
@@ -294,7 +301,7 @@ export async function getInfoPosts(
   const { search, urgency = "ALL", limit = 20, offset = 0 } = params;
 
   try {
-    const where: Record<string, unknown> = {
+    const where: Prisma.PostWhereInput = {
       status: PostStatus.PUBLISHED,
       type: PostType.INFO,
     };
@@ -314,16 +321,7 @@ export async function getInfoPosts(
       ];
     }
 
-    const [posts, total] = await Promise.all([
-      prisma.post.findMany({
-        where,
-        orderBy: { publishedAt: "desc" },
-        skip: offset,
-        take: limit,
-        select: cardSelect,
-      }),
-      prisma.post.count({ where }),
-    ]);
+    const { posts, total } = await fetchPostCards(where, limit, offset);
 
     const results = await Promise.all(
       posts.map(async (p: any) => {
@@ -361,7 +359,7 @@ export async function getActuPosts(
   const { search, tag, limit = 20, offset = 0 } = params;
 
   try {
-    const where: Record<string, unknown> = {
+    const where: Prisma.PostWhereInput = {
       status: PostStatus.PUBLISHED,
       type: PostType.ACTU,
     };
@@ -378,16 +376,7 @@ export async function getActuPosts(
       ];
     }
 
-    const [posts, total] = await Promise.all([
-      prisma.post.findMany({
-        where,
-        orderBy: { publishedAt: "desc" },
-        skip: offset,
-        take: limit,
-        select: cardSelect,
-      }),
-      prisma.post.count({ where }),
-    ]);
+    const { posts, total } = await fetchPostCards(where, limit, offset);
 
     const results = await Promise.all(posts.map(transformPostCard));
     return { posts: results, total };

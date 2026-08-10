@@ -6,8 +6,6 @@ import {
   Eye,
   Calendar,
   AlertTriangle,
-  LayoutGrid,
-  List as ListIcon,
   Search,
   X,
   ChevronLeft,
@@ -16,6 +14,7 @@ import {
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { ViewModeToggle } from "@/components/ui/view-mode-toggle";
 import { cn, formatRelativeTime } from "@/lib/utils";
 import {
   getInfoPosts,
@@ -144,32 +143,7 @@ export function InfoExplorer(props: Readonly<InfoExplorerProps>) {
           ))}
         </div>
 
-        <div className="flex items-center gap-1 rounded-full border border-border bg-white p-1">
-          <button
-            type="button"
-            onClick={() => setViewMode("grid")}
-            aria-label="Affichage en grille"
-            aria-pressed={viewMode === "grid"}
-            className={cn(
-              "flex h-8 w-8 items-center justify-center rounded-full transition-colors",
-              viewMode === "grid" ? "bg-primary text-white" : "text-muted-foreground hover:text-foreground",
-            )}
-          >
-            <LayoutGrid className="h-4 w-4" />
-          </button>
-          <button
-            type="button"
-            onClick={() => setViewMode("list")}
-            aria-label="Affichage en liste"
-            aria-pressed={viewMode === "list"}
-            className={cn(
-              "flex h-8 w-8 items-center justify-center rounded-full transition-colors",
-              viewMode === "list" ? "bg-primary text-white" : "text-muted-foreground hover:text-foreground",
-            )}
-          >
-            <ListIcon className="h-4 w-4" />
-          </button>
-        </div>
+        <ViewModeToggle value={viewMode} onChange={setViewMode} />
       </div>
 
       {/* Résultats */}
