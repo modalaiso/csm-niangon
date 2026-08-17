@@ -99,7 +99,7 @@ export function ActuExplorer(props: Readonly<ActuExplorerProps>) {
           : undefined
       }
       renderBadge={() => (
-        <span className="absolute left-3 top-3 rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white">
+        <span className="left-3 top-3 rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white">
           Actu
         </span>
       )}

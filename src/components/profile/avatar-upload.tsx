@@ -90,7 +90,7 @@ export function AvatarUpload(props: Readonly<AvatarUploadProps>) {
   return (
     <div className="flex flex-col items-center gap-3">
       <div className="relative">
-        <div className="flex h-40 w-40 items-center justify-center overflow-hidden rounded-full ring-4 ring-primary/10">
+        <div className="flex h-40 w-40 items-center justify-center overflow-hidden rounded-full ring-4 ring-white">
           <Avatar
             avatar={avatar}
             nom={props.nom}

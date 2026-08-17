@@ -114,7 +114,7 @@ export function InfoExplorer(props: Readonly<InfoExplorerProps>) {
       renderBadge={(post) => (
         <span
           className={cn(
-            "absolute left-3 top-3 flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold text-white",
+            "left-3 top-3 flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold text-white",
             post.isUrgent ? "bg-secondary text-secondary-foreground" : "bg-amber-500",
           )}
         >
