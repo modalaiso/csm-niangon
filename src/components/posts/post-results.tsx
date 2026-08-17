@@ -25,7 +25,7 @@ interface PostCardProps<T extends HomePostCard> {
   renderBadge: (post: T, viewMode: ViewMode) => ReactNode;
 }
 
-function PostCard<T extends HomePostCard>(props: PostCardProps<T>) {
+function PostCard<T extends HomePostCard>(props: Readonly<PostCardProps<T>>) {
   const badge = props.renderBadge(props.post, props.viewMode);
 
   if (props.viewMode === "grid") {
