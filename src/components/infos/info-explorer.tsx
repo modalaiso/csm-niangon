@@ -2,8 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import {
-  Eye,
-  Calendar,
   AlertTriangle,
   Search,
   X,
@@ -15,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { PostResults } from "@/components/posts/post-results";
 import { ViewModeToggle, type ViewMode } from "@/components/ui/view-mode-toggle";
-import { cn, formatRelativeTime } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import {
   getInfoPosts,
   type InfoPostCard,

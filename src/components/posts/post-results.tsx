@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { Eye, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { cn, formatRelativeTime } from "@/lib/utils";
+import { formatRelativeTime } from "@/lib/utils";
 import type { HomePostCard } from "@/app/actions/posts";
 import type { ViewMode } from "@/components/ui/view-mode-toggle";
 
@@ -25,21 +25,21 @@ interface PostCardProps<T extends HomePostCard> {
   renderBadge: (post: T, viewMode: ViewMode) => ReactNode;
 }
 
-function PostCard<T extends HomePostCard>({ post, viewMode, renderBadge }: PostCardProps<T>) {
-  const badge = renderBadge(post, viewMode);
+function PostCard<T extends HomePostCard>(props: PostCardProps<T>) {
+  const badge = props.renderBadge(props.post, props.viewMode);
 
-  if (viewMode === "grid") {
+  if (props.viewMode === "grid") {
     return (
       <Link
-        key={post.id}
-        href={`/posts/${post.id}`}
+        key={props.post.id}
+        href={`/posts/${props.post.id}`}
         className="group overflow-hidden rounded-2xl border border-border transition-all hover:border-primary/40 bg-white"
       >
         <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
-          {post.thumbnail ? (
+          {props.post.thumbnail ? (
             <img
-              src={post.thumbnail}
-              alt={post.title}
+              src={props.post.thumbnail}
+              alt={props.post.title}
               className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
           ) : (
@@ -50,22 +50,22 @@ function PostCard<T extends HomePostCard>({ post, viewMode, renderBadge }: PostC
           {badge}
         </div>
         <div className="p-4">
-          <h3 className="line-clamp-1 text-base font-bold text-foreground">{post.title}</h3>
-          <p className="mt-1 line-clamp-3 text-sm text-muted-foreground">{post.summary}</p>
+          <h3 className="line-clamp-1 text-base font-bold text-foreground">{props.post.title}</h3>
+          <p className="mt-1 line-clamp-3 text-sm text-muted-foreground">{props.post.summary}</p>
           <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
             <span>
               Créé par{" "}
               <span className="font-medium text-foreground">
-                {post.author.prenom} {post.author.nom}
+                {props.post.author.prenom} {props.post.author.nom}
               </span>
             </span>
             <span className="inline-flex items-center gap-1">
               <Eye className="h-3.5 w-3.5" />
-              {post.views}
+              {props.post.views}
             </span>
             <span className="inline-flex items-center gap-1">
               <Calendar className="h-3.5 w-3.5" />
-              {formatRelativeTime(post.publishedAt)}
+              {formatRelativeTime(props.post.publishedAt)}
             </span>
           </div>
         </div>
@@ -74,35 +74,35 @@ function PostCard<T extends HomePostCard>({ post, viewMode, renderBadge }: PostC
   }
 
   return (
-    <li key={post.id}>
+    <li key={props.post.id}>
       <Link
-        href={`/posts/${post.id}`}
+        href={`/posts/${props.post.id}`}
         className="flex items-start gap-4 p-4 transition-colors hover:bg-accent/40"
       >
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             {badge}
             <h3 className="truncate text-sm font-bold text-foreground sm:text-base">
-              {post.title}
+              {props.post.title}
             </h3>
           </div>
           <p className="mt-1 line-clamp-2 text-xs text-muted-foreground sm:text-sm">
-            {post.summary}
+            {props.post.summary}
           </p>
           <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground sm:text-xs">
             <span>
               Créé par{" "}
               <span className="font-medium text-foreground">
-                {post.author.prenom} {post.author.nom}
+                {props.post.author.prenom} {props.post.author.nom}
               </span>
             </span>
             <span className="inline-flex items-center gap-1">
               <Eye className="h-3 w-3" />
-              {post.views}
+              {props.post.views}
             </span>
             <span className="inline-flex items-center gap-1">
               <Calendar className="h-3 w-3" />
-              {formatRelativeTime(post.publishedAt)}
+              {formatRelativeTime(props.post.publishedAt)}
             </span>
           </div>
         </div>
