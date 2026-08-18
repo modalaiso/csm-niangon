@@ -344,3 +344,8 @@ export async function adminLogin(formData: z.infer<typeof adminLoginSchema>) {
 
   return { success: true };
 }
+
+export async function logout() {
+  const supabase = await createClient();
+  await supabase.auth.signOut();
+}

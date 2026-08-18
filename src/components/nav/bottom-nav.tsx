@@ -40,7 +40,7 @@ export function BottomNav(props: Readonly<BottomNavProps>) {
   const navItems = isWriterOrAdmin
     ? [
         { href: "/", label: "Accueil", Outline: HomeOutlineIcon, Filled: HomeFilledIcon },
-        { href: "/articles", label: "Articles", Outline: ArticleOutlineIcon, Filled: ArticleFilledIcon },
+        { href: "/actus", label: "Actualités", Outline: ArticleOutlineIcon, Filled: ArticleFilledIcon },
         { href: "/admin/posts/new", label: "Posts", Outline: PencilOutlineIcon, Filled: PencilFilledIcon },
         { href: "/infos", label: "Infos", Outline: InfoOutlineIcon, Filled: InfoFilledIcon },
         { href: "/profile", label: "Profil", Outline: UserOutlineIcon, Filled: UserFilledIcon },
@@ -53,7 +53,7 @@ export function BottomNav(props: Readonly<BottomNavProps>) {
       ];
 
   return (
-    <nav className="sticky bottom-0 left-0 right-0 z-50 border-t-2 border-primary/20 backdrop-blur supports-[backdrop-filter]:bg-background/95 md:hidden">
+    <nav className="sticky bottom-0 left-0 right-0 z-50 border-t border-primary/20 backdrop-blur supports-[backdrop-filter]:bg-background md:hidden">
       <div className="flex h-16 items-center justify-around px-2">
         {navItems.map((item) => {
           const isActive =

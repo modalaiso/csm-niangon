@@ -17,7 +17,7 @@ const ROLE_LABELS: Record<string, string> = {
 export function AdminTopbar(props: Readonly<AdminTopbarProps>) {
 
   return (
-    <header className="sticky top-0 hidden items-center justify-end gap-3 border-b border-border bg-white px-6 py-4 md:flex">
+    <header className="sticky top-0 hidden items-center justify-end gap-3 border-b border-border bg-white px-6 py-4 md:flex z-40">
       <div className="text-right">
         <p className="text-sm font-semibold text-foreground">
           {props.user.prenom} {props.user.nom}

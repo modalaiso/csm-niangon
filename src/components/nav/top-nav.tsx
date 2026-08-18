@@ -11,13 +11,23 @@ import {
 } from "@/components/ui/sheet";
 import { usePathname } from "next/navigation";
 import { SearchDropdown } from "@/components/search/search-dropdown";
+import { ProfileMenu } from "@/components/nav/profile-menu";
 
 import type { User } from "@supabase/supabase-js";
 import type { Role } from "@prisma/client";
 
+interface TopNavProfile {
+  nom: string;
+  prenom: string;
+  username: string;
+  avatar: string | null;
+  email: string | null;
+}
+
 interface TopNavProps {
   user?: User | null;
   userRole?: Role;
+  userProfile?: TopNavProfile | null;
 }
 
 export function TopNav(props: Readonly<TopNavProps>) {
@@ -45,7 +55,7 @@ export function TopNav(props: Readonly<TopNavProps>) {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b-2 border-primary/20 backdrop-blur supports-[backdrop-filter]:bg-background/95 shadow-lg">
+    <header className="sticky top-0 z-50 w-full border-b border-primary/20 backdrop-blur supports-[backdrop-filter]:bg-background">
       <div className="container flex h-14 items-center justify-between px-4">
         {/* Left: Logo */}
         <div className=" items-center inline-block">
@@ -95,10 +105,16 @@ export function TopNav(props: Readonly<TopNavProps>) {
             </Link>
           )}
 
-          {/* Desktop Auth Buttons */}
+          {/* Desktop Auth / Profile */}
           <div className="hidden md:flex items-center gap-2">
-            {props.user ? (
-              <Link href="/profile"></Link>
+            {props.user && props.userProfile ? (
+              <ProfileMenu
+                nom={props.userProfile.nom}
+                prenom={props.userProfile.prenom}
+                username={props.userProfile.username}
+                avatar={props.userProfile.avatar}
+                email={props.userProfile.email}
+              />
             ) : (
               <>
                 <Link href="/login">
@@ -146,12 +162,21 @@ export function TopNav(props: Readonly<TopNavProps>) {
                           href="/admin"
                           className="flex items-center gap-2 text-sm font-medium text-primary hover:underline"
                         >
-                          <ShieldUser className="h-4 w-4" />
                           Dashboard
                         </Link>
                       </>
                     )}
-                    {!props.user && (
+                    {props.user ? (
+                      <>
+                        <div className="h-px bg-border my-2" />
+                        <Link
+                          href="/settings"
+                          className="flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+                        >
+                          Paramètres
+                        </Link>
+                      </>
+                    ) : (
                       <>
                         <div className="h-px bg-border my-2" />
                         <Link

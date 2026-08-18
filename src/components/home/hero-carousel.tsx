@@ -107,7 +107,7 @@ export function HeroCarousel(props: Readonly<HeroCarouselProps>) {
             type="button"
             onClick={() => goTo(index - 1)}
             aria-label="Publication précédente"
-            className="shadow-lg absolute hidden left-6 md:left-8 top-1/2 z-20 sm:flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-white/50 backdrop-blur-[3px] transition-colors hover:bg-white/70 hover:backdrop-blur-[3px]"
+            className="absolute hidden left-6 md:left-8 top-1/2 z-20 sm:flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-white/50 backdrop-blur-[3px] transition-colors hover:bg-white/70 hover:backdrop-blur-[3px]"
           >
             <ChevronLeft className="h-5 w-5 text-primary" />
           </button>
@@ -115,7 +115,7 @@ export function HeroCarousel(props: Readonly<HeroCarouselProps>) {
             type="button"
             onClick={() => goTo(index + 1)}
             aria-label="Publication suivante"
-            className="shadow-lg absolute hidden right-6 md:right-8 top-1/2 z-20 sm:flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-white/50 backdrop-blur-[3px] transition-colors hover:bg-white/70 hover:backdrop-blur-[3px]"
+            className="absolute hidden right-6 md:right-8 top-1/2 z-20 sm:flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-white/50 backdrop-blur-[3px] transition-colors hover:bg-white/70 hover:backdrop-blur-[3px]"
           >
             <ChevronRight className="h-5 w-5 text-primary" />
           </button>

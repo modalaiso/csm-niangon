@@ -94,7 +94,7 @@ const resultText = total === 0
                   <Link
                     key={result.id}
                     href={`/posts/${result.id}`}
-                    className="group overflow-hidden rounded-2xl border border-border bg-white transition-shadow hover:shadow-md"
+                    className="group overflow-hidden rounded-2xl border border-border bg-white transition-all hover:border-primary/40"
                   >
                     <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
                       {result.thumbnail ? (

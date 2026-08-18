@@ -72,17 +72,20 @@ type Block =
   | { type: "heading"; text: string }
   | { type: "quote"; text: string }
   | { type: "list"; items: string[] }
-  | { type: "paragraph"; text: string };
+  | { type: "paragraph"; text: string }
+  | { type: "break" };
 
 function toBlocks(content: string): Block[] {
-  const lines = content
-    .split("\n")
-    .map((line) => line.trim())
-    .filter(Boolean);
+  const lines = content.split("\n").map((line) => line.trim());
 
   const blocks: Block[] = [];
 
   for (const line of lines) {
+    if (!line) {
+      // Conserver les sauts de ligne vides
+      blocks.push({ type: "break" });
+      continue;
+    }
     if (line.startsWith("## ")) {
       blocks.push({ type: "heading", text: line.slice(3) });
       continue;
@@ -149,6 +152,10 @@ export function renderPostContent(content: string): React.ReactNode {
               ))}
             </ul>
           );
+        }
+
+        if (block.type === "break") {
+          return <div key={key} className="mb-2" />;
         }
 
         return (
