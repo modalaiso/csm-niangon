@@ -177,7 +177,7 @@ export default async function PostPage({ params }: Readonly<PostPageProps>) {
                   <Link
                     key={related.id}
                     href={`/posts/${related.id}`}
-                    className="group overflow-hidden rounded-2xl border border-slate-200 bg-white transition-shadow hover:shadow-lg hover:shadow-slate-300/40"
+                    className="group overflow-hidden rounded-2xl border border-slate-200 bg-white transition-all hover:border-primary/40"
                   >
                     <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-200">
                       {related.thumbnail ? (

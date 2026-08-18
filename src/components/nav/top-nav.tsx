@@ -162,12 +162,21 @@ export function TopNav(props: Readonly<TopNavProps>) {
                           href="/admin"
                           className="flex items-center gap-2 text-sm font-medium text-primary hover:underline"
                         >
-                          <ShieldUser className="h-4 w-4" />
                           Dashboard
                         </Link>
                       </>
                     )}
-                    {!props.user && (
+                    {props.user ? (
+                      <>
+                        <div className="h-px bg-border my-2" />
+                        <Link
+                          href="/settings"
+                          className="flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+                        >
+                          Paramètres
+                        </Link>
+                      </>
+                    ) : (
                       <>
                         <div className="h-px bg-border my-2" />
                         <Link

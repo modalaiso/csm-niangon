@@ -106,7 +106,7 @@ export function ProfileForm(props: Readonly<ProfileFormProps>) {
 
   return (
     <div className="space-y-8">
-      <form onSubmit={handleSubmit} className="space-y-5 rounded-3xl border border-border bg-white p-6">
+      <form onSubmit={handleSubmit} className="space-y-5">
         <div className="grid gap-5 sm:grid-cols-2">
           <div className="space-y-1.5">
             <Label>Nom</Label>

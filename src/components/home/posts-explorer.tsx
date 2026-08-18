@@ -36,6 +36,8 @@ export function PostsExplorer(props: Readonly<PostsExplorerProps>) {
 
   return (
     <section className="container px-4 py-8 md:py-12">
+      <div className="mb-6 flex items-center justify-between">
+        <h2 className="text-xl font-bold text-foreground">Explorer les publications</h2>
       <div className="mb-6 flex items-center justify-end gap-2">
         <button
           type="button"
@@ -63,7 +65,7 @@ export function PostsExplorer(props: Readonly<PostsExplorerProps>) {
         >
           {FILTERS.map((item) => (
             <button
-            type="button"
+              type="button"
               key={item.value}
               onClick={() => setFilter(item.value)}
               className={cn(
@@ -77,6 +79,7 @@ export function PostsExplorer(props: Readonly<PostsExplorerProps>) {
             </button>
           ))}
         </div>
+      </div>
       </div>
 
       {props.posts.length === 0 ? (
