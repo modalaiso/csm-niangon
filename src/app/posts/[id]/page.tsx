@@ -37,30 +37,29 @@ export async function generateMetadata(props: Readonly<PostPageProps>) {
   if (!post) {
     return { title: "Publication introuvable | CSM Niangon" };
   }
+  const imageUrl = post.thumbnail ?? "https://csm-niangon.vercel.app/miniature.png";
   return {
+    title: `${post.title} | CSM Niangon`,
+    description: post.summary,
+
     openGraph: {
       title: post.title,
       description: post.summary,
-      url: `https://csm-niangon.vercel.app/posts/${post.id}`,
-      siteName: "CSM Niangon",
       type: "article",
       images: [
         {
-          url: post.thumbnail ?? "https://csm-niangon.vercel.app/miniature.png",
+          url: imageUrl,
           alt: post.title,
         },
       ],
     },
+
     twitter: {
       card: "summary_large_image",
       title: post.title,
       description: post.summary,
-      images: [
-        post.thumbnail ?? "https://csm-niangon.vercel.app/miniature.png",
-      ],
+      images: [imageUrl],
     },
-    title: `${post.title} | CSM Niangon`,
-    description: post.summary,
   };
 }
 
