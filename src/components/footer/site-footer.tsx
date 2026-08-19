@@ -34,6 +34,12 @@ const SOCIAL_LINKS = [
   { href: "https://youtube.com", label: "YouTube", Icon: Youtube },
 ];
 
+const CONTACT = [
+  { href: "tel:+225XXXXXXXXXX", label: "+225 XX XX XX XX XX" },
+  { href: "mailto:csm.niangon@yahoo.fr", label: "csm.niangon@yahoo.fr"},
+  { href: "https://maps.app.goo.gl/7maChM65BqTMFoLG6", label: "Abidjan, Yopougon Niangon" },
+]
+
 export function SiteFooter(props: Readonly<SiteFooterProps>) {
   const pathname = usePathname();
 
@@ -65,7 +71,7 @@ export function SiteFooter(props: Readonly<SiteFooterProps>) {
               La plateforme média officielle du CSM Niangon. Actualités, articles et
               informations de la communauté.
             </p>
-            <div className="mt-4 flex items-center gap-2">
+            {/*<div className="mt-4 flex items-center gap-2">
               {SOCIAL_LINKS.map((social) => (
                 <a
                   key={social.label}
@@ -78,7 +84,7 @@ export function SiteFooter(props: Readonly<SiteFooterProps>) {
                   <social.Icon className="h-4 w-4" />
                 </a>
               ))}
-            </div>
+            </div>*/}
           </div>
 
           {/* Navigation */}
@@ -129,30 +135,16 @@ export function SiteFooter(props: Readonly<SiteFooterProps>) {
           <div>
             <h3 className="text-lg font-heading font-bold text-foreground">Compte</h3>
             <ul className="mt-3 ml-3 space-y-1">
-              <li>
-                <Link
-                  href="/login"
-                  className="text-sm text-muted-foreground transition-colors hover:text-primary"
-                >
-                  Se connecter
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/signup"
-                  className="text-sm text-muted-foreground transition-colors hover:text-primary"
-                >
-                  S'inscrire
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/profile"
-                  className="text-sm text-muted-foreground transition-colors hover:text-primary"
-                >
-                  Mon profil
-                </Link>
-              </li>
+              {CONTACT.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-muted-foreground transition-colors hover:text-primary"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
