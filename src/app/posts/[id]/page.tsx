@@ -31,20 +31,41 @@ function formatDate(date: Date | null): string {
   });
 }
 
-export async function generateMetadata({ params }: PostPageProps) {
-  const resolvedParams = await params;
+export async function generateMetadata(props: Readonly<PostPageProps>) {
+  const resolvedParams = await props.params;
   const post = await getPostById(resolvedParams.id);
   if (!post) {
     return { title: "Publication introuvable | CSM Niangon" };
   }
   return {
+    openGraph: {
+      title: post.title,
+      description: post.summary,
+      url: `https://csm-niangon.vercel.app/posts/${post.id}`,
+      siteName: "CSM Niangon",
+      type: "{post.type.toLowerCase()}",
+      images: [
+        {
+          url: post.thumbnail ?? "https://csm-niangon.vercel.app/miniature.png",
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.summary,
+      images: [
+        post.thumbnail ?? "https://csm-niangon.vercel.app/miniature.png",
+      ],
+    },
     title: `${post.title} | CSM Niangon`,
     description: post.summary,
   };
 }
 
-export default async function PostPage({ params }: Readonly<PostPageProps>) {
-  const resolvedParams = await params;
+export default async function PostPage(props: Readonly<PostPageProps>) {
+  const resolvedParams = await props.params;
   const post = await getPostById(resolvedParams.id);
 
   if (!post) {
