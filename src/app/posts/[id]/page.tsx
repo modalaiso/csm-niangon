@@ -43,7 +43,7 @@ export async function generateMetadata(props: Readonly<PostPageProps>) {
       description: post.summary,
       url: `https://csm-niangon.vercel.app/posts/${post.id}`,
       siteName: "CSM Niangon",
-      type: "{post.type.toLowerCase()}",
+      type: "article",
       images: [
         {
           url: post.thumbnail ?? "https://csm-niangon.vercel.app/miniature.png",
