@@ -38,7 +38,7 @@ export async function generateMetadata(props: Readonly<PostPageProps>) {
     return { title: "Publication introuvable | CSM Niangon" };
   }
 
-  const shareImage = post.thumbnail || "https://csm-niangon.vercel.app/miniature.png";
+  const shareImage = post.thumbnail || "/miniature.png";
 
   return {
     title: `${post.title} | CSM Niangon`,
