@@ -17,13 +17,16 @@ const URGENT_TAG = "urgent";
  * Récupère les posts de type INFO publiés, pour la barre d'information.
  * Un post est "urgent" s'il possède le tag "urgent" (insensible à la casse).
  * Les items urgents sont toujours affichés en premier.
+ * Les INFO dont la durée d'affichage (expiresAt) est dépassée sont exclues.
  */
 export async function getInfoBarItems(limit: number = 15): Promise<InfoBarItem[]> {
   try {
+    const now = new Date();
     const posts = await prisma.post.findMany({
       where: {
         type: PostType.INFO,
         status: PostStatus.PUBLISHED,
+        OR: [{ expiresAt: null }, { expiresAt: { gt: now } }],
       },
       select: {
         id: true,

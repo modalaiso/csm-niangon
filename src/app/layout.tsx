@@ -28,6 +28,7 @@ import { AnnouncementPopup } from "@/components/announcements/announcement-popup
 import { VisitTracker } from "@/components/analytics/visit-tracker";
 import { getInfoBarItems } from "@/app/actions/infobar";
 import { getActiveAnnouncements } from "@/app/actions/announcements";
+import  { SiteFooter } from "@/components/footer/site-footer";
 
 export default async function RootLayout({
   children,
@@ -83,6 +84,7 @@ export default async function RootLayout({
         <InfoBar items={infoBarItems} />
         <TopNav user={user} userRole={userRole} userProfile={userProfile} />
         {children}
+        <SiteFooter userRole={userRole} />
         <BottomNav userRole={userRole} />
         <AnnouncementPopup announcements={announcements} />
         <Analytics />

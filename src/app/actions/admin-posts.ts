@@ -70,9 +70,10 @@ export async function createPost(
   }
 
   const isAnnouncement = input.type === "ANNONCE";
+  const isInfo = input.type === "INFO";
   const images = isAnnouncement ? [] : input.images.slice(0, MAX_IMAGES);
   const expiresAt =
-    isAnnouncement && input.expiresAt && input.expiresAt.getTime() > Date.now()
+    (isAnnouncement || isInfo) && input.expiresAt && input.expiresAt.getTime() > Date.now()
       ? input.expiresAt
       : null;
 
@@ -503,9 +504,10 @@ export async function updatePost(
     if (!existing) return { error: "not_found" };
 
     const isAnnouncement = input.type === "ANNONCE";
+    const isInfo = input.type === "INFO";
     const images = isAnnouncement ? [] : input.images.slice(0, MAX_IMAGES);
     const expiresAt =
-      isAnnouncement && input.expiresAt && input.expiresAt.getTime() > Date.now()
+      (isAnnouncement || isInfo) && input.expiresAt && input.expiresAt.getTime() > Date.now()
         ? input.expiresAt
         : null;
     const uniqueTags = Array.from(new Set(input.tags.map((t) => t.trim()).filter(Boolean)));

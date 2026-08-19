@@ -44,14 +44,23 @@ export function TopNav(props: Readonly<TopNavProps>) {
     return null;
   }
 
-  const isWriterOrAdmin = props.userRole === "WRITER" || props.userRole === "ADMIN";
+  const isWriterOrAdminOrModerator = props.userRole === "WRITER" || props.userRole === "ADMIN" || props.userRole === "MODERATOR";
 
   const navLinks = [
     { href: "/", label: "Accueil" },
     { href: "/actus", label: "Actualités" },
     { href: "/infos", label: "Infos" },
     { href: "/emplois-du-temps", label: "Emplois du temps" },
-    { href: "/devoirs", label: "Calendriers des devoirs" },
+    { href: "/devoirs", label: "Devoirs" },
+  ];
+
+  const navLinksMobile = [
+    { href: "/", label: "Accueil" },
+    { href: "/actus", label: "Actualités" },
+    { href: "/articles", label: "Articles" },
+    { href: "/infos", label: "Infos" },
+    { href: "/emplois-du-temps", label: "Emplois du temps" },
+    { href: "/devoirs", label: "Devoirs" },
   ];
 
   return (
@@ -62,7 +71,7 @@ export function TopNav(props: Readonly<TopNavProps>) {
           <Link href="/" className="flex items-center gap-2 ml-2">
             <img
               src="/logo.png"
-              alt="CSM Niangon TV"
+              alt="CSM Niangon"
               width={40}
               height={40}
               loading="eager"
@@ -96,7 +105,7 @@ export function TopNav(props: Readonly<TopNavProps>) {
           </div>
 
           {/* Bouton de création de post, réservé aux rédacteurs et admins */}
-          {isWriterOrAdmin && (
+          {isWriterOrAdminOrModerator && (
             <Link href="/admin" className="hidden md:block">
               <Button size="sm" className="rounded-full text-white gap-1.5">
                 <ShieldUser className="h-4 w-4" />
@@ -144,9 +153,20 @@ export function TopNav(props: Readonly<TopNavProps>) {
               <SheetContent side="right">
                 <SheetTitle className="sr-only">Menu de navigation</SheetTitle>
                 <div className="flex flex-col gap-4 py-4">
-                  <img src="/logo-g.png" alt="Logo" width={50} />
+                  <div className="items-center inline-block">
+                    <div className="flex items-center gap-2 ml-2">
+                      <img
+                        src="/logo.png"
+                        alt="CSM Niangon"
+                        width={40}
+                        height={40}
+                        loading="eager"
+                      />
+                      <span className="text-[.875rem] leading-[1rem] font-semibold text-primary block">CSM <br/>Niangon</span>
+                    </div>
+                  </div>
                   <nav className="flex flex-col gap-2">
-                    {navLinks.map((link) => (
+                    {navLinksMobile.map((link) => (
                       <Link
                         key={link.href}
                         href={link.href}
@@ -155,7 +175,7 @@ export function TopNav(props: Readonly<TopNavProps>) {
                         {link.label}
                       </Link>
                     ))}
-                    {isWriterOrAdmin && (
+                    {isWriterOrAdminOrModerator && (
                       <>
                         <div className="h-px bg-border my-2" />
                         <Link
