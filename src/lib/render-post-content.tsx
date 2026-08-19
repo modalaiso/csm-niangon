@@ -155,7 +155,7 @@ export function renderPostContent(content: string): React.ReactNode {
         }
 
         if (block.type === "break") {
-          return <div key={key} className="mb-2" />;
+          return <div key={key} className="mb-4" />;
         }
 
         return (

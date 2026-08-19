@@ -88,6 +88,8 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
   const [error, setError] = useState<string | null>(null);
 
   const isAnnouncement = type === "ANNONCE";
+  const isInfo = type === "INFO";
+  const hasExpiration = isAnnouncement || isInfo;
 
   const canGoNext = () => {
     if (step === 1) return type !== null;
@@ -121,7 +123,7 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
     summary: summary.trim(),
     content: content.trim(),
     images: isAnnouncement ? [] : images,
-    expiresAt: isAnnouncement ? expiresAt : null,
+    expiresAt: hasExpiration ? expiresAt : null,
     tags: buildTags(),
     status,
   });
@@ -342,6 +344,23 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
                   <MultiImageUploadField value={images} onChange={setImages} max={MAX_IMAGES} />
                 </div>
               </>
+            )}
+
+            {isInfo && (
+              <div className="mt-6">
+                <h2 className="text-lg font-bold text-foreground">Durée d&apos;affichage dans la barre d&apos;info</h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Passé ce délai, l&apos;information disparaît automatiquement de la barre défilante
+                  (elle reste consultable sur la page /infos).
+                </p>
+                <div className="mt-4 max-w-sm">
+                  <AnnouncementDurationSelect
+                    value={expiresAt}
+                    onChange={setExpiresAt}
+                    label="Durée d'affichage"
+                  />
+                </div>
+              </div>
             )}
 
             <div className="mt-6">

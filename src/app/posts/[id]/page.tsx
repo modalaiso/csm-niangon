@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Eye, Calendar, ArrowLeft } from "lucide-react";
 import { getPostById, getRelatedPosts } from "@/app/actions/posts";
 import { getLikeInfo } from "@/app/actions/likes";
+import { ShareButton } from "@/components/posts/share-button";
 import { getPostComments } from "@/app/actions/comments";
 import { PostGallery } from "@/components/posts/post-gallery";
 import { LikeButton } from "@/components/posts/like-button";
@@ -141,11 +142,18 @@ export default async function PostPage({ params }: Readonly<PostPageProps>) {
             </div>
           )*/}
 
-          <div className="mt-6 border-t border-slate-200 pt-5">
+          <div className="mt-6 flex items-center gap-2 border-t border-slate-200 pt-5">
             <LikeButton
               postId={post.id}
               initialCount={likeInfo.count}
               initialLiked={likeInfo.likedByUser}
+            />
+            <ShareButton
+              postId={post.id}
+              type={post.type}
+              title={post.title}
+              summary={post.summary}
+              thumbnail={post.thumbnail}
             />
           </div>
 

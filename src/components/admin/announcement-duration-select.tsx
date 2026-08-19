@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 interface AnnouncementDurationSelectProps {
   value: Date | null;
   onChange: (date: Date | null) => void;
+  label?: string;
 }
 
 const DURATION_OPTIONS = [
@@ -46,7 +47,7 @@ export function AnnouncementDurationSelect(props: Readonly<AnnouncementDurationS
 
   return (
     <div className="space-y-2">
-      <Label htmlFor="announcement-duration">Durée de vie de l&apos;annonce</Label>
+      <Label htmlFor="announcement-duration">{props.label ?? "Durée de vie de l'annonce"}</Label>
       <Select value={mode} onValueChange={handleModeChange}>
         <SelectTrigger id="announcement-duration">
           <SelectValue placeholder="Choisir une durée" />
