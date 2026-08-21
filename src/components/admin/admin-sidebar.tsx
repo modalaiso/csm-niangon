@@ -12,6 +12,7 @@ import {
   Menu,
   X,
   ArrowLeft,
+  CalendarClock,
 } from "lucide-react";
 import type { Role } from "@prisma/client";
 import { cn } from "@/lib/utils";
@@ -21,7 +22,10 @@ interface AdminSidebarProps {
 }
 
 const OVERVIEW_ITEM = { href: "/admin", label: "Vue d'ensemble", Icon: LayoutDashboard };
-const POST_ITEMS = [{ href: "/admin/posts", label: "Publications", Icon: FileText }];
+const POST_ITEMS = [
+  { href: "/admin/posts", label: "Publications", Icon: FileText },
+  { href: "/admin/schedules", label: "Emplois du temps", Icon: CalendarClock },
+];
 const MODERATION_ITEMS = [
   { href: "/admin/comments", label: "Commentaires", Icon: MessageCircle },
   { href: "/admin/moderation", label: "Modération", Icon: ShieldAlert },

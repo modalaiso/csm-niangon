@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { Inter, League_Spartan } from "next/font/google";
 
@@ -25,7 +24,8 @@ import { BottomNav } from "@/components/nav/bottom-nav";
 import { TopNav } from "@/components/nav/top-nav";
 import { InfoBar } from "@/components/info-bar/info-bar";
 import { AnnouncementPopup } from "@/components/announcements/announcement-popup";
-import { VisitTracker } from "@/components/analytics/visit-tracker";
+import { AnalyticsGate } from "@/components/analytics/analytics-gate";
+import { CookieConsentBanner } from "@/components/cookies/cookie-consent-banner";
 import { getInfoBarItems } from "@/app/actions/infobar";
 import { getActiveAnnouncements } from "@/app/actions/announcements";
 import  { SiteFooter } from "@/components/footer/site-footer";
@@ -80,14 +80,14 @@ export default async function RootLayout({
       <body
         className={`${inter.variable} ${leagueSpartan.variable} antialiased`}
       >
-        <VisitTracker />
+        <AnalyticsGate />
         <InfoBar items={infoBarItems} />
         <TopNav user={user} userRole={userRole} userProfile={userProfile} />
         {children}
         <SiteFooter userRole={userRole} />
         <BottomNav userRole={userRole} />
         <AnnouncementPopup announcements={announcements} />
-        <Analytics />
+        <CookieConsentBanner />
       </body>
     </html>
   );

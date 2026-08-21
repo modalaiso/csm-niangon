@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Facebook, Instagram, Youtube } from "lucide-react";
 import type { Role } from "@prisma/client";
+import { openCookiePreferences } from "@/lib/cookie-consent";
 
 interface SiteFooterProps {
   userRole?: Role;
@@ -71,20 +72,6 @@ export function SiteFooter(props: Readonly<SiteFooterProps>) {
               La plateforme média officielle du CSM Niangon. Actualités, articles et
               informations de la communauté.
             </p>
-            {/*<div className="mt-4 flex items-center gap-2">
-              {SOCIAL_LINKS.map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={social.label}
-                  className="flex h-8 w-8 items-center justify-center text-muted-foreground transition-colors hover:text-primary"
-                >
-                  <social.Icon className="h-4 w-4" />
-                </a>
-              ))}
-            </div>*/}
           </div>
 
           {/* Navigation */}
@@ -131,9 +118,9 @@ export function SiteFooter(props: Readonly<SiteFooterProps>) {
             </ul>
           </div>
 
-          {/* Compte */}
+          {/* Contact */}
           <div>
-            <h3 className="text-lg font-heading font-bold text-foreground">Compte</h3>
+            <h3 className="text-lg font-heading font-bold text-foreground">Contact</h3>
             <ul className="mt-3 ml-3 space-y-1">
               {CONTACT.map((link) => (
                 <li key={link.href}>
@@ -150,10 +137,30 @@ export function SiteFooter(props: Readonly<SiteFooterProps>) {
         </div>
 
         {/* Barre inférieure */}
-        <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-border pt-6 sm:flex-row">
+        <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-border pt-6 sm:flex-row sm:flex-wrap">
           <p className="text-xs text-muted-foreground">
             &copy; {year} CSM Niangon. Tous droits réservés.
           </p>
+
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
+            <Link href="/mentions-legales" className="text-xs text-muted-foreground transition-colors hover:text-primary">
+              Mentions légales
+            </Link>
+            <Link href="/cgu" className="text-xs text-muted-foreground transition-colors hover:text-primary">
+              CGU
+            </Link>
+            <Link href="/confidentialite" className="text-xs text-muted-foreground transition-colors hover:text-primary">
+              Confidentialité
+            </Link>
+            <button
+              type="button"
+              onClick={openCookiePreferences}
+              className="text-xs text-muted-foreground transition-colors hover:text-primary"
+            >
+              Gérer les cookies
+            </button>
+          </div>
+
           <p className="text-xs text-muted-foreground">
             Développé par <a href="https://github.com/modalaiso" target="_blank" className="text-primary hover:underline">modalaiso</a>.
           </p>

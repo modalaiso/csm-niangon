@@ -45,6 +45,14 @@ enum ModerationLogType {
   REJECTED
 }
 
+enum Weekday {
+  LUNDI
+  MARDI
+  MERCREDI
+  JEUDI
+  VENDREDI
+}
+
 model User {
   id        String    @id @default(cuid())
   email     String    @unique
@@ -255,4 +263,57 @@ model AccessKey {
 
   @@index([role])
   @@index([isUsed])
+}
+
+/// ------------------------- Emplois du temps -------------------------
+
+model SchoolClass {
+  id         String   @id @default(cuid())
+  name       String   @unique
+  level      String?
+  schoolYear String   @default("2026-2027")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  rows ScheduleRow[]
+
+  @@index([level])
+}
+
+model Subject {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  color     String?
+  createdAt DateTime @default(now())
+
+  cells ScheduleCell[]
+}
+
+model ScheduleRow {
+  id        String   @id @default(cuid())
+  classId   String
+  startTime String
+  endTime   String
+  position  Int
+  createdAt DateTime @default(now())
+
+  class SchoolClass    @relation(fields: [classId], references: [id], onDelete: Cascade)
+  cells ScheduleCell[]
+
+  @@index([classId])
+}
+
+model ScheduleCell {
+  id        String   @id @default(cuid())
+  rowId     String
+  day       Weekday
+  subjectId String?
+  updatedAt DateTime @updatedAt
+
+  row     ScheduleRow @relation(fields: [rowId], references: [id], onDelete: Cascade)
+  subject Subject?    @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+
+  @@unique([rowId, day])
+  @@index([rowId])
+  @@index([subjectId])
 }
