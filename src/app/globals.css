@@ -112,3 +112,23 @@ input[type="search"]::-webkit-search-decoration {
     animation: marquee 25s linear infinite;
   }
 }
+
+/* Impression : n'affiche que l'emploi du temps, masque nav/footer/pop-ups */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  #schedule-print-area,
+  #schedule-print-area * {
+    visibility: visible;
+  }
+
+  #schedule-print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    border: none !important;
+  }
+}

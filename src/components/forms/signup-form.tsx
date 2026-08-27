@@ -29,6 +29,9 @@ const signupSchema = z
       .string()
       .min(8, "Le mot de passe doit contenir au moins 8 caractères"),
     confirmPassword: z.string(),
+    acceptTerms: z.boolean().refine((val) => val === true, {
+      message: "Vous devez accepter les CGU et la politique de confidentialité",
+    }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Les mots de passe ne correspondent pas",
@@ -55,8 +58,6 @@ const CLASS_OPTIONS = [
 import { signup } from "@/app/actions/auth";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-
-// ... imports
 
 export function SignupForm(_props: Readonly<SignupFormProps>) {
   const [serverError, setServerError] = useState<string | null>(null);
@@ -91,11 +92,6 @@ export function SignupForm(_props: Readonly<SignupFormProps>) {
     <div className="w-full max-w-2xl space-y-8 rounded-3xl border border-green-500 bg-white p-8 shadow-lg">
       <div className="text-center">
         <h2 className="text-2xl font-bold text-gray-900">Inscription</h2>
-        {/*{serverError && (
-                    <div className="mt-4 rounded-md bg-red-50 p-3 text-sm text-red-500">
-                        {serverError}
-                    </div>
-                )}*/}
       </div>
 
       <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
@@ -209,6 +205,29 @@ export function SignupForm(_props: Readonly<SignupFormProps>) {
               </p>
             )}
           </div>
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="flex items-start gap-2.5 text-sm text-gray-600">
+            <input
+              type="checkbox"
+              {...register("acceptTerms")}
+              className="mt-0.5 h-4 w-4 flex-shrink-0 rounded border-input accent-primary"
+            />
+            <span>
+              J&apos;accepte les{" "}
+              <Link href="/cgu" target="_blank" className="font-medium text-blue-600 hover:underline">
+                Conditions Générales d&apos;Utilisation
+              </Link>{" "}
+              et la{" "}
+              <Link href="/confidentialite" target="_blank" className="font-medium text-blue-600 hover:underline">
+                politique de confidentialité
+              </Link>
+            </span>
+          </label>
+          {errors.acceptTerms && (
+            <p className="text-sm text-red-500">{errors.acceptTerms.message}</p>
+          )}
         </div>
 
         <Button
