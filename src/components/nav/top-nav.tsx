@@ -1,20 +1,19 @@
 "use client";
 
-import Link from "next/link";
+import type { Role } from "@prisma/client";
+import type { User } from "@supabase/supabase-js";
 import { Menu, ShieldUser } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { ProfileMenu } from "@/components/nav/profile-menu";
+import { SearchDropdown } from "@/components/search/search-dropdown";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
-  SheetTrigger,
   SheetTitle,
+  SheetTrigger,
 } from "@/components/ui/sheet";
-import { usePathname } from "next/navigation";
-import { SearchDropdown } from "@/components/search/search-dropdown";
-import { ProfileMenu } from "@/components/nav/profile-menu";
-
-import type { User } from "@supabase/supabase-js";
-import type { Role } from "@prisma/client";
 
 interface TopNavProfile {
   nom: string;
@@ -44,7 +43,10 @@ export function TopNav(props: Readonly<TopNavProps>) {
     return null;
   }
 
-  const isWriterOrAdminOrModerator = props.userRole === "WRITER" || props.userRole === "ADMIN" || props.userRole === "MODERATOR";
+  const isWriterOrAdminOrModerator =
+    props.userRole === "WRITER" ||
+    props.userRole === "ADMIN" ||
+    props.userRole === "MODERATOR";
 
   const navLinks = [
     { href: "/", label: "Accueil" },
@@ -76,7 +78,9 @@ export function TopNav(props: Readonly<TopNavProps>) {
               height={40}
               loading="eager"
             />
-            <span className="text-[.875rem] leading-[1rem] font-semibold text-primary hidden sm:block">CSM Niangon</span>
+            <span className="text-[.875rem] leading-[1rem] font-semibold text-primary hidden sm:block">
+              CSM Niangon
+            </span>
           </Link>
         </div>
 
@@ -162,7 +166,10 @@ export function TopNav(props: Readonly<TopNavProps>) {
                         height={40}
                         loading="eager"
                       />
-                      <span className="text-[.875rem] leading-[1rem] font-semibold text-primary block">CSM <br/>Niangon</span>
+                      <span className="text-[.875rem] leading-[1rem] font-semibold text-primary block">
+                        CSM <br />
+                        Niangon
+                      </span>
                     </div>
                   </div>
                   <nav className="flex flex-col gap-2">

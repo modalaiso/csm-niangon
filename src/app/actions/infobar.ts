@@ -1,7 +1,7 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
 import { PostStatus, PostType } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 
 export interface InfoBarItem {
   id: string;
@@ -19,7 +19,9 @@ const URGENT_TAG = "urgent";
  * Les items urgents sont toujours affichés en premier.
  * Les INFO dont la durée d'affichage (expiresAt) est dépassée sont exclues.
  */
-export async function getInfoBarItems(limit: number = 15): Promise<InfoBarItem[]> {
+export async function getInfoBarItems(
+  limit: number = 15,
+): Promise<InfoBarItem[]> {
   try {
     const now = new Date();
     const posts = await prisma.post.findMany({
@@ -50,7 +52,10 @@ export async function getInfoBarItems(limit: number = 15): Promise<InfoBarItem[]
     // Urgent en premier, puis le reste par date décroissante (déjà trié)
     return items.sort((a, b) => Number(b.isUrgent) - Number(a.isUrgent));
   } catch (error) {
-    console.error("Erreur lors du chargement de la barre d'information:", error);
+    console.error(
+      "Erreur lors du chargement de la barre d'information:",
+      error,
+    );
     return [];
   }
 }

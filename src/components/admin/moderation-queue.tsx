@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { Check, Loader2, X } from "lucide-react";
 import Link from "next/link";
-import { Check, X, Loader2 } from "lucide-react";
+import { useEffect, useState, useTransition } from "react";
 import {
-  listFlaggedComments,
   approveFlaggedComment,
-  rejectFlaggedComment,
   type FlaggedCommentRow,
+  listFlaggedComments,
+  rejectFlaggedComment,
 } from "@/app/actions/moderation";
 
 function formatDate(date: Date): string {
@@ -64,7 +64,11 @@ export function ModerationQueue() {
   }
 
   if (error) {
-    return <p className="rounded-2xl border border-border bg-white p-5 text-sm text-destructive">{error}</p>;
+    return (
+      <p className="rounded-2xl border border-border bg-white p-5 text-sm text-destructive">
+        {error}
+      </p>
+    );
   }
 
   if (comments.length === 0) {
@@ -80,7 +84,10 @@ export function ModerationQueue() {
   return (
     <ul className="space-y-3">
       {comments.map((comment) => (
-        <li key={comment.id} className="rounded-2xl border border-amber-200 bg-amber-50/40 p-4">
+        <li
+          key={comment.id}
+          className="rounded-2xl border border-amber-200 bg-amber-50/40 p-4"
+        >
           <div className="flex flex-wrap items-center justify-between gap-2">
             <Link
               href={`/posts/${comment.postId}`}
@@ -88,7 +95,9 @@ export function ModerationQueue() {
             >
               {comment.postTitle}
             </Link>
-            <span className="text-xs text-muted-foreground">{formatDate(comment.createdAt)}</span>
+            <span className="text-xs text-muted-foreground">
+              {formatDate(comment.createdAt)}
+            </span>
           </div>
 
           <p className="mt-2 text-sm text-foreground">{comment.content}</p>

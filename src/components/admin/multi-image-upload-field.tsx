@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
 import { ImagePlus, Loader2, X } from "lucide-react";
+import { useRef, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 
 interface MultiImageUploadFieldProps {
@@ -14,7 +14,9 @@ interface MultiImageUploadFieldProps {
 // Même bucket public que ImageUploadField
 const BUCKET = "post-images";
 
-export function MultiImageUploadField(props: Readonly<MultiImageUploadFieldProps>) {
+export function MultiImageUploadField(
+  props: Readonly<MultiImageUploadFieldProps>,
+) {
   const max = props.max ?? 15;
   const inputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -97,7 +99,11 @@ export function MultiImageUploadField(props: Readonly<MultiImageUploadFieldProps
               key={`${url}-${index}`}
               className="group relative aspect-square overflow-hidden rounded-2xl border border-border bg-muted"
             >
-              <img src={url} alt={`Item ${index + 1}`} className="h-full w-full object-cover" />
+              <img
+                src={url}
+                alt={`Item ${index + 1}`}
+                className="h-full w-full object-cover"
+              />
               {index === 0 && (
                 <span className="absolute left-1.5 top-1.5 rounded-full bg-primary px-2 py-0.5 text-[10px] font-semibold text-white">
                   Miniature
@@ -125,7 +131,8 @@ export function MultiImageUploadField(props: Readonly<MultiImageUploadFieldProps
         >
           <ImagePlus className="h-6 w-6" />
           <span className="text-sm">
-            Ajouter des images ({remainingSlots} restante{remainingSlots > 1 ? "s" : ""})
+            Ajouter des images ({remainingSlots} restante
+            {remainingSlots > 1 ? "s" : ""})
           </span>
         </button>
       )}
@@ -139,7 +146,9 @@ export function MultiImageUploadField(props: Readonly<MultiImageUploadFieldProps
         onChange={(e) => handleFiles(e.target.files)}
       />
 
-      {props.hint && !error && <p className="mt-1.5 text-xs text-muted-foreground">{props.hint}</p>}
+      {props.hint && !error && (
+        <p className="mt-1.5 text-xs text-muted-foreground">{props.hint}</p>
+      )}
       {error && <p className="mt-1.5 text-xs text-destructive">{error}</p>}
     </div>
   );

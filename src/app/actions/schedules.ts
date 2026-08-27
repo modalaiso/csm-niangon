@@ -1,9 +1,9 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
+import type { Weekday } from "@prisma/client";
 import { revalidatePath } from "next/cache";
-import { Weekday } from "@prisma/client";
 import { getPostManagerAuthContext } from "@/lib/auth/admin-guard";
+import { prisma } from "@/lib/prisma";
 import { WEEKDAYS } from "@/lib/schedules";
 
 /* --------------------------------- Types --------------------------------- */
@@ -60,7 +60,9 @@ export async function getSchoolClasses(): Promise<ClassSummary[]> {
 }
 
 /** Emploi du temps complet d'une classe (lignes + cases), pour affichage et export */
-export async function getClassSchedule(classId: string): Promise<ClassScheduleData | null> {
+export async function getClassSchedule(
+  classId: string,
+): Promise<ClassScheduleData | null> {
   try {
     const schoolClass = await prisma.schoolClass.findUnique({
       where: { id: classId },
@@ -132,7 +134,13 @@ export async function listSubjects(): Promise<SubjectSummary[]> {
 
 type SimpleSuccess = { success: true };
 type SimpleError = {
-  error: "auth_required" | "forbidden" | "invalid" | "duplicate" | "not_found" | "unknown";
+  error:
+    | "auth_required"
+    | "forbidden"
+    | "invalid"
+    | "duplicate"
+    | "not_found"
+    | "unknown";
 };
 
 export async function createClass(
@@ -147,7 +155,9 @@ export async function createClass(
   if (trimmedName.length < 2) return { error: "invalid" };
 
   try {
-    const existing = await prisma.schoolClass.findUnique({ where: { name: trimmedName } });
+    const existing = await prisma.schoolClass.findUnique({
+      where: { name: trimmedName },
+    });
     if (existing) return { error: "duplicate" };
 
     const created = await prisma.schoolClass.create({
@@ -167,12 +177,16 @@ export async function createClass(
   }
 }
 
-export async function deleteClass(classId: string): Promise<SimpleSuccess | SimpleError> {
+export async function deleteClass(
+  classId: string,
+): Promise<SimpleSuccess | SimpleError> {
   const auth = await getPostManagerAuthContext();
   if (!auth.ok) return { error: auth.error };
 
   try {
-    const existing = await prisma.schoolClass.findUnique({ where: { id: classId } });
+    const existing = await prisma.schoolClass.findUnique({
+      where: { id: classId },
+    });
     if (!existing) return { error: "not_found" };
 
     await prisma.schoolClass.delete({ where: { id: classId } });
@@ -199,7 +213,9 @@ export async function createSubject(
   if (trimmedName.length < 2) return { error: "invalid" };
 
   try {
-    const existing = await prisma.subject.findUnique({ where: { name: trimmedName } });
+    const existing = await prisma.subject.findUnique({
+      where: { name: trimmedName },
+    });
     if (existing) return { error: "duplicate" };
 
     const created = await prisma.subject.create({
@@ -214,12 +230,16 @@ export async function createSubject(
   }
 }
 
-export async function deleteSubject(subjectId: string): Promise<SimpleSuccess | SimpleError> {
+export async function deleteSubject(
+  subjectId: string,
+): Promise<SimpleSuccess | SimpleError> {
   const auth = await getPostManagerAuthContext();
   if (!auth.ok) return { error: auth.error };
 
   try {
-    const existing = await prisma.subject.findUnique({ where: { id: subjectId } });
+    const existing = await prisma.subject.findUnique({
+      where: { id: subjectId },
+    });
     if (!existing) return { error: "not_found" };
 
     await prisma.subject.delete({ where: { id: subjectId } });
@@ -246,7 +266,9 @@ export async function addScheduleRow(
   if (!startTime.trim() || !endTime.trim()) return { error: "invalid" };
 
   try {
-    const schoolClass = await prisma.schoolClass.findUnique({ where: { id: classId } });
+    const schoolClass = await prisma.schoolClass.findUnique({
+      where: { id: classId },
+    });
     if (!schoolClass) return { error: "not_found" };
 
     const lastRow = await prisma.scheduleRow.findFirst({
@@ -299,12 +321,17 @@ export async function updateScheduleRow(
   }
 }
 
-export async function deleteScheduleRow(rowId: string): Promise<SimpleSuccess | SimpleError> {
+export async function deleteScheduleRow(
+  rowId: string,
+): Promise<SimpleSuccess | SimpleError> {
   const auth = await getPostManagerAuthContext();
   if (!auth.ok) return { error: auth.error };
 
   try {
-    const row = await prisma.scheduleRow.findUnique({ where: { id: rowId }, select: { classId: true } });
+    const row = await prisma.scheduleRow.findUnique({
+      where: { id: rowId },
+      select: { classId: true },
+    });
     if (!row) return { error: "not_found" };
 
     await prisma.scheduleRow.delete({ where: { id: rowId } });
@@ -332,7 +359,8 @@ export async function moveScheduleRow(
     const neighbor = await prisma.scheduleRow.findFirst({
       where: {
         classId: row.classId,
-        position: direction === "up" ? { lt: row.position } : { gt: row.position },
+        position:
+          direction === "up" ? { lt: row.position } : { gt: row.position },
       },
       orderBy: { position: direction === "up" ? "desc" : "asc" },
     });
@@ -340,8 +368,14 @@ export async function moveScheduleRow(
     if (!neighbor) return { success: true };
 
     await prisma.$transaction([
-      prisma.scheduleRow.update({ where: { id: row.id }, data: { position: neighbor.position } }),
-      prisma.scheduleRow.update({ where: { id: neighbor.id }, data: { position: row.position } }),
+      prisma.scheduleRow.update({
+        where: { id: row.id },
+        data: { position: neighbor.position },
+      }),
+      prisma.scheduleRow.update({
+        where: { id: neighbor.id },
+        data: { position: row.position },
+      }),
     ]);
 
     revalidatePath(`/admin/schedules/${row.classId}`);
@@ -364,7 +398,10 @@ export async function setScheduleCell(
   if (!auth.ok) return { error: auth.error };
 
   try {
-    const row = await prisma.scheduleRow.findUnique({ where: { id: rowId }, select: { classId: true } });
+    const row = await prisma.scheduleRow.findUnique({
+      where: { id: rowId },
+      select: { classId: true },
+    });
     if (!row) return { error: "not_found" };
 
     if (subjectId) {

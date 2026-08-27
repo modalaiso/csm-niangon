@@ -1,10 +1,10 @@
 "use client";
 
+import { Download, Image as ImageIcon, Loader2, Printer } from "lucide-react";
 import { useRef, useState } from "react";
-import { Download, Printer, Image as ImageIcon, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { ScheduleDocument } from "@/components/schedule/schedule-document";
 import type { ClassScheduleData } from "@/app/actions/schedules";
+import { ScheduleDocument } from "@/components/schedule/schedule-document";
+import { Button } from "@/components/ui/button";
 
 interface ScheduleExportProps {
   schedule: ClassScheduleData;
@@ -19,7 +19,11 @@ export function ScheduleExport(props: Readonly<ScheduleExportProps>) {
     const node = printableRef.current;
     if (!node) return null;
     const { default: html2canvas } = await import("html2canvas");
-    return html2canvas(node, { scale: 2, backgroundColor: "#ffffff", useCORS: true });
+    return html2canvas(node, {
+      scale: 2,
+      backgroundColor: "#ffffff",
+      useCORS: true,
+    });
   };
 
   const fileBaseName = `emploi-du-temps-${props.schedule.className}`
@@ -74,7 +78,13 @@ export function ScheduleExport(props: Readonly<ScheduleExportProps>) {
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center justify-end gap-2 print:hidden">
-        <Button type="button" variant="outline" size="sm" className="gap-1.5 rounded-full" onClick={handlePrint}>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className="gap-1.5 rounded-full"
+          onClick={handlePrint}
+        >
           <Printer className="h-4 w-4" />
           Imprimer
         </Button>
@@ -100,14 +110,24 @@ export function ScheduleExport(props: Readonly<ScheduleExportProps>) {
           disabled={isExporting !== null}
           onClick={handleDownloadPdf}
         >
-          {isExporting === "pdf" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+          {isExporting === "pdf" ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Download className="h-4 w-4" />
+          )}
           Télécharger le PDF
         </Button>
       </div>
 
-      {error && <p className="mb-3 text-sm text-destructive print:hidden">{error}</p>}
+      {error && (
+        <p className="mb-3 text-sm text-destructive print:hidden">{error}</p>
+      )}
 
-      <div id="schedule-print-area" ref={printableRef} className="rounded-2xl border border-border">
+      <div
+        id="schedule-print-area"
+        ref={printableRef}
+        className="rounded-2xl border border-border"
+      >
         <ScheduleDocument schedule={props.schedule} />
       </div>
     </div>

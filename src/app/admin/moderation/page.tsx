@@ -13,7 +13,8 @@ export default async function AdminModerationPage() {
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-foreground">Modération</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Mots-clés surveillés, commentaires en attente de revue, et journal des actions.
+          Mots-clés surveillés, commentaires en attente de revue, et journal des
+          actions.
         </p>
       </div>
       <ModerationTabs />

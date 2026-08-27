@@ -1,11 +1,28 @@
 "use client";
 
-import { useCallback, useEffect, useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
+import {
+  Eye,
+  EyeOff,
+  Loader2,
+  Search,
+  ThumbsDown,
+  ThumbsUp,
+  Trash2,
+} from "lucide-react";
 import Link from "next/link";
-import { Search, Trash2, Eye, EyeOff, Loader2, ThumbsUp, ThumbsDown } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useState, useTransition } from "react";
+import {
+  type AdminCommentFilter,
+  type AdminCommentRow,
+  bulkDeleteComments,
+  deleteCommentAdmin,
+  listAdminComments,
+  setCommentHiddenAdmin,
+} from "@/app/actions/admin-comments";
+import { TablePagination } from "@/components/admin/table-pagination";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -14,15 +31,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { TablePagination } from "@/components/admin/table-pagination";
-import {
-  listAdminComments,
-  deleteCommentAdmin,
-  setCommentHiddenAdmin,
-  bulkDeleteComments,
-  type AdminCommentRow,
-  type AdminCommentFilter,
-} from "@/app/actions/admin-comments";
 
 const FILTER_OPTIONS: { value: AdminCommentFilter; label: string }[] = [
   { value: "ALL", label: "Tous" },
@@ -78,14 +86,14 @@ export function AdminCommentsTable() {
   useEffect(() => {
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filter, page]);
+  }, [load]);
 
   useEffect(() => {
     setPage(1);
     const timeout = setTimeout(load, 300);
     return () => clearTimeout(timeout);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search]);
+  }, [load]);
 
   const toggleSelected = (id: string) => {
     setSelected((prev) => {
@@ -97,7 +105,9 @@ export function AdminCommentsTable() {
   };
 
   const toggleSelectAll = () => {
-    setSelected((prev) => (prev.size === rows.length ? new Set() : new Set(rows.map((r) => r.id))));
+    setSelected((prev) =>
+      prev.size === rows.length ? new Set() : new Set(rows.map((r) => r.id)),
+    );
   };
 
   const handleDelete = (row: AdminCommentRow) => {
@@ -124,7 +134,12 @@ export function AdminCommentsTable() {
   };
 
   const handleBulkDelete = () => {
-    if (!window.confirm(`Supprimer définitivement ${selected.size} commentaire(s) ?`)) return;
+    if (
+      !window.confirm(
+        `Supprimer définitivement ${selected.size} commentaire(s) ?`,
+      )
+    )
+      return;
     startTransition(async () => {
       const result = await bulkDeleteComments(Array.from(selected));
       if ("error" in result) {
@@ -139,7 +154,10 @@ export function AdminCommentsTable() {
     if (isLoading) {
       return (
         <tr>
-          <td colSpan={8} className="px-4 py-10 text-center text-muted-foreground">
+          <td
+            colSpan={8}
+            className="px-4 py-10 text-center text-muted-foreground"
+          >
             <Loader2 className="mx-auto h-5 w-5 animate-spin" />
           </td>
         </tr>
@@ -149,7 +167,10 @@ export function AdminCommentsTable() {
     if (rows.length === 0) {
       return (
         <tr>
-          <td colSpan={8} className="px-4 py-10 text-center text-muted-foreground">
+          <td
+            colSpan={8}
+            className="px-4 py-10 text-center text-muted-foreground"
+          >
             Aucun commentaire ne correspond à ces filtres.
           </td>
         </tr>
@@ -176,7 +197,10 @@ export function AdminCommentsTable() {
           )}
         </td>
         <td className="max-w-[180px] px-4 py-3">
-          <Link href={`/posts/${row.postId}`} className="line-clamp-2 text-primary hover:underline">
+          <Link
+            href={`/posts/${row.postId}`}
+            className="line-clamp-2 text-primary hover:underline"
+          >
             {row.postTitle}
           </Link>
         </td>
@@ -187,7 +211,9 @@ export function AdminCommentsTable() {
           <span
             className={cn(
               "rounded-full px-2 py-1 text-[11px] font-medium",
-              row.isHidden ? "bg-slate-100 text-slate-600" : "bg-primary/10 text-primary",
+              row.isHidden
+                ? "bg-slate-100 text-slate-600"
+                : "bg-primary/10 text-primary",
             )}
           >
             {row.isHidden ? "Masqué" : "Visible"}
@@ -203,7 +229,9 @@ export function AdminCommentsTable() {
             {row.dislikeCount}
           </span>
         </td>
-        <td className="px-4 py-3 text-xs text-muted-foreground">{formatDate(row.createdAt)}</td>
+        <td className="px-4 py-3 text-xs text-muted-foreground">
+          {formatDate(row.createdAt)}
+        </td>
         <td className="px-4 py-3">
           <div className="flex items-center justify-end gap-1">
             <button
@@ -213,7 +241,11 @@ export function AdminCommentsTable() {
               aria-label={row.isHidden ? "Réafficher" : "Masquer"}
               className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
             >
-              {row.isHidden ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+              {row.isHidden ? (
+                <Eye className="h-4 w-4" />
+              ) : (
+                <EyeOff className="h-4 w-4" />
+              )}
             </button>
             <button
               type="button"
@@ -242,7 +274,10 @@ export function AdminCommentsTable() {
             className="pl-9"
           />
         </div>
-        <Select value={filter} onValueChange={(v) => setFilter(v as AdminCommentFilter)}>
+        <Select
+          value={filter}
+          onValueChange={(v) => setFilter(v as AdminCommentFilter)}
+        >
           <SelectTrigger className="w-full bg-white sm:w-44">
             <SelectValue />
           </SelectTrigger>
@@ -302,7 +337,11 @@ export function AdminCommentsTable() {
         </table>
       </div>
 
-      <TablePagination page={page} totalPages={totalPages} onPageChange={setPage} />
+      <TablePagination
+        page={page}
+        totalPages={totalPages}
+        onPageChange={setPage}
+      />
     </div>
   );
 }

@@ -1,10 +1,14 @@
 "use client";
 
-import { useState } from "react";
 import { AlertTriangle } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { useState } from "react";
+import {
+  getInfoPosts,
+  type InfoPostCard,
+  type InfoUrgencyFilter,
+} from "@/app/actions/posts";
 import { PostTypeExplorer } from "@/components/posts/post-type-explorer";
-import { getInfoPosts, type InfoPostCard, type InfoUrgencyFilter } from "@/app/actions/posts";
+import { cn } from "@/lib/utils";
 
 interface InfoExplorerProps {
   initialPosts: InfoPostCard[];
@@ -38,7 +42,9 @@ export function InfoExplorer(props: Readonly<InfoExplorerProps>) {
       fetchPosts={(params) => getInfoPosts({ ...params, urgency })}
       searchPlaceholder="Rechercher une information..."
       renderCount={(total) =>
-        total === 0 ? "Aucune information" : `${total} information${total > 1 ? "s" : ""}`
+        total === 0
+          ? "Aucune information"
+          : `${total} information${total > 1 ? "s" : ""}`
       }
       renderEmptyMessage={(search) =>
         search
@@ -49,7 +55,9 @@ export function InfoExplorer(props: Readonly<InfoExplorerProps>) {
         <span
           className={cn(
             "left-3 top-3 flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold text-white",
-            post.isUrgent ? "bg-secondary text-secondary-foreground" : "bg-amber-500",
+            post.isUrgent
+              ? "bg-secondary text-secondary-foreground"
+              : "bg-amber-500",
           )}
         >
           {post.isUrgent && <AlertTriangle className="h-3 w-3" />}

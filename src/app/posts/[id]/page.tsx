@@ -1,13 +1,13 @@
-import { notFound } from "next/navigation";
+import { ArrowLeft, Calendar, Eye } from "lucide-react";
 import Link from "next/link";
-import { Eye, Calendar, ArrowLeft } from "lucide-react";
-import { getPostById, getRelatedPosts } from "@/app/actions/posts";
-import { getLikeInfo } from "@/app/actions/likes";
-import { ShareButton } from "@/components/posts/share-button";
+import { notFound } from "next/navigation";
 import { getPostComments } from "@/app/actions/comments";
-import { PostGallery } from "@/components/posts/post-gallery";
-import { LikeButton } from "@/components/posts/like-button";
+import { getLikeInfo } from "@/app/actions/likes";
+import { getPostById, getRelatedPosts } from "@/app/actions/posts";
 import { CommentSection } from "@/components/posts/comment-section";
+import { LikeButton } from "@/components/posts/like-button";
+import { PostGallery } from "@/components/posts/post-gallery";
+import { ShareButton } from "@/components/posts/share-button";
 import { Avatar } from "@/components/ui/avatar";
 import { renderPostContent } from "@/lib/render-post-content";
 
@@ -78,7 +78,10 @@ export default async function PostPage(props: Readonly<PostPageProps>) {
     getPostComments(post.id),
   ]);
 
-  const badge = TYPE_BADGES[post.type] ?? { label: post.type, className: "bg-gray-500" };
+  const badge = TYPE_BADGES[post.type] ?? {
+    label: post.type,
+    className: "bg-gray-500",
+  };
 
   // Galerie complète du post (jusqu'à 15 images uploadées).
   // Fallback thumbnail/mediaUrl uniquement pour les posts créés avant
@@ -86,10 +89,14 @@ export default async function PostPage(props: Readonly<PostPageProps>) {
   const images =
     post.images && post.images.length > 0
       ? post.images
-      : [post.thumbnail, post.mediaUrl].filter((url): url is string => Boolean(url));
+      : [post.thumbnail, post.mediaUrl].filter((url): url is string =>
+          Boolean(url),
+        );
 
   const rawContent =
-    post.content && post.content.trim().length > 0 ? post.content : post.summary;
+    post.content && post.content.trim().length > 0
+      ? post.content
+      : post.summary;
 
   return (
     <main className="min-h-screen bg-white text-slate-900">
@@ -119,12 +126,19 @@ export default async function PostPage(props: Readonly<PostPageProps>) {
 
           <div className="mt-5 flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-5">
             <div className="flex items-center gap-3">
-            <Avatar username={post.author.username} avatar={post.author.avatar} nom={post.author.nom} prenom={post.author.prenom} />
+              <Avatar
+                username={post.author.username}
+                avatar={post.author.avatar}
+                nom={post.author.nom}
+                prenom={post.author.prenom}
+              />
               <div>
                 <p className="text-sm font-semibold text-slate-900">
                   {post.author.prenom} {post.author.nom}
                 </p>
-                <p className="text-xs text-slate-500">@{post.author.username}</p>
+                <p className="text-xs text-slate-500">
+                  @{post.author.username}
+                </p>
               </div>
             </div>
 

@@ -1,12 +1,40 @@
 "use client";
 
-import { useEffect, useMemo, useState, useTransition } from "react";
+import {
+  ChevronDown,
+  ChevronUp,
+  Eye,
+  EyeOff,
+  MessageCircle,
+  MoreVertical,
+  Pencil,
+  Trash2,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
-import { MoreVertical, ChevronUp, ChevronDown, MessageCircle, Pencil, Trash2, EyeOff, Eye } from "lucide-react";
-import { ThumbsUpOutlineIcon, ThumbsUpFilledIcon, ThumbsDownOutlineIcon, ThumbsDownFilledIcon } from "@/components/icons/icons";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useTransition,
+} from "react";
+import {
+  addComment,
+  type CommentThread,
+  deleteComment,
+  editComment,
+  type PostComment,
+  setCommentHidden,
+  toggleCommentReaction,
+} from "@/app/actions/comments";
+import {
+  ThumbsDownFilledIcon,
+  ThumbsDownOutlineIcon,
+  ThumbsUpFilledIcon,
+  ThumbsUpOutlineIcon,
+} from "@/components/icons/icons";
 import { Avatar } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
-import { addComment, editComment, deleteComment, setCommentHidden, toggleCommentReaction, type CommentThread, type PostComment } from "@/app/actions/comments";
 
 interface CommentSectionProps {
   postId: string;
@@ -40,7 +68,11 @@ interface CommentMenuProps {
 }
 
 function CommentMenu(props: Readonly<CommentMenuProps>) {
-  if (!props.comment.canEdit && !props.comment.canDelete && !props.comment.canModerate) {
+  if (
+    !props.comment.canEdit &&
+    !props.comment.canDelete &&
+    !props.comment.canModerate
+  ) {
     return null;
   }
 
@@ -74,7 +106,11 @@ function CommentMenu(props: Readonly<CommentMenuProps>) {
               onClick={props.onToggleHidden}
               className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-foreground hover:bg-accent"
             >
-              {props.comment.isHidden ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+              {props.comment.isHidden ? (
+                <Eye className="h-4 w-4" />
+              ) : (
+                <EyeOff className="h-4 w-4" />
+              )}
               {props.comment.isHidden ? "Réafficher" : "Masquer"}
             </button>
           )}
@@ -110,7 +146,6 @@ function ComposerBox(props: Readonly<ComposerBoxProps>) {
   return (
     <div className="mt-3">
       <input
-        autoFocus={props.autoFocus}
         type="text"
         value={props.value}
         onChange={(e) => props.onChange(e.target.value)}
@@ -165,11 +200,18 @@ function ReactionRow(props: Readonly<ReactionRowProps>) {
         )}
       >
         {props.comment.userReaction === "LIKE" ? (
-          <ThumbsUpFilledIcon className={cn("h-4 w-4", props.comment.userReaction === "LIKE" && "fill-primary")} />
+          <ThumbsUpFilledIcon
+            className={cn(
+              "h-4 w-4",
+              props.comment.userReaction === "LIKE" && "fill-primary",
+            )}
+          />
         ) : (
           <ThumbsUpOutlineIcon className="h-4 w-4" />
         )}
-        {props.comment.likeCount > 0 && <span className="text-xs">{props.comment.likeCount}</span>}
+        {props.comment.likeCount > 0 && (
+          <span className="text-xs">{props.comment.likeCount}</span>
+        )}
       </button>
       <button
         type="button"
@@ -180,7 +222,12 @@ function ReactionRow(props: Readonly<ReactionRowProps>) {
         )}
       >
         {props.comment.userReaction === "DISLIKE" ? (
-          <ThumbsDownFilledIcon className={cn("h-4 w-4", props.comment.userReaction === "DISLIKE" && "fill-primary")} />
+          <ThumbsDownFilledIcon
+            className={cn(
+              "h-4 w-4",
+              props.comment.userReaction === "DISLIKE" && "fill-primary",
+            )}
+          />
         ) : (
           <ThumbsDownOutlineIcon className="h-4 w-4" />
         )}
@@ -224,18 +271,31 @@ interface CommentItemProps {
 
 function CommentItem(props: Readonly<CommentItemProps>) {
   // Vue restreinte : un commentaire masqué, pour un visiteur qui n'est ni auteur ni modérateur
-  const isRestrictedView = props.comment.isHidden && !props.comment.canEdit && !props.comment.canModerate;
+  const isRestrictedView =
+    props.comment.isHidden &&
+    !props.comment.canEdit &&
+    !props.comment.canModerate;
   // L'auteur voit son propre commentaire pendant qu'il est masqué : on l'avertit
   // que personne d'autre ne le voit pour l'instant, sinon rien ne le distingue d'un post normal.
-  const isPendingForOwner = props.comment.isHidden && props.comment.canEdit && !props.comment.canModerate;
+  const isPendingForOwner =
+    props.comment.isHidden &&
+    props.comment.canEdit &&
+    !props.comment.canModerate;
 
   return (
     <div className="flex items-start gap-3">
-      <Avatar username={props.comment.author.username} avatar={props.comment.author.avatar} nom={props.comment.author.nom} prenom={props.comment.author.prenom} />
+      <Avatar
+        username={props.comment.author.username}
+        avatar={props.comment.author.avatar}
+        nom={props.comment.author.nom}
+        prenom={props.comment.author.prenom}
+      />
       <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between gap-2">
           <p className="text-sm">
-            <span className="font-semibold text-foreground">{props.comment.author.prenom} {props.comment.author.nom}</span>{" "}
+            <span className="font-semibold text-foreground">
+              {props.comment.author.prenom} {props.comment.author.nom}
+            </span>{" "}
             <span className="text-xs text-muted-foreground">
               {formatRelativeTime(props.comment.createdAt)}
               {props.comment.isEdited && " · modifié"}
@@ -277,18 +337,27 @@ function CommentItem(props: Readonly<CommentItemProps>) {
           <p
             className={cn(
               "mt-1 whitespace-pre-wrap break-words text-sm",
-              isRestrictedView ? "italic text-muted-foreground" : "text-foreground/90",
+              isRestrictedView
+                ? "italic text-muted-foreground"
+                : "text-foreground/90",
             )}
           >
             {props.comment.replyToUsername && (
-              <span className="mr-1 font-medium text-primary">@{props.comment.replyToUsername}</span>
+              <span className="mr-1 font-medium text-primary">
+                @{props.comment.replyToUsername}
+              </span>
             )}
             {props.comment.content}
           </p>
         )}
 
         {!props.isEditing && !isRestrictedView && (
-          <ReactionRow comment={props.comment} onLike={props.onLike} onDislike={props.onDislike} onReply={props.onStartReply} />
+          <ReactionRow
+            comment={props.comment}
+            onLike={props.onLike}
+            onDislike={props.onDislike}
+            onReply={props.onStartReply}
+          />
         )}
 
         {props.isReplyOpen && (
@@ -314,15 +383,31 @@ export function CommentSection(props: Readonly<CommentSectionProps>) {
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
-  const [replyTarget, setReplyTarget] = useState<{ rootId: string; commentId: string } | null>(null);
+  const [replyTarget, setReplyTarget] = useState<{
+    rootId: string;
+    commentId: string;
+  } | null>(null);
   const [replyValue, setReplyValue] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editValue, setEditValue] = useState("");
   const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
 
-  const [reactionOverrides, setReactionOverrides] = useState<Record<string, { likeCount: number; dislikeCount: number; userReaction: "LIKE" | "DISLIKE" | null }>>({});
-  const [contentOverrides, setContentOverrides] = useState<Record<string, { content: string; isEdited: boolean }>>({});
-  const [hiddenOverrides, setHiddenOverrides] = useState<Record<string, boolean>>({});
+  const [reactionOverrides, setReactionOverrides] = useState<
+    Record<
+      string,
+      {
+        likeCount: number;
+        dislikeCount: number;
+        userReaction: "LIKE" | "DISLIKE" | null;
+      }
+    >
+  >({});
+  const [contentOverrides, setContentOverrides] = useState<
+    Record<string, { content: string; isEdited: boolean }>
+  >({});
+  const [hiddenOverrides, setHiddenOverrides] = useState<
+    Record<string, boolean>
+  >({});
   const [deletedIds, setDeletedIds] = useState<Set<string>>(new Set());
 
   // Ferme le menu "..." au clic en dehors
@@ -338,31 +423,35 @@ export function CommentSection(props: Readonly<CommentSectionProps>) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [menuOpenId]);
 
-  const applyOverrides = (comment: PostComment): PostComment => {
-    const reaction = reactionOverrides[comment.id];
-    const contentOverride = contentOverrides[comment.id];
-    const hiddenOverride = hiddenOverrides[comment.id];
+  const applyOverrides = useCallback(
+    (comment: PostComment): PostComment => {
+      const reaction = reactionOverrides[comment.id];
+      const contentOverride = contentOverrides[comment.id];
+      const hiddenOverride = hiddenOverrides[comment.id];
 
-    return {
-      ...comment,
-      ...reaction,
-      ...(contentOverride && {
-        content: contentOverride.content,
-        isEdited: contentOverride.isEdited,
-      }),
-      ...(hiddenOverride !== undefined && { isHidden: hiddenOverride }),
-    };
-  };
+      return {
+        ...comment,
+        ...reaction,
+        ...(contentOverride && {
+          content: contentOverride.content,
+          isEdited: contentOverride.isEdited,
+        }),
+        ...(hiddenOverride !== undefined && { isHidden: hiddenOverride }),
+      };
+    },
+    [contentOverrides, hiddenOverrides, reactionOverrides],
+  );
 
   const visibleThreads = useMemo(() => {
     return props.threads
       .filter((t) => !deletedIds.has(t.root.id))
       .map((t) => ({
         root: applyOverrides(t.root),
-        replies: t.replies.filter((r) => !deletedIds.has(r.id)).map(applyOverrides),
+        replies: t.replies
+          .filter((r) => !deletedIds.has(r.id))
+          .map(applyOverrides),
       }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.threads, deletedIds, reactionOverrides, contentOverrides, hiddenOverrides]);
+  }, [props.threads, deletedIds, applyOverrides]);
 
   const totalCount = useMemo(
     () => visibleThreads.reduce((sum, t) => sum + 1 + t.replies.length, 0),
@@ -402,7 +491,9 @@ export function CommentSection(props: Readonly<CommentSectionProps>) {
     startTransition(async () => {
       const result = await addComment(props.postId, value);
       if ("error" in result) {
-        requireAuthOr(result.error, () => setError("Une erreur est survenue, réessayez."));
+        requireAuthOr(result.error, () =>
+          setError("Une erreur est survenue, réessayez."),
+        );
         return;
       }
       setValue("");
@@ -417,7 +508,9 @@ export function CommentSection(props: Readonly<CommentSectionProps>) {
     startTransition(async () => {
       const result = await addComment(props.postId, replyValue, commentId);
       if ("error" in result) {
-        requireAuthOr(result.error, () => setError("Une erreur est survenue, réessayez."));
+        requireAuthOr(result.error, () =>
+          setError("Une erreur est survenue, réessayez."),
+        );
         return;
       }
       closeReplyBox();
@@ -432,7 +525,9 @@ export function CommentSection(props: Readonly<CommentSectionProps>) {
     startTransition(async () => {
       const result = await editComment(comment.id, editValue);
       if ("error" in result) {
-        requireAuthOr(result.error, () => setError("Impossible de modifier ce commentaire."));
+        requireAuthOr(result.error, () =>
+          setError("Impossible de modifier ce commentaire."),
+        );
         return;
       }
       setContentOverrides((prev) => ({
@@ -446,11 +541,18 @@ export function CommentSection(props: Readonly<CommentSectionProps>) {
 
   const handleDelete = (comment: PostComment) => {
     setMenuOpenId(null);
-    if (!window.confirm("Supprimer ce commentaire ? Cette action est irréversible.")) return;
+    if (
+      !window.confirm(
+        "Supprimer ce commentaire ? Cette action est irréversible.",
+      )
+    )
+      return;
     startTransition(async () => {
       const result = await deleteComment(comment.id);
       if ("error" in result) {
-        requireAuthOr(result.error, () => setError("Impossible de supprimer ce commentaire."));
+        requireAuthOr(result.error, () =>
+          setError("Impossible de supprimer ce commentaire."),
+        );
         return;
       }
       setDeletedIds((prev) => new Set(prev).add(comment.id));
@@ -466,7 +568,10 @@ export function CommentSection(props: Readonly<CommentSectionProps>) {
         requireAuthOr(result.error, () => setError("Action non autorisée."));
         return;
       }
-      setHiddenOverrides((prev) => ({ ...prev, [comment.id]: result.isHidden }));
+      setHiddenOverrides((prev) => ({
+        ...prev,
+        [comment.id]: result.isHidden,
+      }));
       router.refresh();
     });
   };
@@ -475,7 +580,9 @@ export function CommentSection(props: Readonly<CommentSectionProps>) {
     startTransition(async () => {
       const result = await toggleCommentReaction(comment.id, type);
       if ("error" in result) {
-        requireAuthOr(result.error, () => setError("Une erreur est survenue, réessayez."));
+        requireAuthOr(result.error, () =>
+          setError("Une erreur est survenue, réessayez."),
+        );
         return;
       }
       setReactionOverrides((prev) => ({ ...prev, [comment.id]: result }));
@@ -487,7 +594,9 @@ export function CommentSection(props: Readonly<CommentSectionProps>) {
       comment={comment}
       rootId={rootId}
       isMenuOpen={menuOpenId === comment.id}
-      onToggleMenu={() => setMenuOpenId((prev) => (prev === comment.id ? null : comment.id))}
+      onToggleMenu={() =>
+        setMenuOpenId((prev) => (prev === comment.id ? null : comment.id))
+      }
       isEditing={editingId === comment.id}
       editValue={editValue}
       onEditValueChange={setEditValue}
@@ -558,7 +667,9 @@ export function CommentSection(props: Readonly<CommentSectionProps>) {
         </div>
       </div>
 
-      {error && <p className="mb-4 text-center text-sm text-destructive">{error}</p>}
+      {error && (
+        <p className="mb-4 text-center text-sm text-destructive">{error}</p>
+      )}
 
       {visibleThreads.length === 0 ? (
         <p className="text-center text-sm text-muted-foreground">

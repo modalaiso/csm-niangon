@@ -20,7 +20,9 @@ export function ViewModeToggle(props: Readonly<ViewModeToggleProps>) {
         aria-pressed={props.value === "grid"}
         className={cn(
           "flex h-8 w-8 items-center justify-center rounded-full transition-colors",
-          props.value === "grid" ? "bg-primary text-white" : "text-muted-foreground hover:text-foreground",
+          props.value === "grid"
+            ? "bg-primary text-white"
+            : "text-muted-foreground hover:text-foreground",
         )}
       >
         <LayoutGrid className="h-4 w-4" />
@@ -32,7 +34,9 @@ export function ViewModeToggle(props: Readonly<ViewModeToggleProps>) {
         aria-pressed={props.value === "list"}
         className={cn(
           "flex h-8 w-8 items-center justify-center rounded-full transition-colors",
-          props.value === "list" ? "bg-primary text-white" : "text-muted-foreground hover:text-foreground",
+          props.value === "list"
+            ? "bg-primary text-white"
+            : "text-muted-foreground hover:text-foreground",
         )}
       >
         <ListIcon className="h-4 w-4" />

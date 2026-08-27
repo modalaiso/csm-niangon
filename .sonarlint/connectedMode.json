@@ -1,5 +1,5 @@
 {
-    "sonarCloudOrganization": "modalaiso",
-    "projectKey": "modalaiso_csm-niangon",
-    "region": "EU"
+  "sonarCloudOrganization": "modalaiso",
+  "projectKey": "modalaiso_csm-niangon",
+  "region": "EU"
 }

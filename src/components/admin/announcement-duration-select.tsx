@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -9,7 +10,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
 
 interface AnnouncementDurationSelectProps {
   value: Date | null;
@@ -26,7 +26,9 @@ const DURATION_OPTIONS = [
   { label: "Sans limite", value: "none", hours: null },
 ] as const;
 
-export function AnnouncementDurationSelect(props: Readonly<AnnouncementDurationSelectProps>) {
+export function AnnouncementDurationSelect(
+  props: Readonly<AnnouncementDurationSelectProps>,
+) {
   const [mode, setMode] = useState<string>(props.value ? "custom" : "none");
 
   const handleModeChange = (nextMode: string) => {
@@ -47,7 +49,9 @@ export function AnnouncementDurationSelect(props: Readonly<AnnouncementDurationS
 
   return (
     <div className="space-y-2">
-      <Label htmlFor="announcement-duration">{props.label ?? "Durée de vie de l'annonce"}</Label>
+      <Label htmlFor="announcement-duration">
+        {props.label ?? "Durée de vie de l'annonce"}
+      </Label>
       <Select value={mode} onValueChange={handleModeChange}>
         <SelectTrigger id="announcement-duration">
           <SelectValue placeholder="Choisir une durée" />
@@ -66,12 +70,17 @@ export function AnnouncementDurationSelect(props: Readonly<AnnouncementDurationS
           type="datetime-local"
           value={
             props.value
-              ? new Date(props.value.getTime() - props.value.getTimezoneOffset() * 60000)
+              ? new Date(
+                  props.value.getTime() -
+                    props.value.getTimezoneOffset() * 60000,
+                )
                   .toISOString()
                   .slice(0, 16)
               : ""
           }
-          onChange={(e) => props.onChange(e.target.value ? new Date(e.target.value) : null)}
+          onChange={(e) =>
+            props.onChange(e.target.value ? new Date(e.target.value) : null)
+          }
         />
       )}
 

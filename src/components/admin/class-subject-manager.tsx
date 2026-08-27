@@ -1,18 +1,18 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { CalendarClock, Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { Plus, Trash2, CalendarClock } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { useState, useTransition } from "react";
 import {
-  createClass,
-  deleteClass,
-  createSubject,
-  deleteSubject,
   type ClassSummary,
+  createClass,
+  createSubject,
+  deleteClass,
+  deleteSubject,
   type SubjectSummary,
 } from "@/app/actions/schedules";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface ClassSubjectManagerProps {
   initialClasses: ClassSummary[];
@@ -41,14 +41,21 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
       const result = await createClass(className, classLevel, schoolYear);
       if ("error" in result) {
         setClassError(
-          result.error === "duplicate" ? "Cette classe existe déjà." : "Impossible de créer cette classe.",
+          result.error === "duplicate"
+            ? "Cette classe existe déjà."
+            : "Impossible de créer cette classe.",
         );
         return;
       }
       setClasses((prev) =>
         [
           ...prev,
-          { id: result.id, name: className.trim(), level: classLevel.trim() || null, schoolYear },
+          {
+            id: result.id,
+            name: className.trim(),
+            level: classLevel.trim() || null,
+            schoolYear,
+          },
         ].sort((a, b) => a.name.localeCompare(b.name, "fr")),
       );
       setClassName("");
@@ -57,7 +64,12 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
   };
 
   const handleDeleteClass = (classItem: ClassSummary) => {
-    if (!window.confirm(`Supprimer la classe "${classItem.name}" et son emploi du temps ?`)) return;
+    if (
+      !window.confirm(
+        `Supprimer la classe "${classItem.name}" et son emploi du temps ?`,
+      )
+    )
+      return;
     startTransition(async () => {
       const result = await deleteClass(classItem.id);
       if ("error" in result) {
@@ -75,14 +87,17 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
       const result = await createSubject(subjectName, subjectColor);
       if ("error" in result) {
         setSubjectError(
-          result.error === "duplicate" ? "Cette matière existe déjà." : "Impossible de créer cette matière.",
+          result.error === "duplicate"
+            ? "Cette matière existe déjà."
+            : "Impossible de créer cette matière.",
         );
         return;
       }
       setSubjects((prev) =>
-        [...prev, { id: result.id, name: subjectName.trim(), color: subjectColor }].sort((a, b) =>
-          a.name.localeCompare(b.name, "fr"),
-        ),
+        [
+          ...prev,
+          { id: result.id, name: subjectName.trim(), color: subjectColor },
+        ].sort((a, b) => a.name.localeCompare(b.name, "fr")),
       );
       setSubjectName("");
     });
@@ -106,7 +121,8 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
       <div className="rounded-2xl border border-border bg-white p-5">
         <h2 className="text-sm font-semibold text-foreground">Classes</h2>
         <p className="mt-1 text-xs text-muted-foreground">
-          Créez une classe, puis modifiez son emploi du temps depuis la liste ci-dessous.
+          Créez une classe, puis modifiez son emploi du temps depuis la liste
+          ci-dessous.
         </p>
 
         <div className="mt-4 flex flex-col gap-2 sm:flex-row">
@@ -140,16 +156,25 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
             Ajouter
           </Button>
         </div>
-        {classError && <p className="mt-2 text-sm text-destructive">{classError}</p>}
+        {classError && (
+          <p className="mt-2 text-sm text-destructive">{classError}</p>
+        )}
 
         <ul className="mt-4 divide-y divide-border">
           {classes.length === 0 && (
-            <p className="text-sm text-muted-foreground">Aucune classe pour le moment.</p>
+            <p className="text-sm text-muted-foreground">
+              Aucune classe pour le moment.
+            </p>
           )}
           {classes.map((c) => (
-            <li key={c.id} className="flex items-center justify-between gap-3 py-2.5">
+            <li
+              key={c.id}
+              className="flex items-center justify-between gap-3 py-2.5"
+            >
               <div className="min-w-0">
-                <p className="truncate text-sm font-medium text-foreground">{c.name}</p>
+                <p className="truncate text-sm font-medium text-foreground">
+                  {c.name}
+                </p>
                 <p className="text-xs text-muted-foreground">
                   {c.level ?? "—"} · {c.schoolYear}
                 </p>
@@ -208,16 +233,23 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
             Ajouter
           </Button>
         </div>
-        {subjectError && <p className="mt-2 text-sm text-destructive">{subjectError}</p>}
+        {subjectError && (
+          <p className="mt-2 text-sm text-destructive">{subjectError}</p>
+        )}
 
         <ul className="mt-4 flex flex-wrap gap-2">
           {subjects.length === 0 && (
-            <p className="text-sm text-muted-foreground">Aucune matière pour le moment.</p>
+            <p className="text-sm text-muted-foreground">
+              Aucune matière pour le moment.
+            </p>
           )}
           {subjects.map((s) => (
             <li key={s.id}>
               <span className="flex items-center gap-2 rounded-full border border-border bg-muted/40 py-1 pl-3 pr-1 text-xs font-medium text-foreground">
-                <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: s.color ?? "#94a3b8" }} />
+                <span
+                  className="h-2.5 w-2.5 rounded-full"
+                  style={{ backgroundColor: s.color ?? "#94a3b8" }}
+                />
                 {s.name}
                 <button
                   type="button"

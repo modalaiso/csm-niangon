@@ -1,9 +1,9 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
-import { prisma } from "@/lib/prisma";
+import type { Role } from "@prisma/client";
 import { z } from "zod";
-import { Role } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
+import { createClient } from "@/lib/supabase/server";
 
 // Schemas (matching the form schemas)
 const signupSchema = z.object({
@@ -55,7 +55,10 @@ async function checkPasswordCompromise(password: string): Promise<boolean> {
       `https://api.pwnedpasswords.com/range/${prefix}`,
     );
     if (!response.ok) {
-      console.error("Erreur lors de la vérification de la compromission du mot de passe:", response.statusText);
+      console.error(
+        "Erreur lors de la vérification de la compromission du mot de passe:",
+        response.statusText,
+      );
       return false; // Fail open if API is down
     }
 

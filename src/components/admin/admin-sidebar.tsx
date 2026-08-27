@@ -1,27 +1,31 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import type { Role } from "@prisma/client";
 import {
-  LayoutDashboard,
+  ArrowLeft,
+  CalendarClock,
   FileText,
+  LayoutDashboard,
+  Menu,
   MessageCircle,
   ShieldAlert,
   Users,
-  Menu,
   X,
-  ArrowLeft,
-  CalendarClock,
 } from "lucide-react";
-import type { Role } from "@prisma/client";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 interface AdminSidebarProps {
   role: Role;
 }
 
-const OVERVIEW_ITEM = { href: "/admin", label: "Vue d'ensemble", Icon: LayoutDashboard };
+const OVERVIEW_ITEM = {
+  href: "/admin",
+  label: "Vue d'ensemble",
+  Icon: LayoutDashboard,
+};
 const POST_ITEMS = [
   { href: "/admin/posts", label: "Publications", Icon: FileText },
   { href: "/admin/schedules", label: "Emplois du temps", Icon: CalendarClock },
@@ -30,7 +34,9 @@ const MODERATION_ITEMS = [
   { href: "/admin/comments", label: "Commentaires", Icon: MessageCircle },
   { href: "/admin/moderation", label: "Modération", Icon: ShieldAlert },
 ];
-const ADMIN_ITEMS = [{ href: "/admin/users", label: "Utilisateurs", Icon: Users }];
+const ADMIN_ITEMS = [
+  { href: "/admin/users", label: "Utilisateurs", Icon: Users },
+];
 
 function getNavItems(role: Role) {
   const items = [OVERVIEW_ITEM];
@@ -53,7 +59,9 @@ function SidebarLinks(props: Readonly<SidebarLinksProps>) {
     <nav className="flex flex-col gap-1">
       {items.map((item) => {
         const isActive =
-          item.href === "/admin" ? pathname === "/admin" : pathname.startsWith(item.href);
+          item.href === "/admin"
+            ? pathname === "/admin"
+            : pathname.startsWith(item.href);
         return (
           <Link
             key={item.href}
@@ -134,7 +142,10 @@ export function AdminSidebar(props: Readonly<AdminSidebarProps>) {
                 <X className="h-5 w-5" />
               </button>
             </div>
-            <SidebarLinks role={props.role} onNavigate={() => setIsMobileOpen(false)} />
+            <SidebarLinks
+              role={props.role}
+              onNavigate={() => setIsMobileOpen(false)}
+            />
           </div>
         </div>
       )}

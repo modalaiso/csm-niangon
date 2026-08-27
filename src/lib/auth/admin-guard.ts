@@ -1,7 +1,7 @@
-import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
-import { prisma } from "@/lib/prisma";
 import type { Role } from "@prisma/client";
+import { redirect } from "next/navigation";
+import { prisma } from "@/lib/prisma";
+import { createClient } from "@/lib/supabase/server";
 
 export interface AuthenticatedUser {
   id: string;
@@ -13,7 +13,11 @@ export interface AuthenticatedUser {
   avatar: string | null;
 }
 
-const DASHBOARD_ROLES: ReadonlySet<Role> = new Set(["WRITER", "MODERATOR", "ADMIN"]);
+const DASHBOARD_ROLES: ReadonlySet<Role> = new Set([
+  "WRITER",
+  "MODERATOR",
+  "ADMIN",
+]);
 const POST_MANAGER_ROLES: ReadonlySet<Role> = new Set(["WRITER", "ADMIN"]);
 const MODERATOR_ROLES: ReadonlySet<Role> = new Set(["MODERATOR", "ADMIN"]);
 
@@ -26,7 +30,15 @@ export async function getCurrentUser(): Promise<AuthenticatedUser | null> {
 
   const dbUser = await prisma.user.findUnique({
     where: { id: user.id },
-    select: { id: true, email: true, role: true, username: true, prenom: true, nom: true, avatar: true },
+    select: {
+      id: true,
+      email: true,
+      role: true,
+      username: true,
+      prenom: true,
+      nom: true,
+      avatar: true,
+    },
   });
 
   if (!dbUser) return null;
@@ -82,7 +94,8 @@ export async function getDashboardAuthContext(): Promise<AuthContext> {
 export async function getPostManagerAuthContext(): Promise<AuthContext> {
   const user = await getCurrentUser();
   if (!user) return { ok: false, error: "auth_required" };
-  if (!POST_MANAGER_ROLES.has(user.role)) return { ok: false, error: "forbidden" };
+  if (!POST_MANAGER_ROLES.has(user.role))
+    return { ok: false, error: "forbidden" };
   return { ok: true, user };
 }
 

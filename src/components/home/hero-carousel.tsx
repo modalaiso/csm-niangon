@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, ArrowUpRight } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import type { HomePostCard } from "@/app/actions/posts";
 
 interface HeroCarouselProps {
@@ -44,7 +44,9 @@ export function HeroCarousel(props: Readonly<HeroCarouselProps>) {
 
   const current = props.posts[index];
   const goTo = (i: number) =>
-    setIndex(((i % props.posts.length) + props.posts.length) % props.posts.length);
+    setIndex(
+      ((i % props.posts.length) + props.posts.length) % props.posts.length,
+    );
 
   const handleTouchStart = (e: React.TouchEvent<HTMLElement>) => {
     if (props.posts.length <= 1) return;
@@ -66,7 +68,10 @@ export function HeroCarousel(props: Readonly<HeroCarouselProps>) {
 
     // On ignore les gestes trop verticaux (scroll de page) pour ne réagir
     // qu'aux swipes réellement horizontaux
-    if (Math.abs(deltaX) > SWIPE_THRESHOLD && Math.abs(deltaX) > Math.abs(deltaY)) {
+    if (
+      Math.abs(deltaX) > SWIPE_THRESHOLD &&
+      Math.abs(deltaX) > Math.abs(deltaY)
+    ) {
       if (deltaX < 0) {
         goTo(index + 1);
       } else {

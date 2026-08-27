@@ -22,7 +22,11 @@ export default async function ActusPage() {
       </div>
 
       <div className="container px-3 sm:px-4 pb-10">
-        <ActuExplorer initialPosts={posts} initialTotal={total} availableTags={availableTags} />
+        <ActuExplorer
+          initialPosts={posts}
+          initialTotal={total}
+          availableTags={availableTags}
+        />
       </div>
     </main>
   );

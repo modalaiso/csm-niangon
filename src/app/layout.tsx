@@ -1,3 +1,4 @@
+import type { Role } from "@prisma/client";
 import type { Metadata } from "next";
 import "./globals.css";
 import { Inter, League_Spartan } from "next/font/google";
@@ -18,17 +19,17 @@ export const metadata: Metadata = {
     "La plateforme média officielle du CSM Niangon. Découvrez les actualités et informations du CSM Niangon.",
 };
 
-import { createClient } from "@/lib/supabase/server";
-import { prisma } from "@/lib/prisma";
+import { getActiveAnnouncements } from "@/app/actions/announcements";
+import { getInfoBarItems } from "@/app/actions/infobar";
+import { AnalyticsGate } from "@/components/analytics/analytics-gate";
+import { AnnouncementPopup } from "@/components/announcements/announcement-popup";
+import { CookieConsentBanner } from "@/components/cookies/cookie-consent-banner";
+import { SiteFooter } from "@/components/footer/site-footer";
+import { InfoBar } from "@/components/info-bar/info-bar";
 import { BottomNav } from "@/components/nav/bottom-nav";
 import { TopNav } from "@/components/nav/top-nav";
-import { InfoBar } from "@/components/info-bar/info-bar";
-import { AnnouncementPopup } from "@/components/announcements/announcement-popup";
-import { AnalyticsGate } from "@/components/analytics/analytics-gate";
-import { CookieConsentBanner } from "@/components/cookies/cookie-consent-banner";
-import { getInfoBarItems } from "@/app/actions/infobar";
-import { getActiveAnnouncements } from "@/app/actions/announcements";
-import  { SiteFooter } from "@/components/footer/site-footer";
+import { prisma } from "@/lib/prisma";
+import { createClient } from "@/lib/supabase/server";
 
 export default async function RootLayout({
   children,
@@ -40,7 +41,7 @@ export default async function RootLayout({
     data: { user },
   } = await supabase.auth.getUser();
 
-  let userRole = undefined;
+  let userRole: Role | undefined;
   let userProfile = null;
 
   if (user) {

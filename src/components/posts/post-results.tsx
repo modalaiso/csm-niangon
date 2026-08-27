@@ -1,12 +1,12 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { Calendar, Eye } from "lucide-react";
 import Link from "next/link";
-import { Eye, Calendar } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { formatRelativeTime } from "@/lib/utils";
+import type { ReactNode } from "react";
 import type { HomePostCard } from "@/app/actions/posts";
+import { Button } from "@/components/ui/button";
 import type { ViewMode } from "@/components/ui/view-mode-toggle";
+import { formatRelativeTime } from "@/lib/utils";
 
 interface PostResultsProps<T extends HomePostCard> {
   posts: T[];
@@ -50,8 +50,12 @@ function PostCard<T extends HomePostCard>(props: Readonly<PostCardProps<T>>) {
           {badge}
         </div>
         <div className="p-4">
-          <h3 className="line-clamp-1 text-base font-bold text-foreground">{props.post.title}</h3>
-          <p className="mt-1 line-clamp-3 text-sm text-muted-foreground">{props.post.summary}</p>
+          <h3 className="line-clamp-1 text-base font-bold text-foreground">
+            {props.post.title}
+          </h3>
+          <p className="mt-1 line-clamp-3 text-sm text-muted-foreground">
+            {props.post.summary}
+          </p>
           <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
             <span>
               Créé par{" "}
@@ -111,11 +115,15 @@ function PostCard<T extends HomePostCard>(props: Readonly<PostCardProps<T>>) {
   );
 }
 
-export function PostResults<T extends HomePostCard>(props: Readonly<PostResultsProps<T>>) {
+export function PostResults<T extends HomePostCard>(
+  props: Readonly<PostResultsProps<T>>,
+) {
   if (props.posts.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center rounded-2xl py-16 text-center">
-        <p className="text-base font-medium text-muted-foreground">{props.emptyStateMessage}</p>
+        <p className="text-base font-medium text-muted-foreground">
+          {props.emptyStateMessage}
+        </p>
         {props.emptyStateAction && (
           <Button
             variant="outline"

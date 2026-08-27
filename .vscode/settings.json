@@ -1,7 +1,7 @@
 {
-    "prisma.pinToPrisma6": true,
-    "sonarlint.connectedMode.project": {
-        "connectionId": "modalaiso",
-        "projectKey": "modalaiso_csm-niangon"
-    }
+  "prisma.pinToPrisma6": true,
+  "sonarlint.connectedMode.project": {
+    "connectionId": "modalaiso",
+    "projectKey": "modalaiso_csm-niangon"
+  }
 }

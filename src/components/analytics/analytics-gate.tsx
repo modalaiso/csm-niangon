@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Analytics } from "@vercel/analytics/next";
+import { useEffect, useState } from "react";
 import { VisitTracker } from "@/components/analytics/visit-tracker";
-import { getStoredConsent, CONSENT_CHANGE_EVENT } from "@/lib/cookie-consent";
+import { CONSENT_CHANGE_EVENT, getStoredConsent } from "@/lib/cookie-consent";
 
 /**
  * Ne monte le suivi d'audience (VisitLog interne + Vercel Analytics) que si

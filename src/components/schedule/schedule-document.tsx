@@ -42,7 +42,10 @@ export function ScheduleDocument(props: Readonly<ScheduleDocumentProps>) {
           <tbody>
             {props.schedule.rows.length === 0 ? (
               <tr>
-                <td colSpan={6} className="border-2 border-slate-900 px-3 py-6 text-center text-slate-500">
+                <td
+                  colSpan={6}
+                  className="border-2 border-slate-900 px-3 py-6 text-center text-slate-500"
+                >
                   Aucun créneau renseigné pour cette classe.
                 </td>
               </tr>

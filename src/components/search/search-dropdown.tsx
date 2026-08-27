@@ -1,14 +1,14 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
-import { useRouter } from "next/navigation";
 import { Search, X } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
-  searchPosts,
   getRecentPosts,
   type SearchResult,
+  searchPosts,
 } from "@/app/actions/search";
+import { Input } from "@/components/ui/input";
 
 export function SearchDropdown() {
   const router = useRouter();
@@ -23,7 +23,10 @@ export function SearchDropdown() {
   // Fermer dropdown au clic extérieur
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
@@ -46,7 +49,9 @@ export function SearchDropdown() {
       }
     };
     load();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   // Recherche avec debounce + AbortController
@@ -63,7 +68,8 @@ export function SearchDropdown() {
         const data = await searchPosts(searchQuery, 10);
         if (!controller.signal.aborted) setResults(data.results);
       } catch (err) {
-        if (!controller.signal.aborted) console.error("Erreur recherche :", err);
+        if (!controller.signal.aborted)
+          console.error("Erreur recherche :", err);
       } finally {
         if (!controller.signal.aborted) setIsLoading(false);
       }
@@ -121,13 +127,7 @@ export function SearchDropdown() {
   return (
     <div ref={containerRef} className="relative flex-1">
       {/* Barre de recherche */}
-      <div
-        role="combobox"
-        aria-expanded={isOpen}
-        aria-haspopup="listbox"
-        aria-controls="search-listbox"
-        className="flex items-center gap-2 rounded-full bg-gray-100 dark:bg-gray-800"
-      >
+      <div className="flex items-center gap-2 rounded-full bg-gray-100 dark:bg-gray-800">
         <Input
           type="search"
           placeholder="Recherche"
@@ -137,6 +137,8 @@ export function SearchDropdown() {
           onKeyDown={handleKeyDown}
           aria-label="Rechercher des articles"
           aria-autocomplete="list"
+          aria-expanded={isOpen}
+          aria-controls="search-listbox"
           className="bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 flex-1 outline-none w-40"
         />
 
@@ -164,23 +166,23 @@ export function SearchDropdown() {
       {/* Dropdown */}
       {isOpen && (
         <div>
-          <ul
+          <div
             id="search-listbox"
-            role="listbox"
-            aria-label="Résultats de recherche"
             className="absolute top-full left-[55%] mt-4 w-[71vw] max-w-[24rem] -translate-x-2/3 sm:left-auto sm:right-0 sm:translate-x-0 sm:transform-none sm:w-96 bg-background border border-border rounded-lg z-40 max-h-[400px] overflow-y-auto divide-y divide-border"
           >
             {isLoading ? (
-              <li className="p-4 text-center text-sm text-muted-foreground" role="status">
+              <output className="block p-4 text-center text-sm text-muted-foreground">
                 Chargement...
-              </li>
+              </output>
             ) : results.length === 0 ? (
               <li className="p-4 text-center text-sm text-muted-foreground">
-                {searchQuery.trim() ? "Aucun résultat trouvé" : "Aucun post disponible"}
+                {searchQuery.trim()
+                  ? "Aucun résultat trouvé"
+                  : "Aucun post disponible"}
               </li>
             ) : (
               results.map((result) => (
-                <li key={result.id} role="option">
+                <li key={result.id}>
                   <button
                     type="button"
                     onClick={() => handleResultClick(result.id)}
@@ -196,7 +198,9 @@ export function SearchDropdown() {
                         />
                       )*/}
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-medium text-base truncate">{result.title}</h3>
+                        <h3 className="font-medium text-base truncate">
+                          {result.title}
+                        </h3>
                         {/*<p className="text-xs text-muted-foreground truncate">
                           {result.author.username}
                         </p>*/}
@@ -209,7 +213,7 @@ export function SearchDropdown() {
                 </li>
               ))
             )}
-          </ul>
+          </div>
         </div>
       )}
     </div>

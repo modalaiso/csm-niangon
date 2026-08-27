@@ -1,8 +1,8 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
-import { revalidatePath } from "next/cache";
 
 export interface MyProfile {
   id: string;
@@ -25,7 +25,9 @@ type AuthError = "auth_required";
  * Il n'y a pas de paramètre "userId" : cette action ne peut renvoyer
  * que le profil du visiteur courant, jamais celui d'un tiers.
  */
-export async function getMyProfile(): Promise<MyProfile | { error: AuthError }> {
+export async function getMyProfile(): Promise<
+  MyProfile | { error: AuthError }
+> {
   const supabase = await createClient();
   const {
     data: { user },
@@ -62,7 +64,12 @@ export interface UpdateProfileInput {
 
 type UpdateSuccess = { success: true };
 type UpdateError = {
-  error: "auth_required" | "invalid" | "email_taken" | "matricule_taken" | "unknown";
+  error:
+    | "auth_required"
+    | "invalid"
+    | "email_taken"
+    | "matricule_taken"
+    | "unknown";
 };
 
 /** Met à jour classe, matricule et email — réservé au propriétaire du compte */
@@ -133,7 +140,9 @@ type AvatarSuccess = { success: true; avatar: string | null };
 type AvatarError = { error: "auth_required" | "unknown" };
 
 /** Définit (ou retire, si url = null) la photo de profil de l'utilisateur connecté */
-export async function updateMyAvatar(url: string | null): Promise<AvatarSuccess | AvatarError> {
+export async function updateMyAvatar(
+  url: string | null,
+): Promise<AvatarSuccess | AvatarError> {
   const supabase = await createClient();
   const {
     data: { user },

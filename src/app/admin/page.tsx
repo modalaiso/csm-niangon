@@ -1,9 +1,21 @@
+import {
+  Eye,
+  FileText,
+  Megaphone,
+  MessageCircle,
+  TrendingUp,
+  Users,
+} from "lucide-react";
 import Link from "next/link";
-import { TrendingUp, Eye, FileText, MessageCircle, Megaphone, Users } from "lucide-react";
-import { getAllVisitStats, getVisitTrend, getTopPages, type VisitPeriod } from "@/app/actions/analytics";
 import { getDashboardSummary } from "@/app/actions/admin-dashboard";
-import { requireDashboardAccess } from "@/lib/auth/admin-guard";
+import {
+  getAllVisitStats,
+  getTopPages,
+  getVisitTrend,
+  type VisitPeriod,
+} from "@/app/actions/analytics";
 import { VisitTrendChart } from "@/components/admin/visit-trend-chart";
+import { requireDashboardAccess } from "@/lib/auth/admin-guard";
 
 export const metadata = {
   title: "Vue d'ensemble | Dashboard | CSM Niangon",
@@ -20,8 +32,10 @@ const PERIOD_ORDER: { key: VisitPeriod; short: string }[] = [
 
 export default async function AdminDashboardPage() {
   const currentUser = await requireDashboardAccess();
-  const canManagePosts = currentUser.role === "WRITER" || currentUser.role === "ADMIN";
-  const canModerate = currentUser.role === "MODERATOR" || currentUser.role === "ADMIN";
+  const canManagePosts =
+    currentUser.role === "WRITER" || currentUser.role === "ADMIN";
+  const canModerate =
+    currentUser.role === "MODERATOR" || currentUser.role === "ADMIN";
   const isAdmin = currentUser.role === "ADMIN";
 
   const [visitStats, trend, topPages, summaryResult] = await Promise.all([
@@ -50,7 +64,9 @@ export default async function AdminDashboardPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Vue d&apos;ensemble</h1>
+        <h1 className="text-2xl font-bold text-foreground">
+          Vue d&apos;ensemble
+        </h1>
         <p className="mt-1 text-sm text-muted-foreground">
           Statistiques de trafic et état de la plateforme
         </p>
@@ -66,11 +82,19 @@ export default async function AdminDashboardPage() {
             const stat = statsByPeriod.get(p.key);
             const uniqueCount = stat?.uniqueSessions ?? 0;
             return (
-              <div key={p.key} className="rounded-2xl border border-border bg-white p-4">
-                <p className="text-xs font-medium text-muted-foreground">{p.short}</p>
-                <p className="mt-1 text-2xl font-bold text-foreground">{stat?.count ?? 0}</p>
+              <div
+                key={p.key}
+                className="rounded-2xl border border-border bg-white p-4"
+              >
+                <p className="text-xs font-medium text-muted-foreground">
+                  {p.short}
+                </p>
+                <p className="mt-1 text-2xl font-bold text-foreground">
+                  {stat?.count ?? 0}
+                </p>
                 <p className="mt-0.5 text-[11px] text-muted-foreground">
-                  {uniqueCount} visiteur{uniqueCount > 1 ? "s" : ""} unique{uniqueCount > 1 ? "s" : ""}
+                  {uniqueCount} visiteur{uniqueCount > 1 ? "s" : ""} unique
+                  {uniqueCount > 1 ? "s" : ""}
                 </p>
               </div>
             );
@@ -82,7 +106,9 @@ export default async function AdminDashboardPage() {
       <section className="rounded-2xl border border-border bg-white p-5">
         <div className="mb-4 flex items-center gap-2">
           <TrendingUp className="h-4 w-4 text-primary" />
-          <h2 className="text-sm font-semibold text-foreground">Tendance sur 14 jours</h2>
+          <h2 className="text-sm font-semibold text-foreground">
+            Tendance sur 14 jours
+          </h2>
         </div>
         <VisitTrendChart data={trend} />
       </section>
@@ -95,13 +121,20 @@ export default async function AdminDashboardPage() {
           >
             <div className="flex items-center justify-between">
               <FileText className="h-5 w-5 text-primary" />
-              <span className="text-xs text-muted-foreground">{summary.totalPosts} au total</span>
+              <span className="text-xs text-muted-foreground">
+                {summary.totalPosts} au total
+              </span>
             </div>
-            <p className="mt-3 text-2xl font-bold text-foreground">{summary.publishedPosts}</p>
-            <p className="text-sm text-muted-foreground">Publications publiées</p>
+            <p className="mt-3 text-2xl font-bold text-foreground">
+              {summary.publishedPosts}
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Publications publiées
+            </p>
             <p className="mt-2 text-xs text-muted-foreground">
-              {summary.draftPosts} brouillon{summary.draftPosts > 1 ? "s" : ""} ·{" "}
-              {summary.archivedPosts} archivé{summary.archivedPosts > 1 ? "s" : ""}
+              {summary.draftPosts} brouillon{summary.draftPosts > 1 ? "s" : ""}{" "}
+              · {summary.archivedPosts} archivé
+              {summary.archivedPosts > 1 ? "s" : ""}
             </p>
           </Link>
         )}
@@ -113,10 +146,16 @@ export default async function AdminDashboardPage() {
           >
             <div className="flex items-center justify-between">
               <MessageCircle className="h-5 w-5 text-secondary" />
-              <span className="text-xs text-muted-foreground">{summary.totalComments} au total</span>
+              <span className="text-xs text-muted-foreground">
+                {summary.totalComments} au total
+              </span>
             </div>
-            <p className="mt-3 text-2xl font-bold text-foreground">{summary.pendingComments}</p>
-            <p className="text-sm text-muted-foreground">Commentaires à modérer</p>
+            <p className="mt-3 text-2xl font-bold text-foreground">
+              {summary.pendingComments}
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Commentaires à modérer
+            </p>
           </Link>
         )}
 
@@ -126,7 +165,9 @@ export default async function AdminDashboardPage() {
               <Megaphone className="h-5 w-5 text-rose-500" />
               {isAdmin && <Users className="h-4 w-4 text-muted-foreground" />}
             </div>
-            <p className="mt-3 text-2xl font-bold text-foreground">{summary.activeAnnouncements}</p>
+            <p className="mt-3 text-2xl font-bold text-foreground">
+              {summary.activeAnnouncements}
+            </p>
             <p className="text-sm text-muted-foreground">Annonces actives</p>
             {isAdmin && (
               <p className="mt-2 text-xs text-muted-foreground">
@@ -146,11 +187,16 @@ export default async function AdminDashboardPage() {
           </h2>
         </div>
         {topPages.length === 0 ? (
-          <p className="text-sm text-muted-foreground">Pas encore assez de données.</p>
+          <p className="text-sm text-muted-foreground">
+            Pas encore assez de données.
+          </p>
         ) : (
           <ul className="divide-y divide-border">
             {topPages.map((page, index) => (
-              <li key={page.path} className="flex items-center justify-between py-2.5">
+              <li
+                key={page.path}
+                className="flex items-center justify-between py-2.5"
+              >
                 <span className="flex items-center gap-2 text-sm text-foreground">
                   <span className="flex h-5 w-5 items-center justify-center rounded-full bg-muted text-[11px] font-semibold text-muted-foreground">
                     {index + 1}
@@ -159,7 +205,9 @@ export default async function AdminDashboardPage() {
                     {page.path}
                   </Link>
                 </span>
-                <span className="text-sm font-medium text-foreground">{page.count}</span>
+                <span className="text-sm font-medium text-foreground">
+                  {page.count}
+                </span>
               </li>
             ))}
           </ul>

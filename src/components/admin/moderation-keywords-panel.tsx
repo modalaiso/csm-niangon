@@ -1,10 +1,17 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
-import { Plus, Trash2, Loader2 } from "lucide-react";
 import type { ModerationAction } from "@prisma/client";
-import { Input } from "@/components/ui/input";
+import { Loader2, Plus, Trash2 } from "lucide-react";
+import { useEffect, useState, useTransition } from "react";
+import {
+  addModerationKeyword,
+  deleteModerationKeyword,
+  listModerationKeywords,
+  type ModerationKeywordRow,
+  toggleModerationKeyword,
+} from "@/app/actions/moderation";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -13,15 +20,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import {
-  listModerationKeywords,
-  addModerationKeyword,
-  toggleModerationKeyword,
-  deleteModerationKeyword,
-  type ModerationKeywordRow,
-} from "@/app/actions/moderation";
 
-const ACTION_OPTIONS: { value: ModerationAction; label: string; hint: string }[] = [
+const ACTION_OPTIONS: {
+  value: ModerationAction;
+  label: string;
+  hint: string;
+}[] = [
   {
     value: "AUTO_DELETE",
     label: "Supprimer automatiquement",
@@ -65,7 +69,8 @@ export function ModerationKeywordsPanel() {
       const result = await addModerationKeyword(phrase, action);
       if ("error" in result) {
         if (result.error === "duplicate") setError("Ce mot-clé existe déjà.");
-        else if (result.error === "invalid") setError("Le mot-clé doit contenir au moins 2 caractères.");
+        else if (result.error === "invalid")
+          setError("Le mot-clé doit contenir au moins 2 caractères.");
         else setError("Impossible d'ajouter ce mot-clé.");
         return;
       }
@@ -91,10 +96,13 @@ export function ModerationKeywordsPanel() {
 
   return (
     <div className="rounded-2xl border border-border bg-white p-5">
-      <h2 className="text-sm font-semibold text-foreground">Mots-clés surveillés</h2>
+      <h2 className="text-sm font-semibold text-foreground">
+        Mots-clés surveillés
+      </h2>
       <p className="mt-1 text-xs text-muted-foreground">
-        Tout commentaire contenant l&apos;un de ces mots ou phrases (insensible à la casse) déclenche
-        l&apos;action choisie, automatiquement, à la publication.
+        Tout commentaire contenant l&apos;un de ces mots ou phrases (insensible
+        à la casse) déclenche l&apos;action choisie, automatiquement, à la
+        publication.
       </p>
 
       {/* Formulaire d'ajout */}
@@ -106,7 +114,10 @@ export function ModerationKeywordsPanel() {
           placeholder="Mot ou phrase à surveiller..."
           className="flex-1"
         />
-        <Select value={action} onValueChange={(v) => setAction(v as ModerationAction)}>
+        <Select
+          value={action}
+          onValueChange={(v) => setAction(v as ModerationAction)}
+        >
           <SelectTrigger className="w-full bg-white sm:w-56">
             <SelectValue />
           </SelectTrigger>
@@ -118,7 +129,12 @@ export function ModerationKeywordsPanel() {
             ))}
           </SelectContent>
         </Select>
-        <Button type="button" onClick={handleAdd} disabled={isPending || !phrase.trim()} className="gap-1.5 text-white">
+        <Button
+          type="button"
+          onClick={handleAdd}
+          disabled={isPending || !phrase.trim()}
+          className="gap-1.5 text-white"
+        >
           <Plus className="h-4 w-4" />
           Ajouter
         </Button>
@@ -133,28 +149,46 @@ export function ModerationKeywordsPanel() {
       <div className="mt-5">
         {(() => {
           if (isLoading) {
-            return <Loader2 className="mx-auto h-5 w-5 animate-spin text-muted-foreground" />;
+            return (
+              <Loader2 className="mx-auto h-5 w-5 animate-spin text-muted-foreground" />
+            );
           }
 
           if (keywords.length === 0) {
-            return <p className="text-sm text-muted-foreground">Aucun mot-clé configuré pour le moment.</p>;
+            return (
+              <p className="text-sm text-muted-foreground">
+                Aucun mot-clé configuré pour le moment.
+              </p>
+            );
           }
 
           return (
             <ul className="divide-y divide-border">
               {keywords.map((k) => (
-                <li key={k.id} className="flex items-center justify-between gap-3 py-2.5">
+                <li
+                  key={k.id}
+                  className="flex items-center justify-between gap-3 py-2.5"
+                >
                   <div className="min-w-0 flex-1">
-                    <p className={cn("truncate text-sm font-medium", !k.isActive && "text-muted-foreground line-through")}>
+                    <p
+                      className={cn(
+                        "truncate text-sm font-medium",
+                        !k.isActive && "text-muted-foreground line-through",
+                      )}
+                    >
                       {k.phrase}
                     </p>
                     <span
                       className={cn(
                         "mt-0.5 inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold",
-                        k.action === "AUTO_DELETE" ? "bg-destructive/10 text-destructive" : "bg-amber-100 text-amber-700",
+                        k.action === "AUTO_DELETE"
+                          ? "bg-destructive/10 text-destructive"
+                          : "bg-amber-100 text-amber-700",
                       )}
                     >
-                      {k.action === "AUTO_DELETE" ? "Suppression auto" : "Revue manuelle"}
+                      {k.action === "AUTO_DELETE"
+                        ? "Suppression auto"
+                        : "Revue manuelle"}
                     </span>
                   </div>
                   <div className="flex flex-shrink-0 items-center gap-2">
@@ -164,7 +198,9 @@ export function ModerationKeywordsPanel() {
                       disabled={isPending}
                       className={cn(
                         "rounded-full px-3 py-1 text-xs font-medium transition-colors",
-                        k.isActive ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground",
+                        k.isActive
+                          ? "bg-primary/10 text-primary"
+                          : "bg-muted text-muted-foreground",
                       )}
                     >
                       {k.isActive ? "Actif" : "Inactif"}

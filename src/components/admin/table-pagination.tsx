@@ -33,7 +33,9 @@ export function TablePagination(props: Readonly<TablePaginationProps>) {
         size="icon"
         className="rounded-full"
         disabled={props.page === props.totalPages}
-        onClick={() => props.onPageChange(Math.min(props.totalPages, props.page + 1))}
+        onClick={() =>
+          props.onPageChange(Math.min(props.totalPages, props.page + 1))
+        }
       >
         <ChevronRight className="h-4 w-4" />
       </Button>

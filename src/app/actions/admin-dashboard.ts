@@ -1,8 +1,8 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
 import { PostStatus, PostType } from "@prisma/client";
 import { getDashboardAuthContext } from "@/lib/auth/admin-guard";
+import { prisma } from "@/lib/prisma";
 
 export interface DashboardSummary {
   totalPosts: number;
@@ -15,7 +15,9 @@ export interface DashboardSummary {
   totalUsers: number;
 }
 
-type DashboardSummaryResult = DashboardSummary | { error: "auth_required" | "forbidden" };
+type DashboardSummaryResult =
+  | DashboardSummary
+  | { error: "auth_required" | "forbidden" };
 
 /** Résumé de la plateforme pour les cartes KPI de la vue d'ensemble */
 export async function getDashboardSummary(): Promise<DashboardSummaryResult> {

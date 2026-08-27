@@ -1,8 +1,8 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
-import { revalidatePath } from "next/cache";
 
 export interface LikeInfo {
   count: number;
@@ -36,7 +36,9 @@ export async function getLikeInfo(postId: string): Promise<LikeInfo> {
 /** Ajoute ou retire le like de l'utilisateur courant sur un post */
 export async function toggleLike(
   postId: string,
-): Promise<{ liked: boolean; count: number } | { error: "auth_required" | "unknown" }> {
+): Promise<
+  { liked: boolean; count: number } | { error: "auth_required" | "unknown" }
+> {
   try {
     const supabase = await createClient();
     const {

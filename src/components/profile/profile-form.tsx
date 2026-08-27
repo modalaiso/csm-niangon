@@ -1,12 +1,17 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { Loader2, LogOut, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Loader2, Trash2, LogOut } from "lucide-react";
+import { useState, useTransition } from "react";
+import { logout } from "@/app/actions/auth";
+import {
+  deleteMyAccount,
+  type MyProfile,
+  updateMyProfile,
+} from "@/app/actions/profile";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { logout } from "@/app/actions/auth";
 import {
   Select,
   SelectContent,
@@ -14,7 +19,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { updateMyProfile, deleteMyAccount, type MyProfile } from "@/app/actions/profile";
 
 interface ProfileFormProps {
   profile: MyProfile;
@@ -52,7 +56,8 @@ export function ProfileForm(props: Readonly<ProfileFormProps>) {
   const [confirmText, setConfirmText] = useState("");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  const emailChanged = email.trim().toLowerCase() !== props.profile.email.toLowerCase();
+  const emailChanged =
+    email.trim().toLowerCase() !== props.profile.email.toLowerCase();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -114,13 +119,21 @@ export function ProfileForm(props: Readonly<ProfileFormProps>) {
           </div>
           <div className="space-y-1.5">
             <Label>Prénoms</Label>
-            <Input value={props.profile.prenom} disabled className="bg-muted/50" />
+            <Input
+              value={props.profile.prenom}
+              disabled
+              className="bg-muted/50"
+            />
           </div>
         </div>
 
         <div className="space-y-1.5">
           <Label>Nom d&apos;utilisateur</Label>
-          <Input value={props.profile.username} disabled className="bg-muted/50" />
+          <Input
+            value={props.profile.username}
+            disabled
+            className="bg-muted/50"
+          />
         </div>
 
         <div className="space-y-1.5">
@@ -159,7 +172,8 @@ export function ProfileForm(props: Readonly<ProfileFormProps>) {
           />
           {emailChanged && (
             <p className="text-xs text-muted-foreground">
-              Un email de confirmation pourra vous être envoyé à la nouvelle adresse.
+              Un email de confirmation pourra vous être envoyé à la nouvelle
+              adresse.
             </p>
           )}
         </div>
@@ -189,9 +203,12 @@ export function ProfileForm(props: Readonly<ProfileFormProps>) {
 
       {/* Zone de suppression de compte */}
       <div className="rounded-3xl border border-destructive/30 bg-destructive/5 p-6">
-        <h2 className="text-sm font-semibold text-destructive">Zone de danger</h2>
+        <h2 className="text-sm font-semibold text-destructive">
+          Zone de danger
+        </h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          La suppression de votre compte est définitive : les contenus liés à ce compte seront supprimés. Cette action est irréversible.
+          La suppression de votre compte est définitive : les contenus liés à ce
+          compte seront supprimés. Cette action est irréversible.
         </p>
 
         {!showDeleteConfirm ? (
@@ -207,7 +224,8 @@ export function ProfileForm(props: Readonly<ProfileFormProps>) {
         ) : (
           <div className="mt-4 space-y-3">
             <Label htmlFor="confirm-delete" className="text-sm">
-              Tapez <span className="font-semibold">SUPPRIMER</span> pour confirmer
+              Tapez <span className="font-semibold">SUPPRIMER</span> pour
+              confirmer
             </Label>
             <Input
               id="confirm-delete"
@@ -215,7 +233,9 @@ export function ProfileForm(props: Readonly<ProfileFormProps>) {
               onChange={(e) => setConfirmText(e.target.value)}
               placeholder="SUPPRIMER"
             />
-            {deleteError && <p className="text-sm text-destructive">{deleteError}</p>}
+            {deleteError && (
+              <p className="text-sm text-destructive">{deleteError}</p>
+            )}
             <div className="flex gap-2">
               <Button
                 type="button"

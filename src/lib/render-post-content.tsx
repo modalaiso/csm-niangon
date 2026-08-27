@@ -5,7 +5,8 @@ import React from "react";
  * liens Markdown [texte](url) et URLs brutes (https://...).
  */
 function renderInline(text: string, keyPrefix: string): React.ReactNode[] {
-  const pattern = /(\*\*[^*]+\*\*|\*[^*]+\*|\[[^\]]+\]\([^\s)]+\)|https?:\/\/[^\s]+)/g;
+  const pattern =
+    /(\*\*[^*]+\*\*|\*[^*]+\*|\[[^\]]+\]\([^\s)]+\)|https?:\/\/[^\s]+)/g;
   const parts = text.split(pattern).filter((part) => part !== "");
 
   return parts.map((part, i) => {
@@ -18,7 +19,12 @@ function renderInline(text: string, keyPrefix: string): React.ReactNode[] {
       );
     }
 
-    if (part.startsWith("*") && part.endsWith("*") && part.length > 2 && !part.startsWith("**")) {
+    if (
+      part.startsWith("*") &&
+      part.endsWith("*") &&
+      part.length > 2 &&
+      !part.startsWith("**")
+    ) {
       return (
         <em key={key} className="italic">
           {part.slice(1, -1)}
@@ -35,7 +41,7 @@ function renderInline(text: string, keyPrefix: string): React.ReactNode[] {
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          style={{ textDecoration: 'underline' }}
+          style={{ textDecoration: "underline" }}
           className="text-primary hover:text-primary/80"
         >
           {label}
@@ -54,7 +60,7 @@ function renderInline(text: string, keyPrefix: string): React.ReactNode[] {
             href={url}
             target="_blank"
             rel="noopener noreferrer"
-            style={{ textDecoration: 'underline', textUnderlineOffset: '2px' }}
+            style={{ textDecoration: "underline", textUnderlineOffset: "2px" }}
             className="text-primary hover:text-primary/80"
           >
             {url}
@@ -127,7 +133,10 @@ export function renderPostContent(content: string): React.ReactNode {
 
         if (block.type === "heading") {
           return (
-            <h3 key={key} className="mb-2 mt-4 text-lg font-bold text-foreground first:mt-0">
+            <h3
+              key={key}
+              className="mb-2 mt-4 text-lg font-bold text-foreground first:mt-0"
+            >
               {renderInline(block.text, key)}
             </h3>
           );
@@ -146,9 +155,14 @@ export function renderPostContent(content: string): React.ReactNode {
 
         if (block.type === "list") {
           return (
-            <ul key={key} className="mb-3 list-disc space-y-1 pl-5 text-sm text-foreground/90">
+            <ul
+              key={key}
+              className="mb-3 list-disc space-y-1 pl-5 text-sm text-foreground/90"
+            >
               {block.items.map((item, itemIndex) => (
-                <li key={`${key}-${itemIndex}`}>{renderInline(item, `${key}-${itemIndex}`)}</li>
+                <li key={`${key}-${itemIndex}`}>
+                  {renderInline(item, `${key}-${itemIndex}`)}
+                </li>
               ))}
             </ul>
           );
@@ -159,7 +173,10 @@ export function renderPostContent(content: string): React.ReactNode {
         }
 
         return (
-          <p key={key} className="mb-1 text-sm leading-relaxed text-foreground/90">
+          <p
+            key={key}
+            className="mb-1 text-sm leading-relaxed text-foreground/90"
+          >
             {renderInline(block.text, key)}
           </p>
         );

@@ -1,8 +1,8 @@
 "use client";
 
-import * as React from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,7 +14,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import Link from "next/link";
 
 const signupSchema = z
   .object({
@@ -55,9 +54,9 @@ const CLASS_OPTIONS = [
   "Parent d'élève",
 ];
 
-import { signup } from "@/app/actions/auth";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { signup } from "@/app/actions/auth";
 
 export function SignupForm(_props: Readonly<SignupFormProps>) {
   const [serverError, setServerError] = useState<string | null>(null);
@@ -216,11 +215,19 @@ export function SignupForm(_props: Readonly<SignupFormProps>) {
             />
             <span>
               J&apos;accepte les{" "}
-              <Link href="/cgu" target="_blank" className="font-medium text-blue-600 hover:underline">
+              <Link
+                href="/cgu"
+                target="_blank"
+                className="font-medium text-blue-600 hover:underline"
+              >
                 Conditions Générales d&apos;Utilisation
               </Link>{" "}
               et la{" "}
-              <Link href="/confidentialite" target="_blank" className="font-medium text-blue-600 hover:underline">
+              <Link
+                href="/confidentialite"
+                target="_blank"
+                className="font-medium text-blue-600 hover:underline"
+              >
                 politique de confidentialité
               </Link>
             </span>

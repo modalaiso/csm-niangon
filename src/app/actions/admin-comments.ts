@@ -1,8 +1,8 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { getModeratorAuthContext } from "@/lib/auth/admin-guard";
+import { prisma } from "@/lib/prisma";
 
 export interface AdminCommentRow {
   id: string;
@@ -104,10 +104,14 @@ export async function listAdminComments(
 }
 
 type SimpleSuccess = { success: true };
-type SimpleError = { error: "auth_required" | "forbidden" | "not_found" | "unknown" };
+type SimpleError = {
+  error: "auth_required" | "forbidden" | "not_found" | "unknown";
+};
 
 /** Supprime un commentaire (et trace l'action dans le journal de modération) */
-export async function deleteCommentAdmin(commentId: string): Promise<SimpleSuccess | SimpleError> {
+export async function deleteCommentAdmin(
+  commentId: string,
+): Promise<SimpleSuccess | SimpleError> {
   const auth = await getModeratorAuthContext();
   if (!auth.ok) return { error: auth.error };
 
@@ -164,7 +168,10 @@ export async function setCommentHiddenAdmin(
     });
     if (!comment) return { error: "not_found" };
 
-    await prisma.comment.update({ where: { id: commentId }, data: { isHidden: hidden } });
+    await prisma.comment.update({
+      where: { id: commentId },
+      data: { isHidden: hidden },
+    });
 
     await prisma.auditLog.create({
       data: {
@@ -188,7 +195,9 @@ export async function setCommentHiddenAdmin(
 type BulkSuccess = { success: true; count: number };
 type BulkError = { error: "auth_required" | "forbidden" | "unknown" };
 
-export async function bulkDeleteComments(commentIds: string[]): Promise<BulkSuccess | BulkError> {
+export async function bulkDeleteComments(
+  commentIds: string[],
+): Promise<BulkSuccess | BulkError> {
   const auth = await getModeratorAuthContext();
   if (!auth.ok) return { error: auth.error };
   if (commentIds.length === 0) return { success: true, count: 0 };
@@ -198,7 +207,9 @@ export async function bulkDeleteComments(commentIds: string[]): Promise<BulkSucc
       where: { id: { in: commentIds } },
       select: { postId: true },
     });
-    const result = await prisma.comment.deleteMany({ where: { id: { in: commentIds } } });
+    const result = await prisma.comment.deleteMany({
+      where: { id: { in: commentIds } },
+    });
 
     await prisma.auditLog.create({
       data: {
@@ -217,7 +228,10 @@ export async function bulkDeleteComments(commentIds: string[]): Promise<BulkSucc
 
     return { success: true, count: result.count };
   } catch (error) {
-    console.error("Erreur lors de la suppression groupée des commentaires:", error);
+    console.error(
+      "Erreur lors de la suppression groupée des commentaires:",
+      error,
+    );
     return { error: "unknown" };
   }
 }

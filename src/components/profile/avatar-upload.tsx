@@ -1,10 +1,10 @@
 "use client";
 
-import { useRef, useState, useTransition } from "react";
 import { Camera, Loader2, X } from "lucide-react";
-import { createClient } from "@/utils/supabase/client";
+import { useRef, useState, useTransition } from "react";
 import { updateMyAvatar } from "@/app/actions/profile";
 import { Avatar } from "@/components/ui/avatar";
+import { createClient } from "@/utils/supabase/client";
 
 interface AvatarUploadProps {
   avatar: string | null;
@@ -107,7 +107,11 @@ export function AvatarUpload(props: Readonly<AvatarUploadProps>) {
           aria-label="Changer la photo de profil"
           className="absolute bottom-0 right-0 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-white transition-colors border-4 border-white disabled:opacity-60"
         >
-          {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-6 w-6" />}
+          {busy ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Camera className="h-6 w-6" />
+          )}
         </button>
       </div>
 

@@ -1,9 +1,16 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { Search, Loader2, ShieldCheck } from "lucide-react";
 import type { Role } from "@prisma/client";
+import { Loader2, Search, ShieldCheck } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+import {
+  type AdminUserRow,
+  listUsers,
+  updateUserRole,
+} from "@/app/actions/admin-users";
+import { TablePagination } from "@/components/admin/table-pagination";
+import { useAdminList } from "@/components/admin/useAdminList";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -12,10 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useAdminList } from "@/components/admin/useAdminList";
 import { cn } from "@/lib/utils";
-import { TablePagination } from "@/components/admin/table-pagination";
-import { listUsers, updateUserRole, type AdminUserRow } from "@/app/actions/admin-users";
 
 interface AdminUsersTableProps {
   currentUserId: string;
@@ -56,8 +60,21 @@ export function AdminUsersTable(props: Readonly<AdminUsersTableProps>) {
   const [roleFilter, setRoleFilter] = useState<Role | "ALL">("ALL");
 
   const fetchUsers = useCallback(
-    async ({ search, page, pageSize }: { search: string; page: number; pageSize: number }) => {
-      const result = await listUsers({ search, role: roleFilter, page, pageSize });
+    async ({
+      search,
+      page,
+      pageSize,
+    }: {
+      search: string;
+      page: number;
+      pageSize: number;
+    }) => {
+      const result = await listUsers({
+        search,
+        role: roleFilter,
+        page,
+        pageSize,
+      });
       if ("error" in result) {
         if (result.error === "auth_required") return { error: "auth_required" };
         return { error: "Impossible de charger les utilisateurs." };
@@ -88,7 +105,12 @@ export function AdminUsersTable(props: Readonly<AdminUsersTableProps>) {
 
   const handleRoleChange = (row: AdminUserRow, nextRole: Role) => {
     if (row.id === props.currentUserId) return;
-    if (!window.confirm(`Changer le rôle de ${row.prenom} ${row.nom} en "${nextRole}" ?`)) return;
+    if (
+      !window.confirm(
+        `Changer le rôle de ${row.prenom} ${row.nom} en "${nextRole}" ?`,
+      )
+    )
+      return;
 
     startTransition(async () => {
       const result = await updateUserRole(row.id, nextRole);
@@ -109,7 +131,10 @@ export function AdminUsersTable(props: Readonly<AdminUsersTableProps>) {
     if (isLoading) {
       return (
         <tr>
-          <td colSpan={5} className="px-4 py-10 text-center text-muted-foreground">
+          <td
+            colSpan={5}
+            className="px-4 py-10 text-center text-muted-foreground"
+          >
             <Loader2 className="mx-auto h-5 w-5 animate-spin" />
           </td>
         </tr>
@@ -119,7 +144,10 @@ export function AdminUsersTable(props: Readonly<AdminUsersTableProps>) {
     if (rows.length === 0) {
       return (
         <tr>
-          <td colSpan={5} className="px-4 py-10 text-center text-muted-foreground">
+          <td
+            colSpan={5}
+            className="px-4 py-10 text-center text-muted-foreground"
+          >
             Aucun utilisateur ne correspond à ces filtres.
           </td>
         </tr>
@@ -133,7 +161,11 @@ export function AdminUsersTable(props: Readonly<AdminUsersTableProps>) {
           <td className="px-4 py-3">
             <p className="font-medium text-foreground">
               {row.prenom} {row.nom}
-              {isSelf && <span className="ml-1.5 text-xs text-muted-foreground">(vous)</span>}
+              {isSelf && (
+                <span className="ml-1.5 text-xs text-muted-foreground">
+                  (vous)
+                </span>
+              )}
             </p>
             <p className="text-xs text-muted-foreground">@{row.username}</p>
           </td>
@@ -156,7 +188,12 @@ export function AdminUsersTable(props: Readonly<AdminUsersTableProps>) {
                 onValueChange={(v) => handleRoleChange(row, v as Role)}
                 disabled={isPending}
               >
-                <SelectTrigger className={cn("h-8 w-40 border-0 text-xs font-medium", ROLE_BADGES[row.role])}>
+                <SelectTrigger
+                  className={cn(
+                    "h-8 w-40 border-0 text-xs font-medium",
+                    ROLE_BADGES[row.role],
+                  )}
+                >
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -169,7 +206,9 @@ export function AdminUsersTable(props: Readonly<AdminUsersTableProps>) {
               </Select>
             )}
           </td>
-          <td className="px-4 py-3 text-muted-foreground">{formatDate(row.createdAt)}</td>
+          <td className="px-4 py-3 text-muted-foreground">
+            {formatDate(row.createdAt)}
+          </td>
         </tr>
       );
     });
@@ -187,7 +226,10 @@ export function AdminUsersTable(props: Readonly<AdminUsersTableProps>) {
             className="pl-9"
           />
         </div>
-        <Select value={roleFilter} onValueChange={(v) => setRoleFilter(v as Role | "ALL")}>
+        <Select
+          value={roleFilter}
+          onValueChange={(v) => setRoleFilter(v as Role | "ALL")}
+        >
           <SelectTrigger className="w-full bg-white sm:w-48">
             <SelectValue />
           </SelectTrigger>
@@ -218,7 +260,11 @@ export function AdminUsersTable(props: Readonly<AdminUsersTableProps>) {
         </table>
       </div>
 
-      <TablePagination page={page} totalPages={totalPages} onPageChange={setPage} />
+      <TablePagination
+        page={page}
+        totalPages={totalPages}
+        onPageChange={setPage}
+      />
     </div>
   );
 }

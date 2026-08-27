@@ -1,7 +1,7 @@
 "use client";
 
-import type { AuthenticatedUser } from "@/lib/auth/admin-guard";
 import { Avatar } from "@/components/ui/avatar";
+import type { AuthenticatedUser } from "@/lib/auth/admin-guard";
 
 interface AdminTopbarProps {
   user: AuthenticatedUser;
@@ -15,7 +15,6 @@ const ROLE_LABELS: Record<string, string> = {
 };
 
 export function AdminTopbar(props: Readonly<AdminTopbarProps>) {
-
   return (
     <header className="sticky top-0 hidden items-center justify-end gap-3 border-b border-border bg-white px-6 py-4 md:flex z-40">
       <div className="text-right">

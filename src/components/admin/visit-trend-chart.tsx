@@ -21,7 +21,10 @@ export function VisitTrendChart(props: Readonly<VisitTrendChartProps>) {
   }
 
   return (
-    <div className="flex items-end gap-1" style={{ height: `${CHART_HEIGHT_PX}px` }}>
+    <div
+      className="flex items-end gap-1"
+      style={{ height: `${CHART_HEIGHT_PX}px` }}
+    >
       {props.data.map((point) => {
         const barHeight = Math.max(
           MIN_BAR_HEIGHT_PX,
@@ -43,7 +46,9 @@ export function VisitTrendChart(props: Readonly<VisitTrendChartProps>) {
               className="w-full rounded-t-md bg-primary/80 transition-colors group-hover:bg-primary"
               style={{ height: `${barHeight}px` }}
             />
-            <span className="mt-1 text-[9px] text-muted-foreground">{dateLabel}</span>
+            <span className="mt-1 text-[9px] text-muted-foreground">
+              {dateLabel}
+            </span>
           </div>
         );
       })}

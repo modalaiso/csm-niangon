@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import type { AnnouncementItem } from "@/app/actions/announcements";
 import { ANNOUNCEMENT_OPEN_EVENT } from "@/components/announcements/announcement-events";
 import { renderPostContent } from "@/lib/render-post-content";
@@ -56,7 +56,9 @@ export function AnnouncementPopup(props: Readonly<AnnouncementPopupProps>) {
     const handler = (e: Event) => {
       const detail = (e as CustomEvent<{ id?: string }>).detail;
       if (detail?.id) {
-        const foundIndex = props.announcements.findIndex((a) => a.id === detail.id);
+        const foundIndex = props.announcements.findIndex(
+          (a) => a.id === detail.id,
+        );
         if (foundIndex !== -1) setIndex(foundIndex);
       }
       setIsOpen(true);
@@ -77,13 +79,19 @@ export function AnnouncementPopup(props: Readonly<AnnouncementPopupProps>) {
   if (pathname.startsWith("/devoirs")) return null;
   if (pathname.startsWith("/posts")) return null;
   if (pathname.startsWith("/profile")) return null;
+  if (pathname.startsWith("/mentions-legales")) return null;
+  if (pathname.startsWith("/cgu")) return null;
+  if (pathname.startsWith("/confidentialite")) return null;
   if (props.announcements.length === 0) return null;
 
   const current = props.announcements[index];
   const hasMultiple = props.announcements.length > 1;
 
   const goTo = (i: number) => {
-    setIndex(((i % props.announcements.length) + props.announcements.length) % props.announcements.length);
+    setIndex(
+      ((i % props.announcements.length) + props.announcements.length) %
+        props.announcements.length,
+    );
   };
 
   const bodyText = current.content?.trim() ? current.content : current.summary;

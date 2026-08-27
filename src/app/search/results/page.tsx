@@ -1,6 +1,12 @@
-import { getSearchResults } from "@/app/actions/search";
+import {
+  ArrowLeft,
+  Calendar,
+  ChevronLeft,
+  ChevronRight,
+  Eye,
+} from "lucide-react";
 import Link from "next/link";
-import { ArrowLeft, Eye, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
+import { getSearchResults } from "@/app/actions/search";
 import { Button } from "@/components/ui/button";
 import { cn, formatRelativeTime } from "@/lib/utils";
 
@@ -25,7 +31,9 @@ interface SearchResultsPageProps {
   }>;
 }
 
-export default async function SearchResultsPage(props: Readonly<SearchResultsPageProps>) {
+export default async function SearchResultsPage(
+  props: Readonly<SearchResultsPageProps>,
+) {
   const resolvedSearchParams = await props.searchParams;
   const query = resolvedSearchParams.q || "";
   const currentPage = Math.max(1, Number(resolvedSearchParams.page) || 1);
@@ -40,14 +48,15 @@ export default async function SearchResultsPage(props: Readonly<SearchResultsPag
     params.set("page", String(page));
     return `/search/results?${params.toString()}`;
   };
-  
-// 1. Independent statement for pluralization
-const plural = total > 1 ? "s" : "";
 
-// 2. Main statement using the extracted variable
-const resultText = total === 0
-  ? "Aucun résultat trouvé"
-  : `${total} résultat${plural} trouvé${plural}`;
+  // 1. Independent statement for pluralization
+  const plural = total > 1 ? "s" : "";
+
+  // 2. Main statement using the extracted variable
+  const resultText =
+    total === 0
+      ? "Aucun résultat trouvé"
+      : `${total} résultat${plural} trouvé${plural}`;
 
   return (
     <main className="min-h-screen bg-background">
@@ -55,8 +64,8 @@ const resultText = total === 0
       <div>
         <div className="container flex flex-row items-start sm:items-center justify-between gap-2 px-4 py-6 sm:py-8">
           <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900 hover:underline"
+            href="/"
+            className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900 hover:underline"
           >
             <ArrowLeft className="h-4 w-4" />
             Retour
@@ -68,7 +77,9 @@ const resultText = total === 0
       </div>
 
       <div className="container px-4 pb-2">
-        <h1 className="text-2xl font-bold text-foreground">Résultats de recherche</h1>
+        <h1 className="text-2xl font-bold text-foreground">
+          Résultats de recherche
+        </h1>
       </div>
 
       {/* Content */}
@@ -157,7 +168,11 @@ const resultText = total === 0
                     currentPage === 1 && "pointer-events-none opacity-40",
                   )}
                 >
-                  <Button variant="outline" size="icon" className="rounded-full">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="rounded-full"
+                  >
                     <ChevronLeft className="h-4 w-4" />
                   </Button>
                 </Link>
@@ -171,10 +186,15 @@ const resultText = total === 0
                   aria-disabled={currentPage === totalPages}
                   className={cn(
                     "pointer-events-auto",
-                    currentPage === totalPages && "pointer-events-none opacity-40",
+                    currentPage === totalPages &&
+                      "pointer-events-none opacity-40",
                   )}
                 >
-                  <Button variant="outline" size="icon" className="rounded-full">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="rounded-full"
+                  >
                     <ChevronRight className="h-4 w-4" />
                   </Button>
                 </Link>

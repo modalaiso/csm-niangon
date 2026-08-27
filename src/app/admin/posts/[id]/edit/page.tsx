@@ -10,7 +10,9 @@ interface EditPostPageProps {
   params: Promise<{ id: string }>;
 }
 
-export default async function EditPostPage({ params }: Readonly<EditPostPageProps>) {
+export default async function EditPostPage({
+  params,
+}: Readonly<EditPostPageProps>) {
   const { id } = await params;
   const result = await getPostForEdit(id);
 

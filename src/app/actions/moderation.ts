@@ -1,9 +1,9 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
 import type { ModerationAction, ModerationLogType } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 import { getModeratorAuthContext } from "@/lib/auth/admin-guard";
+import { prisma } from "@/lib/prisma";
 
 /* --------------------------- Mots-clés de modération --------------------------- */
 
@@ -24,7 +24,9 @@ export async function listModerationKeywords(): Promise<ListKeywordsResult> {
   if (!auth.ok) return { error: auth.error };
 
   try {
-    const keywords = await prisma.moderationKeyword.findMany({ orderBy: { createdAt: "desc" } });
+    const keywords = await prisma.moderationKeyword.findMany({
+      orderBy: { createdAt: "desc" },
+    });
     return { keywords };
   } catch (error) {
     console.error("Erreur lors du chargement des mots-clés:", error);
@@ -33,7 +35,9 @@ export async function listModerationKeywords(): Promise<ListKeywordsResult> {
 }
 
 type AddKeywordSuccess = { success: true; keyword: ModerationKeywordRow };
-type AddKeywordError = { error: "auth_required" | "forbidden" | "invalid" | "duplicate" | "unknown" };
+type AddKeywordError = {
+  error: "auth_required" | "forbidden" | "invalid" | "duplicate" | "unknown";
+};
 
 /** Ajoute un mot-clé/une phrase à surveiller (toujours normalisé en minuscules) */
 export async function addModerationKeyword(
@@ -47,7 +51,9 @@ export async function addModerationKeyword(
   if (trimmed.length < 2) return { error: "invalid" };
 
   try {
-    const existing = await prisma.moderationKeyword.findUnique({ where: { phrase: trimmed } });
+    const existing = await prisma.moderationKeyword.findUnique({
+      where: { phrase: trimmed },
+    });
     if (existing) return { error: "duplicate" };
 
     const keyword = await prisma.moderationKeyword.create({
@@ -63,7 +69,9 @@ export async function addModerationKeyword(
 }
 
 type SimpleSuccess = { success: true };
-type SimpleError = { error: "auth_required" | "forbidden" | "not_found" | "unknown" };
+type SimpleError = {
+  error: "auth_required" | "forbidden" | "not_found" | "unknown";
+};
 
 export async function toggleModerationKeyword(
   id: string,
@@ -73,10 +81,15 @@ export async function toggleModerationKeyword(
   if (!auth.ok) return { error: auth.error };
 
   try {
-    const existing = await prisma.moderationKeyword.findUnique({ where: { id } });
+    const existing = await prisma.moderationKeyword.findUnique({
+      where: { id },
+    });
     if (!existing) return { error: "not_found" };
 
-    await prisma.moderationKeyword.update({ where: { id }, data: { isActive } });
+    await prisma.moderationKeyword.update({
+      where: { id },
+      data: { isActive },
+    });
     revalidatePath("/admin/moderation");
     return { success: true };
   } catch (error) {
@@ -85,12 +98,16 @@ export async function toggleModerationKeyword(
   }
 }
 
-export async function deleteModerationKeyword(id: string): Promise<SimpleSuccess | SimpleError> {
+export async function deleteModerationKeyword(
+  id: string,
+): Promise<SimpleSuccess | SimpleError> {
   const auth = await getModeratorAuthContext();
   if (!auth.ok) return { error: auth.error };
 
   try {
-    const existing = await prisma.moderationKeyword.findUnique({ where: { id } });
+    const existing = await prisma.moderationKeyword.findUnique({
+      where: { id },
+    });
     if (!existing) return { error: "not_found" };
 
     await prisma.moderationKeyword.delete({ where: { id } });
@@ -110,9 +127,13 @@ export interface KeywordMatch {
 }
 
 /** Vérifie un contenu contre la liste active de mots-clés. Retourne le premier match trouvé. */
-export async function checkContentAgainstKeywords(content: string): Promise<KeywordMatch | null> {
+export async function checkContentAgainstKeywords(
+  content: string,
+): Promise<KeywordMatch | null> {
   try {
-    const keywords = await prisma.moderationKeyword.findMany({ where: { isActive: true } });
+    const keywords = await prisma.moderationKeyword.findMany({
+      where: { isActive: true },
+    });
     const normalized = content.toLowerCase();
 
     for (const keyword of keywords) {
@@ -181,7 +202,9 @@ export async function listFlaggedComments(): Promise<ListFlaggedResult> {
 }
 
 /** Approuve un commentaire signalé : redevient visible normalement */
-export async function approveFlaggedComment(commentId: string): Promise<SimpleSuccess | SimpleError> {
+export async function approveFlaggedComment(
+  commentId: string,
+): Promise<SimpleSuccess | SimpleError> {
   const auth = await getModeratorAuthContext();
   if (!auth.ok) return { error: auth.error };
 
@@ -218,7 +241,9 @@ export async function approveFlaggedComment(commentId: string): Promise<SimpleSu
 }
 
 /** Rejette un commentaire signalé : suppression définitive */
-export async function rejectFlaggedComment(commentId: string): Promise<SimpleSuccess | SimpleError> {
+export async function rejectFlaggedComment(
+  commentId: string,
+): Promise<SimpleSuccess | SimpleError> {
   const auth = await getModeratorAuthContext();
   if (!auth.ok) return { error: auth.error };
 
@@ -262,10 +287,14 @@ export interface ModerationLogRow {
   postTitle: string | null;
 }
 
-type ListLogsResult = { logs: ModerationLogRow[] } | { error: "auth_required" | "forbidden" | "unknown" };
+type ListLogsResult =
+  | { logs: ModerationLogRow[] }
+  | { error: "auth_required" | "forbidden" | "unknown" };
 
 /** Historique de toutes les actions de modération (auto-suppressions incluses) — traçabilité */
-export async function listModerationLogs(limit: number = 50): Promise<ListLogsResult> {
+export async function listModerationLogs(
+  limit: number = 50,
+): Promise<ListLogsResult> {
   const auth = await getModeratorAuthContext();
   if (!auth.ok) return { error: auth.error };
 
@@ -276,7 +305,9 @@ export async function listModerationLogs(limit: number = 50): Promise<ListLogsRe
     });
 
     const postIds = Array.from(
-      new Set(logs.map((l) => l.postId).filter((id): id is string => Boolean(id))),
+      new Set(
+        logs.map((l) => l.postId).filter((id): id is string => Boolean(id)),
+      ),
     );
     const posts = await prisma.post.findMany({
       where: { id: { in: postIds } },

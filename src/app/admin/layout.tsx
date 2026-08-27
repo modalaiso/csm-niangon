@@ -1,6 +1,6 @@
-import { requireDashboardAccess } from "@/lib/auth/admin-guard";
 import { AdminSidebar } from "@/components/admin/admin-sidebar";
 import { AdminTopbar } from "@/components/admin/admin-topbar";
+import { requireDashboardAccess } from "@/lib/auth/admin-guard";
 
 export const metadata = {
   title: "Dashboard | CSM Niangon",
