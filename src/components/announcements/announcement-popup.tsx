@@ -11,6 +11,27 @@ interface AnnouncementPopupProps {
   announcements: AnnouncementItem[];
 }
 
+function shouldHidePopup(pathname: string): boolean {
+  const hiddenPrefixes = [
+    "/signup",
+    "/login",
+    "/admin-signup",
+    "/admin-login",
+    "/admin",
+    "/actus",
+    "/infos",
+    "/emplois-du-temps",
+    "/devoirs",
+    "/posts",
+    "/profile",
+    "/mentions-legales",
+    "/cgu",
+    "/confidentialite",
+  ];
+
+  return hiddenPrefixes.some((prefix) => pathname.startsWith(prefix));
+}
+
 export function AnnouncementPopup(props: Readonly<AnnouncementPopupProps>) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
@@ -67,21 +88,8 @@ export function AnnouncementPopup(props: Readonly<AnnouncementPopupProps>) {
     return () => window.removeEventListener(ANNOUNCEMENT_OPEN_EVENT, handler);
   }, [props.announcements]);
 
-  // Jamais de pop-up d'annonce par-dessus le dashboard admin
-  if (pathname.startsWith("/signup")) return null;
-  if (pathname.startsWith("/login")) return null;
-  if (pathname.startsWith("/admin-signup")) return null;
-  if (pathname.startsWith("/admin-login")) return null;
-  if (pathname.startsWith("/admin")) return null;
-  if (pathname.startsWith("/actus")) return null;
-  if (pathname.startsWith("/infos")) return null;
-  if (pathname.startsWith("/emplois-du-temps")) return null;
-  if (pathname.startsWith("/devoirs")) return null;
-  if (pathname.startsWith("/posts")) return null;
-  if (pathname.startsWith("/profile")) return null;
-  if (pathname.startsWith("/mentions-legales")) return null;
-  if (pathname.startsWith("/cgu")) return null;
-  if (pathname.startsWith("/confidentialite")) return null;
+  // Jamais de pop-up d'annonce par-dessus les pages exclues.
+  if (shouldHidePopup(pathname)) return null;
   if (props.announcements.length === 0) return null;
 
   const current = props.announcements[index];

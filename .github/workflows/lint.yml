@@ -23,13 +23,13 @@ jobs:
           cache: 'npm'
 
       - name: Installation des dépendances
-        run: npm ci
+        run: npm ci --ignore-scripts
 
       - name: Génération du client Prisma
-        run: npx prisma generate
+        run: npx --no-install prisma generate
 
       - name: Vérification des types TypeScript
-        run: npx tsc --noEmit
+        run: npx --no-install tsc --noEmit
 
       - name: Exécution de ESLint
         run: npm run lint
