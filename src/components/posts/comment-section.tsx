@@ -449,7 +449,7 @@ export function CommentSection(props: Readonly<CommentSectionProps>) {
         root: applyOverrides(t.root),
         replies: t.replies
           .filter((r) => !deletedIds.has(r.id))
-          .map(applyOverrides),
+          .map((reply) => applyOverrides(reply)),
       }));
   }, [props.threads, deletedIds, applyOverrides]);
 
