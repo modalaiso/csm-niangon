@@ -1,10 +1,10 @@
 "use server";
 
+import type { CommentReactionType, Role } from "@prisma/client";
+import { revalidatePath } from "next/cache";
+import { checkContentAgainstKeywords } from "@/app/actions/moderation";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
-import { revalidatePath } from "next/cache";
-import type { CommentReactionType, Role } from "@prisma/client";
-import { checkContentAgainstKeywords } from "@/app/actions/moderation";
 
 export interface PostComment {
   id: string;
@@ -44,7 +44,12 @@ type RawComment = {
   userId: string;
   isHidden: boolean;
   isFlagged: boolean;
-  user: { username: string; prenom: string; nom: string; avatar: string | null };
+  user: {
+    username: string;
+    prenom: string;
+    nom: string;
+    avatar: string | null;
+  };
   reactions: { userId: string; type: CommentReactionType }[];
 };
 
@@ -83,7 +88,9 @@ function findRootId(c: RawComment, byId: Map<string, RawComment>): string {
 }
 
 /** Commentaires d'un post, organisés en fils (commentaire principal + réponses aplaties) */
-export async function getPostComments(postId: string): Promise<CommentThread[]> {
+export async function getPostComments(
+  postId: string,
+): Promise<CommentThread[]> {
   try {
     const { userId, role } = await getAuthContext();
     const canModerate = isModerationRole(role);
@@ -111,8 +118,12 @@ export async function getPostComments(postId: string): Promise<CommentThread[]> 
 
     const toPostComment = (c: RawComment): PostComment => {
       const likeCount = c.reactions.filter((r) => r.type === "LIKE").length;
-      const dislikeCount = c.reactions.filter((r) => r.type === "DISLIKE").length;
-      const mine = userId ? c.reactions.find((r) => r.userId === userId) : undefined;
+      const dislikeCount = c.reactions.filter(
+        (r) => r.type === "DISLIKE",
+      ).length;
+      const mine = userId
+        ? c.reactions.find((r) => r.userId === userId)
+        : undefined;
       const parent = c.parentId ? byId.get(c.parentId) : undefined;
       // On n'affiche la mention "@untel" que si on répond à une réponse (pas au commentaire principal)
       const replyToUsername = parent?.parentId ? parent.user.username : null;
@@ -152,7 +163,7 @@ export async function getPostComments(postId: string): Promise<CommentThread[]> 
       if (!c.parentId) continue;
       const rootId = findRootId(c, byId);
       if (!repliesByRoot.has(rootId)) repliesByRoot.set(rootId, []);
-      repliesByRoot.get(rootId)!.push(toPostComment(c));
+      repliesByRoot.get(rootId)?.push(toPostComment(c));
     }
 
     const threads: CommentThread[] = roots.map((root) => ({
@@ -223,7 +234,7 @@ export async function addComment(
         parentId: parentId ?? null,
         isFlagged,
         isHidden: isFlagged,
-        flaggedKeyword: isFlagged ? match!.phrase : null,
+        flaggedKeyword: isFlagged ? match?.phrase : null,
       },
     });
 
@@ -232,7 +243,7 @@ export async function addComment(
         data: {
           type: "FLAGGED",
           content: trimmed,
-          matchedKeyword: match!.phrase,
+          matchedKeyword: match?.phrase,
           authorId: userId,
           postId,
         },
@@ -248,7 +259,9 @@ export async function addComment(
 }
 
 type EditCommentSuccess = { success: true; content: string };
-type EditCommentError = { error: "empty" | "auth_required" | "forbidden" | "not_found" | "unknown" };
+type EditCommentError = {
+  error: "empty" | "auth_required" | "forbidden" | "not_found" | "unknown";
+};
 type EditCommentResult = EditCommentSuccess | EditCommentError;
 
 /** Modifie le contenu d'un commentaire — réservé à son auteur */
@@ -292,11 +305,15 @@ export async function editComment(
 }
 
 type DeleteCommentSuccess = { success: true };
-type DeleteCommentError = { error: "auth_required" | "forbidden" | "not_found" | "unknown" };
+type DeleteCommentError = {
+  error: "auth_required" | "forbidden" | "not_found" | "unknown";
+};
 type DeleteCommentResult = DeleteCommentSuccess | DeleteCommentError;
 
 /** Supprime un commentaire — réservé à son auteur, ou aux modérateurs/admins */
-export async function deleteComment(commentId: string): Promise<DeleteCommentResult> {
+export async function deleteComment(
+  commentId: string,
+): Promise<DeleteCommentResult> {
   try {
     const { userId, role } = await getAuthContext();
     if (!userId) {
@@ -325,7 +342,9 @@ export async function deleteComment(commentId: string): Promise<DeleteCommentRes
 }
 
 type SetHiddenSuccess = { success: true; isHidden: boolean };
-type SetHiddenError = { error: "auth_required" | "forbidden" | "not_found" | "unknown" };
+type SetHiddenError = {
+  error: "auth_required" | "forbidden" | "not_found" | "unknown";
+};
 type SetHiddenResult = SetHiddenSuccess | SetHiddenError;
 
 /** Masque ou réaffiche un commentaire — réservé aux modérateurs/admins */
@@ -391,17 +410,25 @@ export async function toggleCommentReaction(
       await prisma.commentReaction.delete({ where: { id: existing.id } });
       userReaction = null;
     } else if (existing) {
-      await prisma.commentReaction.update({ where: { id: existing.id }, data: { type } });
+      await prisma.commentReaction.update({
+        where: { id: existing.id },
+        data: { type },
+      });
       userReaction = type;
     } else {
-      await prisma.commentReaction.create({ data: { commentId, userId, type } });
+      await prisma.commentReaction.create({
+        data: { commentId, userId, type },
+      });
       userReaction = type;
     }
 
     const [likeCount, dislikeCount, comment] = await Promise.all([
       prisma.commentReaction.count({ where: { commentId, type: "LIKE" } }),
       prisma.commentReaction.count({ where: { commentId, type: "DISLIKE" } }),
-      prisma.comment.findUnique({ where: { id: commentId }, select: { postId: true } }),
+      prisma.comment.findUnique({
+        where: { id: commentId },
+        select: { postId: true },
+      }),
     ]);
 
     if (comment) revalidatePath(`/posts/${comment.postId}`);

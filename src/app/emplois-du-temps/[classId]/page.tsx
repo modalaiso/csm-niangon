@@ -1,6 +1,6 @@
-import { notFound } from "next/navigation";
-import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 import { getClassSchedule } from "@/app/actions/schedules";
 import { ScheduleExport } from "@/components/schedule/schedule-export";
 
@@ -8,7 +8,9 @@ interface SchedulePageProps {
   params: Promise<{ classId: string }>;
 }
 
-export async function generateMetadata({ params }: Readonly<SchedulePageProps>) {
+export async function generateMetadata({
+  params,
+}: Readonly<SchedulePageProps>) {
   const { classId } = await params;
   const schedule = await getClassSchedule(classId);
   if (!schedule) {
@@ -20,7 +22,9 @@ export async function generateMetadata({ params }: Readonly<SchedulePageProps>) 
   };
 }
 
-export default async function SchedulePage({ params }: Readonly<SchedulePageProps>) {
+export default async function SchedulePage({
+  params,
+}: Readonly<SchedulePageProps>) {
   const { classId } = await params;
   const schedule = await getClassSchedule(classId);
 

@@ -2,7 +2,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-
 interface Props {
   error: any;
   reset?: () => void;
@@ -12,7 +11,10 @@ export default function GlobalError(props: Props) {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-white text-gray-900">
       <h1 className="text-4xl font-bold">Erreur</h1>
-      <p className="container text-center mt-2 text-gray-600">Une erreur est survenue: {props.error?.message}</p>
+      <p className="container text-start mt-2 text-gray-600">
+        Une erreur est survenue: <br />
+        {props.error?.message}
+      </p>
       <div className="mt-6 flex gap-3">
         <Button
           onClick={() => props.reset?.()}

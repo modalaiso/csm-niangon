@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { useRef, useState } from "react";
 
 interface PostGalleryProps {
   images: string[];
@@ -16,7 +16,10 @@ export function PostGallery(props: Readonly<PostGalleryProps>) {
   const scrollToIndex = (index: number) => {
     const container = scrollRef.current;
     if (!container) return;
-    container.scrollTo({ left: index * container.clientWidth, behavior: "smooth" });
+    container.scrollTo({
+      left: index * container.clientWidth,
+      behavior: "smooth",
+    });
   };
 
   const goTo = (index: number) => {
@@ -43,8 +46,8 @@ export function PostGallery(props: Readonly<PostGalleryProps>) {
         <span className="absolute right-3 top-3 rounded-full bg-black/60 px-3 py-1 text-xs font-semibold text-white shadow-sm">
           1/{props.images.length}
         </span>
-        <button 
-          type="button" 
+        <button
+          type="button"
           onClick={openFullscreen}
           className="w-full focus:outline-none focus:ring-2 focus:ring-primary"
           aria-label="Ouvrir l'image en plein écran"

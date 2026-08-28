@@ -1,9 +1,19 @@
 "use client";
 
+import { ArrowDown, ArrowUp, Loader2, Plus, Trash2 } from "lucide-react";
 import { useState, useTransition } from "react";
-import { Plus, Trash2, ArrowUp, ArrowDown, Loader2 } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import {
+  addScheduleRow,
+  type ClassScheduleData,
+  deleteScheduleRow,
+  getClassSchedule,
+  moveScheduleRow,
+  type SubjectSummary,
+  setScheduleCell,
+  updateScheduleRow,
+} from "@/app/actions/schedules";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -11,16 +21,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  getClassSchedule,
-  addScheduleRow,
-  updateScheduleRow,
-  deleteScheduleRow,
-  moveScheduleRow,
-  setScheduleCell,
-  type ClassScheduleData,
-  type SubjectSummary,
-} from "@/app/actions/schedules";
 import { WEEKDAYS } from "@/lib/schedules";
 
 interface ScheduleEditorProps {
@@ -68,7 +68,11 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
     });
   };
 
-  const handleUpdateRowTime = (rowId: string, startTime: string, endTime: string) => {
+  const handleUpdateRowTime = (
+    rowId: string,
+    startTime: string,
+    endTime: string,
+  ) => {
     startTransition(async () => {
       const result = await updateScheduleRow(rowId, startTime, endTime);
       if ("error" in result) {
@@ -80,7 +84,8 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
   };
 
   const handleDeleteRow = (rowId: string) => {
-    if (!window.confirm("Supprimer cette ligne horaire et toutes ses cases ?")) return;
+    if (!window.confirm("Supprimer cette ligne horaire et toutes ses cases ?"))
+      return;
     startTransition(async () => {
       const result = await deleteScheduleRow(rowId);
       if ("error" in result) {
@@ -98,7 +103,11 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
     });
   };
 
-  const handleCellChange = (rowId: string, day: (typeof WEEKDAYS)[number], value: string) => {
+  const handleCellChange = (
+    rowId: string,
+    day: (typeof WEEKDAYS)[number],
+    value: string,
+  ) => {
     const subjectId = value === NONE_VALUE ? null : value;
     startTransition(async () => {
       const result = await setScheduleCell(rowId, day, subjectId);
@@ -130,7 +139,10 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
           <tbody className="divide-y divide-border">
             {schedule.rows.length === 0 ? (
               <tr>
-                <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">
+                <td
+                  colSpan={7}
+                  className="px-4 py-8 text-center text-muted-foreground"
+                >
                   Aucune ligne horaire. Ajoutez-en une ci-dessous.
                 </td>
               </tr>
@@ -143,7 +155,11 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
                         defaultValue={row.startTime}
                         onBlur={(e) => {
                           if (e.target.value !== row.startTime) {
-                            handleUpdateRowTime(row.id, e.target.value, row.endTime);
+                            handleUpdateRowTime(
+                              row.id,
+                              e.target.value,
+                              row.endTime,
+                            );
                           }
                         }}
                         className="w-20"
@@ -153,7 +169,11 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
                         defaultValue={row.endTime}
                         onBlur={(e) => {
                           if (e.target.value !== row.endTime) {
-                            handleUpdateRowTime(row.id, row.startTime, e.target.value);
+                            handleUpdateRowTime(
+                              row.id,
+                              row.startTime,
+                              e.target.value,
+                            );
                           }
                         }}
                         className="w-20"
@@ -166,7 +186,9 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
                       <td key={day} className="px-3 py-2">
                         <Select
                           value={cell?.subjectId ?? NONE_VALUE}
-                          onValueChange={(value) => handleCellChange(row.id, day, value)}
+                          onValueChange={(value) =>
+                            handleCellChange(row.id, day, value)
+                          }
                         >
                           <SelectTrigger className="h-9 w-40 bg-white text-xs">
                             <SelectValue placeholder="Vide" />
@@ -223,7 +245,10 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
 
       <div className="mt-4 flex flex-wrap items-end gap-2 rounded-2xl border border-dashed border-border bg-muted/30 p-4">
         <div>
-          <label className="mb-1 block text-xs font-medium text-muted-foreground" htmlFor="new-start">
+          <label
+            className="mb-1 block text-xs font-medium text-muted-foreground"
+            htmlFor="new-start"
+          >
             Début
           </label>
           <Input
@@ -235,7 +260,10 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
           />
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium text-muted-foreground" htmlFor="new-end">
+          <label
+            className="mb-1 block text-xs font-medium text-muted-foreground"
+            htmlFor="new-end"
+          >
             Fin
           </label>
           <Input
@@ -252,7 +280,11 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
           disabled={isPending || !newStart.trim() || !newEnd.trim()}
           className="gap-1.5 text-white"
         >
-          {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
+          {isPending ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Plus className="h-4 w-4" />
+          )}
           Ajouter une ligne
         </Button>
       </div>

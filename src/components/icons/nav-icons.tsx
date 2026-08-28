@@ -1,4 +1,4 @@
-import * as React from "react";
+import type * as React from "react";
 
 type IconProps = React.SVGProps<SVGSVGElement>;
 
@@ -134,10 +134,7 @@ export function ArticleFilledIcon(props: IconProps) {
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-      <path 
-        d="M11 7V9H17V7H11Z"
-        fill="currentColor"
-      />
+      <path d="M11 7V9H17V7H11Z" fill="currentColor" />
       <path
         fillRule="evenodd"
         clipRule="evenodd"

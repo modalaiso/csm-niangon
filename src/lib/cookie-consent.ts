@@ -23,7 +23,9 @@ export function setStoredConsent(status: ConsentStatus) {
   } catch {
     // localStorage indisponible : le bandeau réapparaîtra à chaque visite, sans bloquer le reste
   }
-  window.dispatchEvent(new CustomEvent(CONSENT_CHANGE_EVENT, { detail: { status } }));
+  window.dispatchEvent(
+    new CustomEvent(CONSENT_CHANGE_EVENT, { detail: { status } }),
+  );
 }
 
 /** Rouvre le bandeau de préférences cookies depuis n'importe où (ex: pied de page) */

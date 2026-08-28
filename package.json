@@ -8,6 +8,9 @@
     "start": "next start",
     "lint": "biome check",
     "format": "biome format --write",
+    "test": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push",
     "prisma:studio": "prisma studio",
@@ -57,19 +60,25 @@
   "devDependencies": {
     "@biomejs/biome": "2.2.0",
     "@prisma/engines": "^7.8.0",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
     "@types/node": "^20",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.1.0",
     "autoprefixer": "^10.4.22",
     "babel-plugin-react-compiler": "1.0.0",
     "baseline-browser-mapping": "^2.9.0",
     "eslint": "^10.7.0",
     "eslint-plugin-unicorn": "^72.0.0",
+    "jsdom": "^30.0.1",
     "postcss": "^8.5.6",
     "prisma": "^6.12.0",
     "tailwindcss": "^3.4.18",
     "tsx": "^4.20.6",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.11",
+    "vitest-mock-extended": "^5.1.1"
   },
   "allowScripts": {
     "@prisma/client@6.19.3": true,
@@ -78,5 +87,20 @@
     "esbuild@0.25.12": true,
     "sharp@0.34.5": true,
     "@prisma/engines@7.8.0": true
-  }
+  },
+  "description": "<div align=\"center\">",
+  "main": "eslint.config.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/modalaiso/csm-niangon.git"
+  },
+  "keywords": [],
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/modalaiso/csm-niangon/issues"
+  },
+  "homepage": "https://github.com/modalaiso/csm-niangon#readme"
 }

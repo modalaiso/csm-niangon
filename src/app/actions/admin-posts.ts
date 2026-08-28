@@ -1,10 +1,9 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
+import type { PostStatus, PostType } from "@prisma/client";
 import { revalidatePath } from "next/cache";
-import type { PostType } from "@prisma/client";
-import { PostStatus } from "@prisma/client";
 import { getPostManagerAuthContext } from "@/lib/auth/admin-guard";
+import { prisma } from "@/lib/prisma";
 
 const MAX_IMAGES = 15;
 
@@ -73,13 +72,17 @@ export async function createPost(
   const isInfo = input.type === "INFO";
   const images = isAnnouncement ? [] : input.images.slice(0, MAX_IMAGES);
   const expiresAt =
-    (isAnnouncement || isInfo) && input.expiresAt && input.expiresAt.getTime() > Date.now()
+    (isAnnouncement || isInfo) &&
+    input.expiresAt &&
+    input.expiresAt.getTime() > Date.now()
       ? input.expiresAt
       : null;
 
   try {
     const slug = await generateUniqueSlug(title);
-    const uniqueTags = Array.from(new Set(input.tags.map((t) => t.trim()).filter(Boolean)));
+    const uniqueTags = Array.from(
+      new Set(input.tags.map((t) => t.trim()).filter(Boolean)),
+    );
 
     const post = await prisma.post.create({
       data: {
@@ -212,8 +215,12 @@ export async function listAdminPosts(
       }),
     ]);
 
-    const todayMap = new Map(todayViews.map((v) => [v.postId, v._count.postId]));
-    const totalMap = new Map(totalViews.map((v) => [v.postId, v._count.postId]));
+    const todayMap = new Map(
+      todayViews.map((v) => [v.postId, v._count.postId]),
+    );
+    const totalMap = new Map(
+      totalViews.map((v) => [v.postId, v._count.postId]),
+    );
 
     const rows: AdminPostRow[] = posts.map((p) => ({
       id: p.id,
@@ -305,7 +312,9 @@ export async function updatePostStatus(
       data: {
         status,
         publishedAt:
-          status === "PUBLISHED" && !existing.publishedAt ? new Date() : existing.publishedAt,
+          status === "PUBLISHED" && !existing.publishedAt
+            ? new Date()
+            : existing.publishedAt,
       },
     });
 
@@ -385,7 +394,9 @@ export async function bulkDeletePosts(
   if (postIds.length === 0) return { success: true, deleted: 0 };
 
   try {
-    const result = await prisma.post.deleteMany({ where: { id: { in: postIds } } });
+    const result = await prisma.post.deleteMany({
+      where: { id: { in: postIds } },
+    });
 
     await prisma.auditLog.create({
       data: {
@@ -423,7 +434,9 @@ type GetPostForEditResult =
   | { post: AdminPostEditData }
   | { error: "auth_required" | "forbidden" | "not_found" | "unknown" };
 
-export async function getPostForEdit(postId: string): Promise<GetPostForEditResult> {
+export async function getPostForEdit(
+  postId: string,
+): Promise<GetPostForEditResult> {
   const auth = await getPostManagerAuthContext();
   if (!auth.ok) {
     return { error: auth.error };
@@ -507,10 +520,14 @@ export async function updatePost(
     const isInfo = input.type === "INFO";
     const images = isAnnouncement ? [] : input.images.slice(0, MAX_IMAGES);
     const expiresAt =
-      (isAnnouncement || isInfo) && input.expiresAt && input.expiresAt.getTime() > Date.now()
+      (isAnnouncement || isInfo) &&
+      input.expiresAt &&
+      input.expiresAt.getTime() > Date.now()
         ? input.expiresAt
         : null;
-    const uniqueTags = Array.from(new Set(input.tags.map((t) => t.trim()).filter(Boolean)));
+    const uniqueTags = Array.from(
+      new Set(input.tags.map((t) => t.trim()).filter(Boolean)),
+    );
 
     await prisma.post.update({
       where: { id: postId },
@@ -525,7 +542,9 @@ export async function updatePost(
         tags: uniqueTags,
         expiresAt,
         publishedAt:
-          input.status === "PUBLISHED" && !existing.publishedAt ? new Date() : existing.publishedAt,
+          input.status === "PUBLISHED" && !existing.publishedAt
+            ? new Date()
+            : existing.publishedAt,
       },
     });
 

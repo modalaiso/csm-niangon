@@ -1,13 +1,16 @@
 "use client";
 
+import { ChevronLeft, ChevronRight, Loader2, Search, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
-import { Search, X, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { ViewModeToggle, type ViewMode } from "@/components/ui/view-mode-toggle";
-import { PostResults } from "@/components/posts/post-results";
-import { cn } from "@/lib/utils";
 import type { HomePostCard } from "@/app/actions/posts";
+import { PostResults } from "@/components/posts/post-results";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  type ViewMode,
+  ViewModeToggle,
+} from "@/components/ui/view-mode-toggle";
+import { cn } from "@/lib/utils";
 
 export interface FetchPostsParams {
   search: string;
@@ -23,7 +26,9 @@ interface EmptyStateAction {
 interface PostTypeExplorerProps<T extends HomePostCard> {
   initialPosts: T[];
   initialTotal: number;
-  fetchPosts: (params: FetchPostsParams) => Promise<{ posts: T[]; total: number }>;
+  fetchPosts: (
+    params: FetchPostsParams,
+  ) => Promise<{ posts: T[]; total: number }>;
   filterKey: unknown;
   filters?: React.ReactNode;
   searchPlaceholder: string;
@@ -52,14 +57,17 @@ export function PostTypeExplorer<T extends HomePostCard>(
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
   useEffect(() => {
-    const timeout = window.setTimeout(() => setDebouncedSearch(searchInput.trim()), 300);
+    const timeout = window.setTimeout(
+      () => setDebouncedSearch(searchInput.trim()),
+      300,
+    );
     return () => window.clearTimeout(timeout);
   }, [searchInput]);
 
   useEffect(() => {
     setPage(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch, props.filterKey]);
+  }, []);
 
   const load = useCallback(() => {
     startTransition(async () => {
@@ -72,7 +80,7 @@ export function PostTypeExplorer<T extends HomePostCard>(
       setTotal(result.total);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch, props.filterKey, page, pageSize]);
+  }, [debouncedSearch, page, pageSize, props.fetchPosts]);
 
   useEffect(() => {
     if (isFirstRun.current) {
@@ -108,7 +116,9 @@ export function PostTypeExplorer<T extends HomePostCard>(
             </button>
           )}
         </div>
-        <p className="text-xs text-muted-foreground sm:text-sm">{props.renderCount(total)}</p>
+        <p className="text-xs text-muted-foreground sm:text-sm">
+          {props.renderCount(total)}
+        </p>
       </div>
 
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
@@ -116,7 +126,9 @@ export function PostTypeExplorer<T extends HomePostCard>(
         <ViewModeToggle value={viewMode} onChange={setViewMode} />
       </div>
 
-      <div className={cn("relative transition-opacity", isPending && "opacity-60")}>
+      <div
+        className={cn("relative transition-opacity", isPending && "opacity-60")}
+      >
         {isPending && (
           <div className="absolute right-0 top-0 flex items-center gap-1.5 text-xs text-muted-foreground">
             <Loader2 className="h-3.5 w-3.5 animate-spin" />

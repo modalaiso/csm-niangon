@@ -1,4 +1,4 @@
-import { Role, PostType, PostStatus } from "@prisma/client";
+import type { PostStatus, PostType, Role } from "@prisma/client";
 
 export type { Role, PostType, PostStatus };
 

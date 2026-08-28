@@ -1,8 +1,8 @@
 "use server";
 
+import { PostStatus, PostType } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { getPostViewCount } from "@/lib/viewCount";
-import { PostStatus, PostType } from "@prisma/client";
 
 export interface SearchResult {
   id: string;
@@ -47,7 +47,7 @@ const resultSelect = {
 export async function searchPosts(
   query: string,
   limit: number = 10,
-  offset: number = 0
+  offset: number = 0,
 ): Promise<{ results: SearchResult[]; total: number }> {
   if (!query || query.trim().length === 0) {
     return { results: [], total: 0 };
@@ -77,7 +77,10 @@ export async function searchPosts(
     ]);
 
     const results = await Promise.all(
-      rawResults.map(async (r: any) => ({ ...r, views: await getPostViewCount(r.id) }))
+      rawResults.map(async (r: any) => ({
+        ...r,
+        views: await getPostViewCount(r.id),
+      })),
     );
 
     return { results, total };
@@ -91,7 +94,9 @@ export async function searchPosts(
  * Get recent published posts — hors ANNONCE, également non indexées ici
  * (barre de recherche "posts récents").
  */
-export async function getRecentPosts(limit: number = 10): Promise<SearchResult[]> {
+export async function getRecentPosts(
+  limit: number = 10,
+): Promise<SearchResult[]> {
   try {
     const results = await prisma.post.findMany({
       where: { status: PostStatus.PUBLISHED, type: { not: PostType.ANNONCE } },
@@ -100,7 +105,12 @@ export async function getRecentPosts(limit: number = 10): Promise<SearchResult[]
       take: limit,
     });
 
-    const mapped = await Promise.all(results.map(async (r: any) => ({ ...r, views: await getPostViewCount(r.id) })));
+    const mapped = await Promise.all(
+      results.map(async (r: any) => ({
+        ...r,
+        views: await getPostViewCount(r.id),
+      })),
+    );
 
     return mapped;
   } catch (error) {
@@ -115,7 +125,7 @@ export async function getRecentPosts(limit: number = 10): Promise<SearchResult[]
 export async function getSearchResults(
   query: string,
   limit: number = 20,
-  offset: number = 0
+  offset: number = 0,
 ): Promise<{ results: SearchResult[]; total: number }> {
   if (!query || query.trim().length === 0) {
     const results = await getRecentPosts(limit);

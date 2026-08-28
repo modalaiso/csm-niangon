@@ -1,21 +1,21 @@
 "use client";
 
+import type { Role } from "@prisma/client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
-import { Role } from "@prisma/client";
 import {
-  HomeOutlineIcon,
-  HomeFilledIcon,
-  ArticleOutlineIcon,
   ArticleFilledIcon,
-  InfoOutlineIcon,
+  ArticleOutlineIcon,
+  HomeFilledIcon,
+  HomeOutlineIcon,
   InfoFilledIcon,
-  UserOutlineIcon,
-  UserFilledIcon,
-  PencilOutlineIcon,
+  InfoOutlineIcon,
   PencilFilledIcon,
+  PencilOutlineIcon,
+  UserFilledIcon,
+  UserOutlineIcon,
 } from "@/components/icons/nav-icons";
+import { cn } from "@/lib/utils";
 
 interface BottomNavProps {
   userRole?: Role;
@@ -35,21 +35,67 @@ export function BottomNav(props: Readonly<BottomNavProps>) {
     return null;
   }
 
-  const isWriterOrAdmin = props.userRole === "WRITER" || props.userRole === "ADMIN";
+  const isWriterOrAdmin =
+    props.userRole === "WRITER" || props.userRole === "ADMIN";
 
   const navItems = isWriterOrAdmin
     ? [
-        { href: "/", label: "Accueil", Outline: HomeOutlineIcon, Filled: HomeFilledIcon },
-        { href: "/actus", label: "Actualités", Outline: ArticleOutlineIcon, Filled: ArticleFilledIcon },
-        { href: "/admin/posts/new", label: "Posts", Outline: PencilOutlineIcon, Filled: PencilFilledIcon },
-        { href: "/infos", label: "Infos", Outline: InfoOutlineIcon, Filled: InfoFilledIcon },
-        { href: "/profile", label: "Profil", Outline: UserOutlineIcon, Filled: UserFilledIcon },
+        {
+          href: "/",
+          label: "Accueil",
+          Outline: HomeOutlineIcon,
+          Filled: HomeFilledIcon,
+        },
+        {
+          href: "/actus",
+          label: "Actualités",
+          Outline: ArticleOutlineIcon,
+          Filled: ArticleFilledIcon,
+        },
+        {
+          href: "/admin/posts/new",
+          label: "Posts",
+          Outline: PencilOutlineIcon,
+          Filled: PencilFilledIcon,
+        },
+        {
+          href: "/infos",
+          label: "Infos",
+          Outline: InfoOutlineIcon,
+          Filled: InfoFilledIcon,
+        },
+        {
+          href: "/profile",
+          label: "Profil",
+          Outline: UserOutlineIcon,
+          Filled: UserFilledIcon,
+        },
       ]
     : [
-        { href: "/", label: "Accueil", Outline: HomeOutlineIcon, Filled: HomeFilledIcon },
-        { href: "/articles", label: "Articles", Outline: ArticleOutlineIcon, Filled: ArticleFilledIcon },
-        { href: "/infos", label: "Infos", Outline: InfoOutlineIcon, Filled: InfoFilledIcon },
-        { href: "/profile", label: "Profil", Outline: UserOutlineIcon, Filled: UserFilledIcon },
+        {
+          href: "/",
+          label: "Accueil",
+          Outline: HomeOutlineIcon,
+          Filled: HomeFilledIcon,
+        },
+        {
+          href: "/articles",
+          label: "Articles",
+          Outline: ArticleOutlineIcon,
+          Filled: ArticleFilledIcon,
+        },
+        {
+          href: "/infos",
+          label: "Infos",
+          Outline: InfoOutlineIcon,
+          Filled: InfoFilledIcon,
+        },
+        {
+          href: "/profile",
+          label: "Profil",
+          Outline: UserOutlineIcon,
+          Filled: UserFilledIcon,
+        },
       ];
 
   return (

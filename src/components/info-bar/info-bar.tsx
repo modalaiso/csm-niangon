@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { AlertTriangle, Info } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AlertTriangle, Info } from "lucide-react";
+import { useEffect, useRef } from "react";
 import type { InfoBarItem } from "@/app/actions/infobar";
 
 interface InfoBarProps {
@@ -85,8 +85,7 @@ export function InfoBar(props: Readonly<InfoBarProps>) {
   if (!props.items || props.items.length === 0) return null;
 
   return (
-    <div
-      role="region"
+    <section
       aria-label="Informations importantes"
       className={`w-full overflow-hidden border-b ${
         hasUrgent
@@ -121,6 +120,6 @@ export function InfoBar(props: Readonly<InfoBarProps>) {
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 }

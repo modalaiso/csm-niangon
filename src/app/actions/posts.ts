@@ -1,8 +1,8 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
 import { PostStatus, PostType, type Prisma } from "@prisma/client";
 import { headers } from "next/headers";
+import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 import { getPostViewCount } from "@/lib/viewCount";
 
@@ -55,7 +55,9 @@ const cardSelect = {
   thumbnail: true,
   publishedAt: true,
   tags: true,
-  author: { select: { id: true, username: true, prenom: true, nom: true, avatar: true } },
+  author: {
+    select: { id: true, username: true, prenom: true, nom: true, avatar: true },
+  },
 } as const;
 
 // Transformer les données Prisma en format HomePostCard avec le count de vues
@@ -95,7 +97,11 @@ async function fetchPostCards(
 }
 
 /** Récupère les publications publiées excluant les annonces */
-async function fetchPublishedPostCards({ limit }: { limit: number; }): Promise<HomePostCard[]> {
+async function fetchPublishedPostCards({
+  limit,
+}: {
+  limit: number;
+}): Promise<HomePostCard[]> {
   const posts = await prisma.post.findMany({
     where: { status: PostStatus.PUBLISHED, type: { not: PostType.ANNONCE } },
     orderBy: { publishedAt: "desc" },
@@ -133,7 +139,9 @@ export async function getPostById(id: string): Promise<PostDetail | null> {
         images: true,
         tags: true,
         publishedAt: true,
-        author: { select: { username: true, prenom: true, nom: true, avatar: true } },
+        author: {
+          select: { username: true, prenom: true, nom: true, avatar: true },
+        },
       },
     });
 
@@ -142,10 +150,15 @@ export async function getPostById(id: string): Promise<PostDetail | null> {
     // Track les vues : une seule vue par utilisateur/visiteur
     try {
       const supabase = await createClient();
-      const { data: { user } } = await supabase.auth.getUser();
-      
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
       const headersList = await headers();
-      const ipAddress = headersList.get("x-forwarded-for") || headersList.get("x-real-ip") || "unknown";
+      const ipAddress =
+        headersList.get("x-forwarded-for") ||
+        headersList.get("x-real-ip") ||
+        "unknown";
 
       // Vérifier si cet utilisateur/visiteur a déjà vu ce post
       const existingView = await prisma.postView.findFirst({
@@ -223,7 +236,10 @@ export async function getRelatedPosts(
     });
     return Promise.all(posts.map(transformPostCard));
   } catch (error) {
-    console.error("Erreur lors du chargement des publications similaires:", error);
+    console.error(
+      "Erreur lors du chargement des publications similaires:",
+      error,
+    );
     return [];
   }
 }
@@ -247,7 +263,10 @@ export async function getPostsByType(
 
     return await fetchPostCards(where, limit, offset);
   } catch (error) {
-    console.error("Erreur lors du chargement des publications par type:", error);
+    console.error(
+      "Erreur lors du chargement des publications par type:",
+      error,
+    );
     return { posts: [], total: 0 };
   }
 }
@@ -328,7 +347,9 @@ export async function getInfoPosts(
         const card = await transformPostCard(p);
         return {
           ...card,
-          isUrgent: (p.tags ?? []).some((t: string) => t.toLowerCase() === URGENT_TAG),
+          isUrgent: (p.tags ?? []).some(
+            (t: string) => t.toLowerCase() === URGENT_TAG,
+          ),
         };
       }),
     );

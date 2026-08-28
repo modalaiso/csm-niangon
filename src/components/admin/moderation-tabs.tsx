@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { cn } from "@/lib/utils";
-import { ModerationQueue } from "@/components/admin/moderation-queue";
 import { ModerationKeywordsPanel } from "@/components/admin/moderation-keywords-panel";
 import { ModerationLogList } from "@/components/admin/moderation-log-list";
+import { ModerationQueue } from "@/components/admin/moderation-queue";
+import { cn } from "@/lib/utils";
 
 const TABS = [
   { id: "queue", label: "File d'attente" },
@@ -27,7 +27,9 @@ export function ModerationTabs() {
             onClick={() => setActive(tab.id)}
             className={cn(
               "rounded-full px-4 py-1.5 text-sm font-medium transition-colors",
-              active === tab.id ? "bg-white text-foreground shadow-sm" : "text-muted-foreground",
+              active === tab.id
+                ? "bg-white text-foreground shadow-sm"
+                : "text-muted-foreground",
             )}
           >
             {tab.label}

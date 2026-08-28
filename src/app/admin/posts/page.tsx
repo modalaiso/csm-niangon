@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { PenSquare } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { AdminPostsTable } from "@/components/admin/admin-posts-table";
+import { Button } from "@/components/ui/button";
 import { requirePostManager } from "@/lib/auth/admin-guard";
 
 export const metadata = {
@@ -17,7 +17,8 @@ export default async function AdminPostsPage() {
         <div>
           <h1 className="text-2xl font-bold text-foreground">Publications</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Gérez toutes les publications : statut, suppression, vues et réactions.
+            Gérez toutes les publications : statut, suppression, vues et
+            réactions.
           </p>
         </div>
         <Link href="/admin/posts/new">

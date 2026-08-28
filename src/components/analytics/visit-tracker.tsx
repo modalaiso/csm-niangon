@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
+import { useEffect, useRef } from "react";
 import { logVisit } from "@/app/actions/analytics";
 
 const SESSION_STORAGE_KEY = "csm_visit_sid";
@@ -24,7 +24,13 @@ function detectDevice(): string {
   return window.innerWidth < 768 ? "mobile" : "desktop";
 }
 
-const EXCLUDED_PREFIXES = ["/admin", "/login", "/signup", "/admin-login", "/admin-signup"];
+const EXCLUDED_PREFIXES = [
+  "/admin",
+  "/login",
+  "/signup",
+  "/admin-login",
+  "/admin-signup",
+];
 
 /**
  * Composant invisible monté globalement (layout racine) qui enregistre
@@ -38,7 +44,9 @@ export function VisitTracker() {
   useEffect(() => {
     if (!pathname) return;
 
-    const isExcluded = EXCLUDED_PREFIXES.some((prefix) => pathname.startsWith(prefix));
+    const isExcluded = EXCLUDED_PREFIXES.some((prefix) =>
+      pathname.startsWith(prefix),
+    );
     if (isExcluded || lastLoggedPath.current === pathname) return;
     lastLoggedPath.current = pathname;
 

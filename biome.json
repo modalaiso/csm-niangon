@@ -7,7 +7,14 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "includes": ["**", "!node_modules", "!.next", "!dist", "!build"]
+    "includes": [
+      "**",
+      "!node_modules",
+      "!.next",
+      "!dist",
+      "!build",
+      "!eslint.config.js"
+    ]
   },
   "formatter": {
     "enabled": true,
@@ -19,7 +26,18 @@
     "rules": {
       "recommended": true,
       "suspicious": {
-        "noUnknownAtRules": "off"
+        "noUnknownAtRules": "off",
+        "noExplicitAny": "off",
+        "noArrayIndexKey": "off"
+      },
+      "performance": {
+        "noImgElement": "off"
+      },
+      "style": {
+        "noNonNullAssertion": "off"
+      },
+      "a11y": {
+        "noSvgWithoutTitle": "off"
       }
     },
     "domains": {

@@ -1,7 +1,16 @@
 "use client";
 
+import {
+  Bold,
+  Eye,
+  Heading2,
+  Italic,
+  Link2,
+  List,
+  Pencil,
+  Quote,
+} from "lucide-react";
 import { useRef, useState } from "react";
-import { Bold, Italic, Heading2, Quote, List, Link2, Eye, Pencil } from "lucide-react";
 import { renderPostContent } from "@/lib/render-post-content";
 import { cn } from "@/lib/utils";
 
@@ -20,11 +29,16 @@ export function ContentEditor(props: Readonly<ContentEditorProps>) {
     const { selectionStart, selectionEnd, value } = textarea;
     const selected = value.slice(selectionStart, selectionEnd) || "texte";
     const nextValue =
-      value.slice(0, selectionStart) + prefix + selected + suffix + value.slice(selectionEnd);
+      value.slice(0, selectionStart) +
+      prefix +
+      selected +
+      suffix +
+      value.slice(selectionEnd);
     props.onChange(nextValue);
     requestAnimationFrame(() => {
       textarea.focus();
-      const cursor = selectionStart + prefix.length + selected.length + suffix.length;
+      const cursor =
+        selectionStart + prefix.length + selected.length + suffix.length;
       textarea.setSelectionRange(cursor, cursor);
     });
   };
@@ -44,7 +58,8 @@ export function ContentEditor(props: Readonly<ContentEditorProps>) {
       .map((line) => (line.startsWith(prefix) ? line : `${prefix}${line}`))
       .join("\n");
 
-    const nextValue = value.slice(0, lineStart) + updatedBlock + value.slice(lineEnd);
+    const nextValue =
+      value.slice(0, lineStart) + updatedBlock + value.slice(lineEnd);
     props.onChange(nextValue);
     requestAnimationFrame(() => textarea.focus());
   };
@@ -53,7 +68,8 @@ export function ContentEditor(props: Readonly<ContentEditorProps>) {
     const textarea = textareaRef.current;
     if (!textarea) return;
     const { selectionStart, selectionEnd, value } = textarea;
-    const selected = value.slice(selectionStart, selectionEnd) || "texte du lien";
+    const selected =
+      value.slice(selectionStart, selectionEnd) || "texte du lien";
 
     const url = window.prompt("Adresse du lien (https://...)", "https://");
     if (!url?.trim()) {
@@ -62,7 +78,8 @@ export function ContentEditor(props: Readonly<ContentEditorProps>) {
     }
 
     const markdown = `[${selected}](${url.trim()})`;
-    const nextValue = value.slice(0, selectionStart) + markdown + value.slice(selectionEnd);
+    const nextValue =
+      value.slice(0, selectionStart) + markdown + value.slice(selectionEnd);
     props.onChange(nextValue);
     requestAnimationFrame(() => {
       textarea.focus();
@@ -74,7 +91,11 @@ export function ContentEditor(props: Readonly<ContentEditorProps>) {
   const toolbarButtons = [
     { label: "Gras", icon: Bold, action: () => applyWrap("**") },
     { label: "Italique", icon: Italic, action: () => applyWrap("*") },
-    { label: "Sous-titre", icon: Heading2, action: () => applyLinePrefix("## ") },
+    {
+      label: "Sous-titre",
+      icon: Heading2,
+      action: () => applyLinePrefix("## "),
+    },
     { label: "Note", icon: Quote, action: () => applyLinePrefix("> ") },
     { label: "Liste à puces", icon: List, action: () => applyLinePrefix("- ") },
     { label: "Lien", icon: Link2, action: applyLink },
@@ -103,7 +124,9 @@ export function ContentEditor(props: Readonly<ContentEditorProps>) {
             onClick={() => setMode("edit")}
             className={cn(
               "flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium transition-colors",
-              mode === "edit" ? "bg-white text-foreground shadow-sm" : "text-muted-foreground",
+              mode === "edit"
+                ? "bg-white text-foreground shadow-sm"
+                : "text-muted-foreground",
             )}
           >
             <Pencil className="h-3.5 w-3.5" />
@@ -114,7 +137,9 @@ export function ContentEditor(props: Readonly<ContentEditorProps>) {
             onClick={() => setMode("preview")}
             className={cn(
               "flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium transition-colors",
-              mode === "preview" ? "bg-white text-foreground shadow-sm" : "text-muted-foreground",
+              mode === "preview"
+                ? "bg-white text-foreground shadow-sm"
+                : "text-muted-foreground",
             )}
           >
             <Eye className="h-3.5 w-3.5" />
@@ -138,7 +163,9 @@ export function ContentEditor(props: Readonly<ContentEditorProps>) {
           {props.value.trim() ? (
             renderPostContent(props.value)
           ) : (
-            <p className="text-sm text-muted-foreground">Rien à prévisualiser pour le moment.</p>
+            <p className="text-sm text-muted-foreground">
+              Rien à prévisualiser pour le moment.
+            </p>
           )}
         </div>
       )}

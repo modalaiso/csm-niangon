@@ -1,4 +1,4 @@
-import * as React from "react";
+import type * as React from "react";
 
 type IconProps = React.SVGProps<SVGSVGElement>;
 
@@ -51,7 +51,6 @@ export function ThumbsUpFilledIcon(props: IconProps) {
         fill="currentColor"
       />
     </svg>
-
   );
 }
 

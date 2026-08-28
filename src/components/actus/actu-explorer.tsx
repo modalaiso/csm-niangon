@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import { Tag } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { PostTypeExplorer } from "@/components/posts/post-type-explorer";
+import { useState } from "react";
 import { getActuPosts, type HomePostCard } from "@/app/actions/posts";
+import { PostTypeExplorer } from "@/components/posts/post-type-explorer";
+import { cn } from "@/lib/utils";
 
 interface ActuExplorerProps {
   initialPosts: HomePostCard[];
@@ -23,7 +23,9 @@ export function ActuExplorer(props: Readonly<ActuExplorerProps>) {
       fetchPosts={(params) => getActuPosts({ ...params, tag: activeTag })}
       searchPlaceholder="Rechercher une actualité..."
       renderCount={(total) =>
-        total === 0 ? "Aucune actualité" : `${total} actualité${total > 1 ? "s" : ""}`
+        total === 0
+          ? "Aucune actualité"
+          : `${total} actualité${total > 1 ? "s" : ""}`
       }
       renderEmptyMessage={(search) =>
         search
@@ -33,7 +35,12 @@ export function ActuExplorer(props: Readonly<ActuExplorerProps>) {
             : "Aucune actualité pour l'instant"
       }
       emptyStateAction={
-        activeTag ? { label: "Réinitialiser le filtre", onClick: () => setActiveTag(null) } : undefined
+        activeTag
+          ? {
+              label: "Réinitialiser le filtre",
+              onClick: () => setActiveTag(null),
+            }
+          : undefined
       }
       renderBadge={() => (
         <span className="left-3 top-3 rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white">

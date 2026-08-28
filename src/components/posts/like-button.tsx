@@ -1,10 +1,13 @@
 "use client";
 
-import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { ThumbsUpOutlineIcon, ThumbsUpFilledIcon } from "@/components/icons/icons";
-import { cn } from "@/lib/utils";
+import { useState, useTransition } from "react";
 import { toggleLike } from "@/app/actions/likes";
+import {
+  ThumbsUpFilledIcon,
+  ThumbsUpOutlineIcon,
+} from "@/components/icons/icons";
+import { cn } from "@/lib/utils";
 
 interface LikeButtonProps {
   postId: string;
@@ -40,12 +43,14 @@ export function LikeButton(props: Readonly<LikeButtonProps>) {
       aria-pressed={liked}
       className={cn(
         "flex items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors disabled:opacity-60",
-        liked
-          ? "text-primary"
-          : "text-muted-foreground hover:text-primary",
+        liked ? "text-primary" : "text-muted-foreground hover:text-primary",
       )}
     >
-      {liked ? <ThumbsUpFilledIcon className="h-5 w-5" /> : <ThumbsUpOutlineIcon className="h-5 w-5" />}
+      {liked ? (
+        <ThumbsUpFilledIcon className="h-5 w-5" />
+      ) : (
+        <ThumbsUpOutlineIcon className="h-5 w-5" />
+      )}
       {count}
     </button>
   );

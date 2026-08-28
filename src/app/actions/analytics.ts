@@ -116,10 +116,20 @@ export async function getVisitStats(period: VisitPeriod): Promise<VisitStats> {
       }),
     ]);
 
-    return { period, label: PERIOD_LABELS[period], count, uniqueSessions: sessions.length };
+    return {
+      period,
+      label: PERIOD_LABELS[period],
+      count,
+      uniqueSessions: sessions.length,
+    };
   } catch (error) {
     console.error("Erreur lors du calcul des statistiques de visite:", error);
-    return { period, label: PERIOD_LABELS[period], count: 0, uniqueSessions: 0 };
+    return {
+      period,
+      label: PERIOD_LABELS[period],
+      count: 0,
+      uniqueSessions: 0,
+    };
   }
 }
 
@@ -142,7 +152,9 @@ export interface VisitTrendPoint {
 }
 
 /** Nombre de visites par jour sur les N derniers jours, pour un graphique de tendance */
-export async function getVisitTrend(days: number = 14): Promise<VisitTrendPoint[]> {
+export async function getVisitTrend(
+  days: number = 14,
+): Promise<VisitTrendPoint[]> {
   const start = new Date();
   start.setHours(0, 0, 0, 0);
   start.setDate(start.getDate() - (days - 1));
@@ -165,7 +177,10 @@ export async function getVisitTrend(days: number = 14): Promise<VisitTrendPoint[
       counts.set(key, (counts.get(key) ?? 0) + 1);
     }
 
-    return Array.from(counts.entries()).map(([date, count]) => ({ date, count }));
+    return Array.from(counts.entries()).map(([date, count]) => ({
+      date,
+      count,
+    }));
   } catch (error) {
     console.error("Erreur lors du calcul de la tendance des visites:", error);
     return [];

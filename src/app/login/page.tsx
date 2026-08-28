@@ -1,6 +1,6 @@
-import { LoginForm } from "@/components/forms/login-form";
-import Link from "next/link";
 import { ShieldUser } from "lucide-react";
+import Link from "next/link";
+import { LoginForm } from "@/components/forms/login-form";
 
 export default function LoginPage() {
   return (
@@ -14,11 +14,22 @@ export default function LoginPage() {
         </Link>
       </div>
       <div className="mb-8 text-center">
-        <Link href="/" className="text-3xl font-bold text-blue-900 hover:opacity-80">
+        <Link
+          href="/"
+          className="text-3xl font-bold text-blue-900 hover:opacity-80"
+        >
           {/*Logo*/}
           <div className="mb-4 mt-4 flex flex-col items-center gap-2 justify-center">
-            <img src="/logo.png" alt="Logo" width={75} height={50} loading="eager"/>
-            <span className="text-[1rem] leading-[1rem] font-bold text-primary hidden sm:block">CSM Niangon</span>
+            <img
+              src="/logo.png"
+              alt="Logo"
+              width={75}
+              height={50}
+              loading="eager"
+            />
+            <span className="text-[1rem] leading-[1rem] font-bold text-primary hidden sm:block">
+              CSM Niangon
+            </span>
           </div>
         </Link>
       </div>

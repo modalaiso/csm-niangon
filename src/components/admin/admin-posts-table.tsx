@@ -1,26 +1,40 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { Search, Trash2, Eye, ThumbsUp, MessageCircle, Pencil, Loader2 } from "lucide-react";
 import type { PostStatus } from "@prisma/client";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useAdminList, useRowSelection } from "@/components/admin/useAdminList";
-import { cn } from "@/lib/utils";
-import { TablePagination } from "@/components/admin/table-pagination";
 import {
-  listAdminPosts,
-  deletePost,
-  updatePostStatus,
-  bulkUpdatePostStatus,
-  bulkDeletePosts,
+  Eye,
+  Loader2,
+  MessageCircle,
+  Pencil,
+  Search,
+  ThumbsUp,
+  Trash2,
+} from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+import {
   type AdminPostRow,
   type AdminPostStatusFilter,
   type AdminPostTypeFilter,
+  bulkDeletePosts,
+  bulkUpdatePostStatus,
+  deletePost,
+  listAdminPosts,
+  updatePostStatus,
 } from "@/app/actions/admin-posts";
+import { TablePagination } from "@/components/admin/table-pagination";
+import { useAdminList, useRowSelection } from "@/components/admin/useAdminList";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 
 const TYPE_BADGES: Record<string, { label: string; className: string }> = {
   ACTU: { label: "Actu", className: "bg-blue-600" },
@@ -87,9 +101,16 @@ export function AdminPostsTable() {
   } = useAdminList<AdminPostRow>(
     useCallback(
       async ({ search, page, pageSize }) => {
-        const result = await listAdminPosts({ status, type, search, page, pageSize });
+        const result = await listAdminPosts({
+          status,
+          type,
+          search,
+          page,
+          pageSize,
+        });
         if ("error" in result) {
-          if (result.error === "auth_required") return { error: "auth_required" };
+          if (result.error === "auth_required")
+            return { error: "auth_required" };
           return { error: "Impossible de charger les publications." };
         }
         return { items: result.posts, total: result.total };
@@ -98,7 +119,8 @@ export function AdminPostsTable() {
     ),
     { pageSize: PAGE_SIZE },
   );
-  const { selected, toggleSelected, toggleSelectAll, clearSelection } = useRowSelection();
+  const { selected, toggleSelected, toggleSelectAll, clearSelection } =
+    useRowSelection();
 
   useEffect(() => {
     if (error === "auth_required") router.push("/login");
@@ -106,10 +128,15 @@ export function AdminPostsTable() {
 
   useEffect(() => {
     clearSelection();
-  }, [rows, clearSelection]);
+  }, [clearSelection]);
 
   const handleDelete = (row: AdminPostRow) => {
-    if (!window.confirm(`Supprimer définitivement "${row.title}" ? Cette action est irréversible.`)) return;
+    if (
+      !window.confirm(
+        `Supprimer définitivement "${row.title}" ? Cette action est irréversible.`,
+      )
+    )
+      return;
     startTransition(async () => {
       const result = await deletePost(row.id);
       if ("error" in result) {
@@ -133,7 +160,10 @@ export function AdminPostsTable() {
 
   const handleBulkStatus = (nextStatus: PostStatus) => {
     startTransition(async () => {
-      const result = await bulkUpdatePostStatus(Array.from(selected), nextStatus);
+      const result = await bulkUpdatePostStatus(
+        Array.from(selected),
+        nextStatus,
+      );
       if ("error" in result) {
         setError("Impossible d'appliquer le changement groupé.");
         return;
@@ -143,7 +173,12 @@ export function AdminPostsTable() {
   };
 
   const handleBulkDelete = () => {
-    if (!window.confirm(`Supprimer définitivement ${selected.size} publication(s) ?`)) return;
+    if (
+      !window.confirm(
+        `Supprimer définitivement ${selected.size} publication(s) ?`,
+      )
+    )
+      return;
     startTransition(async () => {
       const result = await bulkDeletePosts(Array.from(selected));
       if ("error" in result) {
@@ -159,7 +194,10 @@ export function AdminPostsTable() {
   if (isLoading) {
     tableBodyContent = (
       <tr>
-        <td colSpan={9} className="px-4 py-10 text-center text-muted-foreground">
+        <td
+          colSpan={9}
+          className="px-4 py-10 text-center text-muted-foreground"
+        >
           <Loader2 className="mx-auto h-5 w-5 animate-spin" />
         </td>
       </tr>
@@ -167,14 +205,20 @@ export function AdminPostsTable() {
   } else if (rows.length === 0) {
     tableBodyContent = (
       <tr>
-        <td colSpan={9} className="px-4 py-10 text-center text-muted-foreground">
+        <td
+          colSpan={9}
+          className="px-4 py-10 text-center text-muted-foreground"
+        >
           Aucune publication ne correspond à ces filtres.
         </td>
       </tr>
     );
   } else {
     tableBodyContent = rows.map((row) => {
-      const typeBadge = TYPE_BADGES[row.type] ?? { label: row.type, className: "bg-gray-500" };
+      const typeBadge = TYPE_BADGES[row.type] ?? {
+        label: row.type,
+        className: "bg-gray-500",
+      };
       const statusBadge = STATUS_BADGES[row.status] ?? {
         label: row.status,
         className: "bg-gray-100 text-gray-600",
@@ -191,7 +235,10 @@ export function AdminPostsTable() {
             />
           </td>
           <td className="max-w-[260px] px-4 py-3">
-            <Link href={`/posts/${row.id}`} className="line-clamp-1 font-medium text-foreground hover:underline">
+            <Link
+              href={`/posts/${row.id}`}
+              className="line-clamp-1 font-medium text-foreground hover:underline"
+            >
               {row.title}
             </Link>
             <span
@@ -209,7 +256,10 @@ export function AdminPostsTable() {
               onValueChange={(v) => handleStatusChange(row, v as PostStatus)}
             >
               <SelectTrigger
-                className={cn("h-8 w-32 border-0 text-xs font-medium", statusBadge.className)}
+                className={cn(
+                  "h-8 w-32 border-0 text-xs font-medium",
+                  statusBadge.className,
+                )}
               >
                 <SelectValue>{statusBadge.label}</SelectValue>
               </SelectTrigger>
@@ -242,7 +292,9 @@ export function AdminPostsTable() {
               {row.commentsCount}
             </span>
           </td>
-          <td className="px-4 py-3 text-muted-foreground">{formatDate(row.publishedAt ?? row.createdAt)}</td>
+          <td className="px-4 py-3 text-muted-foreground">
+            {formatDate(row.publishedAt ?? row.createdAt)}
+          </td>
           <td className="px-4 py-3">
             <div className="flex items-center justify-end gap-1">
               <Link
@@ -281,7 +333,13 @@ export function AdminPostsTable() {
             className="pl-9"
           />
         </div>
-        <Select value={status} onValueChange={(v) => { setStatus(v as AdminPostStatusFilter); setPage(1); }}>
+        <Select
+          value={status}
+          onValueChange={(v) => {
+            setStatus(v as AdminPostStatusFilter);
+            setPage(1);
+          }}
+        >
           <SelectTrigger className="w-full bg-white sm:w-44">
             <SelectValue />
           </SelectTrigger>
@@ -293,7 +351,13 @@ export function AdminPostsTable() {
             ))}
           </SelectContent>
         </Select>
-        <Select value={type} onValueChange={(v) => { setType(v as AdminPostTypeFilter); setPage(1); }}>
+        <Select
+          value={type}
+          onValueChange={(v) => {
+            setType(v as AdminPostTypeFilter);
+            setPage(1);
+          }}
+        >
           <SelectTrigger className="w-full bg-white sm:w-44">
             <SelectValue />
           </SelectTrigger>
@@ -366,14 +430,16 @@ export function AdminPostsTable() {
               <th className="px-4 py-3 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-border">
-            {tableBodyContent}
-          </tbody>
+          <tbody className="divide-y divide-border">{tableBodyContent}</tbody>
         </table>
       </div>
 
       {/* Pagination */}
-      <TablePagination page={page} totalPages={totalPages} onPageChange={setPage} />
+      <TablePagination
+        page={page}
+        totalPages={totalPages}
+        onPageChange={setPage}
+      />
     </div>
   );
 }

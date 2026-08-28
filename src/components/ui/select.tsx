@@ -1,12 +1,13 @@
 "use client";
 
-import * as React from "react";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { Check, ChevronDown, ChevronUp } from "lucide-react";
+import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-type ElementRef<C extends React.ElementType> = React.ComponentPropsWithRef<C>["ref"] extends React.Ref<infer T> ? T : never;
+type ElementRef<C extends React.ElementType> =
+  React.ComponentPropsWithRef<C>["ref"] extends React.Ref<infer T> ? T : never;
 
 const Select = SelectPrimitive.Root;
 

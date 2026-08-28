@@ -1,9 +1,9 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
 import type { Role } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 import { getAdminAuthContext } from "@/lib/auth/admin-guard";
+import { prisma } from "@/lib/prisma";
 
 export interface AdminUserRow {
   id: string;
@@ -23,11 +23,20 @@ export interface ListUsersInput {
   pageSize?: number;
 }
 
-type ListUsersSuccess = { users: AdminUserRow[]; total: number; page: number; pageSize: number };
-type ListUsersResult = ListUsersSuccess | { error: "auth_required" | "forbidden" | "unknown" };
+type ListUsersSuccess = {
+  users: AdminUserRow[];
+  total: number;
+  page: number;
+  pageSize: number;
+};
+type ListUsersResult =
+  | ListUsersSuccess
+  | { error: "auth_required" | "forbidden" | "unknown" };
 
 /** Liste paginée/filtrée des utilisateurs — réservée ADMIN */
-export async function listUsers(input: ListUsersInput = {}): Promise<ListUsersResult> {
+export async function listUsers(
+  input: ListUsersInput = {},
+): Promise<ListUsersResult> {
   const auth = await getAdminAuthContext();
   if (!auth.ok) return { error: auth.error };
 
@@ -88,7 +97,10 @@ export async function updateUserRole(
   if (!auth.ok) return { error: auth.error };
 
   try {
-    const target = await prisma.user.findUnique({ where: { id: userId }, select: { role: true } });
+    const target = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { role: true },
+    });
     if (!target) return { error: "not_found" };
 
     if (target.role === "ADMIN" && role !== "ADMIN") {

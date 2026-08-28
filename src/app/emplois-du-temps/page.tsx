@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { CalendarClock } from "lucide-react";
+import Link from "next/link";
 import { getSchoolClasses } from "@/app/actions/schedules";
 
 export const metadata = {
@@ -21,7 +21,7 @@ export default async function SchedulesPage() {
       <div className="container px-4 mt-16 pb-6">
         <h1 className="text-2xl font-bold text-foreground">Emplois du temps</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Consultez, imprimez ou téléchargez l&apos;emploi du temps de chaque classe.
+          Consultez, imprimez ou téléchargez l'emploi du temps de chaque classe.
         </p>
       </div>
 
@@ -29,7 +29,7 @@ export default async function SchedulesPage() {
         {classes.length === 0 ? (
           <div className="flex flex-col items-center justify-center rounded-2xl py-16 text-center">
             <p className="text-base font-medium text-muted-foreground">
-              Aucun emploi du temps n&apos;est disponible pour l&apos;instant.
+              Aucun emploi du temps n'est disponible pour l'instant.
             </p>
           </div>
         ) : (
@@ -50,8 +50,12 @@ export default async function SchedulesPage() {
                         <CalendarClock className="h-5 w-5" />
                       </span>
                       <span>
-                        <span className="block text-sm font-semibold text-foreground">{c.name}</span>
-                        <span className="block text-xs text-muted-foreground">{c.schoolYear}</span>
+                        <span className="block text-sm font-semibold text-foreground">
+                          {c.name}
+                        </span>
+                        <span className="block text-xs text-muted-foreground">
+                          {c.schoolYear}
+                        </span>
                       </span>
                     </Link>
                   ))}

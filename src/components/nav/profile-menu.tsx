@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
+import { LogOut, Settings, UserRound } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { LogOut, Settings, UserRound } from "lucide-react";
-import { Avatar } from "@/components/ui/avatar";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { logout } from "@/app/actions/auth";
+import { Avatar } from "@/components/ui/avatar";
 
 interface ProfileMenuProps {
   nom: string;
@@ -28,7 +28,10 @@ export function ProfileMenu(props: Readonly<ProfileMenuProps>) {
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
@@ -73,7 +76,9 @@ export function ProfileMenu(props: Readonly<ProfileMenuProps>) {
               {props.prenom} {props.nom}
             </p>
             {props.email && (
-              <p className="truncate text-xs text-muted-foreground">{props.email}</p>
+              <p className="truncate text-xs text-muted-foreground">
+                {props.email}
+              </p>
             )}
           </div>
 

@@ -8,5 +8,7 @@ export const ANNOUNCEMENT_OPEN_EVENT = "csm:open-announcement";
  */
 export function openAnnouncementPopup(id?: string) {
   if (typeof window === "undefined") return;
-  window.dispatchEvent(new CustomEvent(ANNOUNCEMENT_OPEN_EVENT, { detail: { id } }));
+  window.dispatchEvent(
+    new CustomEvent(ANNOUNCEMENT_OPEN_EVENT, { detail: { id } }),
+  );
 }

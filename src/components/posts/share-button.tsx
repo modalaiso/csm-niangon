@@ -1,13 +1,13 @@
 "use client";
 
+import { Check, Link2, Mail, MoreHorizontal, Share2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { Share2, X, Check, Link2, Mail, MoreHorizontal } from "lucide-react";
 import {
+  FacebookIcon,
+  InstagramIcon,
+  TelegramIcon,
   WhatsAppIcon,
   XSocialIcon,
-  FacebookIcon,
-  TelegramIcon,
-  InstagramIcon,
 } from "@/components/icons/social-icons";
 import { cn } from "@/lib/utils";
 
@@ -79,7 +79,11 @@ export function ShareButton(props: Readonly<ShareButtonProps>) {
 
   const handleNativeShare = async () => {
     try {
-      await navigator.share({ title: props.title, text: props.summary, url: shareUrl });
+      await navigator.share({
+        title: props.title,
+        text: props.summary,
+        url: shareUrl,
+      });
       setIsOpen(false);
     } catch {
       // Partage annulé par l'utilisateur : rien à faire
@@ -186,7 +190,10 @@ export function ShareButton(props: Readonly<ShareButtonProps>) {
     },
   ];
 
-  const badge = TYPE_BADGES[props.type] ?? { label: props.type, className: "bg-gray-500" };
+  const badge = TYPE_BADGES[props.type] ?? {
+    label: props.type,
+    className: "bg-gray-500",
+  };
 
   return (
     <>
@@ -223,10 +230,14 @@ export function ShareButton(props: Readonly<ShareButtonProps>) {
           <div className="mx-5 mt-4 flex items-center gap-3 rounded-2xl border border-border bg-muted/30 p-3">
             <div className="relative h-14 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-muted">
               {props.thumbnail ? (
-                <img src={props.thumbnail} alt={props.title} className="h-full w-full object-cover" />
+                <img
+                  src={props.thumbnail}
+                  alt={props.title}
+                  className="h-full w-full object-cover"
+                />
               ) : (
                 <div className="flex h-full w-full items-center justify-center text-[10px] text-muted-foreground">
-                  Pas d&apos;image
+                  Pas d'image
                 </div>
               )}
             </div>
@@ -239,8 +250,12 @@ export function ShareButton(props: Readonly<ShareButtonProps>) {
               >
                 {badge.label}
               </span>
-              <p className="mt-1 line-clamp-1 text-sm font-semibold text-foreground">{props.title}</p>
-              <p className="line-clamp-1 text-xs text-muted-foreground">{props.summary}</p>
+              <p className="mt-1 line-clamp-1 text-sm font-semibold text-foreground">
+                {props.title}
+              </p>
+              <p className="line-clamp-1 text-xs text-muted-foreground">
+                {props.summary}
+              </p>
             </div>
           </div>
 
@@ -286,7 +301,9 @@ export function ShareButton(props: Readonly<ShareButtonProps>) {
           {/* Lien à copier */}
           <div className="mx-5 mb-5 mt-5 flex items-center gap-2 rounded-full border border-border bg-muted/40 py-2 pl-4 pr-2">
             <Link2 className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
-            <span className="min-w-0 flex-1 truncate text-sm text-muted-foreground">{shareUrl}</span>
+            <span className="min-w-0 flex-1 truncate text-sm text-muted-foreground">
+              {shareUrl}
+            </span>
             <button
               type="button"
               onClick={handleCopy}

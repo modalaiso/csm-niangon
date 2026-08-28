@@ -7,20 +7,21 @@ export interface AdminListResult<T> {
   total: number;
 }
 
-export type AdminListFetcher<T> = (
-  params: {
-    search: string;
-    page: number;
-    pageSize: number;
-  },
-) => Promise<AdminListResult<T> | { error: string }>;
+export type AdminListFetcher<T> = (params: {
+  search: string;
+  page: number;
+  pageSize: number;
+}) => Promise<AdminListResult<T> | { error: string }>;
 
 export interface UseAdminListOptions {
   pageSize?: number;
   searchDelayMs?: number;
 }
 
-export function useAdminList<T>(fetcher: AdminListFetcher<T>, options?: UseAdminListOptions) {
+export function useAdminList<T>(
+  fetcher: AdminListFetcher<T>,
+  options?: UseAdminListOptions,
+) {
   const pageSize = options?.pageSize ?? 15;
   const searchDelayMs = options?.searchDelayMs ?? 300;
 
@@ -63,7 +64,7 @@ export function useAdminList<T>(fetcher: AdminListFetcher<T>, options?: UseAdmin
     setPage(1);
     const timeout = window.setTimeout(load, searchDelayMs);
     return () => window.clearTimeout(timeout);
-  }, [search, load, searchDelayMs]);
+  }, [load, searchDelayMs]);
 
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
@@ -97,7 +98,9 @@ export function useRowSelection() {
   }, []);
 
   const toggleSelectAll = useCallback((ids: string[]) => {
-    setSelected((prev) => (prev.size === ids.length ? new Set() : new Set(ids)));
+    setSelected((prev) =>
+      prev.size === ids.length ? new Set() : new Set(ids),
+    );
   }, []);
 
   const clearSelection = useCallback(() => {

@@ -48,3 +48,14 @@ env.txt
 
 # Prisma
 prisma/.env
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+
+#Build output
+build-output.txt

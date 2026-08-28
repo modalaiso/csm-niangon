@@ -37,7 +37,7 @@ interface AvatarProps {
   textClassName?: string;
 }
 
-function Avatar(props: Readonly<AvatarProps>){
+function Avatar(props: Readonly<AvatarProps>) {
   const sizeClasses = props.className ? props.className : "h-9 w-9";
   const textClasses = props.textClassName ? props.textClassName : "text-sm";
 
@@ -45,7 +45,7 @@ function Avatar(props: Readonly<AvatarProps>){
     return (
       <img
         src={props.avatar}
-        alt={props.prenom + " " + props.nom}
+        alt={`${props.prenom} ${props.nom}`}
         className={`${sizeClasses} flex-shrink-0 rounded-full object-cover`}
       />
     );

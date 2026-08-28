@@ -1,14 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
 import { Cookie } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
-  getStoredConsent,
-  setStoredConsent,
   COOKIE_PREFERENCES_OPEN_EVENT,
   type ConsentStatus,
+  getStoredConsent,
+  setStoredConsent,
 } from "@/lib/cookie-consent";
 
 export function CookieConsentBanner() {
@@ -19,7 +19,8 @@ export function CookieConsentBanner() {
 
     const handleReopen = () => setVisible(true);
     window.addEventListener(COOKIE_PREFERENCES_OPEN_EVENT, handleReopen);
-    return () => window.removeEventListener(COOKIE_PREFERENCES_OPEN_EVENT, handleReopen);
+    return () =>
+      window.removeEventListener(COOKIE_PREFERENCES_OPEN_EVENT, handleReopen);
   }, []);
 
   const handleChoice = (status: ConsentStatus) => {
@@ -46,10 +47,13 @@ export function CookieConsentBanner() {
               Ce site utilise des cookies
             </p>
             <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-              Nous utilisons des cookies techniques nécessaires au fonctionnement du site,
-              et, avec votre accord, des cookies de mesure d&apos;audience pour comprendre
-              l&apos;usage du site. Voir notre{" "}
-              <Link href="/confidentialite" className="text-primary hover:underline">
+              Nous utilisons des cookies techniques nécessaires au
+              fonctionnement du site, et, avec votre accord, des cookies de
+              mesure d'audience pour comprendre l'usage du site. Voir notre{" "}
+              <Link
+                href="/confidentialite"
+                className="text-primary hover:underline"
+              >
                 politique de confidentialité
               </Link>
               .
