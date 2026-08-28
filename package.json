@@ -69,7 +69,7 @@
     "autoprefixer": "^10.4.22",
     "babel-plugin-react-compiler": "1.0.0",
     "baseline-browser-mapping": "^2.9.0",
-    "eslint": "^10.7.0",
+    "eslint": "^10.9.1",
     "eslint-plugin-unicorn": "^72.0.0",
     "jsdom": "^30.0.1",
     "postcss": "^8.5.6",
