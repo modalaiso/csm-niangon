@@ -13,13 +13,10 @@ export default function MentionsLegalesPage() {
         </h2>
         <p className="text-muted-foreground">
           Le présent site est édité par{" "}
-          <strong className="text-foreground">CSM Niangon</strong> (
-          <span className="italic text-amber-700">
-            forme juridique à préciser — association loi 1901 / club sportif
-            enregistré, etc.
-          </span>
-          ), dont le siège est situé à Abidjan, Yopougon Niangon, Côte
-          d&apos;Ivoire.
+          <strong className="text-foreground">CSM Niangon</strong>{" "}
+          (<span className="italic text-amber-700">
+            forme juridique à préciser — association loi 1901 / club sportif enregistré, etc.
+          </span>), dont le siège est situé à Abidjan, Yopougon Niangon, Côte d'Ivoire.
         </p>
         <ul className="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
           <li>Email de contact : csm.niangon@yahoo.fr</li>
@@ -55,8 +52,8 @@ export default function MentionsLegalesPage() {
           </a>
         </p>
         <p className="mt-3 text-muted-foreground">
-          L&apos;authentification des comptes et le stockage des fichiers
-          (images, avatars) sont assurés par :
+          L'authentification des comptes et le stockage des fichiers (images,
+          avatars) sont assurés par :
         </p>
         <p className="mt-1 text-muted-foreground">
           Supabase Inc.
@@ -77,11 +74,11 @@ export default function MentionsLegalesPage() {
           3. Propriété intellectuelle
         </h2>
         <p className="text-muted-foreground">
-          L&apos;ensemble des éléments du site (textes, logo, mise en page,
-          code) est protégé par le droit d&apos;auteur et demeure la propriété
-          de CSM Niangon ou de ses contributeurs, sauf mention contraire. Toute
-          reproduction ou représentation, totale ou partielle, sans autorisation
-          préalable est interdite.
+          L'ensemble des éléments du site (textes, logo, mise en page, code) est
+          protégé par le droit d'auteur et demeure la propriété de CSM Niangon
+          ou de ses contributeurs, sauf mention contraire. Toute reproduction ou
+          représentation, totale ou partielle, sans autorisation préalable est
+          interdite.
         </p>
       </section>
 
@@ -90,9 +87,9 @@ export default function MentionsLegalesPage() {
           4. Responsabilité
         </h2>
         <p className="text-muted-foreground">
-          CSM Niangon met tout en œuvre pour assurer l&apos;exactitude des
+          CSM Niangon met tout en œuvre pour assurer l'exactitude des
           informations publiées, mais ne saurait être tenu responsable des
-          erreurs, omissions ou de l&apos;indisponibilité temporaire du service.
+          erreurs, omissions ou de l'indisponibilité temporaire du service.
         </p>
       </section>
 
@@ -103,7 +100,7 @@ export default function MentionsLegalesPage() {
         <p className="text-muted-foreground">
           Les présentes mentions légales sont soumises au droit ivoirien. En cas
           de litige, et à défaut de résolution amiable, les tribunaux compétents
-          d&apos;Abidjan seront seuls saisis, sauf disposition légale contraire.
+          d'Abidjan seront seuls saisis, sauf disposition légale contraire.
         </p>
       </section>
     </LegalPageLayout>

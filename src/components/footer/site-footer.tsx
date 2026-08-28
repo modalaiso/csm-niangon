@@ -199,8 +199,7 @@ export function SiteFooter(props: Readonly<SiteFooterProps>) {
               rel="noopener"
             >
               modalaiso
-            </a>
-            .
+            </a>.
           </p>
         </div>
       </div>
