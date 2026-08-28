@@ -13,10 +13,12 @@ export default function MentionsLegalesPage() {
         </h2>
         <p className="text-muted-foreground">
           Le présent site est édité par{" "}
-          <strong className="text-foreground">CSM Niangon</strong>{" "}
-          (<span className="italic text-amber-700">
-            forme juridique à préciser — association loi 1901 / club sportif enregistré, etc.
-          </span>), dont le siège est situé à Abidjan, Yopougon Niangon, Côte d'Ivoire.
+          <strong className="text-foreground">CSM Niangon</strong> (
+          <span className="italic text-amber-700">
+            forme juridique à préciser — association loi 1901 / club sportif
+            enregistré, etc.
+          </span>
+          ), dont le siège est situé à Abidjan, Yopougon Niangon, Côte d'Ivoire.
         </p>
         <ul className="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
           <li>Email de contact : csm.niangon@yahoo.fr</li>

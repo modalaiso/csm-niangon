@@ -5,9 +5,8 @@ import React from "react";
  * liens Markdown [texte](url) et URLs brutes (https://...).
  */
 function renderInline(text: string, keyPrefix: string): React.ReactNode[] {
-  // Expressions simplifiées sans risque de backtracking super-linéaire
   const pattern =
-    /(\*\*[^*]+\*\*|\*[^*]+\*|\[[^\]]+\]\([^)\s]+\)|https?:\/\/[^\s]+)/g;
+    /(\*\*[^*]+\*\*|\*[^*]+\*|\[[^\]]+\]\([^\s)]+\)|https?:\/\/[^\s]+)/g;
   const parts = text.split(pattern).filter((part) => part !== "");
 
   return parts.map((part, i) => {
