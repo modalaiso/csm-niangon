@@ -64,9 +64,7 @@ export default async function AdminDashboardPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">
-          Vue d&apos;ensemble
-        </h1>
+        <h1 className="text-2xl font-bold text-foreground">Vue d'ensemble</h1>
         <p className="mt-1 text-sm text-muted-foreground">
           Statistiques de trafic et état de la plateforme
         </p>

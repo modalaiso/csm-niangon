@@ -128,7 +128,7 @@ export function ProfileForm(props: Readonly<ProfileFormProps>) {
         </div>
 
         <div className="space-y-1.5">
-          <Label>Nom d&apos;utilisateur</Label>
+          <Label>Nom d'utilisateur</Label>
           <Input
             value={props.profile.username}
             disabled

@@ -18,7 +18,7 @@ export default async function AdminSchedulesPage() {
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-foreground">Emplois du temps</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Gérez les classes, les matières, et l&apos;emploi du temps de chaque
+          Gérez les classes, les matières, et l'emploi du temps de chaque
           classe.
         </p>
       </div>

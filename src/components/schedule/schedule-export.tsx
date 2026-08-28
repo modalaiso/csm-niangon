@@ -101,7 +101,7 @@ export function ScheduleExport(props: Readonly<ScheduleExportProps>) {
           ) : (
             <ImageIcon className="h-4 w-4" />
           )}
-          Télécharger l&apos;image
+          Télécharger l'image
         </Button>
         <Button
           type="button"

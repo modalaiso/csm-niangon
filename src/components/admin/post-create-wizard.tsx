@@ -313,7 +313,7 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
                 />
                 <span>
                   Marquer comme urgent (mis en avant dans la barre
-                  d&apos;information)
+                  d'information)
                 </span>
               </label>
             )}
@@ -373,8 +373,8 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
               Rédigez le contenu complet
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Utilisez la barre d&apos;outils pour mettre en forme :
-              sous-titres, gras, italique, notes et listes.
+              Utilisez la barre d'outils pour mettre en forme : sous-titres,
+              gras, italique, notes et listes.
               {isAnnouncement &&
                 " Ce contenu s'affichera dans le pop-up de l'annonce."}
             </p>
@@ -390,12 +390,12 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
             {isAnnouncement ? (
               <>
                 <h2 className="text-lg font-bold text-foreground">
-                  Durée de vie de l&apos;annonce
+                  Durée de vie de l'annonce
                 </h2>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Les annonces ne comportent pas d&apos;image : elles
-                  s&apos;affichent en pop-up dès l&apos;arrivée sur le site,
-                  pour la durée que vous choisissez.
+                  Les annonces ne comportent pas d'image : elles s'affichent en
+                  pop-up dès l'arrivée sur le site, pour la durée que vous
+                  choisissez.
                 </p>
                 <div className="mt-6 max-w-sm">
                   <AnnouncementDurationSelect
@@ -411,8 +411,8 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
                 </h2>
                 <p className="mt-1 text-sm text-muted-foreground">
                   La première image sert de miniature sur les cartes. Vous
-                  pouvez en ajouter jusqu&apos;à {MAX_IMAGES} et en supprimer à
-                  tout moment.
+                  pouvez en ajouter jusqu'à {MAX_IMAGES} et en supprimer à tout
+                  moment.
                 </p>
                 <div className="mt-6">
                   <MultiImageUploadField
@@ -427,12 +427,11 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
             {isInfo && (
               <div className="mt-6">
                 <h2 className="text-lg font-bold text-foreground">
-                  Durée d&apos;affichage dans la barre d&apos;info
+                  Durée d'affichage dans la barre d'info
                 </h2>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Passé ce délai, l&apos;information disparaît automatiquement
-                  de la barre défilante (elle reste consultable sur la page
-                  /infos).
+                  Passé ce délai, l'information disparaît automatiquement de la
+                  barre défilante (elle reste consultable sur la page /infos).
                 </p>
                 <div className="mt-4 max-w-sm">
                   <AnnouncementDurationSelect

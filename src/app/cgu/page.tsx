@@ -13,11 +13,11 @@ export default function CGUPage() {
       <section>
         <h2 className="mb-2 text-lg font-bold text-foreground">1. Objet</h2>
         <p className="text-muted-foreground">
-          Les présentes Conditions Générales d&apos;Utilisation (CGU) régissent
-          l&apos;accès et l&apos;usage de la plateforme CSM Niangon, dédiée à la
-          diffusion d&apos;actualités, d&apos;articles et d&apos;informations de
-          la communauté. En créant un compte ou en utilisant le site, vous
-          acceptez sans réserve les présentes CGU.
+          Les présentes Conditions Générales d'Utilisation (CGU) régissent
+          l'accès et l'usage de la plateforme CSM Niangon, dédiée à la diffusion
+          d'actualités, d'articles et d'informations de la communauté. En créant
+          un compte ou en utilisant le site, vous acceptez sans réserve les
+          présentes CGU.
         </p>
       </section>
 
@@ -26,12 +26,11 @@ export default function CGUPage() {
           2. Accès au service
         </h2>
         <p className="text-muted-foreground">
-          La consultation des publications est libre. La création d&apos;un
-          compte est nécessaire pour aimer, commenter ou personnaliser son
-          profil. Certaines fonctionnalités (rédaction, modération,
-          administration) sont réservées aux comptes disposant d&apos;un rôle
-          spécifique (Rédacteur, Modérateur, Administrateur), attribué via une
-          clé d&apos;accès.
+          La consultation des publications est libre. La création d'un compte
+          est nécessaire pour aimer, commenter ou personnaliser son profil.
+          Certaines fonctionnalités (rédaction, modération, administration) sont
+          réservées aux comptes disposant d'un rôle spécifique (Rédacteur,
+          Modérateur, Administrateur), attribué via une clé d'accès.
         </p>
       </section>
 
@@ -41,10 +40,10 @@ export default function CGUPage() {
         </h2>
         <p className="text-muted-foreground">
           Vous vous engagez à fournir des informations exactes lors de
-          l&apos;inscription et à garder confidentiels vos identifiants de
-          connexion. Vous êtes responsable de toute activité effectuée depuis
-          votre compte. Vous pouvez à tout moment supprimer votre compte depuis
-          votre page de profil.
+          l'inscription et à garder confidentiels vos identifiants de connexion.
+          Vous êtes responsable de toute activité effectuée depuis votre compte.
+          Vous pouvez à tout moment supprimer votre compte depuis votre page de
+          profil.
         </p>
       </section>
 
@@ -55,15 +54,15 @@ export default function CGUPage() {
         <p className="text-muted-foreground">
           En publiant un commentaire, vous vous engagez à ne pas diffuser de
           contenu illicite, injurieux, diffamatoire, discriminatoire, ou portant
-          atteinte aux droits d&apos;un tiers. CSM Niangon se réserve le droit
-          de masquer ou supprimer tout contenu contrevenant à ces règles, avec
-          ou sans préavis.
+          atteinte aux droits d'un tiers. CSM Niangon se réserve le droit de
+          masquer ou supprimer tout contenu contrevenant à ces règles, avec ou
+          sans préavis.
         </p>
         <p className="mt-2 text-muted-foreground">
           Certains contenus sont vérifiés automatiquement à la publication au
-          moyen d&apos;une liste de mots-clés surveillés : selon la nature du
-          contenu détecté, un commentaire peut être automatiquement masqué en
-          attente de revue par un modérateur, ou ne pas être publié.
+          moyen d'une liste de mots-clés surveillés : selon la nature du contenu
+          détecté, un commentaire peut être automatiquement masqué en attente de
+          revue par un modérateur, ou ne pas être publié.
         </p>
       </section>
 
@@ -97,8 +96,8 @@ export default function CGUPage() {
         <p className="text-muted-foreground">
           CSM Niangon peut modifier les présentes CGU à tout moment. Les
           utilisateurs seront informés de toute modification substantielle. La
-          poursuite de l&apos;utilisation du site après modification vaut
-          acceptation des nouvelles CGU.
+          poursuite de l'utilisation du site après modification vaut acceptation
+          des nouvelles CGU.
         </p>
       </section>
 

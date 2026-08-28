@@ -206,7 +206,7 @@ export default async function PostPage(props: Readonly<PostPageProps>) {
           {relatedPosts.length === 0 ? (
             <div className="flex flex-col items-center justify-center rounded-2xl border-slate-300 py-12 text-center">
               <p className="text-sm font-medium text-slate-500">
-                Aucune autre publication pour l&apos;instant
+                Aucune autre publication pour l'instant
               </p>
             </div>
           ) : (
@@ -231,7 +231,7 @@ export default async function PostPage(props: Readonly<PostPageProps>) {
                         />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center text-xs text-slate-500">
-                          Pas d&apos;image
+                          Pas d'image
                         </div>
                       )}
                       <span

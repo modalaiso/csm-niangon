@@ -214,13 +214,13 @@ export function SignupForm(_props: Readonly<SignupFormProps>) {
               className="mt-0.5 h-4 w-4 flex-shrink-0 rounded border-input accent-primary"
             />
             <span>
-              J&apos;accepte les{" "}
+              J'accepte les{" "}
               <Link
                 href="/cgu"
                 target="_blank"
                 className="font-medium text-blue-600 hover:underline"
               >
-                Conditions Générales d&apos;Utilisation
+                Conditions Générales d'Utilisation
               </Link>{" "}
               et la{" "}
               <Link

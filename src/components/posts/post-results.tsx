@@ -44,7 +44,7 @@ function PostCard<T extends HomePostCard>(props: Readonly<PostCardProps<T>>) {
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center text-xs text-muted-foreground">
-              Pas d&apos;image
+              Pas d'image
             </div>
           )}
           {badge}

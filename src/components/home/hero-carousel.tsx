@@ -35,7 +35,7 @@ export function HeroCarousel(props: Readonly<HeroCarouselProps>) {
             Bienvenue sur CSM Niangon
           </h1>
           <p className="mt-2 text-sm text-muted-foreground md:text-base">
-            Aucun post pour l&apos;instant. Revenez bientôt !
+            Aucun post pour l'instant. Revenez bientôt !
           </p>
         </div>
       </section>

@@ -237,7 +237,7 @@ export function ShareButton(props: Readonly<ShareButtonProps>) {
                 />
               ) : (
                 <div className="flex h-full w-full items-center justify-center text-[10px] text-muted-foreground">
-                  Pas d&apos;image
+                  Pas d'image
                 </div>
               )}
             </div>

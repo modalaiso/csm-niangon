@@ -49,8 +49,7 @@ export function CookieConsentBanner() {
             <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
               Nous utilisons des cookies techniques nécessaires au
               fonctionnement du site, et, avec votre accord, des cookies de
-              mesure d&apos;audience pour comprendre l&apos;usage du site. Voir
-              notre{" "}
+              mesure d'audience pour comprendre l'usage du site. Voir notre{" "}
               <Link
                 href="/confidentialite"
                 className="text-primary hover:underline"

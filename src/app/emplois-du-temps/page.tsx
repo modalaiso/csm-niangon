@@ -21,8 +21,7 @@ export default async function SchedulesPage() {
       <div className="container px-4 mt-16 pb-6">
         <h1 className="text-2xl font-bold text-foreground">Emplois du temps</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Consultez, imprimez ou téléchargez l&apos;emploi du temps de chaque
-          classe.
+          Consultez, imprimez ou téléchargez l'emploi du temps de chaque classe.
         </p>
       </div>
 
@@ -30,7 +29,7 @@ export default async function SchedulesPage() {
         {classes.length === 0 ? (
           <div className="flex flex-col items-center justify-center rounded-2xl py-16 text-center">
             <p className="text-base font-medium text-muted-foreground">
-              Aucun emploi du temps n&apos;est disponible pour l&apos;instant.
+              Aucun emploi du temps n'est disponible pour l'instant.
             </p>
           </div>
         ) : (

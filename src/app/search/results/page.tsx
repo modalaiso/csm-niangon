@@ -90,7 +90,7 @@ export default async function SearchResultsPage(
               Aucun post ne correspond à votre recherche
             </p>
             <Link href="/">
-              <Button className="text-white">Retour à l&apos;accueil</Button>
+              <Button className="text-white">Retour à l'accueil</Button>
             </Link>
           </div>
         ) : (
@@ -116,7 +116,7 @@ export default async function SearchResultsPage(
                         />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center text-xs text-muted-foreground">
-                          Pas d&apos;image
+                          Pas d'image
                         </div>
                       )}
                       <span

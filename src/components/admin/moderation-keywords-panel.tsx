@@ -100,9 +100,8 @@ export function ModerationKeywordsPanel() {
         Mots-clés surveillés
       </h2>
       <p className="mt-1 text-xs text-muted-foreground">
-        Tout commentaire contenant l&apos;un de ces mots ou phrases (insensible
-        à la casse) déclenche l&apos;action choisie, automatiquement, à la
-        publication.
+        Tout commentaire contenant l'un de ces mots ou phrases (insensible à la
+        casse) déclenche l'action choisie, automatiquement, à la publication.
       </p>
 
       {/* Formulaire d'ajout */}

@@ -93,13 +93,13 @@ export function PostsExplorer(props: Readonly<PostsExplorerProps>) {
       {props.posts.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-2xl py-16 text-center">
           <p className="text-base font-medium text-muted-foreground">
-            Aucun post pour l&apos;instant
+            Aucun post pour l'instant
           </p>
         </div>
       ) : filteredPosts.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-2xl py-16 text-center">
           <p className="text-base font-medium text-muted-foreground">
-            Aucun post dans cette catégorie pour l&apos;instant
+            Aucun post dans cette catégorie pour l'instant
           </p>
         </div>
       ) : (
@@ -124,7 +124,7 @@ export function PostsExplorer(props: Readonly<PostsExplorerProps>) {
                     />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center text-xs text-muted-foreground">
-                      Pas d&apos;image
+                      Pas d'image
                     </div>
                   )}
                   <span
