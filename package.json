@@ -17,7 +17,7 @@
     "prisma:seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
-    "@headlessui/react": "^2.2.9",
+    "@headlessui/react": "^2.2.10",
     "@hookform/resolvers": "^5.2.2",
     "@prisma/client": "^6.19.3",
     "@radix-ui/react-avatar": "^1.1.11",
