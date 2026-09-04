@@ -1,6 +1,12 @@
 import { expect, test } from "@playwright/test";
 
 test.describe("Authentification", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      window.localStorage.setItem("csm_cookie_consent", "rejected");
+    });
+  });
+
   test("le formulaire de connexion affiche les champs requis", async ({
     page,
   }) => {
