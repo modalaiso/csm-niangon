@@ -26,10 +26,10 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --ignore-scripts
 
       - name: Générer le client Prisma
-        run: npx prisma generate
+        run: npx --no-install prisma generate
 
       - name: Lancer les tests unitaires et d'intégration
         run: npm run test:unit -- --coverage
@@ -77,16 +77,16 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --ignore-scripts
 
       - name: Générer le client Prisma
-        run: npx prisma generate
+        run: npx --no-install prisma generate
 
       - name: Appliquer les migrations sur la base de test
-        run: npx prisma migrate deploy
+        run: npx --no-install prisma migrate deploy
 
       - name: Installer les navigateurs Playwright
-        run: npx playwright install --with-deps chromium webkit
+        run: npx --no-install playwright install --with-deps chromium webkit
 
       - name: Build de l'application
         run: npm run build
