@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
@@ -52,6 +53,7 @@ export function TopNav(props: Readonly<TopNavProps>) {
     { href: "/", label: "Accueil" },
     { href: "/actus", label: "Actualités" },
     { href: "/infos", label: "Infos" },
+    { href: "/about", label: "À propos de nous" },
     { href: "/emplois-du-temps", label: "Emplois du temps" },
     { href: "/devoirs", label: "Devoirs" },
   ];
@@ -63,6 +65,7 @@ export function TopNav(props: Readonly<TopNavProps>) {
     { href: "/infos", label: "Infos" },
     { href: "/emplois-du-temps", label: "Emplois du temps" },
     { href: "/devoirs", label: "Devoirs" },
+    { href: "/about", label: "À propos de nous" },
   ];
 
   return (
@@ -156,6 +159,9 @@ export function TopNav(props: Readonly<TopNavProps>) {
               </SheetTrigger>
               <SheetContent side="right">
                 <SheetTitle className="sr-only">Menu de navigation</SheetTitle>
+                <SheetDescription className="sr-only">
+                  Liens de navigation du site
+                </SheetDescription>
                 <div className="flex flex-col gap-4 py-4">
                   <div className="items-center inline-block">
                     <div className="flex items-center gap-2 ml-2">
