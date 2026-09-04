@@ -2,7 +2,7 @@ import { ModerationTabs } from "@/components/admin/moderation-tabs";
 import { requireModerator } from "@/lib/auth/admin-guard";
 
 export const metadata = {
-  title: "Modération | Dashboard | CSM Niangon",
+  title: "Modération | Dashboard - CSM Niangon",
 };
 
 export default async function AdminModerationPage() {

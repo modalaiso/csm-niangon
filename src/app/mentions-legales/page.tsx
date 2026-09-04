@@ -12,37 +12,28 @@ export default function MentionsLegalesPage() {
           1. Éditeur du site
         </h2>
         <p className="text-muted-foreground">
-          Le présent site est édité par{" "}
-          <strong className="text-foreground">CSM Niangon</strong> (
-          <span className="italic text-amber-700">
-            forme juridique à préciser — association loi 1901 / club sportif
-            enregistré, etc.
-          </span>
-          ), dont le siège est situé à Abidjan, Yopougon Niangon, Côte d'Ivoire.
+          Le présent site internet est édité par une personne physique :
         </p>
         <ul className="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
-          <li>Email de contact : csm.niangon@yahoo.fr</li>
-          <li>Contact protection des données : mobioisrael@hotmail.com</li>
-          <li>
-            Directeur de la publication :{" "}
-            <span className="italic text-amber-700">
-              [nom du représentant légal à compléter]
-            </span>
-          </li>
+          <li>Éditeur / Nom : Mobio Israel</li>
+          <li>Adresse / Domiciliation : Abidjan, Côte d'Ivoire</li>
+          <li>Email de contact : [contact@csm-niangon.com]</li>
+          <li>Contact protection des données : [privacy@...]</li>
+          <li>Directeur de la publication : [Nom du directeur]</li>
         </ul>
       </section>
 
       <section>
         <h2 className="mb-2 text-lg font-bold text-foreground">
-          2. Hébergement
+          2. Hébergement et Services Tiers
         </h2>
         <p className="text-muted-foreground">
-          Le site (application et code) est hébergé par :
+          Le site est hébergé et s'appuie sur les infrastructures techniques des
+          prestataires suivants :
         </p>
         <p className="mt-1 text-muted-foreground">
-          Vercel Inc.
-          <br />
-          340 S Lemon Ave #4133, Walnut, CA 91789, États-Unis
+          <strong>Vercel Inc.</strong> 440 N Barranca Ave #4133, Covina, CA
+          91723, États-Unis
           <br />
           <a
             href="https://vercel.com"
@@ -54,11 +45,10 @@ export default function MentionsLegalesPage() {
           </a>
         </p>
         <p className="mt-3 text-muted-foreground">
-          L'authentification des comptes et le stockage des fichiers (images,
-          avatars) sont assurés par :
+          L'authentification et le stockage des données sont assurés par :
         </p>
         <p className="mt-1 text-muted-foreground">
-          Supabase Inc.
+          <strong>Supabase Inc.</strong> Camden, 3500 S Dupont Hwy, États-Unis
           <br />
           <a
             href="https://supabase.com"
@@ -76,28 +66,51 @@ export default function MentionsLegalesPage() {
           3. Propriété intellectuelle
         </h2>
         <p className="text-muted-foreground">
-          L'ensemble des éléments du site (textes, logo, mise en page, code) est
-          protégé par le droit d'auteur et demeure la propriété de CSM Niangon
-          ou de ses contributeurs, sauf mention contraire. Toute reproduction ou
-          représentation, totale ou partielle, sans autorisation préalable est
-          interdite.
+          L'ensemble des éléments du site (textes, logo, mise en page, éléments
+          graphiques, photographies, code source) est protégé par le droit
+          d'auteur et demeure la propriété de CSM Niangon ou de ses
+          contributeurs, sauf mention contraire. <br />
+          Toute reproduction ou représentation, totale ou partielle, sans
+          autorisation préalable est interdite.
         </p>
       </section>
 
       <section>
         <h2 className="mb-2 text-lg font-bold text-foreground">
-          4. Responsabilité
+          4. Données personnelles et Confidentialité
         </h2>
         <p className="text-muted-foreground">
-          CSM Niangon met tout en œuvre pour assurer l'exactitude des
-          informations publiées, mais ne saurait être tenu responsable des
-          erreurs, omissions ou de l'indisponibilité temporaire du service.
+          Conformément à la législation relative à la protection des données à
+          caractère personnel en Côte d'Ivoire (Loi n° 2013-450) :
+        </p>
+        <ul className="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
+          <li>
+            Les informations collectées via le système d'authentification et les
+            formulaires sont uniquement destinées à la gestion des comptes et au
+            fonctionnement du site.
+          </li>
+          <li>
+            Vous disposez d'un droit d'accès, de modification et de suppression
+            de vos données personnelles.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 className="mb-2 text-lg font-bold text-foreground">
+          5. Limitation de responsabilité
+        </h2>
+        <p className="text-muted-foreground">
+          L'Éditeur s'efforce de fournir des informations exactes et de
+          maintenir le service disponible. Toutefois, il ne saurait être tenu
+          responsable des erreurs, omissions, interruptions de service ou
+          indisponibilités temporaires.
         </p>
       </section>
 
       <section>
         <h2 className="mb-2 text-lg font-bold text-foreground">
-          5. Droit applicable
+          6. Droit applicable et Juridiction compétente
         </h2>
         <p className="text-muted-foreground">
           Les présentes mentions légales sont soumises au droit ivoirien. En cas

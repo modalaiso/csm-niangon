@@ -3,7 +3,7 @@ import { ClassSubjectManager } from "@/components/admin/class-subject-manager";
 import { requirePostManager } from "@/lib/auth/admin-guard";
 
 export const metadata = {
-  title: "Emplois du temps | Dashboard | CSM Niangon",
+  title: "Emplois du temps | Dashboard - CSM Niangon",
 };
 
 export default async function AdminSchedulesPage() {

@@ -3,7 +3,7 @@ import { getPostForEdit } from "@/app/actions/admin-posts";
 import { PostCreateWizard } from "@/components/admin/post-create-wizard";
 
 export const metadata = {
-  title: "Modifier une publication | Dashboard | CSM Niangon",
+  title: "Modifier une publication | Dashboard - CSM Niangon",
 };
 
 interface EditPostPageProps {

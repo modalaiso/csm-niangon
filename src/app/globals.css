@@ -12,6 +12,11 @@ input[type="search"]::-webkit-search-decoration {
   appearance: none;
 }
 
+::selection {
+  background-color: #42aa4a;
+  color: #fff;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

@@ -2,7 +2,7 @@ import { AdminUsersTable } from "@/components/admin/admin-users-table";
 import { requireAdmin } from "@/lib/auth/admin-guard";
 
 export const metadata = {
-  title: "Utilisateurs | Dashboard | CSM Niangon",
+  title: "Utilisateurs | Dashboard - CSM Niangon",
 };
 
 export default async function AdminUsersPage() {

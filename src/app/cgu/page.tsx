@@ -15,7 +15,7 @@ export default function CGUPage() {
         <p className="text-muted-foreground">
           Les présentes Conditions Générales d'Utilisation (CGU) régissent
           l'accès et l'usage de la plateforme CSM Niangon, dédiée à la diffusion
-          d'actualités, d'articles et d'informations de la communauté. En créant
+          d'informations, d'actualités et d'articles de la communauté. En créant
           un compte ou en utilisant le site, vous acceptez sans réserve les
           présentes CGU.
         </p>

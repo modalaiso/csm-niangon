@@ -81,7 +81,7 @@ export function TopNav(props: Readonly<TopNavProps>) {
               height={40}
               loading="eager"
             />
-            <span className="text-[.875rem] leading-[1rem] font-semibold text-primary hidden sm:block">
+            <span className="text-[.875rem] leading-[1rem] font-semibold font-heading text-primary hidden sm:block">
               CSM Niangon
             </span>
           </Link>

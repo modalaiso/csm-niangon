@@ -81,7 +81,7 @@ const config = {
       },
       fontFamily: {
         sans: ["Inter", "system-ui", "sans-serif"],
-        heading: ["League Spartan", "system-ui", "sans-serif"],
+        heading: ["Plus Jakarta Sans", "system-ui", "sans-serif"],
       },
       keyframes: {
         "accordion-down": {

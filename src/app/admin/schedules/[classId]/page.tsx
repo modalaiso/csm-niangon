@@ -6,7 +6,7 @@ import { ScheduleEditor } from "@/components/admin/schedule-editor";
 import { requirePostManager } from "@/lib/auth/admin-guard";
 
 export const metadata = {
-  title: "Modifier l'emploi du temps | Dashboard | CSM Niangon",
+  title: "Modifier l'emploi du temps | Dashboard - CSM Niangon",
 };
 
 interface AdminScheduleEditPageProps {

@@ -11,8 +11,8 @@ interface SiteFooterProps {
 }
 
 const NAV_LINKS = [
-  { href: "/", label: "Accueil" },
   { href: "/actus", label: "Actualités" },
+  { href: "/about", label: "À propos de nous" },
   { href: "/articles", label: "Articles" },
   { href: "/infos", label: "Infos" },
   { href: "/emplois-du-temps", label: "Emplois du temps" },
@@ -37,7 +37,7 @@ const _SOCIAL_LINKS = [
 
 const CONTACT = [
   { href: "tel:+225XXXXXXXXXX", label: "+225 XX XX XX XX XX" },
-  { href: "mailto:csm.niangon@yahoo.fr", label: "csm.niangon@yahoo.fr" },
+  { href: "mailto:contact@csm-niangon.com", label: "contact@csm-niangon.com" },
   {
     href: "https://maps.app.goo.gl/7maChM65BqTMFoLG6",
     label: "Abidjan, Yopougon Niangon",
@@ -77,14 +77,13 @@ export function SiteFooter(props: Readonly<SiteFooterProps>) {
                 width={36}
                 height={36}
               />
-              <span className="text-sm font-bold text-primary">
+              <span className="text-sm font-bold text-primary font-heading">
                 CSM <br />
                 Niangon
               </span>
             </Link>
             <p className="mt-3 max-w-xs text-sm text-muted-foreground">
-              La plateforme média officielle du CSM Niangon. Actualités,
-              articles et informations de la communauté.
+              L'excellence Notre devise. Dieu pour la réussite des enfants
             </p>
           </div>
 
@@ -128,6 +127,7 @@ export function SiteFooter(props: Readonly<SiteFooterProps>) {
                   <Link
                     href={link.href}
                     className="text-sm text-muted-foreground transition-colors hover:text-primary"
+                    target="_blank"
                   >
                     {link.label}
                   </Link>
@@ -147,6 +147,7 @@ export function SiteFooter(props: Readonly<SiteFooterProps>) {
                   <Link
                     href={link.href}
                     className="text-sm text-muted-foreground transition-colors hover:text-primary"
+                    target="_blank"
                   >
                     {link.label}
                   </Link>

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { requirePostManager } from "@/lib/auth/admin-guard";
 
 export const metadata = {
-  title: "Publications | Dashboard | CSM Niangon",
+  title: "Publications | Dashboard - CSM Niangon",
 };
 
 export default async function AdminPostsPage() {

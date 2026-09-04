@@ -2,7 +2,7 @@ import { PostCreateWizard } from "@/components/admin/post-create-wizard";
 import { requirePostManager } from "@/lib/auth/admin-guard";
 
 export const metadata = {
-  title: "Créer un post | Dashboard | CSM Niangon",
+  title: "Créer un post | Dashboard - CSM Niangon",
 };
 
 export default async function NewPostPage() {

@@ -18,7 +18,7 @@ import { VisitTrendChart } from "@/components/admin/visit-trend-chart";
 import { requireDashboardAccess } from "@/lib/auth/admin-guard";
 
 export const metadata = {
-  title: "Vue d'ensemble | Dashboard | CSM Niangon",
+  title: "Vue d'ensemble | Dashboard - CSM Niangon",
 };
 
 const PERIOD_ORDER: { key: VisitPeriod; short: string }[] = [

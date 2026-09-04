@@ -1,14 +1,14 @@
 import type { Role } from "@prisma/client";
 import type { Metadata } from "next";
 import "./globals.css";
-import { Inter, League_Spartan } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
 });
 
-const leagueSpartan = League_Spartan({
+const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-heading",
 });
@@ -79,7 +79,7 @@ export default async function RootLayout({
         <meta name="apple-mobile-web-app-title" content="CSM Niangon" />
       </head>
       <body
-        className={`${inter.variable} ${leagueSpartan.variable} antialiased`}
+        className={`${inter.variable} ${plusJakartaSans.variable} antialiased`}
       >
         <AnalyticsGate />
         <InfoBar items={infoBarItems} />
