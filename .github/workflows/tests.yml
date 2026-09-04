@@ -61,8 +61,8 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     env:
-      DATABASE_URL: ${{ secrets.DATABASE_URL_URL }}
-      DIRECT_URL: ${{ secrets.DIRECT_URL_URL }}
+      DATABASE_URL: postgresql://postgres.ucmmokkjfonihhofsmhl:jn0m8StQQ2CMN3KN@aws-0-eu-west-1.pooler.supabase.com:6543/postgres?pgbouncer=true
+      DIRECT_URL: postgresql://postgres.ucmmokkjfonihhofsmhl:jn0m8StQQ2CMN3KN@aws-0-eu-west-1.pooler.supabase.com:5432/postgres
       NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
       NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
       CI: true
