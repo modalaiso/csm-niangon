@@ -99,7 +99,7 @@ export function BottomNav(props: Readonly<BottomNavProps>) {
       ];
 
   return (
-    <nav className="sticky bottom-0 left-0 right-0 z-50 border-t border-primary/20 backdrop-blur supports-[backdrop-filter]:bg-background md:hidden">
+    <nav className="sticky bottom-0 left-0 right-0 z-50 border-t border-primary/20 backdrop-blur supports-[backdrop-filter]:bg-background hidden max-lg:block">
       <div className="flex h-16 items-center justify-around px-2">
         {navItems.map((item) => {
           const isActive =

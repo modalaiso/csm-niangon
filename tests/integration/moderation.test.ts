@@ -26,9 +26,7 @@ describe("checkContentAgainstKeywords", () => {
   });
 
   it("returns null when no active keyword matches", async () => {
-    findManyMock.mockResolvedValue([
-      { phrase: "spam", action: "AUTO_DELETE" },
-    ]);
+    findManyMock.mockResolvedValue([{ phrase: "spam", action: "AUTO_DELETE" }]);
     const result = await checkContentAgainstKeywords("Bonjour tout le monde");
     expect(result).toBeNull();
   });

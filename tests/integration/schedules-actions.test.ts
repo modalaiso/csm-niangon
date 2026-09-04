@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const schoolClassFindMany = vi.fn();
 const getUserMock = vi.fn();
@@ -6,7 +6,7 @@ const getUserMock = vi.fn();
 vi.mock("@/lib/prisma", () => ({
   prisma: {
     schoolClass: {
-      findMany: (...args: unknown[]) => schoolClassFindMany(...args),
+      findMany: schoolClassFindMany,
       findUnique: vi.fn(),
     },
     user: { findUnique: vi.fn() },
@@ -24,7 +24,12 @@ const { getSchoolClasses, createClass } = await import(
 );
 
 describe("getSchoolClasses", () => {
-  beforeEach(() => schoolClassFindMany.mockReset());
+  beforeEach(() => {
+    schoolClassFindMany.mockReset();
+    vi.spyOn(console, "error").mockImplementation(() => {});
+  });
+
+  afterEach(() => vi.restoreAllMocks());
 
   it("returns classes ordered by level then name", async () => {
     schoolClassFindMany.mockResolvedValue([

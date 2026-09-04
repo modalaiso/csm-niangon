@@ -84,7 +84,7 @@ export function TopNav(props: Readonly<TopNavProps>) {
           </Link>
         </div>
 
-        <div className="hidden md:flex container h-14 items-center justify-center px-4">
+        <div className="hidden lg:flex container h-14 items-center justify-center px-4">
           <nav className="hidden lg:flex items-center gap-8">
             {navLinks.map((link) => (
               <Link
@@ -104,13 +104,13 @@ export function TopNav(props: Readonly<TopNavProps>) {
 
         {/* Right: Search & Menu/Auth */}
         <div className="flex items-center gap-2">
-          <div className="hidden md:flex items-center gap-2 flex-1 max-w-sm">
+          <div className="hidden lg:flex items-center gap-2 flex-1 max-w-sm">
             <SearchDropdown />
           </div>
 
           {/* Bouton de création de post, réservé aux rédacteurs et admins */}
           {isWriterOrAdminOrModerator && (
-            <Link href="/admin" className="hidden md:block">
+            <Link href="/admin" className="hidden lg:block">
               <Button size="sm" className="rounded-full text-white gap-1.5">
                 <ShieldUser className="h-4 w-4" />
                 Dashboard
@@ -119,7 +119,7 @@ export function TopNav(props: Readonly<TopNavProps>) {
           )}
 
           {/* Desktop Auth / Profile */}
-          <div className="hidden md:flex items-center gap-2">
+          <div className="hidden lg:flex items-center gap-2">
             {props.user && props.userProfile ? (
               <ProfileMenu
                 nom={props.userProfile.nom}
@@ -145,7 +145,7 @@ export function TopNav(props: Readonly<TopNavProps>) {
           </div>
 
           {/* Mobile Menu Toggle */}
-          <div className="flex md:hidden gap-1">
+          <div className="flex lg:hidden gap-1">
             <SearchDropdown />
             <Sheet>
               <SheetTrigger asChild>
@@ -208,13 +208,13 @@ export function TopNav(props: Readonly<TopNavProps>) {
                         <div className="h-px bg-border my-2" />
                         <Link
                           href="/login"
-                          className="text-sm font-medium hover:underline"
+                          className="text-sm font-medium text-primary hover:underline "
                         >
                           Se connecter
                         </Link>
                         <Link
                           href="/signup"
-                          className="text-sm font-medium hover:underline"
+                          className="text-sm font-medium text-primary hover:underline"
                         >
                           S'inscrire
                         </Link>

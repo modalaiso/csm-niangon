@@ -1,11 +1,11 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const postFindMany = vi.fn();
 
 vi.mock("@/lib/prisma", () => ({
   prisma: {
     post: {
-      findMany: (...args: unknown[]) => postFindMany(...args),
+      findMany: postFindMany,
       count: vi.fn().mockResolvedValue(0),
     },
   },
@@ -25,7 +25,12 @@ const { getPostTagsByType } = await import("@/app/actions/posts");
 const { PostType } = await import("@prisma/client");
 
 describe("getPostTagsByType", () => {
-  beforeEach(() => postFindMany.mockReset());
+  beforeEach(() => {
+    postFindMany.mockReset();
+    vi.spyOn(console, "error").mockImplementation(() => {});
+  });
+
+  afterEach(() => vi.restoreAllMocks());
 
   it("returns a deduplicated, alphabetically sorted list of tags", async () => {
     postFindMany.mockResolvedValue([

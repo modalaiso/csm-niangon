@@ -14,9 +14,7 @@ for (const { path, heading } of legalPages) {
   });
 }
 
-test("le pied de page permet d'accéder aux pages légales", async ({
-  page,
-}) => {
+test("le pied de page permet d'accéder aux pages légales", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("link", { name: /mentions légales/i }).click();
   await expect(page).toHaveURL(/\/mentions-legales/);

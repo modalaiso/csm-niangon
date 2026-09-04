@@ -25,9 +25,7 @@ test.describe("Page d'accueil", () => {
     ).toBeVisible();
   });
 
-  test("permet de naviguer vers la page des informations", async ({
-    page,
-  }) => {
+  test("permet de naviguer vers la page des informations", async ({ page }) => {
     await page.goto("/");
     await page
       .getByRole("link", { name: /^infos$/i })

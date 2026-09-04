@@ -33,7 +33,7 @@ vi.mock("next/headers", () => ({
   }),
 }));
 
-// jsdom does not implement matchMedia — some UI primitives (Radix) expect it.
+// happy-dom does not implement matchMedia — some UI primitives (Radix) expect it.
 if (typeof window !== "undefined" && !window.matchMedia) {
   window.matchMedia = (query: string) => ({
     matches: false,
