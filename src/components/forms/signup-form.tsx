@@ -93,7 +93,11 @@ export function SignupForm(_props: Readonly<SignupFormProps>) {
         <h2 className="text-2xl font-bold text-gray-900">Inscription</h2>
       </div>
 
-      <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
+      <form
+        onSubmit={handleSubmit(handleFormSubmit)}
+        noValidate
+        className="space-y-6"
+      >
         <div className="grid gap-6 md:grid-cols-2">
           <div className="space-y-2">
             <Label htmlFor="lastName">Nom</Label>

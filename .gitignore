@@ -49,6 +49,11 @@ env.txt
 # Prisma
 prisma/.env
 
+# Tests
+coverage/
+playwright-report/
+test-results/
+
 # Playwright
 node_modules/
 /test-results/
