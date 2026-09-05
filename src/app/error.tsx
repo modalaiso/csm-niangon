@@ -17,7 +17,10 @@ export default function GlobalError(props: Props) {
       </p>
       <div className="mt-6 flex gap-3">
         <Button
-          onClick={() => props.reset?.()}
+          onClick={() => {
+            props.reset?.();
+            window.location.reload();
+          }}
           variant="default"
           className="text-white"
         >

@@ -15,11 +15,23 @@ export default function MentionsLegalesPage() {
           Le présent site internet est édité par une personne physique :
         </p>
         <ul className="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
-          <li>Éditeur / Nom : Mobio Israel</li>
-          <li>Adresse / Domiciliation : Abidjan, Côte d'Ivoire</li>
-          <li>Email de contact : [contact@csm-niangon.com]</li>
-          <li>Contact protection des données : [privacy@...]</li>
-          <li>Directeur de la publication : [Nom du directeur]</li>
+          <li>
+            <strong>Éditeur</strong> : <i>Mobio Israel</i>
+          </li>
+          <li>
+            <strong>Adresse</strong> : <i>Abidjan, Côte d'Ivoire</i>
+          </li>
+          <li>
+            <strong>Email de contact</strong> : <i>[contact@csm-niangon.com]</i>
+          </li>
+          <li>
+            <strong>Contact protection des données</strong> :{" "}
+            <i>[privacy@...]</i>
+          </li>
+          <li>
+            <strong>Directeur de la publication</strong> :{" "}
+            <i>[Nom du directeur]</i>
+          </li>
         </ul>
       </section>
 
@@ -31,7 +43,7 @@ export default function MentionsLegalesPage() {
           Le site est hébergé et s'appuie sur les infrastructures techniques des
           prestataires suivants :
         </p>
-        <p className="mt-1 text-muted-foreground">
+        <p className="mt-1 ml-1 text-muted-foreground">
           <strong>Vercel Inc.</strong> 440 N Barranca Ave #4133, Covina, CA
           91723, États-Unis
           <br />
@@ -47,7 +59,7 @@ export default function MentionsLegalesPage() {
         <p className="mt-3 text-muted-foreground">
           L'authentification et le stockage des données sont assurés par :
         </p>
-        <p className="mt-1 text-muted-foreground">
+        <p className="mt-1 ml-1 text-muted-foreground">
           <strong>Supabase Inc.</strong> Camden, 3500 S Dupont Hwy, États-Unis
           <br />
           <a

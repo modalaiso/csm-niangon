@@ -23,6 +23,7 @@ const signupSchema = z
       .string()
       .min(3, "Le nom d'utilisateur doit contenir au moins 3 caractères"),
     classe: z.string().min(1, "La classe est requise"),
+    matricule: z.string().optional(),
     email: z.string().email("Email invalide"),
     password: z
       .string()
@@ -100,7 +101,9 @@ export function SignupForm(_props: Readonly<SignupFormProps>) {
       >
         <div className="grid gap-6 md:grid-cols-2">
           <div className="space-y-2">
-            <Label htmlFor="lastName">Nom</Label>
+            <Label htmlFor="lastName">
+              Nom <span className="text-red-500">*</span>
+            </Label>
             <Input
               id="lastName"
               placeholder="Votre nom"
@@ -113,7 +116,9 @@ export function SignupForm(_props: Readonly<SignupFormProps>) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="prenom">Prénoms</Label>
+            <Label htmlFor="prenom">
+              Prénoms <span className="text-red-500">*</span>
+            </Label>
             <Input
               id="prenom"
               placeholder="Prénoms"
@@ -127,7 +132,9 @@ export function SignupForm(_props: Readonly<SignupFormProps>) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="username">Nom d'utilisateur</Label>
+          <Label htmlFor="username">
+            Nom d'utilisateur <span className="text-red-500">*</span>
+          </Label>
           <Input
             id="username"
             placeholder="Votre pseudo (min 3 car.)"
@@ -140,7 +147,9 @@ export function SignupForm(_props: Readonly<SignupFormProps>) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="classe">Classe</Label>
+          <Label htmlFor="classe">
+            Classe <span className="text-red-500">*</span>
+          </Label>
           <Select
             onValueChange={(value) => setValue("classe", value)}
             defaultValue={selectedClass}
@@ -165,7 +174,18 @@ export function SignupForm(_props: Readonly<SignupFormProps>) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="matricule">Matricule</Label>
+          <Input
+            id="matricule"
+            placeholder="Ex : 12346789A"
+            {...register("matricule")}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="email">
+            Email <span className="text-red-500">*</span>
+          </Label>
           <Input
             id="email"
             type="email"
@@ -180,7 +200,9 @@ export function SignupForm(_props: Readonly<SignupFormProps>) {
 
         <div className="grid gap-6 md:grid-cols-2">
           <div className="space-y-2">
-            <Label htmlFor="password">Mot de passe</Label>
+            <Label htmlFor="password">
+              Mot de passe <span className="text-red-500">*</span>
+            </Label>
             <Input
               id="password"
               type="password"

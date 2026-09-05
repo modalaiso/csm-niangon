@@ -189,14 +189,12 @@ export function SearchDropdown() {
                     className="w-full text-left px-4 py-3 hover:bg-accent/50 transition-colors focus:outline-none focus:bg-accent/50"
                   >
                     <div className="flex items-start gap-3">
-                      {result.thumbnail && (
-                        <img
-                          src={result.thumbnail}
-                          alt=""
-                          aria-hidden="true"
-                          className="w-20 h-14 object-cover rounded flex-shrink-0"
-                        />
-                      )}
+                      <img
+                        src={result.thumbnail || "/miniature.png"}
+                        alt=""
+                        aria-hidden="true"
+                        className="w-20 h-14 object-cover rounded flex-shrink-0"
+                      />
                       <div className="flex-1 min-w-0">
                         <h3 className="font-semibold text-base truncate">
                           {result.title}

@@ -18,7 +18,7 @@ export default function AdminSignupPage() {
               height={50}
               loading="eager"
             />
-            <span className="text-[1rem] leading-[1rem] font-bold text-primary hidden sm:block">
+            <span className="text-[1rem] leading-[1rem] font-bold text-primary hidden sm:block font-heading">
               CSM Niangon
             </span>
           </div>

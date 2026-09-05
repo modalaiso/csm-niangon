@@ -30,25 +30,24 @@ export default function ConfidentialitePage() {
         </h2>
         <ul className="list-disc space-y-1.5 pl-5 text-muted-foreground">
           <li>
-            <strong className="text-foreground">Données de compte</strong> :
-            nom, prénom, nom d'utilisateur, email, classe, matricule
-            (facultatif), photo de profil, bio.
+            <strong>Données de compte</strong> : nom, prénoms, nom
+            d'utilisateur, email, classe, matricule (facultatif), photo de
+            profil.
           </li>
           <li>
-            <strong className="text-foreground">Contenu publié</strong> :
-            publications, commentaires, réponses, likes, réactions.
+            <strong>Contenu publié</strong> : publications, commentaires,
+            réponses, likes, réactions.
           </li>
           <li>
-            <strong className="text-foreground">Statistiques de vues</strong> :
-            un compteur de vues par publication est tenu à partir de votre
-            identifiant de compte (si connecté) ou de votre adresse IP (si non
-            connecté), afin d'éviter les doubles comptages.
+            <strong>Statistiques de vues</strong> : un compteur de vues par
+            publication est tenu à partir de votre identifiant de compte (si
+            connecté) ou de votre adresse IP (si non connecté), afin d'éviter
+            les doubles comptages.
           </li>
           <li>
-            <strong className="text-foreground">Mesure d'audience</strong>{" "}
-            (uniquement avec votre consentement) : pages visitées, référent,
-            type d'appareil, et un identifiant de session anonyme stocké dans
-            votre navigateur.
+            <strong>Mesure d'audience</strong> (uniquement avec votre
+            consentement) : pages visitées, référent, type d'appareil, et un
+            identifiant de session anonyme stocké dans votre navigateur.
           </li>
         </ul>
       </section>

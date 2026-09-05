@@ -4,7 +4,13 @@ import { LoginForm } from "@/components/forms/login-form";
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen relative flex flex-col items-center justify-center bg-gradient-to-br from-blue-100 to-green-50 p-4">
+    <div
+      className="min-h-screen flex flex-col items-center bg-cover bg-center p-4"
+      style={{
+        backgroundImage:
+          "linear-gradient(to bottom right, rgb(219 234 254 / 50%), rgb(240 253 244 / 50%)), url('/bg.png')",
+      }}
+    >
       <div className="absolute top-4 right-4">
         <Link
           href="/admin-login"
@@ -27,7 +33,7 @@ export default function LoginPage() {
               height={50}
               loading="eager"
             />
-            <span className="text-[1rem] leading-[1rem] font-bold text-primary hidden sm:block">
+            <span className="text-[1rem] leading-[1rem] font-bold text-primary hidden sm:block font-heading">
               CSM Niangon
             </span>
           </div>
