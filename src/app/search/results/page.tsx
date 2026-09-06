@@ -55,8 +55,8 @@ export default async function SearchResultsPage(
   // 2. Main statement using the extracted variable
   const resultText =
     total === 0
-      ? "Aucun résultat trouvé"
-      : `${total} résultat${plural} trouvé${plural}`;
+      ? `Aucun résultat trouvé pour "${query}"`
+      : `${total} résultat${plural} trouvé${plural} pour "${query}"`;
 
   return (
     <main className="min-h-screen bg-background">

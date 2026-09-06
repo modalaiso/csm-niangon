@@ -99,7 +99,7 @@ export function BottomNav(props: Readonly<BottomNavProps>) {
       ];
 
   return (
-    <nav className="sticky bottom-0 left-0 right-0 z-50 border-t border-primary/20 backdrop-blur supports-[backdrop-filter]:bg-background hidden max-lg:block">
+    <nav className="sticky bottom-0 left-0 right-0 z-50 border-t border-primary/20 shadow-[0_-4px_12px_#0000000a] backdrop-blur supports-[backdrop-filter]:bg-background hidden max-lg:block">
       <div className="flex h-16 items-center justify-around px-2">
         {navItems.map((item) => {
           const isActive =
@@ -113,9 +113,9 @@ export function BottomNav(props: Readonly<BottomNavProps>) {
               key={item.href}
               href={item.href}
               className={cn(
-                "group flex flex-col items-center justify-center gap-1 rounded-lg p-2 text-xs font-medium transition-colors duration-200",
+                "group flex flex-col items-center justify-center gap-1 rounded-lg p-2 text-xs font-medium font-heading transition-colors duration-200",
                 isActive
-                  ? "text-primary"
+                  ? "text-primary font-bold"
                   : "text-muted-foreground hover:text-primary",
               )}
             >
