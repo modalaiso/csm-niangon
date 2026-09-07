@@ -28,7 +28,7 @@ test.describe("Authentification", () => {
     page,
   }) => {
     await page.goto("/signup");
-    await page.getByLabel(/^email$/i).fill("pas-un-email");
+    await page.getByLabel(/email/i).fill("pas-un-email");
     await page.getByRole("button", { name: /créer un compte/i }).click();
     await expect(page.getByText(/email invalide/i)).toBeVisible();
   });
@@ -37,7 +37,7 @@ test.describe("Authentification", () => {
     page,
   }) => {
     await page.goto("/signup");
-    await page.getByLabel(/^mot de passe$/i).fill("court");
+    await page.getByLabel(/mot de passe/i).fill("court");
     await page.getByRole("button", { name: /créer un compte/i }).click();
     await expect(page.getByText(/au moins 8 caractères/i)).toBeVisible();
   });
