@@ -18,8 +18,8 @@ import {
   deleteSubject,
   getClassSchedule,
   moveScheduleRow,
-  setScheduleCell,
   type SubjectSummary,
+  setScheduleCell,
   updateScheduleRow,
 } from "@/app/actions/schedules";
 import { Button } from "@/components/ui/button";
@@ -478,6 +478,12 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
                             }
                             onDrop={(e) => handleDrop(e, row.id, day)}
                             onClick={() => handleCellClick(row.id, day)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" || e.key === " ") {
+                                e.preventDefault();
+                                handleCellClick(row.id, day);
+                              }
+                            }}
                             className={cn(
                               "px-2 py-2 align-top transition-colors",
                               selectedSubjectId && "cursor-copy",
