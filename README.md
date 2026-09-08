@@ -1,472 +1,513 @@
-# CSM Niangon TV
+# CSM Niangon
 
 <div align="center">
 
-[![Deploiement sur Vercel](https://img.shields.io/badge/deploy-vercel-000000?style=for-the-badge&logo=vercel)](https://vercel.com)
-[![License MIT](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
-[![Next.js](https://img.shields.io/badge/Next.js-16.2.9-black?style=for-the-badge&logo=nextdotjs)](https://nextjs.org)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org)
-[![React](https://img.shields.io/badge/React-19.2.1-61dafb?style=for-the-badge&logo=react)](https://react.dev)
-
-**Une plateforme web moderne et performante pour les ecoles, clubs et associations**
-
-[Installation](#installation) - [Documentation](#utilisation) - [Contribuer](#contribution) - [License](#license)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Next.js](https://img.shields.io/badge/Next.js-16.x-black?logo=next.js&logoColor=white)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19.x-61DAFB?logo=react&logoColor=white)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Prisma](https://img.shields.io/badge/Prisma-6.x-2D3748?logo=prisma&logoColor=white)](https://www.prisma.io/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-4169E1?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Supabase](https://img.shields.io/badge/Supabase-Auth%20%26%20DB-3ECF8E?logo=supabase&logoColor=white)](https://supabase.com/)
 
 </div>
 
----
+CSM Niangon est une plateforme web moderne dédiée à la publication et à la gestion de contenu pour les établissements, clubs et associations. Elle centralise les actualités, événements et communications institutionnelles afin d'améliorer la diffusion d’information et la présence numérique.
 
-## Table des matieres
-
-- [A Propos](#a-propos)
-- [Fonctionnalites](#fonctionnalites)
-- [Stack Technique](#stack-technique)
-- [Prerequis](#prerequis)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Utilisation](#utilisation)
-- [Architecture](#architecture)
-- [Contribution](#contribution)
-- [License](#license)
-- [Support](#support)
+Le projet vise à offrir une expérience simple, rapide et sécurisée pour organiser le contenu éditorial tout en intégrant des rôles utilisateurs, des outils de modération et des fonctionnalités de gestion de contenu évoluées.
 
 ---
 
-## A Propos
+## 📚 Table des matières
 
-**CSM Niangon TV** est une plateforme web dediee a la diffusion d'informations scolaires. Elle permet aux ecoles, clubs et associations de partager :
-
-- Actualites et articles
-- Evenements
-- Communiques
-- Ressources pedagogiques
-- Gestion des utilisateurs (roles et permissions)
-
-Construite avec Next.js, Prisma et Supabase, elle offre une base reutilisable pour toute institution souhaitant disposer d'une vitrine numerique.
-
----
-
-## Fonctionnalites
-
-### Gestion de Contenu
-- Publication et gestion d'articles/actualites
-- Systeme de commentaires et likes
-
-> Note : les types de contenu (INFO, ARTICLE, ACTU, INTERVIEW), les statuts (DRAFT, PUBLISHED, ARCHIVED) et le modele de donnees exact doivent etre verifies contre `prisma/schema.prisma`, qui fait foi.
-
-### Gestion Utilisateurs
-- Authentification via Supabase
-- Roles : USER, WRITER, MODERATOR, ADMIN
-- Cles d'acces dediees pour MODERATOR / WRITER / ADMIN (voir `src/lib/access-keys.ts`)
-
-### Interface Utilisateur
-- Design responsive (Tailwind CSS)
-- Animations (Framer Motion)
-- Composants accessibles (Radix UI)
-- Navigation top/bottom (`top-nav.tsx`, `bottom-nav.tsx`)
-
-### Performance & Architecture
-- Next.js App Router (Server Components par defaut)
-- Prisma ORM (acces base de donnees type-safe)
-- React Query pour la gestion d'etat cote client
-- Vercel Analytics
-
-### Securite
-- Chiffrement des mots de passe (bcryptjs)
-- Middleware d'authentification (`proxy.ts`)
-- Validation des donnees (React Hook Form + Zod)
-- Variables d'environnement non commitees (`.env` exclu via `.gitignore`)
+- [À propos](#-à-propos)
+- [Fonctionnalités](#-fonctionnalités)
+- [Stack technique](#-stack-technique)
+- [Prérequis](#-prérequis)
+- [Installation](#-installation)
+- [Variables d’environnement](#-variables-denvironnement)
+- [Utilisation](#️-utilisation)
+- [Architecture du projet](#-architecture-du-projet)
+- [Contribution](#-contribution)
+- [Auteur & contact](#-auteur--contact)
+- [Licence](#-licence)
 
 ---
 
-## Stack Technique
+## 🌍 À propos
 
-| Categorie | Technologie | Version |
-|-----------|-------------|---------|
-| Framework | Next.js | 16.2.9 |
-| Runtime | React | 19.2.1 |
-| Langage | TypeScript | 5.x |
-| Styling | Tailwind CSS | 3.4.18 |
-| BDD | Prisma + PostgreSQL | 6.19.3 |
-| Authentification | Supabase (`@supabase/supabase-js` + `@supabase/ssr`) | 2.108.2 / 0.7.0 |
-| UI Components | Radix UI | multi-packages, voir `package.json` |
-| Animations | Framer Motion | 12.23.24 |
-| Icons | Lucide React | 0.553.0 |
-| Requetes | React Query (`@tanstack/react-query`) | 5.90.7 |
-| Formulaires | React Hook Form + Zod | 7.66.0 / 3.25.76 |
-| State management | Zustand | 5.0.8 |
-| Linting/Format | Biome | 2.2.0 |
-| Deploiement | Vercel | - |
+CSM Niangon permet à une organisation de gérer son contenu en ligne avec une structure claire et performante. La plateforme prend en charge la publication d’articles, la gestion des événements, l’authentification, le rôle des utilisateurs et la mise à jour de contenus selon des permissions définies.
+
+Elle est conçue pour être facilement déployable, maintenable et extensible, avec une base technique orientée performance, sécurité et qualité de code.
 
 ---
 
-## Prerequis
+## ✨ Fonctionnalités
 
-- Node.js 18+ (LTS recommande) - [Telecharger](https://nodejs.org)
-- npm, pnpm ou yarn
-- Projet Supabase (PostgreSQL hebergee + authentification)
+- Gestion des contenus éditoriaux : actualités, annonces, articles et ressources
+- Système d’authentification et gestion des rôles utilisateurs
+- Modération et validation des messages et contenus
+- Interface responsive et ergonomique pour mobile et desktop
+- Publication structurée avec support des médias et du contenu enrichi
+- Tableau de bord administratif pour une gestion centralisée
+- Intégration avec Supabase et Prisma pour un backend robuste et scalable
+
+---
+
+## 🧰 Stack technique
+
+| Catégorie | Technologie |
+| --- | --- |
+| Framework | Next.js |
+| Frontend | React, TypeScript |
+| Styling | Tailwind CSS |
+| Backend | Next.js API routes |
+| Base de données | PostgreSQL |
+| ORM | Prisma |
+| Authentification | Supabase |
+| Validation | Zod |
+| UI | Radix UI, Tailwind |
+| Animations | Framer Motion |
+| Tests | Vitest, Playwright |
+| Déploiement | Vercel |
+
+---
+
+## ✅ Prérequis
+
+Avant de commencer, assurez-vous d’avoir installé :
+
+- Node.js >= 18
+- npm ou pnpm ou yarn
 - Git
-- (Optionnel) Compte [Vercel](https://vercel.com) pour le deploiement
+- PostgreSQL
+- Un projet Supabase
+- Docker (optionnel, selon votre environnement de développement)
 
-Verifiez votre installation :
+Vérification rapide :
 
 ```bash
-node --version    # v18.0.0+
-npm --version     # 10.0.0+
-git --version     # 2.0.0+
+node --version
+npm --version
+git --version
 ```
 
 ---
 
-## Installation
+## 🚀 Installation
 
-### 1. Cloner le depot
+### 1. Cloner le dépôt
 
 ```bash
 git clone https://github.com/modalaiso/csm-niangon.git
 cd csm-niangon
 ```
 
-### 2. Installer les dependances
+### 2. Installer les dépendances
 
 ```bash
 npm install
 ```
 
-### 3. Configurer les variables d'environnement
+### 3. Configurer les variables d’environnement
 
-Creer un fichier `.env` a la racine du projet (un `.env.example` est fourni comme reference) :
-
-```env
-# Base de donnees - pooler transaction mode (IPv4 uniquement)
-DATABASE_URL="postgresql://postgres.[ID_PROJET]:[MOT_DE_PASSE]@[REGION].pooler.supabase.com:6543/postgres?pgbouncer=true"
-# Base de donnees - pooler session mode (utilise pour les migrations)
-DIRECT_URL="postgresql://postgres.[ID_PROJET]:[MOT_DE_PASSE]@[REGION].pooler.supabase.com:5432/postgres"
-
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL=https://[ID_PROJET].supabase.co
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_XXXX...
-SUPABASE_URL=https://[ID_PROJET].supabase.co
-SUPABASE_PUBLISHABLE_KEY=sb_publishable_XXXX...
-SUPABASE_SECRET_KEY=sb_secret_XXXX...
-SUPABASE_JWKS_URL=https://[ID_PROJET].supabase.co/auth/v1/.well-known/jwks.json
-
-# Cles d'acces (a remplir manuellement)
-MODERATOR_KEYS=
-WRITER_KEYS=
-ADMIN_KEYS=
-```
-
-Important : ces identifiants sont sensibles. Ne jamais les commiter, et regenerer le mot de passe Postgres ou les cles Supabase en cas de doute sur une fuite.
-
-### 4. Initialiser la base de donnees
+Créez un fichier `.env` à la racine du projet :
 
 ```bash
-# Generer le client Prisma
-npm run prisma:generate
-
-# Appliquer les migrations existantes (recommande, coherent avec prisma/migrations/)
-npx prisma migrate deploy
-
-# (Optionnel, developpement uniquement) pousser le schema sans creer de migration
-npm run prisma:push
-
-# (Optionnel) peupler la BD avec les cles d'acces
-npm run prisma:seed
+cp .env.example .env
 ```
 
-> Le projet contient un historique de migrations (`prisma/migrations/`). En developpement comme en production, preferez `prisma migrate dev` / `prisma migrate deploy` a `prisma db push`, qui ne genere pas de fichier de migration et peut faire diverger le schema entre environnements.
+Puis remplissez les variables nécessaires.
 
-### 5. Lancer le serveur de developpement
+### 4. Générer le client Prisma
+
+```bash
+npm run prisma:generate
+```
+
+### 5. Appliquer les migrations
+
+```bash
+npx prisma migrate dev
+```
+
+ou en production :
+
+```bash
+npx prisma migrate deploy
+```
+
+### 6. Démarrer le projet
 
 ```bash
 npm run dev
 ```
 
-Ouvrez [http://localhost:3000](http://localhost:3000).
+Le projet sera accessible sur :
+
+```text
+http://localhost:3000
+```
 
 ---
 
-## Configuration
+## 🔐 Variables d’environnement
 
-### Base de donnees
-
-```bash
-# Creer une nouvelle migration apres modification du schema
-npx prisma migrate dev --name nom_de_la_migration
-
-# Visualiser la BD avec Prisma Studio
-npm run prisma:studio
-```
-
-### Variables d'environnement
+Le projet utilise des variables de configuration essentielles pour la base de données, l’authentification et les rôles d’accès.
 
 | Variable | Description |
-|----------|-------------|
-| `DATABASE_URL` | URL de connexion PostgreSQL via le pooler (port 6543) |
-| `DIRECT_URL` | URL de connexion directe/session, utilisee pour les migrations (port 5432) |
+| --- | --- |
+| `DATABASE_URL` | URL de connexion PostgreSQL |
+| `DIRECT_URL` | URL directe de connexion PostgreSQL pour les migrations |
 | `NEXT_PUBLIC_SUPABASE_URL` | URL du projet Supabase |
-| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Cle publique Supabase (cote client) |
-| `SUPABASE_SECRET_KEY` | Cle secrete Supabase (cote serveur uniquement) |
-| `SUPABASE_JWKS_URL` | URL du JWKS pour la verification des JWT |
-| `MODERATOR_KEYS` | Cles d'invitation pour le role MODERATOR |
-| `WRITER_KEYS` | Cles d'invitation pour le role WRITER |
-| `ADMIN_KEYS` | Cles d'invitation pour le role ADMIN |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Clé publique Supabase côté client |
+| `SUPABASE_URL` | URL Supabase côté serveur |
+| `SUPABASE_PUBLISHABLE_KEY` | Clé publique Supabase côté serveur |
+| `SUPABASE_SECRET_KEY` | Clé secrète Supabase |
+| `SUPABASE_JWKS_URL` | URL JWKS pour la validation des JWT |
+| `MODERATOR_KEYS` | Clés d’accès pour les modérateurs |
+| `WRITER_KEYS` | Clés d’accès pour les rédacteurs |
+| `ADMIN_KEYS` | Clés d’accès pour les administrateurs |
+
+Exemple :
+
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/csm_niangon"
+DIRECT_URL="postgresql://user:password@localhost:5432/csm_niangon"
+
+NEXT_PUBLIC_SUPABASE_URL="https://your-project.supabase.co"
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY="your_publishable_key"
+SUPABASE_URL="https://your-project.supabase.co"
+SUPABASE_PUBLISHABLE_KEY="your_publishable_key"
+SUPABASE_SECRET_KEY="your_secret_key"
+SUPABASE_JWKS_URL="https://your-project.supabase.co/auth/v1/.well-known/jwks.json"
+
+MODERATOR_KEYS="key1,key2"
+WRITER_KEYS="writer-key-1"
+ADMIN_KEYS="admin-key-1"
+```
 
 ---
 
-## Utilisation
+## 🛠️ Utilisation
 
-### Commandes disponibles
+### Commandes utiles
 
 ```bash
-# Developpement
-npm run dev              # Demarrer le serveur local
-npm run build             # Build production
-npm start                 # Lancer l'app en production
+# Démarrage en développement
+npm run dev
 
-# Linting & Formatting
-npm run lint               # Verifier avec Biome
-npm run format             # Formater le code
+# Build production
+npm run build
+
+# Démarrage production
+npm run start
+
+# Vérification du code
+npm run lint
+
+# Formatage
+npm run format
 
 # Prisma
-npm run prisma:generate    # Generer le client Prisma
-npm run prisma:push        # Pousser le schema (dev uniquement, sans migration)
-npm run prisma:studio      # Ouvrir Prisma Studio
-npm run prisma:seed        # Peupler la BD (cles d'acces)
+npm run prisma:generate
+npm run prisma:studio
+npm run prisma:seed
 ```
 
-### Structure des dossiers
+### Exécution des tests
 
+```bash
+npm run test:unit
+npm run test:e2e
 ```
+
+---
+
+## 🧱 Architecture du projet
+
+```text
 csm-niangon/
+├── AGENTS.md
+├── CLAUDE.md
+├── LICENSE
+├── README.md
+├── biome.json
+├── components.json
+├── docs/
+├── e2e/
+│   ├── auth.spec.ts
+│   ├── home.spec.ts
+│   ├── legal-pages.spec.ts
+│   └── schedules.spec.ts
+├── eslint.config.js
+├── next.config.ts
+├── package-lock.json
+├── package.json
+├── playwright.config.ts
+├── postcss.config.js
+├── postcss.config.mjs
+├── prisma/
+│   ├── migrations/
+│   │   └── migration_lock.toml
+│   ├── schema.prisma
+│   └── seed.ts
+├── public/
+│   ├── 100years.png
+│   ├── android-chrome-192x192.png
+│   ├── android-chrome-512x512.png
+│   ├── bg.png
+│   ├── file.svg
+│   ├── globe.svg
+│   ├── logo-b.png
+│   ├── logo-g.png
+│   ├── logo-w.png
+│   ├── logo.png
+│   ├── miniature.png
+│   ├── vercel.svg
+│   ├── web-app-manifest-192x192.png
+│   ├── web-app-manifest-512x512.png
+│   └── window.svg
+├── sonar-project.properties
 ├── src/
-│   ├── app/                        # Pages Next.js App Router
-│   │   ├── page.tsx                # Page d'accueil
-│   │   ├── layout.tsx              # Layout principal
-│   │   ├── globals.css             # Styles globaux
-│   │   ├── manifest.json           # Manifest PWA
-│   │   ├── favicon.ico / icon0.svg / icon1.png / apple-icon.png
+│   ├── app/
 │   │   ├── actions/
-│   │   │   └── auth.ts             # Server action d'authentification
-│   │   ├── login/
-│   │   │   └── page.tsx            # Connexion utilisateur
-│   │   ├── signup/
-│   │   │   └── page.tsx            # Inscription utilisateur
+│   │   │   ├── admin-comments.ts
+│   │   │   ├── admin-dashboard.ts
+│   │   │   ├── admin-posts.ts
+│   │   │   ├── admin-users.ts
+│   │   │   ├── analytics.ts
+│   │   │   ├── announcements.ts
+│   │   │   ├── auth.ts
+│   │   │   ├── comments.ts
+│   │   │   ├── infobar.ts
+│   │   │   ├── likes.ts
+│   │   │   ├── moderation.ts
+│   │   │   ├── posts.ts
+│   │   │   ├── profile.ts
+│   │   │   ├── schedules.ts
+│   │   │   └── search.ts
+│   │   ├── actus/
+│   │   │   └── page.tsx
+│   │   ├── admin/
+│   │   │   ├── comments/
+│   │   │   │   └── page.tsx
+│   │   │   ├── layout.tsx
+│   │   │   ├── moderation/
+│   │   │   │   └── page.tsx
+│   │   │   ├── page.tsx
+│   │   │   ├── posts/
+│   │   │   │   ├── [id]/
+│   │   │   │   │   └── edit/
+│   │   │   │   │       └── page.tsx
+│   │   │   │   ├── new/
+│   │   │   │   │   └── page.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── schedules/
+│   │   │   │   ├── [classId]/
+│   │   │   │   │   └── page.tsx
+│   │   │   │   └── page.tsx
+│   │   │   └── users/
+│   │   │       └── page.tsx
 │   │   ├── admin-login/
-│   │   │   └── page.tsx            # Connexion admin/moderateur/redacteur
+│   │   │   └── page.tsx
 │   │   ├── admin-signup/
-│   │   │   └── page.tsx            # Inscription admin/moderateur/redacteur
-│   │   └── dashboard/
-│   │       └── page.tsx            # Dashboard utilisateur
+│   │   │   └── page.tsx
+│   │   ├── apple-icon.png
+│   │   ├── apple-touch-icon.png
+│   │   ├── cgu/
+│   │   │   └── page.tsx
+│   │   ├── confidentialite/
+│   │   │   └── page.tsx
+│   │   ├── dashboard/
+│   │   │   └── page.tsx
+│   │   ├── emplois-du-temps/
+│   │   │   ├── [classId]/
+│   │   │   │   └── page.tsx
+│   │   │   └── page.tsx
+│   │   ├── error.tsx
+│   │   ├── favicon-16x16.png
+│   │   ├── favicon-32x32.png
+│   │   ├── favicon.ico
+│   │   ├── globals.css
+│   │   ├── icon0.svg
+│   │   ├── icon1.png
+│   │   ├── infos/
+│   │   │   └── page.tsx
+│   │   ├── layout.tsx
+│   │   ├── login/
+│   │   │   └── page.tsx
+│   │   ├── manifest.json
+│   │   ├── mentions-legales/
+│   │   │   └── page.tsx
+│   │   ├── not-found.tsx
+│   │   ├── page.tsx
+│   │   ├── posts/
+│   │   │   └── [id]/
+│   │   │       └── page.tsx
+│   │   ├── profile/
+│   │   │   └── page.tsx
+│   │   ├── search/
+│   │   │   └── results/
+│   │   │       └── page.tsx
+│   │   ├── signup/
+│   │   │   └── page.tsx
+│   │   └── site.webmanifest
 │   ├── components/
+│   │   ├── actus/
+│   │   │   └── actu-explorer.tsx
+│   │   ├── admin/
+│   │   │   ├── admin-comments-table.tsx
+│   │   │   ├── admin-posts-table.tsx
+│   │   │   ├── admin-sidebar.tsx
+│   │   │   ├── admin-topbar.tsx
+│   │   │   ├── admin-users-table.tsx
+│   │   │   ├── announcement-duration-select.tsx
+│   │   │   ├── class-subject-manager.tsx
+│   │   │   ├── content-editor.tsx
+│   │   │   ├── moderation-keywords-panel.tsx
+│   │   │   ├── moderation-log-list.tsx
+│   │   │   ├── moderation-queue.tsx
+│   │   │   ├── moderation-tabs.tsx
+│   │   │   ├── multi-image-upload-field.tsx
+│   │   │   ├── post-create-wizard.tsx
+│   │   │   ├── schedule-editor.tsx
+│   │   │   ├── table-pagination.tsx
+│   │   │   ├── useAdminList.ts
+│   │   │   └── visit-trend-chart.tsx
+│   │   ├── analytics/
+│   │   │   ├── analytics-gate.tsx
+│   │   │   └── visit-tracker.tsx
+│   │   ├── announcements/
+│   │   │   ├── announcement-events.ts
+│   │   │   └── announcement-popup.tsx
+│   │   ├── cookies/
+│   │   │   └── cookie-consent-banner.tsx
+│   │   ├── footer/
+│   │   │   └── site-footer.tsx
 │   │   ├── forms/
-│   │   │   ├── login-form.tsx
-│   │   │   ├── signup-form.tsx
 │   │   │   ├── admin-login-form.tsx
-│   │   │   └── admin-signup-form.tsx
+│   │   │   ├── admin-signup-form.tsx
+│   │   │   ├── login-form.tsx
+│   │   │   └── signup-form.tsx
+│   │   ├── home/
+│   │   │   ├── hero-carousel.tsx
+│   │   │   └── posts-explorer.tsx
+│   │   ├── icons/
+│   │   │   ├── icons.tsx
+│   │   │   ├── nav-icons.tsx
+│   │   │   └── social-icons.tsx
+│   │   ├── info-bar/
+│   │   │   └── info-bar.tsx
+│   │   ├── infos/
+│   │   │   └── info-explorer.tsx
+│   │   ├── legal/
+│   │   │   └── legal-page-layout.tsx
 │   │   ├── nav/
-│   │   │   ├── top-nav.tsx
-│   │   │   └── bottom-nav.tsx
-│   │   └── ui/                     # Composants Radix
+│   │   │   ├── bottom-nav.tsx
+│   │   │   ├── profile-menu.tsx
+│   │   │   └── top-nav.tsx
+│   │   ├── posts/
+│   │   │   ├── comment-section.tsx
+│   │   │   ├── like-button.tsx
+│   │   │   ├── post-gallery.tsx
+│   │   │   ├── post-results.tsx
+│   │   │   ├── post-type-explorer.tsx
+│   │   │   └── share-button.tsx
+│   │   ├── profile/
+│   │   │   ├── avatar-upload.tsx
+│   │   │   └── profile-form.tsx
+│   │   ├── schedule/
+│   │   │   ├── other-classes-list.tsx
+│   │   │   ├── schedule-document.tsx
+│   │   │   └── schedule-export.tsx
+│   │   ├── search/
+│   │   │   └── search-dropdown.tsx
+│   │   └── ui/
+│   │       ├── avatar.tsx
 │   │       ├── button.tsx
 │   │       ├── input.tsx
 │   │       ├── label.tsx
 │   │       ├── select.tsx
-│   │       └── sheet.tsx
+│   │       ├── sheet.tsx
+│   │       └── view-mode-toggle.tsx
 │   ├── lib/
-│   │   ├── prisma.ts               # Client Prisma (singleton)
-│   │   ├── access-keys.ts          # Validation des cles d'acces
-│   │   ├── utils.ts                # Fonctions utilitaires (cn, etc.)
-│   │   └── supabase/
-│   │       └── server.ts           # Client Supabase (server)
-│   ├── utils/
-│   │   └── supabase/               # Doublon avec lib/supabase a clarifier
-│   │       ├── client.ts           # Client Supabase (browser)
-│   │       ├── middleware.ts       # Client Supabase (middleware)
-│   │       └── server.ts           # Client Supabase (server)
-│   ├── proxy.ts                    # Middleware Supabase (auth refresh)
-│   └── types/
-│       └── index.ts                # Types TypeScript partages
-├── prisma/
-│   ├── schema.prisma                # Schema de la base de donnees
-│   ├── seed.ts                      # Script de seed (cles d'acces)
-│   └── migrations/
-│       ├── migration_lock.toml
-│       └── 20260619220156_init/
-│           └── migration.sql
-├── public/
-│   ├── Logo.png / logo-b.png / logo-g.png / logo-w.png
-│   ├── file.svg / globe.svg / next.svg / vercel.svg / window.svg
-│   └── web-app-manifest-192x192.png / web-app-manifest-512x512.png
-├── docs/
-│   ├── cdc_app-media_c_ntic&info.odt / .pdf   # Cahier des charges
-│   └── design/
-│       ├── CSM Niangon.fig
-│       ├── Auth/
-│       ├── Wireframe/
-│       └── nav/
-│           ├── top_nav/
-│           └── bottom_nav/
-├── .vscode/
-│   └── settings.json
-├── .env                             # Variables d'environnement reelles (non commite)
-├── .env.example                     # Modele des variables requises
-├── .gitignore
-├── biome.json
-├── components.json
-├── LICENSE
-├── next.config.ts
-├── next-env.d.ts
-├── postcss.config.js / postcss.config.mjs
+│   │   ├── access-keys.ts
+│   │   ├── auth/
+│   │   │   └── admin-guard.ts
+│   │   ├── cookie-consent.ts
+│   │   ├── prisma.ts
+│   │   ├── render-post-content.tsx
+│   │   ├── schedules.ts
+│   │   ├── supabase/
+│   │   │   └── server.ts
+│   │   ├── utils.ts
+│   │   └── viewCount.ts
+│   ├── proxy.ts
+│   ├── types/
+│   │   └── index.ts
+│   └── utils/
+│       └── supabase/
+│           ├── client.ts
+│           └── middleware.ts
 ├── tailwind.config.js
+├── tests/
+│   ├── integration/
+│   │   ├── moderation.test.ts
+│   │   ├── posts.test.ts
+│   │   └── schedules-actions.test.ts
+│   ├── setup.ts
+│   └── unit/
+│       ├── render-post-content.test.tsx
+│       ├── schedules.test.ts
+│       └── utils.test.ts
 ├── tsconfig.json
-├── package.json
-└── package-lock.json
+└── vitest.config.ts
 ```
 
-### Modele de donnees
+---
 
-Le projet utilise Prisma avec PostgreSQL. Le schema exact (entites, champs, relations) est defini dans `prisma/schema.prisma`, qui fait foi. A date de cette documentation, le projet expose au minimum un modele `AccessKey` (cles d'invitation par role) et un modele `User` lie a l'authentification Supabase.
+## 🤝 Contribution
+
+Les contributions sont les bienvenues !
+
+1. Fork le projet
+2. Créez une branche :
+
+   ```bash
+   git checkout -b feature/ma-fonctionnalite
+   ```
+
+3. Committez vos changements :
+
+   ```bash
+   git commit -m "Ajout de ma fonctionnalité"
+   ```
+
+4. Poussez vers votre fork :
+
+   ```bash
+   git push origin feature/ma-fonctionnalite
+   ```
+
+5. Ouvrez une Pull Request
+
+Merci de respecter les standards de qualité, le style de code existant et la documentation associée.
 
 ---
 
-## Architecture
+## 👤 Auteur & contact
 
-### Principes de design
+- Nom : modalaiso
+- GitHub : [@modalaiso](https://github.com/modalaiso)
+- Site / portfolio : [GitHub profile](https://github.com/modalaiso)
 
-1. App Router : routage Next.js le plus recent
-2. Server Components par defaut
-3. TypeScript strict
-4. Separation des responsabilites (app / components / lib / utils)
-5. Composants accessibles (Radix UI)
-
-### Authentification
-
-- Supabase pour l'authentification (`@supabase/ssr`)
-- Middleware (`proxy.ts`) pour rafraichir la session et proteger les routes
-- Cles d'acces dediees pour l'attribution des roles MODERATOR / WRITER / ADMIN
-
-### Securite
-
-- Variables d'environnement exclues du depot via `.gitignore`
-- Mots de passe hashes avec bcryptjs
-- Validation des formulaires cote client et serveur (Zod)
+Pour toute question, suggestion ou proposition de collaboration, contactez l’auteur via GitHub ou via le dépôt du projet.
 
 ---
 
-## Contribution
+## 📄 Licence
 
-### 1. Fork le projet
+Ce projet est distribué sous la licence MIT.
 
-### 2. Creer une branche feature
-
-```bash
-git checkout -b feature/ma-nouvelle-fonctionnalite
-```
-
-### 3. Faire vos modifications
-
-```bash
-npm run lint
-npm run format
-```
-
-### 4. Commit avec des messages clairs
-
-```bash
-git commit -m "feat: ajouter nouvelle fonctionnalite"
-```
-
-Convention [Conventional Commits](https://www.conventionalcommits.org/) :
-- `feat:` nouvelle fonctionnalite
-- `fix:` correction de bug
-- `docs:` documentation
-- `style:` formatage
-- `refactor:` refonte
-- `test:` tests
-- `chore:` maintenance
-
-### 5. Push et Pull Request
-
-```bash
-git push origin feature/ma-nouvelle-fonctionnalite
-```
-
-### Guidelines
-
-- Respectez le style de code du projet
-- Documentez les changements importants
-- Ne committez jamais de fichiers sensibles (`.env`, cles API)
-- Verifiez que `npm run lint` et `npm run build` passent avant de pousser
-
----
-
-## License
-
-Projet sous licence MIT. Voir le fichier [LICENSE](LICENSE).
-
-Vous etes libre de :
-- Utiliser le code a titre commercial
-- Modifier le code
-- Distribuer le code
-- Utiliser a titre prive
-
-A condition de :
-- Inclure une copie de la licence
-- Inclure la notice de copyright
-
----
-
-## Support
-
-- [Documentation Next.js](https://nextjs.org/docs)
-- [Issues existantes](https://github.com/modalaiso/csm-niangon/issues)
-- [Ouvrir une issue](https://github.com/modalaiso/csm-niangon/issues/new)
-
-### Ressources utiles
-
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Prisma Documentation](https://www.prisma.io/docs)
-- [Supabase Documentation](https://supabase.com/docs)
-- [Tailwind CSS](https://tailwindcss.com/docs)
-- [React Query](https://tanstack.com/query/latest)
-
----
-
-## Remerciements
-
-- [Next.js](https://nextjs.org)
-- [Prisma](https://www.prisma.io)
-- [Supabase](https://supabase.com)
-- [Tailwind CSS](https://tailwindcss.com)
-- [Radix UI](https://www.radix-ui.com)
-
----
-
-## Roadmap
-
-### Complete
-- Authentification utilisateur
-- Gestion des roles et cles d'acces
-- Interface responsive
-
-### En cours
-- Gestion de contenu (articles, evenements, documents)
-- Dashboard utilisateur
-
-### Futur
-- Notifications en temps reel
-- Recherche avancee
-- Export PDF des articles
-- Support multilingue
-
----
-
-<div align="center">
-
-Cree par [Mobio Israel](https://github.com/modalaiso)
-
-[GitHub](https://github.com/modalaiso/csm-niangon) - [Issues](https://github.com/modalaiso/csm-niangon/issues) - [Discussions](https://github.com/modalaiso/csm-niangon/discussions)
-
-</div>
+Voir le fichier `LICENSE` pour plus de détails.

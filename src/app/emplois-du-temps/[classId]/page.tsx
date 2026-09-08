@@ -1,7 +1,8 @@
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getClassSchedule } from "@/app/actions/schedules";
+import { getClassSchedule, getSchoolClasses } from "@/app/actions/schedules";
+import { OtherClassesList } from "@/components/schedule/other-classes-list";
 import { ScheduleExport } from "@/components/schedule/schedule-export";
 
 interface SchedulePageProps {
@@ -26,7 +27,10 @@ export default async function SchedulePage({
   params,
 }: Readonly<SchedulePageProps>) {
   const { classId } = await params;
-  const schedule = await getClassSchedule(classId);
+  const [schedule, classes] = await Promise.all([
+    getClassSchedule(classId),
+    getSchoolClasses(),
+  ]);
 
   if (!schedule) {
     notFound();
@@ -46,6 +50,8 @@ export default async function SchedulePage({
         <div className="mt-6">
           <ScheduleExport schedule={schedule} />
         </div>
+
+        <OtherClassesList classes={classes} currentClassId={classId} />
       </div>
     </main>
   );

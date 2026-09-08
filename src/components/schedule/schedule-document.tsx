@@ -60,9 +60,23 @@ export function ScheduleDocument(props: Readonly<ScheduleDocumentProps>) {
                     return (
                       <td
                         key={day}
-                        className="border-2 border-slate-900 px-3 py-3 text-center uppercase text-slate-900"
+                        className="border-2 border-slate-900 px-2 py-2 text-center uppercase text-slate-900"
                       >
-                        {cell?.subjectName ?? ""}
+                        {cell?.subjectName ? (
+                          <span
+                            style={{
+                              backgroundColor: cell.subjectColor
+                                ? `${cell.subjectColor}26`
+                                : "#f1f5f9",
+                              color: cell.subjectColor ?? "#0f172a",
+                            }}
+                            className="inline-block w-full rounded-lg px-2 py-1.5 font-semibold"
+                          >
+                            {cell.subjectName}
+                          </span>
+                        ) : (
+                          ""
+                        )}
                       </td>
                     );
                   })}
