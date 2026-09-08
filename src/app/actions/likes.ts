@@ -1,9 +1,9 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { notifyPostLike } from "@/lib/notifications";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
-import { notifyPostLike } from "@/lib/notifications";
 
 export interface LikeInfo {
   count: number;

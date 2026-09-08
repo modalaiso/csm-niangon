@@ -6,9 +6,9 @@ import { Menu, ShieldUser } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ProfileMenu } from "@/components/nav/profile-menu";
+import { NotificationBell } from "@/components/notifications/notification-bell";
 import { SearchDropdown } from "@/components/search/search-dropdown";
 import { Button } from "@/components/ui/button";
-import { NotificationBell } from "@/components/notifications/notification-bell";
 import {
   Sheet,
   SheetContent,

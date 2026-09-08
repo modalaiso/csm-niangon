@@ -3,7 +3,7 @@
 import { Bell } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   getMyNotifications,
   getUnreadNotificationCount,
@@ -36,18 +36,17 @@ export function NotificationBell() {
   const [isLoading, setIsLoading] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const refreshCount = () => {
+  const refreshCount = useCallback(() => {
     getUnreadNotificationCount()
       .then(setUnreadCount)
       .catch(() => {});
-  };
+  }, []);
 
   useEffect(() => {
     refreshCount();
     const interval = window.setInterval(refreshCount, POLL_INTERVAL_MS);
     return () => window.clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [refreshCount]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {

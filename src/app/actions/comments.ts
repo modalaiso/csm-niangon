@@ -3,9 +3,9 @@
 import type { CommentReactionType, Role } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { checkContentAgainstKeywords } from "@/app/actions/moderation";
+import { notifyCommentReply } from "@/lib/notifications";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
-import { notifyCommentLike, notifyCommentReply } from "@/lib/notifications";
 
 export interface PostComment {
   id: string;

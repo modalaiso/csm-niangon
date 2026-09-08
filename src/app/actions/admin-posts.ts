@@ -3,8 +3,8 @@
 import type { PostStatus, PostType } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { getPostManagerAuthContext } from "@/lib/auth/admin-guard";
-import { prisma } from "@/lib/prisma";
 import { notifyNewPost } from "@/lib/notifications";
+import { prisma } from "@/lib/prisma";
 
 const MAX_IMAGES = 15;
 
