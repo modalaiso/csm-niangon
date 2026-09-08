@@ -37,8 +37,10 @@ test.describe("Authentification", () => {
     page,
   }) => {
     await page.goto("/signup");
-    await page.getByLabel(/mot de passe/i).fill("court");
-    await page.getByRole("button", { name: /créer un compte/i }).click();
+    await page.getByLabel(/^mot de passe/i).fill("court");
+    const submitButton = page.getByRole("button", { name: /créer un compte/i });
+    await submitButton.scrollIntoViewIfNeeded();
+    await submitButton.click();
     await expect(page.getByText(/au moins 8 caractères/i)).toBeVisible();
   });
 });

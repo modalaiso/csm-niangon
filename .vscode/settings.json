@@ -1,7 +1,7 @@
 {
   "prisma.pinToPrisma6": true,
   "sonarlint.connectedMode.project": {
-    "connectionId": "modalaiso",
+    "connectionId": "SonarQube for IDE - Visual Studio Code 9",
     "projectKey": "modalaiso_csm-niangon"
   }
 }
