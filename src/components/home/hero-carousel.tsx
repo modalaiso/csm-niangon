@@ -103,8 +103,8 @@ export function HeroCarousel(props: Readonly<HeroCarouselProps>) {
       ))}
 
       {/* Voile pour la lisibilité du texte, comme sur la maquette */}
-      <div className="absolute inset-0 bg-gradient-to-r from-white via-transparent to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
 
       {props.posts.length > 1 && (
         <>
@@ -112,7 +112,7 @@ export function HeroCarousel(props: Readonly<HeroCarouselProps>) {
             type="button"
             onClick={() => goTo(index - 1)}
             aria-label="Publication précédente"
-            className="absolute hidden left-6 md:left-8 top-1/2 z-20 sm:flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-white/50 backdrop-blur-[3px] transition-colors hover:bg-white/70 hover:backdrop-blur-[3px]"
+            className="absolute hidden left-6 md:left-8 top-1/2 z-20 sm:flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-background/50 backdrop-blur-[3px] transition-colors hover:bg-background/70 hover:backdrop-blur-[3px]"
           >
             <ChevronLeft className="h-5 w-5 text-primary" />
           </button>
@@ -120,7 +120,7 @@ export function HeroCarousel(props: Readonly<HeroCarouselProps>) {
             type="button"
             onClick={() => goTo(index + 1)}
             aria-label="Publication suivante"
-            className="absolute hidden right-6 md:right-8 top-1/2 z-20 sm:flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-white/50 backdrop-blur-[3px] transition-colors hover:bg-white/70 hover:backdrop-blur-[3px]"
+            className="absolute hidden right-6 md:right-8 top-1/2 z-20 sm:flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-background/50 backdrop-blur-[3px] transition-colors hover:bg-background/70 hover:backdrop-blur-[3px]"
           >
             <ChevronRight className="h-5 w-5 text-primary" />
           </button>

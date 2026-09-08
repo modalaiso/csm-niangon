@@ -4,6 +4,7 @@ import type { PostStatus, PostType } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { getPostManagerAuthContext } from "@/lib/auth/admin-guard";
 import { prisma } from "@/lib/prisma";
+import { notifyNewPost } from "@/lib/notifications";
 
 const MAX_IMAGES = 15;
 
@@ -100,11 +101,17 @@ export async function createPost(
         expiresAt,
         publishedAt: input.status === "PUBLISHED" ? new Date() : null,
       },
-      select: { id: true, slug: true },
+      select: { id: true, slug: true, type: true },
     });
 
     if (input.status === "PUBLISHED") {
       revalidatePath("/");
+      await notifyNewPost({
+        id: post.id,
+        type: post.type,
+        title,
+        authorId: userId,
+      });
     }
     revalidatePath("/admin/posts");
 
@@ -547,6 +554,15 @@ export async function updatePost(
             : existing.publishedAt,
       },
     });
+
+    if (!existing.publishedAt && input.status === "PUBLISHED") {
+      await notifyNewPost({
+        id: postId,
+        type: input.type,
+        title,
+        authorId: auth.user.id,
+      });
+    }
 
     await prisma.auditLog.create({
       data: {

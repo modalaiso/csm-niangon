@@ -79,8 +79,8 @@ export function PostsExplorer(props: Readonly<PostsExplorerProps>) {
                 className={cn(
                   "flex-shrink-0 whitespace-nowrap rounded-full border px-4 py-2 text-sm font-medium transition-colors",
                   filter === item.value
-                    ? "border-primary bg-primary text-white"
-                    : "border-border bg-white text-foreground hover:border-primary/40",
+                    ? "border-primary bg-primary text-background"
+                    : "border-border bg-background text-foreground hover:border-primary/40",
                 )}
               >
                 {item.label}
@@ -113,7 +113,7 @@ export function PostsExplorer(props: Readonly<PostsExplorerProps>) {
               <Link
                 key={post.id}
                 href={`/posts/${post.id}`}
-                className="group overflow-hidden rounded-2xl border border-border transition-all hover:border-primary/40 bg-white"
+                className="group overflow-hidden rounded-2xl border border-border transition-all hover:border-primary/40 bg-background"
               >
                 <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
                   {post.thumbnail ? (

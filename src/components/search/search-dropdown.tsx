@@ -168,7 +168,7 @@ export function SearchDropdown() {
         <div>
           <div
             id="search-listbox"
-            className="absolute top-full left-[55%] mt-4 w-[71vw] max-w-[24rem] -translate-x-2/3 sm:left-auto sm:right-0 sm:translate-x-0 sm:transform-none sm:w-96 bg-background border border-border rounded-lg z-40 max-h-[400px] overflow-y-auto divide-y divide-border"
+            className="absolute top-full left-[55%] mt-4 w-[71vw] max-w-[24rem] -translate-x-2/3 sm:left-auto sm:right-0 sm:translate-x-0 shadow-sm sm:transform-none sm:w-96 bg-background border border-border rounded-lg z-40 max-h-[400px] overflow-y-auto divide-y divide-border"
           >
             {isLoading ? (
               <output className="block p-4 text-center text-sm text-muted-foreground">
