@@ -4,6 +4,7 @@ import { Calendar, Eye, ListFilter } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { HomePostCard } from "@/app/actions/posts";
+import { trackAnalyticsEvent } from "@/lib/analytics-client";
 import { cn, formatRelativeTime } from "@/lib/utils";
 
 interface PostsExplorerProps {
@@ -75,7 +76,13 @@ export function PostsExplorer(props: Readonly<PostsExplorerProps>) {
               <button
                 type="button"
                 key={item.value}
-                onClick={() => setFilter(item.value)}
+                onClick={() => {
+                  setFilter(item.value);
+                  trackAnalyticsEvent("filter", {
+                    filter: item.value,
+                    scope: "posts",
+                  });
+                }}
                 className={cn(
                   "flex-shrink-0 whitespace-nowrap rounded-full border px-4 py-2 text-sm font-medium transition-colors",
                   filter === item.value

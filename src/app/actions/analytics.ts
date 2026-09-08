@@ -1,5 +1,9 @@
 "use server";
 
+import {
+  ANALYTICS_EVENT_NAMES,
+  type LogAnalyticsEventInput,
+} from "@/lib/analytics-types";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 
@@ -62,6 +66,72 @@ export interface LogVisitInput {
 }
 
 type LogVisitResult = { success: true } | { error: "invalid" | "unknown" };
+
+const MAX_EVENT_PROPERTIES = 20;
+
+function sanitizeEventProperties(
+  properties: LogAnalyticsEventInput["properties"],
+) {
+  if (!properties) return undefined;
+
+  return Object.fromEntries(
+    Object.entries(properties)
+      .filter(([key, value]) => {
+        if (!/^[a-zA-Z][a-zA-Z0-9_]{0,39}$/.test(key)) return false;
+        return (
+          value === null ||
+          typeof value === "string" ||
+          typeof value === "number" ||
+          typeof value === "boolean"
+        );
+      })
+      .slice(0, MAX_EVENT_PROPERTIES)
+      .map(([key, value]) => [
+        key,
+        typeof value === "string" ? value.slice(0, 200) : value,
+      ]),
+  );
+}
+
+/** Enregistre un événement d'usage sans stocker de contenu saisi par l'utilisateur. */
+export async function logAnalyticsEvent(
+  input: LogAnalyticsEventInput,
+): Promise<LogVisitResult> {
+  const path = input.path?.trim();
+  const sessionId = input.sessionId?.trim();
+
+  if (
+    !path ||
+    !sessionId ||
+    !ANALYTICS_EVENT_NAMES.includes(input.name) ||
+    path.length > 500 ||
+    sessionId.length > 200
+  ) {
+    return { error: "invalid" };
+  }
+
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    await prisma.analyticsEvent.create({
+      data: {
+        name: input.name,
+        path,
+        sessionId,
+        userId: user?.id ?? null,
+        properties: sanitizeEventProperties(input.properties),
+      },
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error("Erreur lors de l'enregistrement de l'événement:", error);
+    return { error: "unknown" };
+  }
+}
 
 /** Enregistre une visite anonyme (ou liée à l'utilisateur connecté) sur une page publique */
 export async function logVisit(input: LogVisitInput): Promise<LogVisitResult> {
@@ -207,5 +277,97 @@ export async function getTopPages(
   } catch (error) {
     console.error("Erreur lors du calcul des pages les plus visitées:", error);
     return [];
+  }
+}
+
+export interface AnalyticsSummary {
+  engagedSessions: number;
+  engagementRate: number;
+  averageEngagementSeconds: number;
+  scrollDepth90: number;
+  searches: number;
+  shares: number;
+}
+
+/** Indicateurs d'engagement sur les 30 derniers jours. */
+export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
+  const start = new Date();
+  start.setDate(start.getDate() - 30);
+
+  try {
+    const events = await prisma.analyticsEvent.findMany({
+      where: {
+        createdAt: { gte: start },
+        name: {
+          in: [
+            "page_view",
+            "page_engagement",
+            "scroll_depth",
+            "search",
+            "share",
+          ],
+        },
+      },
+      select: { name: true, sessionId: true, properties: true },
+    });
+
+    const pageViewSessions = new Set<string>();
+    const engagedSessions = new Set<string>();
+    let engagementSeconds = 0;
+    let engagementEvents = 0;
+    let scrollDepth90 = 0;
+    let searches = 0;
+    let shares = 0;
+
+    for (const event of events) {
+      if (event.name === "page_view") pageViewSessions.add(event.sessionId);
+      if (event.name === "page_engagement") {
+        engagedSessions.add(event.sessionId);
+        const durationMs =
+          event.properties &&
+          typeof event.properties === "object" &&
+          "durationMs" in event.properties &&
+          typeof event.properties.durationMs === "number"
+            ? event.properties.durationMs
+            : 0;
+        engagementSeconds +=
+          Math.max(0, Math.min(durationMs, 1_800_000)) / 1000;
+        engagementEvents += 1;
+      }
+      if (
+        event.name === "scroll_depth" &&
+        event.properties &&
+        typeof event.properties === "object" &&
+        "depth" in event.properties &&
+        event.properties.depth === 90
+      ) {
+        scrollDepth90 += 1;
+      }
+      if (event.name === "search") searches += 1;
+      if (event.name === "share") shares += 1;
+    }
+
+    return {
+      engagedSessions: engagedSessions.size,
+      engagementRate: pageViewSessions.size
+        ? Math.round((engagedSessions.size / pageViewSessions.size) * 100)
+        : 0,
+      averageEngagementSeconds: engagementEvents
+        ? Math.round(engagementSeconds / engagementEvents)
+        : 0,
+      scrollDepth90,
+      searches,
+      shares,
+    };
+  } catch (error) {
+    console.error("Erreur lors du calcul des indicateurs analytics:", error);
+    return {
+      engagedSessions: 0,
+      engagementRate: 0,
+      averageEngagementSeconds: 0,
+      scrollDepth90: 0,
+      searches: 0,
+      shares: 0,
+    };
   }
 }

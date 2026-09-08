@@ -3,6 +3,7 @@
 import { Analytics } from "@vercel/analytics/next";
 import { useEffect, useState } from "react";
 import { VisitTracker } from "@/components/analytics/visit-tracker";
+import { WebVitals } from "@/components/analytics/web-vitals";
 import { CONSENT_CHANGE_EVENT, getStoredConsent } from "@/lib/cookie-consent";
 
 /**
@@ -32,6 +33,7 @@ export function AnalyticsGate() {
   return (
     <>
       <VisitTracker />
+      <WebVitals />
       <Analytics />
     </>
   );

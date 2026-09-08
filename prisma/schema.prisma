@@ -80,6 +80,7 @@ model User {
   likes             Like[]
   commentReactions  CommentReaction[]
   visitLogs         VisitLog[]
+  analyticsEvents   AnalyticsEvent[]
   moderationKeywords ModerationKeyword[] @relation("KeywordCreator")
   moderationLogsAsModerator ModerationLog[] @relation("ModerationModerator")
   auditLogs         AuditLog[]
@@ -211,6 +212,23 @@ model VisitLog {
   @@index([userId])
   @@index([sessionId])
   @@index([createdAt])
+}
+
+model AnalyticsEvent {
+  id        String   @id @default(cuid())
+  name      String
+  path      String
+  sessionId String
+  userId    String?
+  properties Json?
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([name, createdAt])
+  @@index([path, createdAt])
+  @@index([sessionId, createdAt])
+  @@index([userId, createdAt])
 }
 
 model ModerationKeyword {

@@ -9,6 +9,7 @@ import {
   searchPosts,
 } from "@/app/actions/search";
 import { Input } from "@/components/ui/input";
+import { trackAnalyticsEvent } from "@/lib/analytics-client";
 
 export function SearchDropdown() {
   const router = useRouter();
@@ -104,6 +105,10 @@ export function SearchDropdown() {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && searchQuery.trim()) {
       e.preventDefault();
+      trackAnalyticsEvent("search", {
+        queryLength: searchQuery.trim().length,
+        source: "navbar",
+      });
       router.push(`/search/results?q=${encodeURIComponent(searchQuery)}`);
       setIsOpen(false);
     }
@@ -111,6 +116,10 @@ export function SearchDropdown() {
 
   const handleSearchClick = () => {
     if (searchQuery.trim()) {
+      trackAnalyticsEvent("search", {
+        queryLength: searchQuery.trim().length,
+        source: "navbar",
+      });
       router.push(`/search/results?q=${encodeURIComponent(searchQuery)}`);
     }
     setIsOpen(false);

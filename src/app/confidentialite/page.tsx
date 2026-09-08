@@ -10,7 +10,7 @@ export default function ConfidentialitePage() {
   return (
     <LegalPageLayout
       title="Politique de confidentialité"
-      lastUpdated="21 août 2026"
+      lastUpdated="8 septembre 2026"
     >
       <section>
         <h2 className="mb-2 text-lg font-bold text-foreground">
@@ -46,8 +46,11 @@ export default function ConfidentialitePage() {
           </li>
           <li>
             <strong>Mesure d'audience</strong> (uniquement avec votre
-            consentement) : pages visitées, référent, type d'appareil, et un
-            identifiant de session anonyme stocké dans votre navigateur.
+            consentement) : pages visitées, référent, type d'appareil, campagnes
+            d'acquisition, durée de lecture, profondeur de défilement,
+            recherches (sans le texte recherché), partages, interactions et
+            indicateurs techniques de performance. Les événements sont associés
+            à un identifiant de session anonyme.
           </li>
         </ul>
       </section>
@@ -83,7 +86,16 @@ export default function ConfidentialitePage() {
               <tr>
                 <td className="py-2 pr-4">csm_visit_sid</td>
                 <td className="py-2 pr-4">
-                  Identifiant de session anonyme, mesure d'audience interne
+                  Identifiant de session anonyme, mesure d'audience interne et
+                  événements d'engagement
+                </td>
+                <td className="py-2">Oui</td>
+              </tr>
+              <tr>
+                <td className="py-2 pr-4">csm_analytics_utm</td>
+                <td className="py-2 pr-4">
+                  Conserver la source et la campagne d'acquisition pendant la
+                  session
                 </td>
                 <td className="py-2">Oui</td>
               </tr>
