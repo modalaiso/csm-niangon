@@ -134,7 +134,7 @@ npx prisma migrate dev
 ou en production :
 
 ```bash
-npm run prisma:deploy
+npx prisma migrate deploy
 ```
 
 ### 6. Démarrer le projet
