@@ -17,8 +17,8 @@ interface ProfileMenuProps {
 
 /**
  * Bouton profil du top nav (desktop uniquement). Ouvre un menu déroulant
- * donnant accès à la page profil, aux paramètres du compte (actuellement
- * regroupés sur la même page /profile) et à la déconnexion.
+ * donnant accès à la page profil, aux paramètres du compte et à la
+ * déconnexion.
  */
 export function ProfileMenu(props: Readonly<ProfileMenuProps>) {
   const router = useRouter();

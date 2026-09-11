@@ -74,9 +74,21 @@ export default async function RootLayout({
   ]);
 
   return (
-    <html lang="fr">
+    <html lang="fr" suppressHydrationWarning>
       <head>
         <meta name="apple-mobile-web-app-title" content="CSM Niangon" />
+        <script
+          // Applique le thème avant le premier rendu afin d'éviter un clignotement.
+          dangerouslySetInnerHTML={{
+            __html: `(() => {
+              try {
+                const preference = localStorage.getItem("csm-theme") || "system";
+                const isDark = preference === "dark" || (preference === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+                document.documentElement.classList.toggle("dark", isDark);
+              } catch (_) {}
+            })();`,
+          }}
+        />
       </head>
       <body
         className={`${inter.variable} ${plusJakartaSans.variable} antialiased`}
