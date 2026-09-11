@@ -295,66 +295,92 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
   start.setDate(start.getDate() - 30);
 
   try {
-    const events = await prisma.analyticsEvent.findMany({
-      where: {
-        createdAt: { gte: start },
-        name: {
-          in: [
-            "page_view",
-            "page_engagement",
-            "scroll_depth",
-            "search",
-            "share",
-          ],
+    // Use database-level aggregation for all metrics (not in-memory processing)
+    const [
+      pageViewSessions,
+      engagementEvents,
+      scrollDepth90,
+      searches,
+      shares,
+    ] = await Promise.all([
+      // Get distinct sessions for page views
+      prisma.analyticsEvent.groupBy({
+        by: ["sessionId"],
+        where: {
+          name: "page_view",
+          createdAt: { gte: start },
         },
-      },
-      select: { name: true, sessionId: true, properties: true },
-    });
+      }),
+      // Aggregate engagement metrics by session
+      prisma.analyticsEvent.groupBy({
+        by: ["sessionId"],
+        where: {
+          name: "page_engagement",
+          createdAt: { gte: start },
+        },
+        _count: true,
+      }),
+      // Count scroll depth 90 events
+      prisma.analyticsEvent.count({
+        where: {
+          name: "scroll_depth",
+          createdAt: { gte: start },
+          properties: { equals: { depth: 90 } },
+        },
+      }),
+      // Count search events
+      prisma.analyticsEvent.count({
+        where: {
+          name: "search",
+          createdAt: { gte: start },
+        },
+      }),
+      // Count share events
+      prisma.analyticsEvent.count({
+        where: {
+          name: "share",
+          createdAt: { gte: start },
+        },
+      }),
+    ]);
 
-    const pageViewSessions = new Set<string>();
-    const engagedSessions = new Set<string>();
-    let engagementSeconds = 0;
-    let engagementEvents = 0;
-    let scrollDepth90 = 0;
-    let searches = 0;
-    let shares = 0;
+    const pageViewSessionCount = pageViewSessions.length;
+    const engagedSessionCount = engagementEvents.length;
 
-    for (const event of events) {
-      if (event.name === "page_view") pageViewSessions.add(event.sessionId);
-      if (event.name === "page_engagement") {
-        engagedSessions.add(event.sessionId);
+    // Calculate average engagement time in seconds
+    let averageEngagementSeconds = 0;
+    if (engagementEvents.length > 0) {
+      const engagementRecords = await prisma.analyticsEvent.findMany({
+        where: {
+          name: "page_engagement",
+          createdAt: { gte: start },
+        },
+        select: { properties: true },
+      });
+
+      let totalDurationMs = 0;
+      for (const record of engagementRecords) {
         const durationMs =
-          event.properties &&
-          typeof event.properties === "object" &&
-          "durationMs" in event.properties &&
-          typeof event.properties.durationMs === "number"
-            ? event.properties.durationMs
+          record.properties &&
+          typeof record.properties === "object" &&
+          "durationMs" in record.properties &&
+          typeof record.properties.durationMs === "number"
+            ? record.properties.durationMs
             : 0;
-        engagementSeconds +=
-          Math.max(0, Math.min(durationMs, 1_800_000)) / 1000;
-        engagementEvents += 1;
+        totalDurationMs += Math.max(0, Math.min(durationMs, 1_800_000));
       }
-      if (
-        event.name === "scroll_depth" &&
-        event.properties &&
-        typeof event.properties === "object" &&
-        "depth" in event.properties &&
-        event.properties.depth === 90
-      ) {
-        scrollDepth90 += 1;
-      }
-      if (event.name === "search") searches += 1;
-      if (event.name === "share") shares += 1;
+      averageEngagementSeconds =
+        engagementRecords.length > 0
+          ? Math.round(totalDurationMs / engagementRecords.length / 1000)
+          : 0;
     }
 
     return {
-      engagedSessions: engagedSessions.size,
-      engagementRate: pageViewSessions.size
-        ? Math.round((engagedSessions.size / pageViewSessions.size) * 100)
+      engagedSessions: engagedSessionCount,
+      engagementRate: pageViewSessionCount
+        ? Math.round((engagedSessionCount / pageViewSessionCount) * 100)
         : 0,
-      averageEngagementSeconds: engagementEvents
-        ? Math.round(engagementSeconds / engagementEvents)
-        : 0,
+      averageEngagementSeconds,
       scrollDepth90,
       searches,
       shares,

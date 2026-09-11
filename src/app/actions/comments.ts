@@ -3,7 +3,7 @@
 import type { CommentReactionType, Role } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { checkContentAgainstKeywords } from "@/app/actions/moderation";
-import { notifyCommentReply } from "@/lib/notifications";
+import { notifyCommentLike, notifyCommentReply } from "@/lib/notifications";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 
@@ -425,53 +425,88 @@ export async function toggleCommentReaction(
       return { error: "auth_required" };
     }
 
+    // Check if comment exists
     const comment = await prisma.comment.findUnique({
       where: { id: commentId },
-      select: { reactions: true },
+      select: { id: true, userId: true },
     });
 
     if (!comment) {
       return { error: "unknown" };
     }
 
-    const userReaction = comment.reactions.find((r) => r.userId === userId);
+    // Get current user reaction
+    const existingReaction = await prisma.commentReaction.findFirst({
+      where: { commentId, userId },
+    });
 
-    if (userReaction?.type === type) {
-      // Toggle off if clicking the same reaction
+    // Toggle off if clicking the same reaction type
+    if (existingReaction?.type === type) {
       await prisma.commentReaction.delete({
-        where: { id: userReaction.id },
+        where: { id: existingReaction.id },
       });
     } else {
-      // Delete previous reaction if exists, then create new one
-      if (userReaction) {
-        await prisma.commentReaction.delete({
-          where: { id: userReaction.id },
-        });
-      }
-      await prisma.commentReaction.create({
-        data: {
+      // Upsert handles both create and update atomically
+      await prisma.commentReaction.upsert({
+        where: { commentId_userId: { commentId, userId } },
+        create: {
           commentId,
           userId,
           type,
         },
+        update: {
+          type,
+        },
       });
+
+      // Only notify on new like (not dislike)
+      if (type === "LIKE" && comment.userId !== userId) {
+        const actor = await prisma.user.findUnique({
+          where: { id: userId },
+          select: { username: true },
+        });
+
+        if (actor) {
+          // Get post ID from comment for the notification link
+          const commentWithPost = await prisma.comment.findUnique({
+            where: { id: commentId },
+            select: { postId: true },
+          });
+
+          if (commentWithPost) {
+            await notifyCommentLike({
+              commentAuthorId: comment.userId,
+              actorId: userId,
+              actorPseudo: actor.username,
+              postId: commentWithPost.postId,
+            });
+          }
+        }
+      }
     }
 
-    const updatedReactions = await prisma.commentReaction.findMany({
+    // Use aggregate for efficient count queries
+    const reactions = await prisma.commentReaction.groupBy({
+      by: ["type"],
       where: { commentId },
+      _count: true,
     });
 
-    const likeCount = updatedReactions.filter((r) => r.type === "LIKE").length;
-    const dislikeCount = updatedReactions.filter(
-      (r) => r.type === "DISLIKE",
-    ).length;
-    const newUserReaction = updatedReactions.find((r) => r.userId === userId);
+    const likeCount = reactions.find((r) => r.type === "LIKE")?._count ?? 0;
+    const dislikeCount =
+      reactions.find((r) => r.type === "DISLIKE")?._count ?? 0;
+
+    // Get user's current reaction
+    const userReaction = await prisma.commentReaction.findFirst({
+      where: { commentId, userId },
+      select: { type: true },
+    });
 
     revalidatePath("/");
     return {
       likeCount,
       dislikeCount,
-      userReaction: newUserReaction?.type ?? null,
+      userReaction: userReaction?.type ?? null,
     };
   } catch (error) {
     console.error("Erreur lors de la réaction au commentaire:", error);
