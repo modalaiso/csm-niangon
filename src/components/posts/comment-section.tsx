@@ -90,7 +90,7 @@ function CommentMenu(props: Readonly<CommentMenuProps>) {
       </button>
 
       {props.isOpen && (
-        <div className="absolute right-0 top-8 xl:left-10 xl:top-0 z-20 w-44 overflow-hidden rounded-2xl border border-border bg-white py-1 shadow-sm">
+        <div className="absolute right-0 top-8 xl:left-10 xl:top-0 z-20 w-44 overflow-hidden rounded-2xl border border-border bg-background py-1 shadow-sm">
           {props.comment.canEdit && (
             <button
               type="button"
@@ -635,7 +635,7 @@ export function CommentSection(props: Readonly<CommentSectionProps>) {
   );
 
   return (
-    <section className="mt-5 border-t border-slate-200 pt-5">
+    <section className="mt-5 border-t border-border pt-5">
       <h2 className="mb-5 flex items-center gap-2 text-base font-bold text-foreground">
         <MessageCircle className="h-5 w-5 text-primary" />
         Commentaires ({totalCount})

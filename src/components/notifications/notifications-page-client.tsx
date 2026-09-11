@@ -92,7 +92,7 @@ export function NotificationsPageClient(
           </p>
         </div>
       ) : (
-        <ul className="divide-y divide-border overflow-hidden rounded-2xl border border-border bg-white">
+        <ul className="divide-y divide-border overflow-hidden rounded-2xl border border-border bg-background">
           {notifications.map((n) => {
             const Icon = TYPE_ICONS[n.type] ?? Bell;
             return (

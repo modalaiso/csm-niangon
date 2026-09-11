@@ -99,11 +99,11 @@ export default async function PostPage(props: Readonly<PostPageProps>) {
       : post.summary;
 
   return (
-    <main className="min-h-screen bg-white text-slate-900">
+    <main className="min-h-screen bg-background">
       <div className="container max-w-3xl px-4 py-6 sm:py-8">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900 hover:underline"
+          className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground hover:underline"
         >
           <ArrowLeft className="h-4 w-4" />
           Retour
@@ -116,15 +116,15 @@ export default async function PostPage(props: Readonly<PostPageProps>) {
             {badge.label}
           </span>
 
-          <h1 className="mt-4 text-2xl font-bold leading-tight text-slate-900 sm:text-2xl md:text-3xl uppercase">
+          <h1 className="mt-4 text-2xl font-bold leading-tight text-foreground sm:text-2xl md:text-3xl uppercase">
             {post.title}
           </h1>
 
-          <p className="mt-3 text-base leading-relaxed text-slate-600">
+          <p className="mt-3 text-base leading-relaxed text-muted-foreground">
             {post.summary}
           </p>
 
-          <div className="mt-5 flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-5">
+          <div className="mt-5 flex flex-wrap items-center justify-between gap-4 border-b border-border pb-5">
             <div className="flex items-center gap-3">
               <Avatar
                 username={post.author.username}
@@ -133,16 +133,16 @@ export default async function PostPage(props: Readonly<PostPageProps>) {
                 prenom={post.author.prenom}
               />
               <div>
-                <p className="text-sm font-semibold text-slate-900">
+                <p className="text-sm font-semibold text-foreground">
                   {post.author.prenom} {post.author.nom}
                 </p>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-muted-foreground">
                   @{post.author.username}
                 </p>
               </div>
             </div>
 
-            <div className="flex flex-shrink-0 flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500">
+            <div className="flex flex-shrink-0 flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
               {post.publishedAt && (
                 <span className="inline-flex items-center gap-1">
                   <Calendar className="h-3.5 w-3.5" />
@@ -177,7 +177,7 @@ export default async function PostPage(props: Readonly<PostPageProps>) {
             </div>
           )*/}
 
-          <div className="mt-6 flex items-center gap-2 border-t border-slate-200 pt-5">
+          <div className="mt-6 flex items-center gap-2 border-t border-border pt-5">
             <LikeButton
               postId={post.id}
               initialCount={likeInfo.count}
@@ -197,9 +197,9 @@ export default async function PostPage(props: Readonly<PostPageProps>) {
       </div>
 
       {/* Autres publications */}
-      <section className="border-t border-slate-200 bg-slate-50 px-4 py-10">
+      <section className="border-t border-border bg-muted px-4 py-10">
         <div className="container max-w-5xl">
-          <h2 className="mb-4 text-lg font-bold text-slate-900 sm:text-xl">
+          <h2 className="mb-4 text-lg font-bold text-foreground sm:text-xl">
             Autres publications
           </h2>
 
@@ -220,9 +220,9 @@ export default async function PostPage(props: Readonly<PostPageProps>) {
                   <Link
                     key={related.id}
                     href={`/posts/${related.id}`}
-                    className="group overflow-hidden rounded-2xl border border-slate-200 bg-white transition-all hover:border-primary/40"
+                    className="group overflow-hidden rounded-2xl border border-border bg-background transition-all hover:border-primary/40"
                   >
-                    <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-200">
+                    <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
                       {related.thumbnail ? (
                         <img
                           src={related.thumbnail}
@@ -241,10 +241,10 @@ export default async function PostPage(props: Readonly<PostPageProps>) {
                       </span>
                     </div>
                     <div className="p-4">
-                      <h3 className="line-clamp-2 text-sm font-bold text-slate-900 uppercase">
+                      <h3 className="line-clamp-2 text-sm font-bold text-foreground uppercase">
                         {related.title}
                       </h3>
-                      <p className="line-clamp-3 text-xs text-slate-600">
+                      <p className="line-clamp-3 text-xs text-muted-foreground">
                         {related.summary}
                       </p>
                     </div>

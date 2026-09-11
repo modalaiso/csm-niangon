@@ -9,9 +9,9 @@ interface Props {
 
 export default function GlobalError(props: Props) {
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center bg-white text-gray-900">
+    <main className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground">
       <h1 className="text-4xl font-bold">Erreur</h1>
-      <p className="container text-start mt-2 text-gray-600">
+      <p className="container text-start mt-2 text-muted-foreground">
         Une erreur est survenue: <br />
         {props.error?.message}
       </p>

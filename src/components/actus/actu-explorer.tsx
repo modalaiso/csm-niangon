@@ -59,7 +59,7 @@ export function ActuExplorer(props: Readonly<ActuExplorerProps>) {
               "flex-shrink-0 whitespace-nowrap rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors sm:text-sm",
               !activeTag
                 ? "border-primary bg-primary text-white"
-                : "border-border bg-white text-foreground hover:border-primary/40",
+                : "border-border bg-background text-foreground hover:border-primary/40",
             )}
           >
             Tous
@@ -73,7 +73,7 @@ export function ActuExplorer(props: Readonly<ActuExplorerProps>) {
                 "flex-shrink-0 whitespace-nowrap rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors sm:text-sm",
                 activeTag === tag
                   ? "border-primary bg-primary text-white"
-                  : "border-border bg-white text-foreground hover:border-primary/40",
+                  : "border-border bg-background text-foreground hover:border-primary/40",
               )}
             >
               {tag}

@@ -33,6 +33,7 @@ const CLASS_OPTIONS = [
   "Premiere",
   "Terminal",
   "Parent d'élève",
+  "Autre",
 ];
 
 const ERROR_MESSAGES: Record<string, string> = {
@@ -44,6 +45,8 @@ const ERROR_MESSAGES: Record<string, string> = {
 
 export function ProfileForm(props: Readonly<ProfileFormProps>) {
   const router = useRouter();
+  const [nom, setNom] = useState(props.profile.nom);
+  const [prenom, setPrenom] = useState(props.profile.prenom);
   const [classe, setClasse] = useState(props.profile.classe);
   const [matricule, setMatricule] = useState(props.profile.matricule ?? "");
   const [email, setEmail] = useState(props.profile.email);
@@ -65,7 +68,13 @@ export function ProfileForm(props: Readonly<ProfileFormProps>) {
     setSuccess(false);
 
     startTransition(async () => {
-      const result = await updateMyProfile({ classe, matricule, email });
+      const result = await updateMyProfile({
+        nom,
+        prenom,
+        classe,
+        matricule,
+        email,
+      });
       if ("error" in result) {
         if (result.error === "auth_required") {
           router.push("/login");
@@ -114,15 +123,19 @@ export function ProfileForm(props: Readonly<ProfileFormProps>) {
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="grid gap-5 sm:grid-cols-2">
           <div className="space-y-1.5">
-            <Label>Nom</Label>
-            <Input value={props.profile.nom} disabled className="bg-muted/50" />
+            <Label htmlFor="nom">Nom</Label>
+            <Input
+              id="nom"
+              value={nom}
+              onChange={(e) => setNom(e.target.value)}
+            />
           </div>
           <div className="space-y-1.5">
-            <Label>Prénoms</Label>
+            <Label htmlFor="prenom">Prénoms</Label>
             <Input
-              value={props.profile.prenom}
-              disabled
-              className="bg-muted/50"
+              id="prenom"
+              value={prenom}
+              onChange={(e) => setPrenom(e.target.value)}
             />
           </div>
         </div>
@@ -139,7 +152,7 @@ export function ProfileForm(props: Readonly<ProfileFormProps>) {
         <div className="space-y-1.5">
           <Label htmlFor="classe">Classe</Label>
           <Select value={classe} onValueChange={setClasse}>
-            <SelectTrigger id="classe" className="bg-white">
+            <SelectTrigger id="classe">
               <SelectValue placeholder="Sélectionner votre classe" />
             </SelectTrigger>
             <SelectContent>

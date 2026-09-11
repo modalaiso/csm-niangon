@@ -57,6 +57,8 @@ export async function getMyProfile(): Promise<
 }
 
 export interface UpdateProfileInput {
+  nom: string;
+  prenom: string;
   classe: string;
   matricule: string;
   email: string;
@@ -69,10 +71,12 @@ type UpdateError = {
     | "invalid"
     | "email_taken"
     | "matricule_taken"
+    | "nom_taken"
+    | "prenom_taken"
     | "unknown";
 };
 
-/** Met à jour classe, matricule et email — réservé au propriétaire du compte */
+/** Met à jour nom, prenom, classe, matricule et email — réservé au propriétaire du compte */
 export async function updateMyProfile(
   input: UpdateProfileInput,
 ): Promise<UpdateSuccess | UpdateError> {
@@ -83,28 +87,47 @@ export async function updateMyProfile(
 
   if (!user) return { error: "auth_required" };
 
+  const nom = input.nom.trim();
+  const prenom = input.prenom.trim();
   const classe = input.classe.trim();
   const matricule = input.matricule.trim();
   const email = input.email.trim().toLowerCase();
 
-  if (!classe || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  if (
+    !nom ||
+    !prenom ||
+    !classe ||
+    !email ||
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  ) {
     return { error: "invalid" };
   }
 
   try {
-    const [emailTaken, matriculeTaken] = await Promise.all([
-      prisma.user.findFirst({
-        where: { email, NOT: { id: user.id } },
-        select: { id: true },
-      }),
-      matricule
-        ? prisma.user.findFirst({
-            where: { matricule, NOT: { id: user.id } },
-            select: { id: true },
-          })
-        : Promise.resolve(null),
-    ]);
+    const [nomTaken, prenomTaken, emailTaken, matriculeTaken] =
+      await Promise.all([
+        prisma.user.findFirst({
+          where: { nom, NOT: { id: user.id } },
+          select: { id: true },
+        }),
+        prisma.user.findFirst({
+          where: { prenom, NOT: { id: user.id } },
+          select: { id: true },
+        }),
+        prisma.user.findFirst({
+          where: { email, NOT: { id: user.id } },
+          select: { id: true },
+        }),
+        matricule
+          ? prisma.user.findFirst({
+              where: { matricule, NOT: { id: user.id } },
+              select: { id: true },
+            })
+          : Promise.resolve(null),
+      ]);
 
+    if (nomTaken) return { error: "nom_taken" };
+    if (prenomTaken) return { error: "prenom_taken" };
     if (emailTaken) return { error: "email_taken" };
     if (matriculeTaken) return { error: "matricule_taken" };
 
@@ -122,6 +145,8 @@ export async function updateMyProfile(
     await prisma.user.update({
       where: { id: user.id },
       data: {
+        nom,
+        prenom,
         classe,
         matricule: matricule || null,
         email,

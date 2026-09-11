@@ -8,7 +8,9 @@ export default function LoginPage() {
       className="min-h-screen flex flex-col items-center bg-cover bg-center p-4"
       style={{
         backgroundImage:
-          "linear-gradient(to bottom right, rgb(219 234 254 / 50%), rgb(240 253 244 / 50%)), url('/bg.png')",
+          "linear-gradient(hsl(var(--background) / 0.75), hsl(var(--background) / 0.75)), url('/bg.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
       }}
     >
       <div className="absolute top-4 right-4">

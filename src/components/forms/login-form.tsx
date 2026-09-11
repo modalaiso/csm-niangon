@@ -48,22 +48,22 @@ export function LoginForm(_props: Readonly<LoginFormProps>) {
   };
 
   return (
-    <div className="w-full max-w-md space-y-8 rounded-3xl border border-green-500 bg-white p-8 shadow-lg">
+    <div className="w-full max-w-md space-y-8 rounded-3xl border border-border bg-background p-8 shadow-lg">
       <div className="text-center">
-        <h2 className="text-2xl font-bold text-gray-900">Connexion</h2>
+        <h2 className="text-2xl font-bold text-foreground">Connexion</h2>
         {/*{serverError && (
-                    <div className="mt-4 rounded-md bg-red-50 p-3 text-sm text-red-500">
-                        {serverError}
-                    </div>
-                )}*/}
+          <div className="mt-4 rounded-md bg-red-50 p-3 text-sm text-red-500">
+            {serverError}
+          </div>
+        )}*/}
       </div>
 
       <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
         <div className="space-y-2">
-          <Label htmlFor="nameOrEmail">Nom ou Email</Label>
+          <Label htmlFor="nameOrEmail">Nom d'utilisateur ou Email</Label>
           <Input
             id="nameOrEmail"
-            placeholder="Entrez votre nom ou email"
+            placeholder="Entrez votre nom d'utilisateur ou email"
             {...register("nameOrEmail")}
             className={errors.nameOrEmail ? "border-red-500" : ""}
           />
@@ -88,7 +88,7 @@ export function LoginForm(_props: Readonly<LoginFormProps>) {
 
         <Button
           type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+          className="w-full bg-primary hover:bg-primary/90 text-white"
           disabled={isSubmitting}
         >
           {isSubmitting ? "Connexion..." : "Connectez-vous"}
@@ -102,7 +102,7 @@ export function LoginForm(_props: Readonly<LoginFormProps>) {
           Pas encore de compte ?{" "}
           <Link
             href="/signup"
-            className="font-medium text-blue-600 hover:underline"
+            className="font-medium text-primary hover:underline"
           >
             Créer un compte
           </Link>

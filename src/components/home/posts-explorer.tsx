@@ -86,7 +86,7 @@ export function PostsExplorer(props: Readonly<PostsExplorerProps>) {
                 className={cn(
                   "flex-shrink-0 whitespace-nowrap rounded-full border px-4 py-2 text-sm font-medium transition-colors",
                   filter === item.value
-                    ? "border-primary bg-primary text-background"
+                    ? "border-primary bg-primary text-white"
                     : "border-border bg-background text-foreground hover:border-primary/40",
                 )}
               >

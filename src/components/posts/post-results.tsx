@@ -33,7 +33,7 @@ function PostCard<T extends HomePostCard>(props: Readonly<PostCardProps<T>>) {
       <Link
         key={props.post.id}
         href={`/posts/${props.post.id}`}
-        className="group overflow-hidden rounded-2xl border border-border transition-all hover:border-primary/40 bg-white"
+        className="group overflow-hidden rounded-2xl border border-border transition-all hover:border-primary/40 bg-background"
       >
         <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
           {props.post.thumbnail ? (

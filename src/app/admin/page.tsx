@@ -85,7 +85,7 @@ export default async function AdminDashboardPage() {
             return (
               <div
                 key={p.key}
-                className="rounded-2xl border border-border bg-white p-4"
+                className="rounded-2xl border border-border bg-background p-4"
               >
                 <p className="text-xs font-medium text-muted-foreground">
                   {p.short}
@@ -104,7 +104,7 @@ export default async function AdminDashboardPage() {
       </section>
 
       {/* Tendance 14 jours */}
-      <section className="rounded-2xl border border-border bg-white p-5">
+      <section className="rounded-2xl border border-border bg-background p-5">
         <div className="mb-4 flex items-center gap-2">
           <TrendingUp className="h-4 w-4 text-primary" />
           <h2 className="text-sm font-semibold text-foreground">
@@ -119,7 +119,7 @@ export default async function AdminDashboardPage() {
           Engagement (30 derniers jours)
         </h2>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-          <div className="rounded-2xl border border-border bg-white p-4">
+          <div className="rounded-2xl border border-border bg-background p-4">
             <p className="text-xs font-medium text-muted-foreground">
               Sessions engagées
             </p>
@@ -130,7 +130,7 @@ export default async function AdminDashboardPage() {
               {analytics.engagementRate}% des sessions vues
             </p>
           </div>
-          <div className="rounded-2xl border border-border bg-white p-4">
+          <div className="rounded-2xl border border-border bg-background p-4">
             <p className="text-xs font-medium text-muted-foreground">
               Temps moyen
             </p>
@@ -141,7 +141,7 @@ export default async function AdminDashboardPage() {
               par page active
             </p>
           </div>
-          <div className="rounded-2xl border border-border bg-white p-4">
+          <div className="rounded-2xl border border-border bg-background p-4">
             <p className="text-xs font-medium text-muted-foreground">
               Lecture à 90%
             </p>
@@ -152,7 +152,7 @@ export default async function AdminDashboardPage() {
               pages presque entièrement lues
             </p>
           </div>
-          <div className="rounded-2xl border border-border bg-white p-4">
+          <div className="rounded-2xl border border-border bg-background p-4">
             <p className="text-xs font-medium text-muted-foreground">
               Recherches
             </p>
@@ -163,7 +163,7 @@ export default async function AdminDashboardPage() {
               intentions mesurées
             </p>
           </div>
-          <div className="rounded-2xl border border-border bg-white p-4">
+          <div className="rounded-2xl border border-border bg-background p-4">
             <p className="text-xs font-medium text-muted-foreground">
               Partages
             </p>
@@ -181,7 +181,7 @@ export default async function AdminDashboardPage() {
         {canManagePosts && (
           <Link
             href="/admin/posts"
-            className="rounded-2xl border border-border bg-white p-5 transition-all hover:border-primary/40"
+            className="rounded-2xl border border-border bg-background p-5 transition-all hover:border-primary/40"
           >
             <div className="flex items-center justify-between">
               <FileText className="h-5 w-5 text-primary" />
@@ -206,7 +206,7 @@ export default async function AdminDashboardPage() {
         {canModerate && (
           <Link
             href="/admin/moderation"
-            className="rounded-2xl border border-border bg-white p-5 transition-all hover:border-primary/40"
+            className="rounded-2xl border border-border bg-background p-5 transition-all hover:border-primary/40"
           >
             <div className="flex items-center justify-between">
               <MessageCircle className="h-5 w-5 text-secondary" />
@@ -224,7 +224,7 @@ export default async function AdminDashboardPage() {
         )}
 
         {(canManagePosts || isAdmin) && (
-          <div className="rounded-2xl border border-border bg-white p-5">
+          <div className="rounded-2xl border border-border bg-background p-5">
             <div className="flex items-center justify-between">
               <Megaphone className="h-5 w-5 text-rose-500" />
               {isAdmin && <Users className="h-4 w-4 text-muted-foreground" />}
@@ -243,7 +243,7 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* Pages les plus visitées */}
-      <section className="rounded-2xl border border-border bg-white p-5">
+      <section className="rounded-2xl border border-border bg-background p-5">
         <div className="mb-4 flex items-center gap-2">
           <Eye className="h-4 w-4 text-primary" />
           <h2 className="text-sm font-semibold text-foreground">
