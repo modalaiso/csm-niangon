@@ -1,5 +1,9 @@
 "use server";
 
+import {
+  ANALYTICS_EVENT_NAMES,
+  type LogAnalyticsEventInput,
+} from "@/lib/analytics-types";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 
@@ -62,6 +66,72 @@ export interface LogVisitInput {
 }
 
 type LogVisitResult = { success: true } | { error: "invalid" | "unknown" };
+
+const MAX_EVENT_PROPERTIES = 20;
+
+function sanitizeEventProperties(
+  properties: LogAnalyticsEventInput["properties"],
+) {
+  if (!properties) return undefined;
+
+  return Object.fromEntries(
+    Object.entries(properties)
+      .filter(([key, value]) => {
+        if (!/^[a-zA-Z][a-zA-Z0-9_]{0,39}$/.test(key)) return false;
+        return (
+          value === null ||
+          typeof value === "string" ||
+          typeof value === "number" ||
+          typeof value === "boolean"
+        );
+      })
+      .slice(0, MAX_EVENT_PROPERTIES)
+      .map(([key, value]) => [
+        key,
+        typeof value === "string" ? value.slice(0, 200) : value,
+      ]),
+  );
+}
+
+/** Enregistre un événement d'usage sans stocker de contenu saisi par l'utilisateur. */
+export async function logAnalyticsEvent(
+  input: LogAnalyticsEventInput,
+): Promise<LogVisitResult> {
+  const path = input.path?.trim();
+  const sessionId = input.sessionId?.trim();
+
+  if (
+    !path ||
+    !sessionId ||
+    !ANALYTICS_EVENT_NAMES.includes(input.name) ||
+    path.length > 500 ||
+    sessionId.length > 200
+  ) {
+    return { error: "invalid" };
+  }
+
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    await prisma.analyticsEvent.create({
+      data: {
+        name: input.name,
+        path,
+        sessionId,
+        userId: user?.id ?? null,
+        properties: sanitizeEventProperties(input.properties),
+      },
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error("Erreur lors de l'enregistrement de l'événement:", error);
+    return { error: "unknown" };
+  }
+}
 
 /** Enregistre une visite anonyme (ou liée à l'utilisateur connecté) sur une page publique */
 export async function logVisit(input: LogVisitInput): Promise<LogVisitResult> {
@@ -207,5 +277,123 @@ export async function getTopPages(
   } catch (error) {
     console.error("Erreur lors du calcul des pages les plus visitées:", error);
     return [];
+  }
+}
+
+export interface AnalyticsSummary {
+  engagedSessions: number;
+  engagementRate: number;
+  averageEngagementSeconds: number;
+  scrollDepth90: number;
+  searches: number;
+  shares: number;
+}
+
+/** Indicateurs d'engagement sur les 30 derniers jours. */
+export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
+  const start = new Date();
+  start.setDate(start.getDate() - 30);
+
+  try {
+    // Use database-level aggregation for all metrics (not in-memory processing)
+    const [
+      pageViewSessions,
+      engagementEvents,
+      scrollDepth90,
+      searches,
+      shares,
+    ] = await Promise.all([
+      // Get distinct sessions for page views
+      prisma.analyticsEvent.groupBy({
+        by: ["sessionId"],
+        where: {
+          name: "page_view",
+          createdAt: { gte: start },
+        },
+      }),
+      // Aggregate engagement metrics by session
+      prisma.analyticsEvent.groupBy({
+        by: ["sessionId"],
+        where: {
+          name: "page_engagement",
+          createdAt: { gte: start },
+        },
+        _count: true,
+      }),
+      // Count scroll depth 90 events
+      prisma.analyticsEvent.count({
+        where: {
+          name: "scroll_depth",
+          createdAt: { gte: start },
+          properties: { equals: { depth: 90 } },
+        },
+      }),
+      // Count search events
+      prisma.analyticsEvent.count({
+        where: {
+          name: "search",
+          createdAt: { gte: start },
+        },
+      }),
+      // Count share events
+      prisma.analyticsEvent.count({
+        where: {
+          name: "share",
+          createdAt: { gte: start },
+        },
+      }),
+    ]);
+
+    const pageViewSessionCount = pageViewSessions.length;
+    const engagedSessionCount = engagementEvents.length;
+
+    // Calculate average engagement time in seconds
+    let averageEngagementSeconds = 0;
+    if (engagementEvents.length > 0) {
+      const engagementRecords = await prisma.analyticsEvent.findMany({
+        where: {
+          name: "page_engagement",
+          createdAt: { gte: start },
+        },
+        select: { properties: true },
+      });
+
+      let totalDurationMs = 0;
+      for (const record of engagementRecords) {
+        const durationMs =
+          record.properties &&
+          typeof record.properties === "object" &&
+          "durationMs" in record.properties &&
+          typeof record.properties.durationMs === "number"
+            ? record.properties.durationMs
+            : 0;
+        totalDurationMs += Math.max(0, Math.min(durationMs, 1_800_000));
+      }
+      averageEngagementSeconds =
+        engagementRecords.length > 0
+          ? Math.round(totalDurationMs / engagementRecords.length / 1000)
+          : 0;
+    }
+
+    return {
+      engagedSessions: engagedSessionCount,
+      engagementRate: pageViewSessionCount
+        ? Math.round((engagedSessionCount / pageViewSessionCount) * 100)
+        : 0,
+      averageEngagementSeconds,
+      scrollDepth90,
+      searches,
+      shares,
+    };
+  } catch (error) {
+    console.error("Erreur lors du calcul des indicateurs analytics:", error);
+    return {
+      engagedSessions: 0,
+      engagementRate: 0,
+      averageEngagementSeconds: 0,
+      scrollDepth90: 0,
+      searches: 0,
+      shares: 0,
+    };
   }
 }

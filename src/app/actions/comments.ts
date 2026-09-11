@@ -3,6 +3,7 @@
 import type { CommentReactionType, Role } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { checkContentAgainstKeywords } from "@/app/actions/moderation";
+import { notifyCommentLike, notifyCommentReply } from "@/lib/notifications";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 
@@ -208,6 +209,18 @@ export async function addComment(
       return { error: "auth_required" };
     }
 
+    const parent = parentId
+      ? await prisma.comment.findUnique({
+          where: { id: parentId },
+          select: { userId: true },
+        })
+      : null;
+
+    const actor = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { username: true },
+    });
+
     const match = await checkContentAgainstKeywords(trimmed);
 
     if (match?.action === "AUTO_DELETE") {
@@ -247,6 +260,17 @@ export async function addComment(
           authorId: userId,
           postId,
         },
+      });
+    }
+
+    // Notification de réponse : seulement si le commentaire est bien visible
+    if (parent && !isFlagged) {
+      await notifyCommentReply({
+        parentAuthorId: parent.userId,
+        actorId: userId,
+        actorPseudo: actor?.username || "",
+        postId,
+        replyContent: trimmed,
       });
     }
 
@@ -401,39 +425,89 @@ export async function toggleCommentReaction(
       return { error: "auth_required" };
     }
 
-    const existing = await prisma.commentReaction.findUnique({
-      where: { commentId_userId: { commentId, userId } },
+    // Check if comment exists
+    const comment = await prisma.comment.findUnique({
+      where: { id: commentId },
+      select: { id: true, userId: true },
     });
 
-    let userReaction: CommentReactionType | null;
-    if (existing && existing.type === type) {
-      await prisma.commentReaction.delete({ where: { id: existing.id } });
-      userReaction = null;
-    } else if (existing) {
-      await prisma.commentReaction.update({
-        where: { id: existing.id },
-        data: { type },
-      });
-      userReaction = type;
-    } else {
-      await prisma.commentReaction.create({
-        data: { commentId, userId, type },
-      });
-      userReaction = type;
+    if (!comment) {
+      return { error: "unknown" };
     }
 
-    const [likeCount, dislikeCount, comment] = await Promise.all([
-      prisma.commentReaction.count({ where: { commentId, type: "LIKE" } }),
-      prisma.commentReaction.count({ where: { commentId, type: "DISLIKE" } }),
-      prisma.comment.findUnique({
-        where: { id: commentId },
-        select: { postId: true },
-      }),
-    ]);
+    // Get current user reaction
+    const existingReaction = await prisma.commentReaction.findFirst({
+      where: { commentId, userId },
+    });
 
-    if (comment) revalidatePath(`/posts/${comment.postId}`);
+    // Toggle off if clicking the same reaction type
+    if (existingReaction?.type === type) {
+      await prisma.commentReaction.delete({
+        where: { id: existingReaction.id },
+      });
+    } else {
+      // Upsert handles both create and update atomically
+      await prisma.commentReaction.upsert({
+        where: { commentId_userId: { commentId, userId } },
+        create: {
+          commentId,
+          userId,
+          type,
+        },
+        update: {
+          type,
+        },
+      });
 
-    return { likeCount, dislikeCount, userReaction };
+      // Only notify on new like (not dislike)
+      if (type === "LIKE" && comment.userId !== userId) {
+        const actor = await prisma.user.findUnique({
+          where: { id: userId },
+          select: { username: true },
+        });
+
+        if (actor) {
+          // Get post ID from comment for the notification link
+          const commentWithPost = await prisma.comment.findUnique({
+            where: { id: commentId },
+            select: { postId: true },
+          });
+
+          if (commentWithPost) {
+            await notifyCommentLike({
+              commentAuthorId: comment.userId,
+              actorId: userId,
+              actorPseudo: actor.username,
+              postId: commentWithPost.postId,
+            });
+          }
+        }
+      }
+    }
+
+    // Use aggregate for efficient count queries
+    const reactions = await prisma.commentReaction.groupBy({
+      by: ["type"],
+      where: { commentId },
+      _count: true,
+    });
+
+    const likeCount = reactions.find((r) => r.type === "LIKE")?._count ?? 0;
+    const dislikeCount =
+      reactions.find((r) => r.type === "DISLIKE")?._count ?? 0;
+
+    // Get user's current reaction
+    const userReaction = await prisma.commentReaction.findFirst({
+      where: { commentId, userId },
+      select: { type: true },
+    });
+
+    revalidatePath("/");
+    return {
+      likeCount,
+      dislikeCount,
+      userReaction: userReaction?.type ?? null,
+    };
   } catch (error) {
     console.error("Erreur lors de la réaction au commentaire:", error);
     return { error: "unknown" };

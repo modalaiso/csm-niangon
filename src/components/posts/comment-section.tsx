@@ -34,6 +34,7 @@ import {
   ThumbsUpOutlineIcon,
 } from "@/components/icons/icons";
 import { Avatar } from "@/components/ui/avatar";
+import { trackAnalyticsEvent } from "@/lib/analytics-client";
 import { cn } from "@/lib/utils";
 
 interface CommentSectionProps {
@@ -294,7 +295,7 @@ function CommentItem(props: Readonly<CommentItemProps>) {
         <div className="flex items-start justify-between gap-2">
           <p className="text-sm">
             <span className="font-semibold text-foreground">
-              {props.comment.author.prenom} {props.comment.author.nom}
+              @{props.comment.author.username}
             </span>{" "}
             <span className="text-xs text-muted-foreground">
               {formatRelativeTime(props.comment.createdAt)}
@@ -497,6 +498,10 @@ export function CommentSection(props: Readonly<CommentSectionProps>) {
         return;
       }
       setValue("");
+      trackAnalyticsEvent("comment_created", {
+        postId: props.postId,
+        kind: "comment",
+      });
       router.refresh();
     });
   };
@@ -514,6 +519,10 @@ export function CommentSection(props: Readonly<CommentSectionProps>) {
         return;
       }
       closeReplyBox();
+      trackAnalyticsEvent("comment_created", {
+        postId: props.postId,
+        kind: "reply",
+      });
       setExpanded((prev) => new Set(prev).add(rootId));
       router.refresh();
     });

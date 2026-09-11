@@ -69,7 +69,7 @@ export function ProfileMenu(props: Readonly<ProfileMenuProps>) {
       {isOpen && (
         <div
           role="menu"
-          className="absolute right-0 top-full z-40 mt-4 w-56 overflow-hidden rounded-2xl border border-border bg-white"
+          className="absolute right-0 top-full z-40 mt-4 w-56 overflow-hidden rounded-2xl border border-border bg-white shadow-sm"
         >
           <div className="border-b border-border px-4 py-3">
             <p className="truncate text-sm font-semibold text-foreground">

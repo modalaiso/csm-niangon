@@ -53,6 +53,14 @@ enum Weekday {
   VENDREDI
 }
 
+enum NotificationType {
+  NEW_POST
+  COMMENT_REPLY
+  COMMENT_LIKE
+  POST_LIKE
+  HOMEWORK_DUE
+}
+
 model User {
   id        String    @id @default(cuid())
   email     String    @unique
@@ -72,9 +80,14 @@ model User {
   likes             Like[]
   commentReactions  CommentReaction[]
   visitLogs         VisitLog[]
+  analyticsEvents   AnalyticsEvent[]
   moderationKeywords ModerationKeyword[] @relation("KeywordCreator")
   moderationLogsAsModerator ModerationLog[] @relation("ModerationModerator")
   auditLogs         AuditLog[]
+
+  notificationsReceived Notification[]     @relation("NotificationRecipient")
+  notificationsActed    Notification[]     @relation("NotificationActor")
+  notificationReads     NotificationRead[]
 
   @@index([email])
   @@index([username])
@@ -201,6 +214,23 @@ model VisitLog {
   @@index([createdAt])
 }
 
+model AnalyticsEvent {
+  id        String   @id @default(cuid())
+  name      String
+  path      String
+  sessionId String
+  userId    String?
+  properties Json?
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([name, createdAt])
+  @@index([path, createdAt])
+  @@index([sessionId, createdAt])
+  @@index([userId, createdAt])
+}
+
 model ModerationKeyword {
   id        String            @id @default(cuid())
   phrase    String            @unique
@@ -316,4 +346,37 @@ model ScheduleCell {
   @@unique([rowId, day])
   @@index([rowId])
   @@index([subjectId])
+}
+
+model Notification {
+  id          String           @id @default(cuid())
+  type        NotificationType
+  title       String
+  body        String
+  link        String
+  recipientId String?
+  actorId     String?
+  createdAt   DateTime         @default(now())
+
+  recipient User? @relation("NotificationRecipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  actor     User? @relation("NotificationActor", fields: [actorId], references: [id], onDelete: SetNull)
+  reads     NotificationRead[]
+
+  @@index([recipientId])
+  @@index([createdAt])
+  @@index([type])
+}
+
+model NotificationRead {
+  id             String   @id @default(cuid())
+  notificationId String
+  userId         String
+  readAt         DateTime @default(now())
+
+  notification Notification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([notificationId, userId])
+  @@index([userId])
+  @@index([notificationId])
 }
