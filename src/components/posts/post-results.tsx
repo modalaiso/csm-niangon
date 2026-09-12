@@ -153,7 +153,7 @@ export function PostResults<T extends HomePostCard>(
   }
 
   return (
-    <ul className="divide-y divide-border overflow-hidden rounded-2xl border border-border bg-white">
+    <ul className="divide-y divide-border overflow-hidden rounded-2xl border border-border bg-background">
       {props.posts.map((post) => (
         <PostCard
           key={post.id}
