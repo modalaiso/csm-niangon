@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 const loginSchema = z.object({
-  nameOrEmail: z.string().min(1, "Le nom ou l'email est requis"),
+  nameOrEmail: z.string().min(1, "Le nom d'utilisateur ou l'email est requis"),
   password: z.string().min(1, "Le mot de passe est requis"),
 });
 

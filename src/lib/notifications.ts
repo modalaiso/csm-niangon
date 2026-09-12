@@ -99,13 +99,14 @@ export async function notifyCommentLike(params: {
 export async function notifyPostLike(params: {
   postAuthorId: string;
   actorId: string;
+  actorPseudo: string;
   postId: string;
   postTitle: string;
 }) {
   if (params.postAuthorId === params.actorId) return;
   await createNotification({
     type: "POST_LIKE",
-    title: "Quelqu'un a aimé votre publication",
+    title: `${params.actorPseudo} a aimé votre publication`,
     body: params.postTitle,
     link: `/posts/${params.postId}`,
     recipientId: params.postAuthorId,

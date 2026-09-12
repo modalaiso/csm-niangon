@@ -120,7 +120,7 @@ export function PostsExplorer(props: Readonly<PostsExplorerProps>) {
               <Link
                 key={post.id}
                 href={`/posts/${post.id}`}
-                className="group overflow-hidden rounded-2xl border border-border transition-all hover:border-primary/40 bg-background"
+                className="group overflow-hidden rounded-2xl border border-border transition-all hover:border-primary/40 bg-muted/50"
               >
                 <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
                   {post.thumbnail ? (
@@ -130,9 +130,11 @@ export function PostsExplorer(props: Readonly<PostsExplorerProps>) {
                       className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   ) : (
-                    <div className="flex h-full w-full items-center justify-center text-xs text-muted-foreground">
-                      Pas d'image
-                    </div>
+                    <img
+                      src="/miniature.png"
+                      alt={post.title}
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
                   )}
                   <span
                     className={cn(

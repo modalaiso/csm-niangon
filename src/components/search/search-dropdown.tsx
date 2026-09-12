@@ -136,7 +136,7 @@ export function SearchDropdown() {
   return (
     <div ref={containerRef} className="relative flex-1">
       {/* Barre de recherche */}
-      <div className="flex items-center gap-2 rounded-full bg-gray-100 dark:bg-gray-800">
+      <div className="flex items-center gap-2 rounded-full bg-gray-100 dark:bg-muted">
         <Input
           type="search"
           placeholder="Recherche"

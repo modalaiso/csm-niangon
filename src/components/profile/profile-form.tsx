@@ -128,6 +128,7 @@ export function ProfileForm(props: Readonly<ProfileFormProps>) {
               id="nom"
               value={nom}
               onChange={(e) => setNom(e.target.value)}
+              className="bg-muted/70"
             />
           </div>
           <div className="space-y-1.5">
@@ -136,6 +137,7 @@ export function ProfileForm(props: Readonly<ProfileFormProps>) {
               id="prenom"
               value={prenom}
               onChange={(e) => setPrenom(e.target.value)}
+              className="bg-muted/70"
             />
           </div>
         </div>
@@ -152,7 +154,7 @@ export function ProfileForm(props: Readonly<ProfileFormProps>) {
         <div className="space-y-1.5">
           <Label htmlFor="classe">Classe</Label>
           <Select value={classe} onValueChange={setClasse}>
-            <SelectTrigger id="classe">
+            <SelectTrigger id="classe" className="bg-muted/70">
               <SelectValue placeholder="Sélectionner votre classe" />
             </SelectTrigger>
             <SelectContent>
@@ -172,6 +174,7 @@ export function ProfileForm(props: Readonly<ProfileFormProps>) {
             value={matricule}
             onChange={(e) => setMatricule(e.target.value)}
             placeholder="Ex : 12346789A"
+            className="bg-muted/70"
           />
         </div>
 
@@ -182,6 +185,7 @@ export function ProfileForm(props: Readonly<ProfileFormProps>) {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            className="bg-muted/70"
           />
           {emailChanged && (
             <p className="text-xs text-muted-foreground">
