@@ -34,6 +34,7 @@ import {
   ThumbsUpOutlineIcon,
 } from "@/components/icons/icons";
 import { Avatar } from "@/components/ui/avatar";
+import { trackAnalyticsEvent } from "@/lib/analytics-client";
 import { cn } from "@/lib/utils";
 
 interface CommentSectionProps {
@@ -89,7 +90,7 @@ function CommentMenu(props: Readonly<CommentMenuProps>) {
       </button>
 
       {props.isOpen && (
-        <div className="absolute right-0 top-8 xl:left-10 xl:top-0 z-20 w-44 overflow-hidden rounded-2xl border border-border bg-white py-1 shadow-sm">
+        <div className="absolute right-0 top-8 xl:left-10 xl:top-0 z-20 w-44 overflow-hidden rounded-2xl border border-border bg-background py-1 shadow-sm">
           {props.comment.canEdit && (
             <button
               type="button"
@@ -294,7 +295,7 @@ function CommentItem(props: Readonly<CommentItemProps>) {
         <div className="flex items-start justify-between gap-2">
           <p className="text-sm">
             <span className="font-semibold text-foreground">
-              {props.comment.author.prenom} {props.comment.author.nom}
+              @{props.comment.author.username}
             </span>{" "}
             <span className="text-xs text-muted-foreground">
               {formatRelativeTime(props.comment.createdAt)}
@@ -497,6 +498,10 @@ export function CommentSection(props: Readonly<CommentSectionProps>) {
         return;
       }
       setValue("");
+      trackAnalyticsEvent("comment_created", {
+        postId: props.postId,
+        kind: "comment",
+      });
       router.refresh();
     });
   };
@@ -514,6 +519,10 @@ export function CommentSection(props: Readonly<CommentSectionProps>) {
         return;
       }
       closeReplyBox();
+      trackAnalyticsEvent("comment_created", {
+        postId: props.postId,
+        kind: "reply",
+      });
       setExpanded((prev) => new Set(prev).add(rootId));
       router.refresh();
     });
@@ -626,7 +635,7 @@ export function CommentSection(props: Readonly<CommentSectionProps>) {
   );
 
   return (
-    <section className="mt-5 border-t border-slate-200 pt-5">
+    <section className="mt-5 border-t border-border pt-5">
       <h2 className="mb-5 flex items-center gap-2 text-base font-bold text-foreground">
         <MessageCircle className="h-5 w-5 text-primary" />
         Commentaires ({totalCount})

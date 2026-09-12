@@ -53,6 +53,7 @@ const CLASS_OPTIONS = [
   "Premiere",
   "Terminal",
   "Parent d'élève",
+  "Autre",
 ];
 
 import { useRouter } from "next/navigation";
@@ -89,9 +90,9 @@ export function SignupForm(_props: Readonly<SignupFormProps>) {
   const selectedClass = watch("classe");
 
   return (
-    <div className="w-full max-w-2xl space-y-8 rounded-3xl border border-green-500 bg-white p-8 shadow-lg">
+    <div className="w-full max-w-2xl space-y-8 rounded-3xl border border-border bg-background p-8 shadow-lg">
       <div className="text-center">
-        <h2 className="text-2xl font-bold text-gray-900">Inscription</h2>
+        <h2 className="text-2xl font-bold text-foreground">Inscription</h2>
       </div>
 
       <form
@@ -155,7 +156,7 @@ export function SignupForm(_props: Readonly<SignupFormProps>) {
             defaultValue={selectedClass}
           >
             <SelectTrigger
-              className={`bg-white ${errors.classe ? "border-red-500" : ""}`}
+              className={`bg-background ${errors.classe ? "border-red-500" : ""}`}
             >
               <SelectValue placeholder="Sélectionner votre classe" />
             </SelectTrigger>
@@ -216,7 +217,9 @@ export function SignupForm(_props: Readonly<SignupFormProps>) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="confirmPassword">Confirmer le mot de passe</Label>
+            <Label htmlFor="confirmPassword">
+              Confirmer le mot de passe <span className="text-red-500">*</span>
+            </Label>
             <Input
               id="confirmPassword"
               type="password"
@@ -244,7 +247,7 @@ export function SignupForm(_props: Readonly<SignupFormProps>) {
               <Link
                 href="/cgu"
                 target="_blank"
-                className="font-medium text-blue-600 hover:underline"
+                className="font-medium text-primary hover:underline"
               >
                 Conditions Générales d'Utilisation
               </Link>{" "}
@@ -252,7 +255,7 @@ export function SignupForm(_props: Readonly<SignupFormProps>) {
               <Link
                 href="/confidentialite"
                 target="_blank"
-                className="font-medium text-blue-600 hover:underline"
+                className="font-medium text-primary hover:underline"
               >
                 politique de confidentialité
               </Link>
@@ -265,7 +268,7 @@ export function SignupForm(_props: Readonly<SignupFormProps>) {
 
         <Button
           type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+          className="w-full bg-primary hover:bg-primary/90 text-white"
           disabled={isSubmitting}
         >
           {isSubmitting ? "Création en cours..." : "Créer un compte"}
@@ -279,7 +282,7 @@ export function SignupForm(_props: Readonly<SignupFormProps>) {
           Déjà un compte ?{" "}
           <Link
             href="/login"
-            className="font-medium text-blue-600 hover:underline"
+            className="font-medium text-primary hover:underline"
           >
             Connectez-vous
           </Link>

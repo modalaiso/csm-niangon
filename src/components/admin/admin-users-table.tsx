@@ -230,7 +230,7 @@ export function AdminUsersTable(props: Readonly<AdminUsersTableProps>) {
           value={roleFilter}
           onValueChange={(v) => setRoleFilter(v as Role | "ALL")}
         >
-          <SelectTrigger className="w-full bg-white sm:w-48">
+          <SelectTrigger className="w-full bg-background sm:w-48">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -245,7 +245,7 @@ export function AdminUsersTable(props: Readonly<AdminUsersTableProps>) {
 
       {error && <p className="mb-3 text-sm text-destructive">{error}</p>}
 
-      <div className="overflow-x-auto rounded-2xl border border-border bg-white">
+      <div className="overflow-x-auto rounded-2xl border border-border bg-background">
         <table className="w-full min-w-[800px] text-left text-sm">
           <thead>
             <tr className="border-b border-border text-xs uppercase text-muted-foreground">

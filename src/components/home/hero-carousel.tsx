@@ -31,7 +31,7 @@ export function HeroCarousel(props: Readonly<HeroCarouselProps>) {
     return (
       <section className="relative flex h-[280px] w-full items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5 px-4 text-center md:h-[380px]">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 md:text-3xl">
+          <h1 className="text-2xl font-bold text-foreground md:text-3xl">
             Bienvenue sur CSM Niangon
           </h1>
           <p className="mt-2 text-sm text-muted-foreground md:text-base">
@@ -103,8 +103,8 @@ export function HeroCarousel(props: Readonly<HeroCarouselProps>) {
       ))}
 
       {/* Voile pour la lisibilité du texte, comme sur la maquette */}
-      <div className="absolute inset-0 bg-gradient-to-r from-white via-transparent to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-transparent hidden sm:flex" />
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
 
       {props.posts.length > 1 && (
         <>
@@ -112,7 +112,7 @@ export function HeroCarousel(props: Readonly<HeroCarouselProps>) {
             type="button"
             onClick={() => goTo(index - 1)}
             aria-label="Publication précédente"
-            className="absolute hidden left-6 md:left-8 top-1/2 z-20 sm:flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-white/50 backdrop-blur-[3px] transition-colors hover:bg-white/70 hover:backdrop-blur-[3px]"
+            className="absolute hidden left-6 md:left-8 top-1/2 z-20 sm:flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-background/50 backdrop-blur-[3px] transition-colors hover:bg-background/70 hover:backdrop-blur-[3px]"
           >
             <ChevronLeft className="h-5 w-5 text-primary" />
           </button>
@@ -120,7 +120,7 @@ export function HeroCarousel(props: Readonly<HeroCarouselProps>) {
             type="button"
             onClick={() => goTo(index + 1)}
             aria-label="Publication suivante"
-            className="absolute hidden right-6 md:right-8 top-1/2 z-20 sm:flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-white/50 backdrop-blur-[3px] transition-colors hover:bg-white/70 hover:backdrop-blur-[3px]"
+            className="absolute hidden right-6 md:right-8 top-1/2 z-20 sm:flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-background/50 backdrop-blur-[3px] transition-colors hover:bg-background/70 hover:backdrop-blur-[3px]"
           >
             <ChevronRight className="h-5 w-5 text-primary" />
           </button>
@@ -129,10 +129,10 @@ export function HeroCarousel(props: Readonly<HeroCarouselProps>) {
 
       <div className="absolute inset-x-0 bottom-0 z-10 px-8 pb-20 sm:px-20 md:px-28 md:pb-26">
         <div className="max-w-xl">
-          <h1 className="text-xl font-extrabold uppercase leading-tight text-gray-900 sm:text-2xl md:text-3xl">
+          <h1 className="text-xl font-extrabold uppercase leading-tight text-foreground sm:text-2xl md:text-3xl" style={{ textShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)" }}>
             {current.title}
           </h1>
-          <p className="mt-3 line-clamp-3 text-sm text-gray-700 sm:text-base md:text-sm">
+          <p className="mt-3 line-clamp-3 text-sm text-muted-foreground sm:text-base md:text-sm" style={{ textShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)" }}>
             {current.summary}
           </p>
           <Link

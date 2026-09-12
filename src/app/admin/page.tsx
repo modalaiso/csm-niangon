@@ -10,6 +10,7 @@ import Link from "next/link";
 import { getDashboardSummary } from "@/app/actions/admin-dashboard";
 import {
   getAllVisitStats,
+  getAnalyticsSummary,
   getTopPages,
   getVisitTrend,
   type VisitPeriod,
@@ -38,12 +39,14 @@ export default async function AdminDashboardPage() {
     currentUser.role === "MODERATOR" || currentUser.role === "ADMIN";
   const isAdmin = currentUser.role === "ADMIN";
 
-  const [visitStats, trend, topPages, summaryResult] = await Promise.all([
-    getAllVisitStats(),
-    getVisitTrend(14),
-    getTopPages("weekly", 5),
-    getDashboardSummary(),
-  ]);
+  const [visitStats, trend, topPages, analytics, summaryResult] =
+    await Promise.all([
+      getAllVisitStats(),
+      getVisitTrend(14),
+      getTopPages("weekly", 5),
+      getAnalyticsSummary(),
+      getDashboardSummary(),
+    ]);
 
   const summary =
     "error" in summaryResult
@@ -82,7 +85,7 @@ export default async function AdminDashboardPage() {
             return (
               <div
                 key={p.key}
-                className="rounded-2xl border border-border bg-white p-4"
+                className="rounded-2xl border border-border bg-background p-4"
               >
                 <p className="text-xs font-medium text-muted-foreground">
                   {p.short}
@@ -101,7 +104,7 @@ export default async function AdminDashboardPage() {
       </section>
 
       {/* Tendance 14 jours */}
-      <section className="rounded-2xl border border-border bg-white p-5">
+      <section className="rounded-2xl border border-border bg-background p-5">
         <div className="mb-4 flex items-center gap-2">
           <TrendingUp className="h-4 w-4 text-primary" />
           <h2 className="text-sm font-semibold text-foreground">
@@ -111,11 +114,74 @@ export default async function AdminDashboardPage() {
         <VisitTrendChart data={trend} />
       </section>
 
+      <section>
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+          Engagement (30 derniers jours)
+        </h2>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+          <div className="rounded-2xl border border-border bg-background p-4">
+            <p className="text-xs font-medium text-muted-foreground">
+              Sessions engagées
+            </p>
+            <p className="mt-1 text-2xl font-bold text-foreground">
+              {analytics.engagedSessions}
+            </p>
+            <p className="mt-0.5 text-[11px] text-muted-foreground">
+              {analytics.engagementRate}% des sessions vues
+            </p>
+          </div>
+          <div className="rounded-2xl border border-border bg-background p-4">
+            <p className="text-xs font-medium text-muted-foreground">
+              Temps moyen
+            </p>
+            <p className="mt-1 text-2xl font-bold text-foreground">
+              {analytics.averageEngagementSeconds}s
+            </p>
+            <p className="mt-0.5 text-[11px] text-muted-foreground">
+              par page active
+            </p>
+          </div>
+          <div className="rounded-2xl border border-border bg-background p-4">
+            <p className="text-xs font-medium text-muted-foreground">
+              Lecture à 90%
+            </p>
+            <p className="mt-1 text-2xl font-bold text-foreground">
+              {analytics.scrollDepth90}
+            </p>
+            <p className="mt-0.5 text-[11px] text-muted-foreground">
+              pages presque entièrement lues
+            </p>
+          </div>
+          <div className="rounded-2xl border border-border bg-background p-4">
+            <p className="text-xs font-medium text-muted-foreground">
+              Recherches
+            </p>
+            <p className="mt-1 text-2xl font-bold text-foreground">
+              {analytics.searches}
+            </p>
+            <p className="mt-0.5 text-[11px] text-muted-foreground">
+              intentions mesurées
+            </p>
+          </div>
+          <div className="rounded-2xl border border-border bg-background p-4">
+            <p className="text-xs font-medium text-muted-foreground">
+              Partages
+            </p>
+            <p className="mt-1 text-2xl font-bold text-foreground">
+              {analytics.shares}
+            </p>
+            <p className="mt-0.5 text-[11px] text-muted-foreground">
+              contenus relayés
+            </p>
+          </div>
+        </div>
+      </section>
+
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         {canManagePosts && (
           <Link
             href="/admin/posts"
-            className="rounded-2xl border border-border bg-white p-5 transition-all hover:border-primary/40"
+            className="rounded-2xl border border-border bg-background p-5 transition-all hover:border-primary/40"
           >
             <div className="flex items-center justify-between">
               <FileText className="h-5 w-5 text-primary" />
@@ -140,7 +206,7 @@ export default async function AdminDashboardPage() {
         {canModerate && (
           <Link
             href="/admin/moderation"
-            className="rounded-2xl border border-border bg-white p-5 transition-all hover:border-primary/40"
+            className="rounded-2xl border border-border bg-background p-5 transition-all hover:border-primary/40"
           >
             <div className="flex items-center justify-between">
               <MessageCircle className="h-5 w-5 text-secondary" />
@@ -158,7 +224,7 @@ export default async function AdminDashboardPage() {
         )}
 
         {(canManagePosts || isAdmin) && (
-          <div className="rounded-2xl border border-border bg-white p-5">
+          <div className="rounded-2xl border border-border bg-background p-5">
             <div className="flex items-center justify-between">
               <Megaphone className="h-5 w-5 text-rose-500" />
               {isAdmin && <Users className="h-4 w-4 text-muted-foreground" />}
@@ -177,7 +243,7 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* Pages les plus visitées */}
-      <section className="rounded-2xl border border-border bg-white p-5">
+      <section className="rounded-2xl border border-border bg-background p-5">
         <div className="mb-4 flex items-center gap-2">
           <Eye className="h-4 w-4 text-primary" />
           <h2 className="text-sm font-semibold text-foreground">

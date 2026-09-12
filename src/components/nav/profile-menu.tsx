@@ -17,8 +17,8 @@ interface ProfileMenuProps {
 
 /**
  * Bouton profil du top nav (desktop uniquement). Ouvre un menu déroulant
- * donnant accès à la page profil, aux paramètres du compte (actuellement
- * regroupés sur la même page /profile) et à la déconnexion.
+ * donnant accès à la page profil, aux paramètres du compte et à la
+ * déconnexion.
  */
 export function ProfileMenu(props: Readonly<ProfileMenuProps>) {
   const router = useRouter();
@@ -69,7 +69,7 @@ export function ProfileMenu(props: Readonly<ProfileMenuProps>) {
       {isOpen && (
         <div
           role="menu"
-          className="absolute right-0 top-full z-40 mt-4 w-56 overflow-hidden rounded-2xl border border-border bg-white"
+          className="absolute right-0 top-full z-40 mt-4 w-56 overflow-hidden rounded-2xl border border-border bg-background shadow-sm"
         >
           <div className="border-b border-border px-4 py-3">
             <p className="truncate text-sm font-semibold text-foreground">

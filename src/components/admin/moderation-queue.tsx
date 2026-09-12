@@ -57,7 +57,7 @@ export function ModerationQueue() {
 
   if (isLoading) {
     return (
-      <div className="rounded-2xl border border-border bg-white p-8 text-center">
+      <div className="rounded-2xl border border-border bg-background p-8 text-center">
         <Loader2 className="mx-auto h-5 w-5 animate-spin text-muted-foreground" />
       </div>
     );
@@ -65,7 +65,7 @@ export function ModerationQueue() {
 
   if (error) {
     return (
-      <p className="rounded-2xl border border-border bg-white p-5 text-sm text-destructive">
+      <p className="rounded-2xl border border-border bg-background p-5 text-sm text-destructive">
         {error}
       </p>
     );
@@ -73,7 +73,7 @@ export function ModerationQueue() {
 
   if (comments.length === 0) {
     return (
-      <div className="rounded-2xl border border-border bg-white p-8 text-center">
+      <div className="rounded-2xl border border-border bg-background p-8 text-center">
         <p className="text-sm font-medium text-muted-foreground">
           Aucun commentaire en attente de revue.
         </p>

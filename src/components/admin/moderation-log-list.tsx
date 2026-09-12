@@ -42,7 +42,7 @@ export function ModerationLogList() {
 
   if (isLoading) {
     return (
-      <div className="rounded-2xl border border-border bg-white p-8 text-center">
+      <div className="rounded-2xl border border-border bg-background p-8 text-center">
         <Loader2 className="mx-auto h-5 w-5 animate-spin text-muted-foreground" />
       </div>
     );
@@ -50,7 +50,7 @@ export function ModerationLogList() {
 
   if (logs.length === 0) {
     return (
-      <div className="rounded-2xl border border-border bg-white p-8 text-center">
+      <div className="rounded-2xl border border-border bg-background p-8 text-center">
         <p className="text-sm text-muted-foreground">
           Aucune action de modération enregistrée.
         </p>
@@ -59,7 +59,7 @@ export function ModerationLogList() {
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-border bg-white">
+    <div className="overflow-hidden rounded-2xl border border-border bg-background">
       <ul className="divide-y divide-border">
         {logs.map((log) => {
           const badge = TYPE_BADGES[log.type] ?? {

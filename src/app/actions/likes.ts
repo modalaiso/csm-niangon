@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { notifyPostLike } from "@/lib/notifications";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 
@@ -49,9 +50,15 @@ export async function toggleLike(
       return { error: "auth_required" };
     }
 
-    const existing = await prisma.like.findUnique({
-      where: { postId_userId: { postId, userId: user.id } },
-    });
+    const [existing, post] = await Promise.all([
+      prisma.like.findUnique({
+        where: { postId_userId: { postId, userId: user.id } },
+      }),
+      prisma.post.findUnique({
+        where: { id: postId },
+        select: { authorId: true, title: true },
+      }),
+    ]);
 
     if (existing) {
       await prisma.like.delete({ where: { id: existing.id } });
@@ -62,7 +69,18 @@ export async function toggleLike(
     const count = await prisma.like.count({ where: { postId } });
     revalidatePath(`/posts/${postId}`);
 
-    return { liked: !existing, count };
+    const liked = !existing;
+    if (liked && post) {
+      await notifyPostLike({
+        postAuthorId: post.authorId,
+        actorId: user.id,
+        actorPseudo: user.id,
+        postId,
+        postTitle: post.title,
+      });
+    }
+
+    return { liked, count };
   } catch (error) {
     console.error("Erreur lors de la mise à jour du like:", error);
     return { error: "unknown" };

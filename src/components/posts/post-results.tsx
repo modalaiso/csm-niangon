@@ -33,7 +33,7 @@ function PostCard<T extends HomePostCard>(props: Readonly<PostCardProps<T>>) {
       <Link
         key={props.post.id}
         href={`/posts/${props.post.id}`}
-        className="group overflow-hidden rounded-2xl border border-border transition-all hover:border-primary/40 bg-white"
+        className="group overflow-hidden rounded-2xl border border-border transition-all hover:border-primary/40 bg-muted/50"
       >
         <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
           {props.post.thumbnail ? (
@@ -43,9 +43,11 @@ function PostCard<T extends HomePostCard>(props: Readonly<PostCardProps<T>>) {
               className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center text-xs text-muted-foreground">
-              Pas d'image
-            </div>
+            <img
+              src="/miniature.png"
+              alt={props.post.title}
+              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            />
           )}
           {badge}
         </div>
@@ -153,7 +155,7 @@ export function PostResults<T extends HomePostCard>(
   }
 
   return (
-    <ul className="divide-y divide-border overflow-hidden rounded-2xl border border-border bg-white">
+    <ul className="divide-y divide-border overflow-hidden rounded-2xl border border-border bg-muted/50">
       {props.posts.map((post) => (
         <PostCard
           key={post.id}

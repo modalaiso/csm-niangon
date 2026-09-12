@@ -9,6 +9,7 @@ import {
   WhatsAppIcon,
   XSocialIcon,
 } from "@/components/icons/social-icons";
+import { trackAnalyticsEvent } from "@/lib/analytics-client";
 import { cn } from "@/lib/utils";
 
 interface ShareButtonProps {
@@ -70,6 +71,10 @@ export function ShareButton(props: Readonly<ShareButtonProps>) {
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(shareUrl);
+      trackAnalyticsEvent("share", {
+        channel: "copy_link",
+        postId: props.postId,
+      });
       setCopied(true);
       window.setTimeout(() => setCopied(false), 2000);
     } catch (error) {
@@ -84,6 +89,7 @@ export function ShareButton(props: Readonly<ShareButtonProps>) {
         text: props.summary,
         url: shareUrl,
       });
+      trackAnalyticsEvent("share", { channel: "native", postId: props.postId });
       setIsOpen(false);
     } catch {
       // Partage annulé par l'utilisateur : rien à faire
@@ -92,6 +98,10 @@ export function ShareButton(props: Readonly<ShareButtonProps>) {
 
   const handleInstagramShare = async () => {
     await handleCopy();
+    trackAnalyticsEvent("share", {
+      channel: "instagram",
+      postId: props.postId,
+    });
     window.open("https://www.instagram.com/", "_blank", "noopener,noreferrer");
   };
 
