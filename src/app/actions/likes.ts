@@ -74,7 +74,7 @@ export async function toggleLike(
       await notifyPostLike({
         postAuthorId: post.authorId,
         actorId: user.id,
-        actorPseudo: user.username,
+        actorPseudo: user.id,
         postId,
         postTitle: post.title,
       });
