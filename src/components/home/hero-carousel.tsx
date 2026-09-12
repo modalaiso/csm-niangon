@@ -129,10 +129,10 @@ export function HeroCarousel(props: Readonly<HeroCarouselProps>) {
 
       <div className="absolute inset-x-0 bottom-0 z-10 px-8 pb-20 sm:px-20 md:px-28 md:pb-26">
         <div className="max-w-xl">
-          <h1 className="text-xl font-extrabold uppercase leading-tight text-foreground sm:text-2xl md:text-3xl shadow-lg">
+          <h1 className="text-xl font-extrabold uppercase leading-tight text-foreground sm:text-2xl md:text-3xl text-shadow-lg">
             {current.title}
           </h1>
-          <p className="mt-3 line-clamp-3 text-sm text-muted-foreground sm:text-base md:text-sm shadow-lg">
+          <p className="mt-3 line-clamp-3 text-sm text-muted-foreground sm:text-base md:text-sm text-shadow-lg">
             {current.summary}
           </p>
           <Link
