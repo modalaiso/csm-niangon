@@ -51,13 +51,13 @@ export function PostsExplorer(props: Readonly<PostsExplorerProps>) {
             aria-controls="post-type-filters"
             aria-label="Afficher les filtres"
             className={cn(
-              "flex-shrink-0 rounded-full p-1.5 transition-colors md:pointer-events-none md:p-0",
+              "flex-shrink-0 rounded-full p-1.5 transition-colors md:pointer-events-none md:p-0 md:hidden",
               isFilterOpen
                 ? "bg-primary/10 text-primary"
                 : "text-muted-foreground",
             )}
           >
-            <ListFilter className="h-5 w-5" />
+            <ListFilter className="h-5 w-5 " />
           </button>
 
           <div
