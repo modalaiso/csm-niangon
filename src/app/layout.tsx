@@ -22,6 +22,7 @@ export const metadata: Metadata = {
 import { getActiveAnnouncements } from "@/app/actions/announcements";
 import { getInfoBarItems } from "@/app/actions/infobar";
 import { AnalyticsGate } from "@/components/analytics/analytics-gate";
+import { PostHogUserIdentity } from "@/components/analytics/posthog-user-identity";
 import { AnnouncementPopup } from "@/components/announcements/announcement-popup";
 import { CookieConsentBanner } from "@/components/cookies/cookie-consent-banner";
 import { SiteFooter } from "@/components/footer/site-footer";
@@ -92,6 +93,18 @@ export default async function RootLayout({
         className={`${inter.variable} ${plusJakartaSans.variable} antialiased`}
       >
         <AnalyticsGate />
+        <PostHogUserIdentity
+          user={
+            user && userProfile
+              ? {
+                  id: user.id,
+                  email: userProfile.email,
+                  name: `${userProfile.prenom} ${userProfile.nom}`,
+                  role: userRole,
+                }
+              : null
+          }
+        />
         <InfoBar items={infoBarItems} />
         <TopNav user={user} userRole={userRole} userProfile={userProfile} />
         {children}

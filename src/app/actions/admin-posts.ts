@@ -4,6 +4,10 @@ import type { PostStatus, PostType } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { getPostManagerAuthContext } from "@/lib/auth/admin-guard";
 import { notifyNewPost } from "@/lib/notifications";
+import {
+  captureServerEvent,
+  captureServerException,
+} from "@/lib/posthog-server";
 import { prisma } from "@/lib/prisma";
 
 const MAX_IMAGES = 15;
@@ -115,9 +119,22 @@ export async function createPost(
     }
     revalidatePath("/admin/posts");
 
+    await captureServerEvent({
+      distinctId: userId,
+      event: "post_created",
+      properties: {
+        post_id: post.id,
+        post_type: post.type,
+        status: input.status,
+        image_count: images.length,
+        tag_count: uniqueTags.length,
+      },
+    });
+
     return { success: true, id: post.id, slug: post.slug };
   } catch (error) {
     console.error("Erreur lors de la création du post:", error);
+    await captureServerException(error, userId);
     return { error: "unknown" };
   }
 }
@@ -578,9 +595,24 @@ export async function updatePost(
     revalidatePath("/admin/posts");
     revalidatePath("/");
     revalidatePath(`/posts/${postId}`);
+
+    await captureServerEvent({
+      distinctId: auth.user.id,
+      event: "post_updated",
+      properties: {
+        post_id: postId,
+        post_type: input.type,
+        previous_status: existing.status,
+        status: input.status,
+        image_count: images.length,
+        tag_count: uniqueTags.length,
+      },
+    });
+
     return { success: true, id: postId };
   } catch (error) {
     console.error("Erreur lors de la modification du post:", error);
+    await captureServerException(error, auth.user.id);
     return { error: "unknown" };
   }
 }

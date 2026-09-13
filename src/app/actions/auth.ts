@@ -2,6 +2,10 @@
 
 import type { Role } from "@prisma/client";
 import { z } from "zod";
+import {
+  captureServerEvent,
+  captureServerException,
+} from "@/lib/posthog-server";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 
@@ -139,12 +143,27 @@ export async function signup(formData: z.infer<typeof signupSchema>) {
     });
   } catch (error) {
     console.error("Erreur Prisma:", error);
+    await captureServerException(error, authData.user.id);
     // Rollback Supabase user if Prisma fails?
     // For now, just return error. Ideally we'd delete the auth user.
     return { error: "Erreur lors de la création du profil utilisateur" };
   }
 
-  return { success: true };
+  await captureServerEvent({
+    distinctId: authData.user.id,
+    event: "user_signed_up",
+    properties: {
+      account_type: "user",
+      authentication_method: "password",
+    },
+    personProperties: {
+      email: formData.email,
+      name: `${formData.prenom} ${formData.nom}`,
+      role: "USER",
+    },
+  });
+
+  return { success: true, userId: authData.user.id };
 }
 
 export async function login(formData: z.infer<typeof loginSchema>) {
@@ -172,7 +191,7 @@ export async function login(formData: z.infer<typeof loginSchema>) {
     console.log(`[LOGIN] Tentative de connexion avec: ${email}`);
   }
 
-  const { error } = await supabase.auth.signInWithPassword({
+  const { data: authData, error } = await supabase.auth.signInWithPassword({
     email: email,
     password: formData.password,
   });
@@ -182,8 +201,33 @@ export async function login(formData: z.infer<typeof loginSchema>) {
     return { error: error.message };
   }
 
+  const dbUser = authData.user
+    ? await prisma.user.findUnique({
+        where: { id: authData.user.id },
+        select: { email: true, nom: true, prenom: true, role: true },
+      })
+    : null;
+
+  if (authData.user) {
+    await captureServerEvent({
+      distinctId: authData.user.id,
+      event: "user_logged_in",
+      properties: {
+        account_type: dbUser?.role ?? "USER",
+        authentication_method: "password",
+      },
+      personProperties: dbUser
+        ? {
+            email: dbUser.email,
+            name: `${dbUser.prenom} ${dbUser.nom}`,
+            role: dbUser.role,
+          }
+        : undefined,
+    });
+  }
+
   console.log(`[LOGIN] Connexion réussie: ${email}`);
-  return { success: true };
+  return { success: true, userId: authData.user?.id };
 }
 
 export async function adminSignup(formData: z.infer<typeof adminSignupSchema>) {
