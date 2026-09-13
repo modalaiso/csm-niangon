@@ -111,22 +111,22 @@ export function AnnouncementPopup(props: Readonly<AnnouncementPopupProps>) {
       onClose={() => setIsOpen(false)}
       className="m-auto h-full w-full max-h-[30rem] max-w-[50rem] rounded-3xl p-0 backdrop:bg-black/50 open:flex open:flex-col"
     >
-      <div className="relative flex h-full w-full max-h-[30rem] max-w-[50rem] flex-col overflow-hidden bg-white">
-        <div className="flex items-center justify-between px-6 pb-2 pt-4 sm:px-8">
-          <h2 className="container text-center text-lg font-extrabold uppercase text-slate-900 sm:text-xl">
+      <div className="relative flex h-full w-full max-h-[30rem] max-w-[50rem] flex-col overflow-hidden bg-background shadow-lg">
+        <div className="flex items-center justify-between px-6 pb-2 pt-6 sm:px-8">
+          <h2 className="container text-center text-lg font-extrabold uppercase text-foreground sm:text-xl">
             {current.title}
           </h2>
           <button
             type="button"
             onClick={() => setIsOpen(false)}
             aria-label="Fermer"
-            className="rounded-full p-1 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900"
+            className="rounded-full p-1 text-muted-foreground transition-colors hover:bg-slate-100/25 hover:text-foreground"
           >
             <X className="h-6 w-6" />
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-6 py-1 sm:px-8 mb-6">
+        <div className="flex-1 overflow-y-auto px-6 py-1 sm:px-8 mt-4 mb-6">
           {renderPostContent(bodyText)}
         </div>
 

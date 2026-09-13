@@ -54,33 +54,33 @@ input[type="search"]::-webkit-search-decoration {
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 145 30% 5%;
+    --foreground: 140 20% 98%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 145 25% 7%;
+    --card-foreground: 140 20% 98%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 145 25% 7%;
+    --popover-foreground: 140 20% 98%;
 
-    --primary: 226 71% 40%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 142 71% 45%;
+    --primary-foreground: 144 40% 5%;
 
     --secondary: 38 92% 50%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary-foreground: 145 30% 5%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 145 25% 12%;
+    --muted-foreground: 140 10% 65%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 145 25% 12%;
+    --accent-foreground: 140 20% 98%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    /* --destructive: 0 63% 31%; */
+    --destructive-foreground: 140 20% 98%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 226 71% 40%;
+    --border: 145 20% 15%;
+    --input: 145 20% 15%;
+    --ring: 142 71% 45%;
   }
 }
 

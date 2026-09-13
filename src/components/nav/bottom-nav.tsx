@@ -79,8 +79,8 @@ export function BottomNav(props: Readonly<BottomNavProps>) {
           Filled: HomeFilledIcon,
         },
         {
-          href: "/articles",
-          label: "Articles",
+          href: "/actus",
+          label: "Actualités",
           Outline: ArticleOutlineIcon,
           Filled: ArticleFilledIcon,
         },

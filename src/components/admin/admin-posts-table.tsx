@@ -340,7 +340,7 @@ export function AdminPostsTable() {
             setPage(1);
           }}
         >
-          <SelectTrigger className="w-full bg-white sm:w-44">
+          <SelectTrigger className="w-full bg-background sm:w-44">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -358,7 +358,7 @@ export function AdminPostsTable() {
             setPage(1);
           }}
         >
-          <SelectTrigger className="w-full bg-white sm:w-44">
+          <SelectTrigger className="w-full bg-background sm:w-44">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -407,7 +407,7 @@ export function AdminPostsTable() {
       {error && <p className="mb-3 text-sm text-destructive">{error}</p>}
 
       {/* Table */}
-      <div className="overflow-x-auto rounded-2xl border border-border bg-white">
+      <div className="overflow-x-auto rounded-2xl border border-border bg-background">
         <table className="w-full min-w-[900px] text-left text-sm">
           <thead>
             <tr className="border-b border-border text-xs uppercase text-muted-foreground">

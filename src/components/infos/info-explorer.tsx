@@ -26,7 +26,7 @@ export function InfoExplorer(props: Readonly<InfoExplorerProps>) {
 
   const getUrgencyButtonClass = (item: { value: InfoUrgencyFilter }) => {
     if (urgency !== item.value) {
-      return "border-border bg-white text-foreground hover:border-primary/40";
+      return "border-border bg-background text-foreground hover:border-primary/40";
     }
     if (item.value === "URGENT") {
       return "border-secondary bg-secondary text-secondary-foreground";

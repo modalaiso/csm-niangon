@@ -28,7 +28,7 @@ export function ModerationTabs() {
             className={cn(
               "rounded-full px-4 py-1.5 text-sm font-medium transition-colors",
               active === tab.id
-                ? "bg-white text-foreground shadow-sm"
+                ? "bg-background text-foreground shadow-sm"
                 : "text-muted-foreground",
             )}
           >

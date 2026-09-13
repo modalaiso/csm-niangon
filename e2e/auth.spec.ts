@@ -11,7 +11,7 @@ test.describe("Authentification", () => {
     page,
   }) => {
     await page.goto("/login");
-    await expect(page.getByLabel(/nom ou email/i)).toBeVisible();
+    await expect(page.getByLabel(/nom d'utilisateur ou email/i)).toBeVisible();
     await expect(page.getByLabel(/mot de passe/i)).toBeVisible();
     await expect(
       page.getByRole("button", { name: /connectez-vous/i }),

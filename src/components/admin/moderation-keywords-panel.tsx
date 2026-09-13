@@ -95,7 +95,7 @@ export function ModerationKeywordsPanel() {
   };
 
   return (
-    <div className="rounded-2xl border border-border bg-white p-5">
+    <div className="rounded-2xl border border-border bg-background p-5">
       <h2 className="text-sm font-semibold text-foreground">
         Mots-clés surveillés
       </h2>
@@ -117,7 +117,7 @@ export function ModerationKeywordsPanel() {
           value={action}
           onValueChange={(v) => setAction(v as ModerationAction)}
         >
-          <SelectTrigger className="w-full bg-white sm:w-56">
+          <SelectTrigger className="w-full bg-background sm:w-56">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>

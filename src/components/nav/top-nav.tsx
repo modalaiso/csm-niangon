@@ -6,6 +6,7 @@ import { Menu, ShieldUser } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ProfileMenu } from "@/components/nav/profile-menu";
+import { NotificationBell } from "@/components/notifications/notification-bell";
 import { SearchDropdown } from "@/components/search/search-dropdown";
 import { Button } from "@/components/ui/button";
 import {
@@ -124,13 +125,16 @@ export function TopNav(props: Readonly<TopNavProps>) {
           {/* Desktop Auth / Profile */}
           <div className="hidden lg:flex items-center gap-2">
             {props.user && props.userProfile ? (
-              <ProfileMenu
-                nom={props.userProfile.nom}
-                prenom={props.userProfile.prenom}
-                username={props.userProfile.username}
-                avatar={props.userProfile.avatar}
-                email={props.userProfile.email}
-              />
+              <>
+                <NotificationBell />
+                <ProfileMenu
+                  nom={props.userProfile.nom}
+                  prenom={props.userProfile.prenom}
+                  username={props.userProfile.username}
+                  avatar={props.userProfile.avatar}
+                  email={props.userProfile.email}
+                />
+              </>
             ) : (
               <>
                 <Link href="/login">
@@ -148,8 +152,9 @@ export function TopNav(props: Readonly<TopNavProps>) {
           </div>
 
           {/* Mobile Menu Toggle */}
-          <div className="flex lg:hidden gap-1">
+          <div className="flex lg:hidden gap-1 items-center">
             <SearchDropdown />
+            {props.user && <NotificationBell />}
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-9 w-9">

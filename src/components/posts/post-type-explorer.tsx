@@ -103,7 +103,7 @@ export function PostTypeExplorer<T extends HomePostCard>(
             onChange={(e) => setSearchInput(e.target.value)}
             placeholder={props.searchPlaceholder}
             aria-label={props.searchPlaceholder}
-            className="pl-9 pr-9"
+            className="pl-9 pr-9 bg-muted/50"
           />
           {searchInput && (
             <button

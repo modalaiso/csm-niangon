@@ -65,7 +65,7 @@ export default async function SearchResultsPage(
         <div className="container flex flex-row items-start sm:items-center justify-between gap-2 px-4 py-6 sm:py-8">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900 hover:underline"
+            className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground hover:underline"
           >
             <ArrowLeft className="h-4 w-4" />
             Retour
@@ -105,7 +105,7 @@ export default async function SearchResultsPage(
                   <Link
                     key={result.id}
                     href={`/posts/${result.id}`}
-                    className="group overflow-hidden rounded-2xl border border-border bg-white transition-all hover:border-primary/40"
+                    className="group overflow-hidden rounded-2xl border border-border bg-muted/70 transition-all hover:border-primary/40"
                   >
                     <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
                       {result.thumbnail ? (
@@ -115,9 +115,11 @@ export default async function SearchResultsPage(
                           className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                       ) : (
-                        <div className="flex h-full w-full items-center justify-center text-xs text-muted-foreground">
-                          Pas d'image
-                        </div>
+                        <img
+                          src="/miniature.png"
+                          alt={result.title}
+                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
                       )}
                       <span
                         className={cn(

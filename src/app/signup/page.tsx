@@ -7,13 +7,15 @@ export default function SignupPage() {
       className="min-h-screen flex flex-col items-center bg-cover bg-center p-4"
       style={{
         backgroundImage:
-          "linear-gradient(to bottom right, rgb(219 234 254 / 50%), rgb(240 253 244 / 50%)), url('/bg.png')",
+          "linear-gradient(hsl(var(--background) / 0.75), hsl(var(--background) / 0.75)), url('/bg.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
       }}
     >
       <div className="mb-8 text-center">
         <Link
           href="/"
-          className="text-3xl font-bold text-blue-900 hover:opacity-80"
+          className="text-3xl font-bold text-primary hover:opacity-80"
         >
           {/*Logo*/}
           <div className="mb-4 mt-4 flex flex-col items-center gap-2 justify-center">
@@ -24,7 +26,7 @@ export default function SignupPage() {
               height={50}
               loading="eager"
             />
-            <span className="text-[1rem] leading-[1rem] font-bold text-primary hidden sm:block font-heading">
+            <span className="text-[1rem] leading-[1rem] hidden sm:block font-heading">
               CSM Niangon
             </span>
           </div>

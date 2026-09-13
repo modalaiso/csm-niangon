@@ -216,7 +216,8 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
       {/* Indicateur d'étapes */}
       <ol className="mb-8 flex items-center justify-between">
         {STEPS.map((s, index) => {
-          let stepClassName = "border-border bg-white text-muted-foreground";
+          let stepClassName =
+            "border-border bg-background text-muted-foreground";
 
           if (step === s.id) {
             stepClassName = "border-primary bg-primary text-white";
@@ -493,7 +494,7 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
                   type="button"
                   onClick={() => handleSubmit("ARCHIVED")}
                   disabled={isPending}
-                  className="rounded-full border border-input bg-white px-5 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-60"
+                  className="rounded-full border border-input bg-background px-5 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   Archiver
                 </button>
@@ -502,7 +503,7 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
                 type="button"
                 onClick={() => handleSubmit("DRAFT")}
                 disabled={isPending}
-                className="rounded-full border border-input bg-white px-5 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-60"
+                className="rounded-full border border-input bg-background px-5 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-60"
               >
                 Enregistrer en brouillon
               </button>

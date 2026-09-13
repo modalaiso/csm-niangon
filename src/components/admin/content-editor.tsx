@@ -102,7 +102,7 @@ export function ContentEditor(props: Readonly<ContentEditorProps>) {
   ];
 
   return (
-    <div className="rounded-2xl border border-border bg-white">
+    <div className="rounded-2xl border border-border bg-background">
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border px-3 py-2">
         <div className="flex flex-wrap items-center gap-1">
           {toolbarButtons.map((btn) => (
@@ -125,7 +125,7 @@ export function ContentEditor(props: Readonly<ContentEditorProps>) {
             className={cn(
               "flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium transition-colors",
               mode === "edit"
-                ? "bg-white text-foreground shadow-sm"
+                ? "bg-background text-foreground shadow-sm"
                 : "text-muted-foreground",
             )}
           >
@@ -138,7 +138,7 @@ export function ContentEditor(props: Readonly<ContentEditorProps>) {
             className={cn(
               "flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium transition-colors",
               mode === "preview"
-                ? "bg-white text-foreground shadow-sm"
+                ? "bg-background text-foreground shadow-sm"
                 : "text-muted-foreground",
             )}
           >
@@ -156,7 +156,7 @@ export function ContentEditor(props: Readonly<ContentEditorProps>) {
           placeholder={
             "Rédigez le contenu ici...\n\nUtilisez la barre d'outils ou tapez directement :\n**gras**, *italique*, ## Sous-titre, > Note, - Point, https://exemple.com"
           }
-          className="min-h-[320px] w-full resize-y rounded-b-2xl px-4 py-3 text-sm leading-relaxed text-foreground placeholder:text-muted-foreground focus:outline-none"
+          className="min-h-[320px] w-full resize-y rounded-b-2xl px-4 py-3 bg-background text-sm leading-relaxed text-foreground placeholder:text-muted-foreground focus:outline-none"
         />
       ) : (
         <div className="min-h-[320px] px-4 py-3">

@@ -1,16 +1,15 @@
-import Link from "next/link";
 import { AdminSignupForm } from "@/components/forms/admin-signup-form";
 
 export default function AdminSignupPage() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-red-50 to-orange-50 p-4">
-      <div className="mb-8 text-center">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 to-blue-900 p-4">
+      {/*<div className="mb-8 text-center">
         <Link
           href="/"
-          className="text-3xl font-bold text-blue-900 hover:opacity-80"
+          className="text-3xl font-bold text-primary hover:opacity-80"
         >
           {/*Logo*/}
-          <div className="mb-4 mt-4 flex flex-col items-center gap-2 justify-center">
+      {/*<div className="mb-4 mt-4 flex flex-col items-center gap-2 justify-center">
             <img
               src="/logo.png"
               alt="Logo"
@@ -18,12 +17,12 @@ export default function AdminSignupPage() {
               height={50}
               loading="eager"
             />
-            <span className="text-[1rem] leading-[1rem] font-bold text-primary hidden sm:block font-heading">
+            <span className="text-[1rem] leading-[1rem] hidden sm:block font-heading">
               CSM Niangon
             </span>
           </div>
         </Link>
-      </div>
+      </div>*/}
       <AdminSignupForm />
     </div>
   );

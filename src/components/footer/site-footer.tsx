@@ -65,7 +65,7 @@ export function SiteFooter(props: Readonly<SiteFooterProps>) {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-border bg-white">
+    <footer className="border-t border-border bg-background">
       <div className="container px-4 py-10 sm:py-12">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {/* Logo + description */}

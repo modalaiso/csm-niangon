@@ -7,6 +7,7 @@ import {
   ThumbsUpFilledIcon,
   ThumbsUpOutlineIcon,
 } from "@/components/icons/icons";
+import { trackAnalyticsEvent } from "@/lib/analytics-client";
 import { cn } from "@/lib/utils";
 
 interface LikeButtonProps {
@@ -32,6 +33,11 @@ export function LikeButton(props: Readonly<LikeButtonProps>) {
       }
       setLiked(result.liked);
       setCount(result.count);
+      trackAnalyticsEvent("like", {
+        target: "post",
+        postId: props.postId,
+        value: result.liked,
+      });
     });
   };
 

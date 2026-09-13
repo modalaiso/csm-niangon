@@ -54,10 +54,12 @@ export function AdminLoginForm(_props: Readonly<AdminLoginFormProps>) {
   };
 
   return (
-    <div className="relative w-full max-w-md space-y-8 rounded-3xl border border-green-500 bg-white p-8 shadow-lg">
+    <div className="relative w-full max-w-md space-y-8 rounded-3xl border border-red-500/30 bg-background p-8 shadow-lg">
       <div className="text-center mb-4">
-        <h2 className="text-2xl font-bold text-gray-900">Connexion</h2>
-        <p className="mt-2 text-sm text-gray-600">Accès réservé aux admins</p>
+        <h2 className="text-2xl font-bold text-red-500">Connexion</h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Accès réservé aux admins
+        </p>
       </div>
 
       <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
@@ -106,7 +108,7 @@ export function AdminLoginForm(_props: Readonly<AdminLoginFormProps>) {
 
         <Button
           type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+          className="w-full bg-red-500 hover:bg-red-600 text-white"
           disabled={isSubmitting}
         >
           {isSubmitting ? "Connexion..." : "Connectez-vous"}
@@ -119,7 +121,7 @@ export function AdminLoginForm(_props: Readonly<AdminLoginFormProps>) {
         <div className="text-center text-sm">
           <Link
             href="/login"
-            className="font-medium text-blue-600 hover:underline"
+            className="font-medium text-red-500 hover:underline"
           >
             Retour à la connexion utilisateur
           </Link>

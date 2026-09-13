@@ -76,10 +76,12 @@ export function AdminSignupForm(_props: Readonly<AdminSignupFormProps>) {
   const selectedRole = watch("role");
 
   return (
-    <div className="w-full max-w-2xl space-y-8 rounded-3xl border border-red-500 bg-white p-8 shadow-lg">
+    <div className="w-full max-w-2xl space-y-8 rounded-3xl border border-red-500/30 bg-background p-8 shadow-lg">
       <div className="text-center">
-        <h2 className="text-2xl font-bold text-red-900">Inscription</h2>
-        <p className="mt-2 text-sm text-gray-600">Accès réservé aux admins</p>
+        <h2 className="text-2xl font-bold text-red-500">Inscription</h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Accès réservé aux admins
+        </p>
       </div>
 
       <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
