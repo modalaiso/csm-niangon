@@ -4,8 +4,7 @@ function Pulse({ className }: { className: string }) {
 
 export default function Loading() {
   return (
-    <div
-      role="status"
+    <section
       aria-busy="true"
       aria-label="Chargement du tableau de bord"
       className="flex min-h-screen flex-col bg-muted/30 md:flex-row"
@@ -64,6 +63,6 @@ export default function Loading() {
           </div>
         </main>
       </div>
-    </div>
+    </section>
   );
 }
