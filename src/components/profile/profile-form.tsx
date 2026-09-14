@@ -2,6 +2,7 @@
 
 import { Loader2, LogOut, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import posthog from "posthog-js";
 import { useState, useTransition } from "react";
 import { logout } from "@/app/actions/auth";
 import {
@@ -90,7 +91,9 @@ export function ProfileForm(props: Readonly<ProfileFormProps>) {
 
   const handleLogout = () => {
     startTransition(async () => {
+      posthog.capture("account_logged_out");
       await logout();
+      posthog.reset();
       router.push("/");
       router.refresh();
     });
@@ -114,6 +117,7 @@ export function ProfileForm(props: Readonly<ProfileFormProps>) {
         setDeleteError("Impossible de supprimer le compte. Réessayez.");
         return;
       }
+      posthog.reset();
       router.push("/");
     });
   };

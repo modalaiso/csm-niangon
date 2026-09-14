@@ -1,6 +1,10 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import {
+  captureServerEvent,
+  captureServerException,
+} from "@/lib/posthog-server";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 
@@ -153,10 +157,24 @@ export async function updateMyProfile(
       },
     });
 
+    await captureServerEvent({
+      distinctId: user.id,
+      event: "profile_updated",
+      properties: {
+        email_changed: email !== currentEmail,
+        has_matricule: Boolean(matricule),
+      },
+      personProperties: {
+        email,
+        name: `${prenom} ${nom}`,
+      },
+    });
+
     revalidatePath("/profile");
     return { success: true };
   } catch (error) {
     console.error("Erreur lors de la mise à jour du profil:", error);
+    await captureServerException(error, user.id);
     return { error: "unknown" };
   }
 }
@@ -225,11 +243,17 @@ export async function deleteMyAccount(): Promise<DeleteSuccess | DeleteError> {
     }
 
     await prisma.user.delete({ where: { id: user.id } });
+    await captureServerEvent({
+      distinctId: user.id,
+      event: "account_deleted",
+      properties: { account_role: dbUser?.role ?? "unknown" },
+    });
     await supabase.auth.signOut();
 
     return { success: true };
   } catch (error) {
     console.error("Erreur lors de la suppression du compte:", error);
+    await captureServerException(error, user.id);
     return { error: "unknown" };
   }
 }

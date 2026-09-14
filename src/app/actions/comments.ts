@@ -4,6 +4,10 @@ import type { CommentReactionType, Role } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { checkContentAgainstKeywords } from "@/app/actions/moderation";
 import { notifyCommentLike, notifyCommentReply } from "@/lib/notifications";
+import {
+  captureServerEvent,
+  captureServerException,
+} from "@/lib/posthog-server";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 
@@ -398,10 +402,23 @@ export async function setCommentHidden(
       data: { isHidden: hidden },
     });
 
+    await captureServerEvent({
+      distinctId: userId,
+      event: "comment_moderation_changed",
+      properties: {
+        comment_id: commentId,
+        post_id: existing.postId,
+        is_hidden: hidden,
+        moderator_role: role ?? "unknown",
+      },
+    });
+
     revalidatePath(`/posts/${existing.postId}`);
     return { success: true, isHidden: hidden };
   } catch (error) {
     console.error("Erreur lors du masquage du commentaire:", error);
+    const { userId } = await getAuthContext();
+    if (userId) await captureServerException(error, userId);
     return { error: "unknown" };
   }
 }

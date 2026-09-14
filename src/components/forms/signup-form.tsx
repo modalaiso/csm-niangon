@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import posthog from "posthog-js";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
@@ -80,6 +81,11 @@ export function SignupForm(_props: Readonly<SignupFormProps>) {
       if (result?.error) {
         setServerError(result.error);
       } else if (result?.success) {
+        posthog.identify(result.userId, {
+          email: data.email,
+          name: `${data.prenom} ${data.nom}`,
+          role: "USER",
+        });
         router.push("/");
       }
     } catch {
