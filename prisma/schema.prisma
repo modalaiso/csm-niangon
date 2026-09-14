@@ -380,3 +380,16 @@ model NotificationRead {
   @@index([userId])
   @@index([notificationId])
 }
+
+model ScheduleTimeTemplate {
+  id        String   @id @default(cuid())
+  schoolYear String
+  startTime String
+  endTime   String
+  position  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([schoolYear, position])
+  @@unique([schoolYear, startTime, endTime])
+}

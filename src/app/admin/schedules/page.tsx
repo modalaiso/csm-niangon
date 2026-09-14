@@ -15,16 +15,21 @@ export default async function AdminSchedulesPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground">Emplois du temps</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Gérez les classes, les matières, et l'emploi du temps de chaque
-          classe.
+      <div className="mb-8 rounded-3xl border border-border bg-gradient-to-br from-primary/[0.08] via-background to-background px-6 py-7 sm:px-8">
+        <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">
+          Agenda scolaire
+        </p>
+        <h1 className="mt-2 text-3xl font-bold tracking-tight text-foreground">
+          Emplois du temps
+        </h1>
+        <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+          Organisez les semaines de vos classes dans un espace simple, visuel et
+          toujours prêt à être partagé.
         </p>
       </div>
       <ClassSubjectManager
         initialClasses={classes}
-        initialSubjects={subjects}
+        subjectCount={subjects.length}
       />
     </div>
   );
