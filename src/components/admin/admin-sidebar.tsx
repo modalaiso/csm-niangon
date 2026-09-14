@@ -3,7 +3,9 @@
 import type { Role } from "@prisma/client";
 import {
   ArrowLeft,
+  BookOpen,
   CalendarClock,
+  Clock3,
   FileText,
   LayoutDashboard,
   Menu,
@@ -79,6 +81,25 @@ function SidebarLinks(props: Readonly<SidebarLinksProps>) {
           </Link>
         );
       })}
+      {(props.role === "WRITER" || props.role === "ADMIN") &&
+        pathname.startsWith("/admin/schedules") && (
+          <div className="ml-7 space-y-1 border-l border-border pl-3">
+            <Link
+              href="/admin/schedules/subjects"
+              onClick={props.onNavigate}
+              className="flex items-center gap-2 rounded-lg px-2 py-2 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground"
+            >
+              <BookOpen className="h-3.5 w-3.5" /> Matières
+            </Link>
+            <Link
+              href="/admin/schedules/hours"
+              onClick={props.onNavigate}
+              className="flex items-center gap-2 rounded-lg px-2 py-2 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground"
+            >
+              <Clock3 className="h-3.5 w-3.5" /> Horaires
+            </Link>
+          </div>
+        )}
       <div className="my-2 h-px bg-border" />
       <Link
         href="/"

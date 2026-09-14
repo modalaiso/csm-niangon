@@ -1,5 +1,6 @@
 "use client";
 
+import * as Dialog from "@radix-ui/react-dialog";
 import {
   Bold,
   Eye,
@@ -11,10 +12,9 @@ import {
   Quote,
 } from "lucide-react";
 import { useRef, useState } from "react";
-import * as Dialog from "@radix-ui/react-dialog";
+import { Input } from "@/components/ui/input";
 import { renderPostContent } from "@/lib/render-post-content";
 import { cn } from "@/lib/utils";
-import { Input } from "@/components/ui/input";
 
 interface ContentEditorProps {
   value: string;

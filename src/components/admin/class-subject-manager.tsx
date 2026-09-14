@@ -1,55 +1,64 @@
 "use client";
 
-import { CalendarClock, Plus, Trash2 } from "lucide-react";
+import {
+  ArrowRight,
+  BookOpen,
+  CalendarClock,
+  GraduationCap,
+  LayoutGrid,
+  Plus,
+  Search,
+  Settings2,
+  Trash2,
+} from "lucide-react";
 import Link from "next/link";
-import { useState, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 import {
   type ClassSummary,
   createClass,
-  createSubject,
   deleteClass,
-  deleteSubject,
-  type SubjectSummary,
 } from "@/app/actions/schedules";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 interface ClassSubjectManagerProps {
   initialClasses: ClassSummary[];
-  initialSubjects: SubjectSummary[];
+  subjectCount: number;
 }
 
 export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
   const [classes, setClasses] = useState(props.initialClasses);
-  const [subjects, setSubjects] = useState(props.initialSubjects);
-
   const [className, setClassName] = useState("");
   const [classLevel, setClassLevel] = useState("");
   const [schoolYear, setSchoolYear] = useState("2026-2027");
-  const [classError, setClassError] = useState<string | null>(null);
-
-  const [subjectName, setSubjectName] = useState("");
-  const [subjectColor, setSubjectColor] = useState("#42AA4A");
-  const [subjectError, setSubjectError] = useState<string | null>(null);
-
+  const [search, setSearch] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const filteredClasses = useMemo(
+    () =>
+      classes.filter((item) =>
+        `${item.name} ${item.level ?? ""}`
+          .toLocaleLowerCase("fr")
+          .includes(search.toLocaleLowerCase("fr")),
+      ),
+    [classes, search],
+  );
 
-  const handleAddClass = () => {
+  const addClass = () => {
     if (!className.trim()) return;
-    setClassError(null);
+    setError(null);
     startTransition(async () => {
       const result = await createClass(className, classLevel, schoolYear);
-      if ("error" in result) {
-        setClassError(
+      if ("error" in result)
+        return setError(
           result.error === "duplicate"
             ? "Cette classe existe déjà."
             : "Impossible de créer cette classe.",
         );
-        return;
-      }
-      setClasses((prev) =>
+      setClasses((current) =>
         [
-          ...prev,
+          ...current,
           {
             id: result.id,
             name: className.trim(),
@@ -62,208 +71,217 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
       setClassLevel("");
     });
   };
-
-  const handleDeleteClass = (classItem: ClassSummary) => {
+  const removeClass = (item: ClassSummary) => {
     if (
       !window.confirm(
-        `Supprimer la classe "${classItem.name}" et son emploi du temps ?`,
+        `Supprimer la classe « ${item.name} » et son emploi du temps ?`,
       )
     )
       return;
     startTransition(async () => {
-      const result = await deleteClass(classItem.id);
-      if ("error" in result) {
-        setClassError("Impossible de supprimer cette classe.");
-        return;
-      }
-      setClasses((prev) => prev.filter((c) => c.id !== classItem.id));
-    });
-  };
-
-  const handleAddSubject = () => {
-    if (!subjectName.trim()) return;
-    setSubjectError(null);
-    startTransition(async () => {
-      const result = await createSubject(subjectName, subjectColor);
-      if ("error" in result) {
-        setSubjectError(
-          result.error === "duplicate"
-            ? "Cette matière existe déjà."
-            : "Impossible de créer cette matière.",
+      const result = await deleteClass(item.id);
+      if ("error" in result) setError("Impossible de supprimer cette classe.");
+      else
+        setClasses((current) =>
+          current.filter((entry) => entry.id !== item.id),
         );
-        return;
-      }
-      setSubjects((prev) =>
-        [
-          ...prev,
-          { id: result.id, name: subjectName.trim(), color: subjectColor },
-        ].sort((a, b) => a.name.localeCompare(b.name, "fr")),
-      );
-      setSubjectName("");
-    });
-  };
-
-  const handleDeleteSubject = (subject: SubjectSummary) => {
-    if (!window.confirm(`Supprimer la matière "${subject.name}" ?`)) return;
-    startTransition(async () => {
-      const result = await deleteSubject(subject.id);
-      if ("error" in result) {
-        setSubjectError("Impossible de supprimer cette matière.");
-        return;
-      }
-      setSubjects((prev) => prev.filter((s) => s.id !== subject.id));
     });
   };
 
   return (
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-      {/* Classes */}
-      <div className="rounded-2xl border border-border bg-white p-5">
-        <h2 className="text-sm font-semibold text-foreground">Classes</h2>
-        <p className="mt-1 text-xs text-muted-foreground">
-          Créez une classe, puis modifiez son emploi du temps depuis la liste
-          ci-dessous.
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <div className="rounded-2xl border border-border bg-background p-4">
+          <div className="flex items-center gap-3">
+            <span className="rounded-xl bg-primary/10 p-2 text-primary">
+              <GraduationCap className="h-5 w-5" />
+            </span>
+            <div>
+              <p className="text-2xl font-semibold">{classes.length}</p>
+              <p className="text-xs text-muted-foreground">Classes actives</p>
+            </div>
+          </div>
+        </div>
+        <Link
+          href="/admin/schedules/subjects"
+          className="rounded-2xl border border-border bg-background p-4 transition-colors hover:border-primary/40"
+        >
+          <div className="flex items-center gap-3">
+            <span className="rounded-xl bg-blue-500/10 p-2 text-blue-600">
+              <BookOpen className="h-5 w-5" />
+            </span>
+            <div>
+              <p className="text-2xl font-semibold">{props.subjectCount}</p>
+              <p className="text-xs text-muted-foreground">
+                Matières disponibles
+              </p>
+            </div>
+            <ArrowRight className="ml-auto h-4 w-4 text-muted-foreground" />
+          </div>
+        </Link>
+        <Link
+          href="/admin/schedules/hours"
+          className="rounded-2xl border border-border bg-background p-4 transition-colors hover:border-primary/40"
+        >
+          <div className="flex items-center gap-3">
+            <span className="rounded-xl bg-amber-500/10 p-2 text-amber-600">
+              <CalendarClock className="h-5 w-5" />
+            </span>
+            <div>
+              <p className="text-2xl font-semibold">{schoolYear}</p>
+              <p className="text-xs text-muted-foreground">Modèle horaire</p>
+            </div>
+            <ArrowRight className="ml-auto h-4 w-4 text-muted-foreground" />
+          </div>
+        </Link>
+      </div>
+      {error && (
+        <p
+          role="alert"
+          className="rounded-2xl border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm text-destructive"
+        >
+          {error}
         </p>
-
-        <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+      )}
+      <section className="rounded-3xl border border-border bg-background p-5 shadow-sm sm:p-6">
+        <div className="flex items-start gap-3">
+          <div className="rounded-xl bg-primary p-2 text-white">
+            <Plus className="h-5 w-5" />
+          </div>
+          <div>
+            <h2 className="font-semibold">Créer une nouvelle classe</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Les créneaux de l’année sélectionnée seront générés
+              automatiquement.
+            </p>
+          </div>
+        </div>
+        <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-[1.4fr_1fr_150px_auto]">
           <Input
             value={className}
-            onChange={(e) => setClassName(e.target.value)}
-            placeholder="Ex : 1ère D1"
-            className="flex-1"
+            onChange={(event) => setClassName(event.target.value)}
+            onKeyDown={(event) => event.key === "Enter" && addClass()}
+            placeholder="Nom de la classe · ex. 3e A"
+            aria-label="Nom de la classe"
           />
           <Input
             value={classLevel}
-            onChange={(e) => setClassLevel(e.target.value)}
-            placeholder="Niveau (optionnel)"
-            className="sm:w-40"
+            onChange={(event) => setClassLevel(event.target.value)}
+            placeholder="Niveau · ex. 3e"
+            aria-label="Niveau"
           />
-        </div>
-        <div className="mt-2 flex flex-col gap-2 sm:flex-row">
           <Input
             value={schoolYear}
-            onChange={(e) => setSchoolYear(e.target.value)}
-            placeholder="Année scolaire"
-            className="sm:w-40"
+            onChange={(event) => setSchoolYear(event.target.value)}
+            placeholder="2026-2027"
+            aria-label="Année scolaire"
           />
           <Button
             type="button"
-            onClick={handleAddClass}
+            onClick={addClass}
             disabled={isPending || !className.trim()}
-            className="gap-1.5 text-white"
+            className="gap-2 text-white"
           >
             <Plus className="h-4 w-4" />
-            Ajouter
+            Créer
           </Button>
         </div>
-        {classError && (
-          <p className="mt-2 text-sm text-destructive">{classError}</p>
-        )}
-
-        <ul className="mt-4 divide-y divide-border">
-          {classes.length === 0 && (
-            <p className="text-sm text-muted-foreground">
-              Aucune classe pour le moment.
+      </section>
+      <section className="min-w-0">
+        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 className="flex items-center gap-2 font-semibold">
+              <LayoutGrid className="h-4 w-4 text-primary" />
+              Vos emplois du temps
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Ouvrez une classe pour construire sa semaine.
             </p>
-          )}
-          {classes.map((c) => (
-            <li
-              key={c.id}
-              className="flex items-center justify-between gap-3 py-2.5"
-            >
-              <div className="min-w-0">
-                <p className="truncate text-sm font-medium text-foreground">
-                  {c.name}
+          </div>
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Rechercher une classe"
+              aria-label="Rechercher une classe"
+              className="pl-9 sm:w-56"
+            />
+          </div>
+        </div>
+        {filteredClasses.length === 0 ? (
+          <div className="rounded-3xl border border-dashed border-border bg-background px-5 py-14 text-center text-sm text-muted-foreground">
+            {classes.length
+              ? "Aucune classe ne correspond à cette recherche."
+              : "Aucune classe pour le moment. Créez votre première classe ci-dessus."}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
+            {filteredClasses.map((item, index) => (
+              <article
+                key={item.id}
+                className="group rounded-3xl border border-border bg-background p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div
+                    className={cn(
+                      "flex h-11 w-11 items-center justify-center rounded-2xl text-sm font-bold",
+                      index % 3 === 0
+                        ? "bg-primary/10 text-primary"
+                        : index % 3 === 1
+                          ? "bg-blue-500/10 text-blue-600"
+                          : "bg-amber-500/10 text-amber-600",
+                    )}
+                  >
+                    {item.name.slice(0, 2).toUpperCase()}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => removeClass(item)}
+                    disabled={isPending}
+                    aria-label={`Supprimer ${item.name}`}
+                    className="rounded-lg p-2 text-muted-foreground opacity-0 transition-opacity hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+                <h3 className="mt-4 truncate font-semibold">{item.name}</h3>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {item.level ?? "Niveau non renseigné"}{" "}
+                  <span className="mx-1">·</span> {item.schoolYear}
                 </p>
-                <p className="text-xs text-muted-foreground">
-                  {c.level ?? "—"} · {c.schoolYear}
-                </p>
-              </div>
-              <div className="flex flex-shrink-0 items-center gap-2">
                 <Link
-                  href={`/admin/schedules/${c.id}`}
-                  className="flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary hover:bg-primary/20"
+                  href={`/admin/schedules/${item.id}`}
+                  className="mt-5 flex items-center justify-between rounded-xl bg-muted/60 px-3 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-primary/10 hover:text-primary"
                 >
-                  <CalendarClock className="h-3.5 w-3.5" />
-                  Emploi du temps
+                  <span className="flex items-center gap-2">
+                    <CalendarClock className="h-4 w-4" />
+                    Construire le planning
+                  </span>
+                  <ArrowRight className="h-4 w-4" />
                 </Link>
-                <button
-                  type="button"
-                  onClick={() => handleDeleteClass(c)}
-                  disabled={isPending}
-                  aria-label="Supprimer"
-                  className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* Matières */}
-      <div className="rounded-2xl border border-border bg-white p-5">
-        <h2 className="text-sm font-semibold text-foreground">Matières</h2>
-        <p className="mt-1 text-xs text-muted-foreground">
-          La liste des matières disponibles pour remplir les emplois du temps.
-        </p>
-
-        <div className="mt-4 flex flex-col gap-2 sm:flex-row">
-          <Input
-            value={subjectName}
-            onChange={(e) => setSubjectName(e.target.value)}
-            placeholder="Ex : Mathématiques"
-            className="flex-1"
-          />
-          <input
-            type="color"
-            value={subjectColor}
-            onChange={(e) => setSubjectColor(e.target.value)}
-            aria-label="Couleur de la matière"
-            className="h-10 w-12 flex-shrink-0 cursor-pointer rounded-xl border border-input"
-          />
-          <Button
-            type="button"
-            onClick={handleAddSubject}
-            disabled={isPending || !subjectName.trim()}
-            className="gap-1.5 text-white"
-          >
-            <Plus className="h-4 w-4" />
-            Ajouter
-          </Button>
-        </div>
-        {subjectError && (
-          <p className="mt-2 text-sm text-destructive">{subjectError}</p>
+              </article>
+            ))}
+          </div>
         )}
-
-        <ul className="mt-4 flex flex-wrap gap-2">
-          {subjects.length === 0 && (
-            <p className="text-sm text-muted-foreground">
-              Aucune matière pour le moment.
-            </p>
-          )}
-          {subjects.map((s) => (
-            <li key={s.id}>
-              <span className="flex items-center gap-2 rounded-full border border-border bg-muted/40 py-1 pl-3 pr-1 text-xs font-medium text-foreground">
-                <span
-                  className="h-2.5 w-2.5 rounded-full"
-                  style={{ backgroundColor: s.color ?? "#94a3b8" }}
-                />
-                {s.name}
-                <button
-                  type="button"
-                  onClick={() => handleDeleteSubject(s)}
-                  disabled={isPending}
-                  aria-label={`Supprimer ${s.name}`}
-                  className="rounded-full p-1 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
-                >
-                  <Trash2 className="h-3 w-3" />
-                </button>
-              </span>
-            </li>
-          ))}
-        </ul>
+      </section>
+      <div className="flex flex-wrap gap-3 rounded-3xl border border-border bg-background p-5">
+        <p className="flex items-center gap-2 text-sm font-semibold">
+          <Settings2 className="h-4 w-4 text-primary" />
+          Ressources partagées
+        </p>
+        <Link
+          href="/admin/schedules/subjects"
+          className="rounded-xl bg-muted px-3 py-2 text-sm font-medium hover:bg-primary/10 hover:text-primary"
+        >
+          Gérer les matières
+        </Link>
+        <Link
+          href="/admin/schedules/hours"
+          className="rounded-xl bg-muted px-3 py-2 text-sm font-medium hover:bg-primary/10 hover:text-primary"
+        >
+          Gérer les horaires
+        </Link>
       </div>
     </div>
   );
