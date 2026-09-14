@@ -75,16 +75,20 @@ export async function getUnreadNotificationCount(): Promise<number> {
   if (!userId) return 0;
 
   try {
-    const where = {
-      OR: [{ recipientId: userId }, { recipientId: null }],
-    };
+    // Query directly for unread notifications instead of calculating total - read
+    // This avoids issues with deleted notifications or orphaned read records
+    const unreadCount = await prisma.notification.count({
+      where: {
+        OR: [{ recipientId: userId }, { recipientId: null }],
+        reads: {
+          none: {
+            userId,
+          },
+        },
+      },
+    });
 
-    const [total, read] = await Promise.all([
-      prisma.notification.count({ where }),
-      prisma.notificationRead.count({ where: { userId, notification: where } }),
-    ]);
-
-    return Math.max(0, total - read);
+    return Math.max(0, unreadCount);
   } catch (error) {
     console.error("Erreur lors du calcul des notifications non lues:", error);
     return 0;
