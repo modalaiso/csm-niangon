@@ -166,7 +166,7 @@ export function SearchDropdown() {
           type="submit"
           onClick={handleSearchClick}
           aria-label="Lancer la recherche"
-          className="px-3 hover:opacity-70 transition-opacity"
+          className="px-3 hover:opacity-70 transition-opacity bg-transparent"
         >
           <Search className="h-5 w-5 stroke-primary cursor-pointer" />
         </button>

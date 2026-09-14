@@ -4,6 +4,9 @@
 
 body {
   font-family: var(--font-inter);
+  a {
+    text-decoration: none;
+  }
 }
 
 input[type="search"]::-webkit-search-cancel-button,

@@ -107,7 +107,7 @@ export function NotificationBell() {
         aria-label="Notifications"
         aria-expanded={isOpen}
         aria-haspopup="menu"
-        className="relative flex h-9 w-9 items-center justify-center rounded-full text-foreground transition-colors hover:bg-accent"
+        className="relative flex h-9 w-9 items-center justify-center rounded-full text-foreground transition-colors bg-transparent hover:bg-accent "
       >
         <Bell className="h-5 w-5 text-primary" />
         {unreadCount > 0 && (
@@ -127,7 +127,7 @@ export function NotificationBell() {
               <button
                 type="button"
                 onClick={handleMarkAllRead}
-                className="text-xs font-medium text-primary hover:underline"
+                className="text-xs font-medium text-primary bg-transparent hover:underline"
               >
                 Tout marquer lu
               </button>
@@ -150,7 +150,7 @@ export function NotificationBell() {
                   type="button"
                   onClick={() => handleItemClick(n)}
                   className={cn(
-                    "flex w-full items-start gap-3 border-b border-border px-4 py-3 text-left transition-colors last:border-0 hover:bg-accent/50",
+                    "flex w-full items-start gap-3 border-b border-border px-4 py-3 text-left transition-colors last:border-0 bg-transparent hover:bg-accent/50",
                     !n.isRead && "bg-primary/5",
                   )}
                 >

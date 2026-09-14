@@ -56,7 +56,7 @@ export function ProfileMenu(props: Readonly<ProfileMenuProps>) {
         aria-expanded={isOpen}
         aria-haspopup="menu"
         aria-label="Ouvrir le menu profil"
-        className="flex items-center rounded-full p-1 transition-colors hover:bg-accent"
+        className="flex items-center rounded-full p-1 transition-colors bg-transparent hover:bg-accent"
       >
         <Avatar
           username={props.username}
@@ -109,7 +109,7 @@ export function ProfileMenu(props: Readonly<ProfileMenuProps>) {
             role="menuitem"
             onClick={handleLogout}
             disabled={isPending}
-            className="flex w-full items-center gap-2.5 px-4 py-2.5 text-left text-sm text-destructive hover:bg-destructive/10 disabled:opacity-60"
+            className="flex w-full items-center gap-2.5 px-4 py-2.5 text-left text-sm text-destructive bg-transparent rounded-none hover:bg-destructive/10 disabled:opacity-60"
           >
             <LogOut className="h-4 w-4" />
             Se déconnecter

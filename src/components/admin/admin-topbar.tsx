@@ -25,7 +25,7 @@ export function AdminTopbar(props: Readonly<AdminTopbarProps>) {
           {ROLE_LABELS[props.user.role] ?? props.user.role}
         </p>
       </div>
-      <div className="mt-2">
+      <div>
         <ProfileMenu
           nom={props.user.nom}
           prenom={props.user.prenom}

@@ -138,7 +138,7 @@ export function TopNav(props: Readonly<TopNavProps>) {
             ) : (
               <>
                 <Link href="/login">
-                  <Button variant="ghost" size="sm" className="rounded-full">
+                  <Button variant="ghost" size="sm" className="rounded-full  bg-transparent">
                     Se connecter
                   </Button>
                 </Link>
@@ -157,7 +157,7 @@ export function TopNav(props: Readonly<TopNavProps>) {
             {props.user && <NotificationBell />}
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-9 w-9">
+                <Button variant="ghost" size="icon" className="h-9 w-9 bg-transparent">
                   <Menu className="h-5 w-5 stroke-primary" />
                   <span className="sr-only">Menu</span>
                 </Button>
@@ -219,7 +219,7 @@ export function TopNav(props: Readonly<TopNavProps>) {
                         <div className="h-px bg-border my-2" />
                         <Link
                           href="/login"
-                          className="text-sm font-medium text-primary hover:underline "
+                          className="text-sm font-medium text-primary hover:underline"
                         >
                           Se connecter
                         </Link>

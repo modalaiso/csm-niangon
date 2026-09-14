@@ -185,7 +185,7 @@ export function SiteFooter(props: Readonly<SiteFooterProps>) {
             <button
               type="button"
               onClick={openCookiePreferences}
-              className="text-xs text-muted-foreground transition-colors hover:text-primary"
+              className="text-xs text-muted-foreground transition-colors hover:text-primary bg-transparent"
             >
               Gérer les cookies
             </button>

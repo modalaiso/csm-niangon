@@ -11,8 +11,10 @@ import {
   Quote,
 } from "lucide-react";
 import { useRef, useState } from "react";
+import * as Dialog from "@radix-ui/react-dialog";
 import { renderPostContent } from "@/lib/render-post-content";
 import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
 
 interface ContentEditorProps {
   value: string;
@@ -22,6 +24,14 @@ interface ContentEditorProps {
 export function ContentEditor(props: Readonly<ContentEditorProps>) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [mode, setMode] = useState<"edit" | "preview">("edit");
+  const [isLinkDialogOpen, setIsLinkDialogOpen] = useState(false);
+  const [linkUrl, setLinkUrl] = useState("https://");
+  const linkDialogStateRef = useRef<{
+    selectionStart: number;
+    selectionEnd: number;
+    selected: string;
+    value: string;
+  } | null>(null);
 
   const applyWrap = (prefix: string, suffix: string = prefix) => {
     const textarea = textareaRef.current;
@@ -71,20 +81,39 @@ export function ContentEditor(props: Readonly<ContentEditorProps>) {
     const selected =
       value.slice(selectionStart, selectionEnd) || "texte du lien";
 
-    const url = window.prompt("Adresse du lien (https://...)", "https://");
-    if (!url?.trim()) {
-      textarea.focus();
+    linkDialogStateRef.current = {
+      selectionStart,
+      selectionEnd,
+      selected,
+      value,
+    };
+    setLinkUrl("https://");
+    setIsLinkDialogOpen(true);
+  };
+
+  const handleConfirmLink = () => {
+    const state = linkDialogStateRef.current;
+    if (!state || !linkUrl?.trim()) {
+      const textarea = textareaRef.current;
+      if (textarea) textarea.focus();
+      setIsLinkDialogOpen(false);
       return;
     }
 
-    const markdown = `[${selected}](${url.trim()})`;
+    const markdown = `[${state.selected}](${linkUrl.trim()})`;
     const nextValue =
-      value.slice(0, selectionStart) + markdown + value.slice(selectionEnd);
+      state.value.slice(0, state.selectionStart) +
+      markdown +
+      state.value.slice(state.selectionEnd);
     props.onChange(nextValue);
+    setIsLinkDialogOpen(false);
     requestAnimationFrame(() => {
-      textarea.focus();
-      const cursor = selectionStart + markdown.length;
-      textarea.setSelectionRange(cursor, cursor);
+      const textarea = textareaRef.current;
+      if (textarea) {
+        textarea.focus();
+        const cursor = state.selectionStart + markdown.length;
+        textarea.setSelectionRange(cursor, cursor);
+      }
     });
   };
 
@@ -169,6 +198,55 @@ export function ContentEditor(props: Readonly<ContentEditorProps>) {
           )}
         </div>
       )}
+
+      <Dialog.Root open={isLinkDialogOpen} onOpenChange={setIsLinkDialogOpen}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
+          <Dialog.Content className="fixed left-[50%] top-[50%] z-50 w-full max-w-sm translate-x-[-50%] translate-y-[-50%] rounded-lg border border-border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Dialog.Title className="text-lg font-semibold">
+                  Ajouter un lien
+                </Dialog.Title>
+                <Dialog.Description className="text-sm text-muted-foreground">
+                  Entrez l'adresse URL du lien.
+                </Dialog.Description>
+              </div>
+              <Input
+                type="url"
+                placeholder="https://exemple.com"
+                value={linkUrl}
+                onChange={(e) => setLinkUrl(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleConfirmLink();
+                  } else if (e.key === "Escape") {
+                    setIsLinkDialogOpen(false);
+                  }
+                }}
+                autoFocus
+              />
+              <div className="flex justify-end gap-2 pt-4">
+                <Dialog.Close asChild>
+                  <button
+                    type="button"
+                    className="px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-accent rounded-lg transition-colors"
+                  >
+                    Annuler
+                  </button>
+                </Dialog.Close>
+                <button
+                  type="button"
+                  onClick={handleConfirmLink}
+                  className="px-3 py-2 text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg transition-colors"
+                >
+                  Ajouter
+                </button>
+              </div>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
     </div>
   );
 }
