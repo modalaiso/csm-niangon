@@ -110,6 +110,7 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
     props.initial?.tags.some((t) => t.toLowerCase() === URGENT_TAG) ?? false,
   );
   const [error, setError] = useState<string | null>(null);
+  const [isContentImageUploading, setIsContentImageUploading] = useState(false);
 
   const isAnnouncement = type === "ANNONCE";
   const isInfo = type === "INFO";
@@ -119,7 +120,9 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
     if (step === 1) return type !== null;
     if (step === 2) return title.trim().length >= 5;
     if (step === 3) return summary.trim().length >= 10;
-    if (step === 4) return content.trim().length >= 20;
+    if (step === 4) {
+      return content.trim().length >= 20 && !isContentImageUploading;
+    }
     return true;
   };
 
@@ -374,13 +377,18 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
               Rédigez le contenu complet
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Utilisez la barre d'outils pour mettre en forme : sous-titres,
-              gras, italique, notes et listes.
+              Mettez votre texte en forme avec les outils ou les raccourcis
+              clavier. Vous pouvez glisser ou coller des images directement dans
+              le contenu.
               {isAnnouncement &&
                 " Ce contenu s'affichera dans le pop-up de l'annonce."}
             </p>
             <div className="mt-6">
-              <ContentEditor value={content} onChange={setContent} />
+              <ContentEditor
+                value={content}
+                onChange={setContent}
+                onImageUploadChange={setIsContentImageUploading}
+              />
             </div>
           </div>
         )}
@@ -470,7 +478,7 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
           <button
             type="button"
             onClick={goPrev}
-            disabled={step === 1 || isPending}
+            disabled={step === 1 || isPending || isContentImageUploading}
             className="flex items-center gap-1 rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-40"
           >
             <ChevronLeft className="h-4 w-4" />

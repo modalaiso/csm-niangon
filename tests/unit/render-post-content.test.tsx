@@ -15,10 +15,10 @@ describe("renderPostContent", () => {
     expect(em.tagName).toBe("EM");
   });
 
-  it("renders a heading for lines starting with ##", () => {
+  it("renders Markdown heading levels", () => {
     render(renderPostContent("## Titre de section"));
     expect(
-      screen.getByRole("heading", { level: 3, name: "Titre de section" }),
+      screen.getByRole("heading", { level: 2, name: "Titre de section" }),
     ).toBeInTheDocument();
   });
 
@@ -32,6 +32,37 @@ describe("renderPostContent", () => {
   it("renders a list for consecutive lines starting with -", () => {
     render(renderPostContent("- Premier point\n- Deuxième point"));
     expect(screen.getAllByRole("listitem")).toHaveLength(2);
+  });
+
+  it("renders ordered lists and Markdown tables", () => {
+    render(
+      renderPostContent(
+        "1. Première étape\n2. Deuxième étape\n\n| Nom | Valeur |\n| --- | --- |\n| Score | 3-1 |",
+      ),
+    );
+    expect(screen.getByRole("list")).toHaveClass("list-decimal");
+    expect(screen.getByRole("table")).toBeInTheDocument();
+    expect(screen.getByText("3-1")).toBeInTheDocument();
+  });
+
+  it("renders task lists and embedded images", () => {
+    render(
+      renderPostContent(
+        "- [ ] À faire\n- [x] Terminé\n\n![Photo du match](https://example.com/match.png)",
+      ),
+    );
+    expect(screen.getAllByRole("checkbox")).toHaveLength(2);
+    expect(screen.getByRole("img", { name: "Photo du match" })).toHaveAttribute(
+      "src",
+      "https://example.com/match.png",
+    );
+  });
+
+  it("does not render raw HTML as executable markup", () => {
+    const { container } = render(
+      renderPostContent("<script>alert('xss')</script>"),
+    );
+    expect(container.querySelector("script")).toBeNull();
   });
 
   it("renders markdown links with the correct href", () => {
