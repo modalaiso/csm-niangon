@@ -57,6 +57,10 @@ export function ModerationKeywordsPanel() {
         setError(null);
         setKeywords(result.keywords);
       })
+      .catch((loadError) => {
+        console.error("Erreur lors du chargement des mots-clés:", loadError);
+        setError("Impossible de charger les mots-clés.");
+      })
       .finally(() => setIsLoading(false));
   };
 

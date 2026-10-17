@@ -70,6 +70,9 @@ export function NotificationBell() {
         .then((result) => {
           if ("notifications" in result) setNotifications(result.notifications);
         })
+        .catch((error) => {
+          console.error("Erreur lors du chargement des notifications:", error);
+        })
         .finally(() => setIsLoading(false));
     }
   };
@@ -78,16 +81,41 @@ export function NotificationBell() {
     setIsOpen(false);
     if (!item.isRead) {
       setUnreadCount((c) => Math.max(0, c - 1));
-      markNotificationRead(item.id);
+      void markNotificationRead(item.id)
+        .then((result) => {
+          if ("error" in result) {
+            console.error(
+              "Erreur lors du marquage de la notification:",
+              result.error,
+            );
+          }
+        })
+        .catch((error) => {
+          console.error("Erreur lors du marquage de la notification:", error);
+        });
     }
     router.push(item.link);
   };
 
   const handleMarkAllRead = () => {
-    markAllNotificationsRead().then(() => {
-      setUnreadCount(0);
-      setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
-    });
+    void markAllNotificationsRead()
+      .then((result) => {
+        if ("error" in result) {
+          console.error(
+            "Erreur lors du marquage global des notifications:",
+            result.error,
+          );
+          return;
+        }
+        setUnreadCount(0);
+        setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+      })
+      .catch((error) => {
+        console.error(
+          "Erreur lors du marquage global des notifications:",
+          error,
+        );
+      });
   };
 
   if (

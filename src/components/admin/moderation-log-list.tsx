@@ -31,11 +31,23 @@ function formatDate(date: Date): string {
 export function ModerationLogList() {
   const [logs, setLogs] = useState<ModerationLogRow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     listModerationLogs(50)
       .then((result) => {
-        if (!("error" in result)) setLogs(result.logs);
+        if ("error" in result) {
+          setError("Impossible de charger l'historique de modération.");
+          return;
+        }
+        setLogs(result.logs);
+      })
+      .catch((loadError) => {
+        console.error(
+          "Erreur lors du chargement du journal de modération:",
+          loadError,
+        );
+        setError("Impossible de charger l'historique de modération.");
       })
       .finally(() => setIsLoading(false));
   }, []);
@@ -45,6 +57,14 @@ export function ModerationLogList() {
       <div className="rounded-2xl border border-border bg-background p-8 text-center">
         <Loader2 className="mx-auto h-5 w-5 animate-spin text-muted-foreground" />
       </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <p className="rounded-2xl border border-border bg-background p-8 text-center text-sm text-destructive">
+        {error}
+      </p>
     );
   }
 

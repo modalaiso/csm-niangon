@@ -55,15 +55,47 @@ export function NotificationsPageClient(
     setNotifications((prev) =>
       prev.map((n) => (n.id === item.id ? { ...n, isRead: true } : n)),
     );
-    startTransition(() => {
-      markNotificationRead(item.id);
+    startTransition(async () => {
+      try {
+        const result = await markNotificationRead(item.id);
+        if ("error" in result) {
+          console.error(
+            "Erreur lors du marquage de la notification:",
+            result.error,
+          );
+          setNotifications((prev) =>
+            prev.map((n) => (n.id === item.id ? { ...n, isRead: false } : n)),
+          );
+        }
+      } catch (error) {
+        console.error("Erreur lors du marquage de la notification:", error);
+        setNotifications((prev) =>
+          prev.map((n) => (n.id === item.id ? { ...n, isRead: false } : n)),
+        );
+      }
     });
   };
 
   const handleMarkAll = () => {
+    const previousNotifications = notifications;
     setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
     startTransition(async () => {
-      await markAllNotificationsRead();
+      try {
+        const result = await markAllNotificationsRead();
+        if ("error" in result) {
+          console.error(
+            "Erreur lors du marquage global des notifications:",
+            result.error,
+          );
+          setNotifications(previousNotifications);
+        }
+      } catch (error) {
+        console.error(
+          "Erreur lors du marquage global des notifications:",
+          error,
+        );
+        setNotifications(previousNotifications);
+      }
     });
   };
 

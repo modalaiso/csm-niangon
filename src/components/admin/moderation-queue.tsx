@@ -36,6 +36,13 @@ export function ModerationQueue() {
         setError(null);
         setComments(result.comments);
       })
+      .catch((loadError) => {
+        console.error(
+          "Erreur lors du chargement de la file de modération:",
+          loadError,
+        );
+        setError("Impossible de charger la file de modération.");
+      })
       .finally(() => setIsLoading(false));
   };
 
