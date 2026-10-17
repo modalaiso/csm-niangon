@@ -15,8 +15,8 @@ const NAV_LINKS = [
   { href: "/about", label: "À propos de nous" },
   { href: "/articles", label: "Articles" },
   { href: "/infos", label: "Infos" },
-  { href: "/emplois-du-temps", label: "Emplois du temps" },
-  { href: "/devoirs", label: "Devoirs" },
+  /*{ href: "/emplois-du-temps", label: "Emplois du temps" },
+  { href: "/devoirs", label: "Devoirs" },*/
 ];
 
 const USEFUL_LINKS = [
