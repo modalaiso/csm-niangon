@@ -44,6 +44,242 @@ export interface SubjectSummary {
   color: string | null;
 }
 
+export interface ScheduleTimeTemplateData {
+  id: string;
+  schoolYear: string;
+  startTime: string;
+  endTime: string;
+  position: number;
+}
+
+const DEFAULT_TIME_TEMPLATES = [
+  ["07:30", "08:25"],
+  ["08:25", "09:20"],
+  ["09:20", "10:15"],
+  ["10:30", "11:25"],
+  ["11:25", "12:20"],
+  ["14:00", "14:55"],
+  ["14:55", "15:50"],
+] as const;
+
+async function ensureScheduleTimeTemplates(schoolYear: string) {
+  const normalizedYear = schoolYear.trim() || "2026-2027";
+  const existing = await prisma.scheduleTimeTemplate.findMany({
+    where: { schoolYear: normalizedYear },
+    orderBy: { position: "asc" },
+  });
+  if (existing.length > 0) return existing;
+
+  await prisma.scheduleTimeTemplate.createMany({
+    data: DEFAULT_TIME_TEMPLATES.map(([startTime, endTime], position) => ({
+      schoolYear: normalizedYear,
+      startTime,
+      endTime,
+      position,
+    })),
+  });
+  return prisma.scheduleTimeTemplate.findMany({
+    where: { schoolYear: normalizedYear },
+    orderBy: { position: "asc" },
+  });
+}
+
+export async function getScheduleTimeTemplates(
+  schoolYear: string,
+): Promise<ScheduleTimeTemplateData[]> {
+  try {
+    const templates = await ensureScheduleTimeTemplates(schoolYear);
+    return templates;
+  } catch (error) {
+    console.error("Erreur lors du chargement des horaires:", error);
+    return [];
+  }
+}
+
+export async function createScheduleTimeTemplate(
+  schoolYear: string,
+  startTime: string,
+  endTime: string,
+): Promise<(SimpleSuccess & { id: string }) | SimpleError> {
+  const auth = await getPostManagerAuthContext();
+  if (!auth.ok) return { error: auth.error };
+  const normalizedYear = schoolYear.trim() || "2026-2027";
+  if (!startTime.trim() || !endTime.trim()) return { error: "invalid" };
+  try {
+    const last = await prisma.scheduleTimeTemplate.findFirst({
+      where: { schoolYear: normalizedYear },
+      orderBy: { position: "desc" },
+      select: { position: true },
+    });
+    const created = await prisma.scheduleTimeTemplate.create({
+      data: {
+        schoolYear: normalizedYear,
+        startTime: startTime.trim(),
+        endTime: endTime.trim(),
+        position: (last?.position ?? -1) + 1,
+      },
+    });
+    revalidatePath("/admin/schedules/hours");
+    revalidatePath("/admin/schedules");
+    return { success: true, id: created.id };
+  } catch (error) {
+    console.error("Erreur lors de la création de l'horaire:", error);
+    return { error: "unknown" };
+  }
+}
+
+export async function updateScheduleTimeTemplate(
+  templateId: string,
+  startTime: string,
+  endTime: string,
+): Promise<SimpleSuccess | SimpleError> {
+  const auth = await getPostManagerAuthContext();
+  if (!auth.ok) return { error: auth.error };
+  if (!startTime.trim() || !endTime.trim()) return { error: "invalid" };
+  try {
+    await prisma.scheduleTimeTemplate.update({
+      where: { id: templateId },
+      data: { startTime: startTime.trim(), endTime: endTime.trim() },
+    });
+    revalidatePath("/admin/schedules/hours");
+    return { success: true };
+  } catch (error) {
+    console.error("Erreur lors de la modification de l'horaire:", error);
+    return { error: "unknown" };
+  }
+}
+
+export async function deleteScheduleTimeTemplate(
+  templateId: string,
+): Promise<SimpleSuccess | SimpleError> {
+  const auth = await getPostManagerAuthContext();
+  if (!auth.ok) return { error: auth.error };
+  try {
+    const template = await prisma.scheduleTimeTemplate.findUnique({
+      where: { id: templateId },
+      select: { schoolYear: true },
+    });
+    if (!template) return { error: "not_found" };
+    await prisma.scheduleTimeTemplate.delete({ where: { id: templateId } });
+    revalidatePath("/admin/schedules/hours");
+    revalidatePath("/admin/schedules");
+    return { success: true };
+  } catch (error) {
+    console.error("Erreur lors de la suppression de l'horaire:", error);
+    return { error: "unknown" };
+  }
+}
+
+export async function moveScheduleTimeTemplate(
+  templateId: string,
+  direction: "up" | "down",
+): Promise<SimpleSuccess | SimpleError> {
+  const auth = await getPostManagerAuthContext();
+  if (!auth.ok) return { error: auth.error };
+  try {
+    const current = await prisma.scheduleTimeTemplate.findUnique({
+      where: { id: templateId },
+    });
+    if (!current) return { error: "not_found" };
+    const neighbor = await prisma.scheduleTimeTemplate.findFirst({
+      where: {
+        schoolYear: current.schoolYear,
+        position:
+          direction === "up"
+            ? { lt: current.position }
+            : { gt: current.position },
+      },
+      orderBy: { position: direction === "up" ? "desc" : "asc" },
+    });
+    if (!neighbor) return { success: true };
+    await prisma.$transaction([
+      prisma.scheduleTimeTemplate.update({
+        where: { id: current.id },
+        data: { position: neighbor.position },
+      }),
+      prisma.scheduleTimeTemplate.update({
+        where: { id: neighbor.id },
+        data: { position: current.position },
+      }),
+    ]);
+    revalidatePath("/admin/schedules/hours");
+    return { success: true };
+  } catch (error) {
+    console.error("Erreur lors du déplacement de l'horaire:", error);
+    return { error: "unknown" };
+  }
+}
+
+export async function ensureClassScheduleRows(
+  classId: string,
+): Promise<SimpleSuccess | SimpleError> {
+  const auth = await getPostManagerAuthContext();
+  if (!auth.ok) return { error: auth.error };
+  try {
+    const schoolClass = await prisma.schoolClass.findUnique({
+      where: { id: classId },
+      select: { schoolYear: true, rows: { select: { id: true }, take: 1 } },
+    });
+    if (!schoolClass) return { error: "not_found" };
+    if (schoolClass.rows.length > 0) return { success: true };
+    const templates = await ensureScheduleTimeTemplates(schoolClass.schoolYear);
+    await prisma.scheduleRow.createMany({
+      data: templates.map((template) => ({
+        classId,
+        startTime: template.startTime,
+        endTime: template.endTime,
+        position: template.position,
+      })),
+    });
+    revalidatePath(`/admin/schedules/${classId}`);
+    return { success: true };
+  } catch (error) {
+    console.error("Erreur lors de la génération des créneaux:", error);
+    return { error: "unknown" };
+  }
+}
+
+export async function updateClassSchoolYear(
+  classId: string,
+  schoolYear: string,
+): Promise<SimpleSuccess | SimpleError> {
+  const auth = await getPostManagerAuthContext();
+  if (!auth.ok) return { error: auth.error };
+  const normalizedYear = schoolYear.trim();
+  if (!normalizedYear) return { error: "invalid" };
+  try {
+    const schoolClass = await prisma.schoolClass.findUnique({
+      where: { id: classId },
+      select: { schoolYear: true },
+    });
+    if (!schoolClass) return { error: "not_found" };
+    if (schoolClass.schoolYear === normalizedYear) return { success: true };
+    const templates = await ensureScheduleTimeTemplates(normalizedYear);
+    await prisma.$transaction([
+      prisma.schoolClass.update({
+        where: { id: classId },
+        data: { schoolYear: normalizedYear },
+      }),
+      prisma.scheduleRow.deleteMany({ where: { classId } }),
+      prisma.scheduleRow.createMany({
+        data: templates.map((template) => ({
+          classId,
+          startTime: template.startTime,
+          endTime: template.endTime,
+          position: template.position,
+        })),
+      }),
+    ]);
+    revalidatePath(`/admin/schedules/${classId}`);
+    revalidatePath("/admin/schedules");
+    revalidatePath("/emplois-du-temps");
+    return { success: true };
+  } catch (error) {
+    console.error("Erreur lors du changement d'année scolaire:", error);
+    return { error: "unknown" };
+  }
+}
+
 /* ------------------------------ Lecture publique ------------------------------ */
 
 /** Liste des classes, triées par niveau puis nom — page publique /emplois-du-temps */
@@ -166,6 +402,17 @@ export async function createClass(
         level: level.trim() || null,
         schoolYear: schoolYear.trim() || "2026-2027",
       },
+    });
+    const templates = await ensureScheduleTimeTemplates(
+      schoolYear.trim() || "2026-2027",
+    );
+    await prisma.scheduleRow.createMany({
+      data: templates.map((template) => ({
+        classId: created.id,
+        startTime: template.startTime,
+        endTime: template.endTime,
+        position: template.position,
+      })),
     });
 
     revalidatePath("/admin/schedules");

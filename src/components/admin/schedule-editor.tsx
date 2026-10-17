@@ -20,6 +20,7 @@ import {
   moveScheduleRow,
   type SubjectSummary,
   setScheduleCell,
+  updateClassSchoolYear,
   updateScheduleRow,
 } from "@/app/actions/schedules";
 import { Button } from "@/components/ui/button";
@@ -73,6 +74,9 @@ function textColorFor(hex: string): string {
 export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
   const [schedule, setSchedule] = useState(props.initialSchedule);
   const [subjects, setSubjects] = useState(props.subjects);
+  const [schoolYear, setSchoolYear] = useState(
+    props.initialSchedule.schoolYear,
+  );
   const [tab, setTab] = useState<Tab>("grille");
 
   const [newStart, setNewStart] = useState("");
@@ -88,11 +92,29 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
 
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
 
   const reload = () => {
     startTransition(async () => {
       const fresh = await getClassSchedule(props.classId);
       if (fresh) setSchedule(fresh);
+    });
+  };
+
+  const handleSchoolYearChange = () => {
+    if (!schoolYear.trim() || schoolYear === schedule.schoolYear) return;
+    setError(null);
+    startTransition(async () => {
+      const result = await updateClassSchoolYear(props.classId, schoolYear);
+      if ("error" in result) {
+        setError("Impossible de générer les créneaux de cette année scolaire.");
+        setSchoolYear(schedule.schoolYear);
+        return;
+      }
+      setNotice(
+        `Les créneaux ${schoolYear} ont été générés depuis le modèle annuel.`,
+      );
+      reload();
     });
   };
 
@@ -284,7 +306,32 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
   );
 
   return (
-    <div>
+    <div className="space-y-5">
+      <div className="flex flex-col gap-3 rounded-3xl border border-border bg-gradient-to-r from-primary/[0.08] via-white to-white p-5 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">
+            Modèle de la classe
+          </p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Les créneaux sont générés depuis la page Horaires.
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <label
+            htmlFor="schedule-school-year"
+            className="text-xs font-semibold text-muted-foreground"
+          >
+            Année scolaire
+          </label>
+          <Input
+            id="schedule-school-year"
+            value={schoolYear}
+            onChange={(event) => setSchoolYear(event.target.value)}
+            onBlur={handleSchoolYearChange}
+            className="h-9 w-28 bg-white text-sm"
+          />
+        </div>
+      </div>
       {/* Tabs */}
       <div className="mb-4 flex w-fit items-center gap-1 rounded-full bg-muted p-1">
         <button
@@ -314,6 +361,9 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
       </div>
 
       {error && <p className="mb-3 text-sm text-destructive">{error}</p>}
+      {notice && (
+        <output className="mb-3 block text-sm text-primary">{notice}</output>
+      )}
 
       {tab === "matieres" ? (
         <div className="space-y-4">
