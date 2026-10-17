@@ -55,8 +55,8 @@ export function TopNav(props: Readonly<TopNavProps>) {
     { href: "/actus", label: "Actualités" },
     { href: "/infos", label: "Infos" },
     { href: "/about", label: "À propos de nous" },
-    { href: "/emplois-du-temps", label: "Emplois du temps" },
-    { href: "/devoirs", label: "Devoirs" },
+    /*{ href: "/emplois-du-temps", label: "Emplois du temps" },
+    { href: "/devoirs", label: "Devoirs" },*/
   ];
 
   const navLinksMobile = [
@@ -64,8 +64,8 @@ export function TopNav(props: Readonly<TopNavProps>) {
     { href: "/actus", label: "Actualités" },
     { href: "/articles", label: "Articles" },
     { href: "/infos", label: "Infos" },
-    { href: "/emplois-du-temps", label: "Emplois du temps" },
-    { href: "/devoirs", label: "Devoirs" },
+    /*{ href: "/emplois-du-temps", label: "Emplois du temps" },
+    { href: "/devoirs", label: "Devoirs" },*/
     { href: "/about", label: "À propos de nous" },
   ];
 
