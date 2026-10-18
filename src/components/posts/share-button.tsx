@@ -222,7 +222,7 @@ export function ShareButton(props: Readonly<ShareButtonProps>) {
         onClose={() => setIsOpen(false)}
         className="m-auto w-[calc(100%-2rem)] max-w-lg rounded-3xl p-0 backdrop:bg-black/50 open:flex open:flex-col"
       >
-        <div className="flex max-h-[85vh] w-full flex-col overflow-hidden bg-white">
+        <div className="flex max-h-[85vh] w-full flex-col overflow-hidden bg-background">
           {/* En-tête */}
           <div className="flex items-center justify-between px-5 pt-5">
             <h2 className="text-base font-bold text-foreground">Partager</h2>
@@ -254,7 +254,7 @@ export function ShareButton(props: Readonly<ShareButtonProps>) {
             <div className="min-w-0 flex-1">
               <span
                 className={cn(
-                  "inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold text-white",
+                  "inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold text-foreground",
                   badge.className,
                 )}
               >
@@ -319,7 +319,7 @@ export function ShareButton(props: Readonly<ShareButtonProps>) {
               onClick={handleCopy}
               className={cn(
                 "flex flex-shrink-0 items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium text-white transition-colors",
-                copied ? "bg-primary" : "bg-foreground hover:bg-foreground/90",
+                copied ? "bg-primary" : "bg-primary hover:bg-primary/90",
               )}
             >
               {copied && <Check className="h-4 w-4" />}
