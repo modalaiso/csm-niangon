@@ -1,4 +1,4 @@
-import { ArrowLeft, Calendar, Eye } from "lucide-react";
+import { ArrowLeft, Calendar } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPostComments } from "@/app/actions/comments";
@@ -7,6 +7,7 @@ import { getPostById, getRelatedPosts } from "@/app/actions/posts";
 import { CommentSection } from "@/components/posts/comment-section";
 import { LikeButton } from "@/components/posts/like-button";
 import { PostGallery } from "@/components/posts/post-gallery";
+import { PostViewTracker } from "@/components/posts/post-view-tracker";
 import { ShareButton } from "@/components/posts/share-button";
 import { Avatar } from "@/components/ui/avatar";
 import { renderPostContent } from "@/lib/render-post-content";
@@ -149,10 +150,11 @@ export default async function PostPage(props: Readonly<PostPageProps>) {
                   {formatDate(post.publishedAt)}
                 </span>
               )}
-              <span className="inline-flex items-center gap-1">
-                <Eye className="h-3.5 w-3.5" />
-                {post.views}
-              </span>
+              <PostViewTracker
+                key={post.id}
+                postId={post.id}
+                initialViews={post.views}
+              />
             </div>
           </div>
 

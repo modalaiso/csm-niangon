@@ -1,6 +1,46 @@
 {
   "version": 1,
   "skills": {
+    "nextjs-turbopack": {
+      "source": "registry:affaan-m/nextjs-turbopack",
+      "commit_sha": "4130457d674d2180c5af2c5f634f3cae4cbc6c4f",
+      "digest": "sha256:8b50ca4b53b0004cedf218cc8b0e15a278c431a844200111ac26f6f5344a4c2d",
+      "agents": ["claude-code", "github-copilot"],
+      "mode": {
+        "claude-code": "symlink",
+        "github-copilot": "symlink"
+      }
+    },
+    "performance-optimization": {
+      "source": "registry:addyosmani/performance-optimization",
+      "commit_sha": "8c6530305396f341b5da7201cf1f7e390fdb863f",
+      "digest": "sha256:2f5d67923608634a96e9df684d9f59bf47be414bf8b956385dae2d3a9ed5305c",
+      "agents": ["claude-code", "github-copilot"],
+      "mode": {
+        "claude-code": "symlink",
+        "github-copilot": "symlink"
+      }
+    },
+    "seo-images": {
+      "source": "registry:antigravity/seo-images",
+      "commit_sha": "6e69f00a01898251c83e7b024444d82d70cc3b2c",
+      "digest": "sha256:780f65b7487be0a5bd9e55bd8020225c6ad2917e1a98aae3ac9ded8673216a2d",
+      "agents": ["claude-code", "github-copilot"],
+      "mode": {
+        "claude-code": "symlink",
+        "github-copilot": "symlink"
+      }
+    },
+    "skill-creator": {
+      "source": "registry:anthropic/skill-creator",
+      "commit_sha": "9d2f1ae187231d8199c64b5b762e1bdf2244733d",
+      "digest": "sha256:ca5641f654763aec65e10c3709107b59b0afbe8c6468d3c6f1923dc2ee9f93eb",
+      "agents": ["claude-code", "github-copilot"],
+      "mode": {
+        "claude-code": "symlink",
+        "github-copilot": "symlink"
+      }
+    },
     "supabase": {
       "source": "supabase/agent-skills",
       "sourceType": "github",
@@ -18,6 +58,26 @@
       "sourceType": "github",
       "skillPath": "skills/supabase-server/SKILL.md",
       "computedHash": "4b5ca7324535afa4627ca12f4175c85b826d201bb02085e99857d87144ba7527"
+    },
+    "theme-factory": {
+      "source": "registry:anthropic/theme-factory",
+      "commit_sha": "9d2f1ae187231d8199c64b5b762e1bdf2244733d",
+      "digest": "sha256:62b20efeb8404ed24cfb19fcbc46f88f29d0aa577366927fc57045edc179a745",
+      "agents": ["claude-code", "github-copilot"],
+      "mode": {
+        "claude-code": "symlink",
+        "github-copilot": "symlink"
+      }
+    },
+    "web-design-guidelines": {
+      "source": "registry:antfu/web-design-guidelines",
+      "commit_sha": "a74f281a27dadc02397bc1a174b0f2c97531b6ae",
+      "digest": "sha256:b78816474bd55ff82499ab58a030a7d01dad9c22b82d3f2627a09c8c638def21",
+      "agents": ["claude-code", "github-copilot"],
+      "mode": {
+        "claude-code": "symlink",
+        "github-copilot": "symlink"
+      }
     }
   }
 }

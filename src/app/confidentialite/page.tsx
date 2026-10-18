@@ -40,9 +40,11 @@ export default function ConfidentialitePage() {
           </li>
           <li>
             <strong>Statistiques de vues</strong> : un compteur de vues par
-            publication est tenu à partir de votre identifiant de compte (si
-            connecté) ou de votre adresse IP (si non connecté), afin d'éviter
-            les doubles comptages.
+            publication est validé après au moins 10 secondes de lecture active.
+            La durée est mesurée sans compter les périodes où l'onglet est
+            inactif. Le comptage utilise votre identifiant de compte (si vous
+            êtes connecté) ou votre adresse IP (sinon) afin d'éviter les doubles
+            comptages.
           </li>
           <li>
             <strong>Mesure d'audience</strong> (uniquement avec votre

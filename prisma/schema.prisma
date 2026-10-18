@@ -182,11 +182,12 @@ model Like {
 }
 
 model PostView {
-  id        String   @id @default(cuid())
-  postId    String
-  userId    String?
-  ipAddress String?
-  createdAt DateTime @default(now())
+  id              String   @id @default(cuid())
+  postId          String
+  userId          String?
+  ipAddress       String?
+  durationSeconds Int      @default(0)
+  createdAt       DateTime @default(now())
 
   post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 

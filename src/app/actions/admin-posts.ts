@@ -4,6 +4,7 @@ import type { PostStatus, PostType } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { getPostManagerAuthContext } from "@/lib/auth/admin-guard";
 import { notifyNewPost } from "@/lib/notifications";
+import { MIN_POST_VIEW_SECONDS } from "@/lib/post-view-tracking";
 import {
   captureServerEvent,
   captureServerException,
@@ -229,12 +230,19 @@ export async function listAdminPosts(
     const [todayViews, totalViews] = await Promise.all([
       prisma.postView.groupBy({
         by: ["postId"],
-        where: { postId: { in: postIds }, createdAt: { gte: startOfDay } },
+        where: {
+          postId: { in: postIds },
+          createdAt: { gte: startOfDay },
+          durationSeconds: { gte: MIN_POST_VIEW_SECONDS },
+        },
         _count: { postId: true },
       }),
       prisma.postView.groupBy({
         by: ["postId"],
-        where: { postId: { in: postIds } },
+        where: {
+          postId: { in: postIds },
+          durationSeconds: { gte: MIN_POST_VIEW_SECONDS },
+        },
         _count: { postId: true },
       }),
     ]);

@@ -1,0 +1,2 @@
+ALTER TABLE "PostView"
+ADD COLUMN "durationSeconds" INTEGER NOT NULL DEFAULT 0;

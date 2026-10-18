@@ -423,8 +423,8 @@ export function AdminPostsTable() {
               <th className="px-4 py-3">Titre</th>
               <th className="px-4 py-3">Statut</th>
               <th className="px-4 py-3">Auteur</th>
-              <th className="px-4 py-3">Vues (jour)</th>
-              <th className="px-4 py-3">Vues (total)</th>
+              <th className="px-4 py-3">Lectures ≥ 10 s (jour)</th>
+              <th className="px-4 py-3">Lectures ≥ 10 s (total)</th>
               <th className="px-4 py-3">Réactions</th>
               <th className="px-4 py-3">Date</th>
               <th className="px-4 py-3 text-right">Actions</th>

@@ -16,16 +16,23 @@ const ROLE_LABELS: Record<string, string> = {
 
 export function AdminTopbar(props: Readonly<AdminTopbarProps>) {
   return (
-    <header className="sticky top-0 hidden items-center justify-end gap-3 border-b border-border bg-background px-6 py-4 md:flex z-40">
-      <div className="text-right">
+    <header className="sticky top-0 z-40 hidden items-center justify-between border-b border-border/70 bg-background/95 px-6 py-3 backdrop-blur md:flex">
+      <div>
+        <p className="text-sm font-semibold text-foreground">
+          Espace d’administration
+        </p>
+        <p className="text-xs text-muted-foreground">
+          Pilotage et gestion de la plateforme
+        </p>
+      </div>
+      <div className="flex items-center gap-5">
+        <span className="hidden items-center gap-2 text-xs text-muted-foreground lg:inline-flex">
+          <span className="h-2 w-2 rounded-full bg-emerald-500" />
+          {ROLE_LABELS[props.user.role] ?? props.user.role}
+        </span>
         <p className="text-sm font-semibold text-foreground">
           {props.user.prenom} {props.user.nom}
         </p>
-        <p className="text-xs text-muted-foreground">
-          {ROLE_LABELS[props.user.role] ?? props.user.role}
-        </p>
-      </div>
-      <div>
         <ProfileMenu
           nom={props.user.nom}
           prenom={props.user.prenom}
