@@ -1,4 +1,3 @@
-import { CalendarDays } from "lucide-react";
 import { getSchoolClasses, listSubjects } from "@/app/actions/schedules";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { ClassSubjectManager } from "@/components/admin/class-subject-manager";
@@ -20,7 +19,6 @@ export default async function AdminSchedulesPage() {
       <AdminPageHeader
         title="Emplois du temps"
         description="Organisez les classes et les matières, puis composez les horaires de chaque classe."
-        icon={CalendarDays}
       />
       <ClassSubjectManager
         initialClasses={classes}

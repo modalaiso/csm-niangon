@@ -227,7 +227,7 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
   /* --------------------------------- Rendu --------------------------------- */
 
   const subjectPalette = (
-    <div className="rounded-2xl border border-border/70 bg-background p-4 shadow-sm">
+    <div className="rounded-xl border border-border bg-background p-4">
       <div className="mb-3 flex items-center justify-between">
         <h3 className="text-sm font-semibold text-foreground">
           Matières disponibles
@@ -269,8 +269,8 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
                 }
                 style={{ backgroundColor: color, color: textColorFor(color) }}
                 className={cn(
-                  "flex cursor-grab items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold shadow-sm transition-transform active:cursor-grabbing",
-                  isSelected && "scale-105 ring-2 ring-primary ring-offset-2",
+                  "flex cursor-grab items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold active:cursor-grabbing focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                  isSelected && "ring-2 ring-primary ring-offset-2",
                 )}
               >
                 <GripVertical className="h-3.5 w-3.5 opacity-70" />
@@ -286,14 +286,14 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
   return (
     <div className="space-y-4">
       {/* Tabs */}
-      <div className="flex w-fit items-center gap-1 rounded-2xl border border-border/70 bg-background p-1.5 shadow-sm">
+      <div className="flex w-fit items-center gap-1 rounded-lg border border-border bg-background p-1">
         <button
           type="button"
           onClick={() => setTab("grille")}
           className={cn(
-            "rounded-full px-4 py-1.5 text-sm font-medium transition-colors",
+            "rounded-md px-4 py-2 text-sm font-medium transition-colors",
             tab === "grille"
-              ? "bg-primary text-white shadow-sm"
+              ? "bg-primarys2-700 text-white"
               : "text-muted-foreground hover:bg-muted hover:text-foreground",
           )}
         >
@@ -303,9 +303,9 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
           type="button"
           onClick={() => setTab("matieres")}
           className={cn(
-            "rounded-full px-4 py-1.5 text-sm font-medium transition-colors",
+            "rounded-md px-4 py-2 text-sm font-medium transition-colors",
             tab === "matieres"
-              ? "bg-primary text-white shadow-sm"
+              ? "bg-primarys2-700 text-white"
               : "text-muted-foreground hover:bg-muted hover:text-foreground",
           )}
         >
@@ -317,7 +317,7 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
 
       {tab === "matieres" ? (
         <div className="space-y-4">
-          <div className="rounded-2xl border border-border/70 bg-background p-5 shadow-sm">
+          <div className="rounded-xl border border-border bg-background p-5">
             <h2 className="text-base font-semibold tracking-tight text-foreground">
               Ajouter une matière
             </h2>
@@ -338,9 +338,9 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
                     aria-label={`Choisir la couleur ${color}`}
                     style={{ backgroundColor: color }}
                     className={cn(
-                      "h-7 w-7 flex-shrink-0 rounded-full border-2 transition-transform",
+                      "h-7 w-7 flex-shrink-0 rounded-full border-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                       subjectColor === color
-                        ? "scale-110 border-foreground"
+                        ? "border-foreground"
                         : "border-transparent",
                     )}
                   />
@@ -350,7 +350,7 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
                 type="button"
                 onClick={handleAddSubject}
                 disabled={isPending || !subjectName.trim()}
-                className="gap-1.5 text-white"
+                className="gap-1.5 rounded-md bg-primarys2-700 text-white hover:bg-primarys2-800"
               >
                 <Plus className="h-4 w-4" />
                 Ajouter
@@ -358,7 +358,7 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-border/70 bg-background p-5 shadow-sm">
+          <div className="rounded-xl border border-border bg-background p-5">
             <h2 className="mb-3 text-base font-semibold tracking-tight text-foreground">
               Liste des matières
             </h2>
@@ -374,7 +374,7 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
                     <li key={s.id}>
                       <span
                         style={{ backgroundColor: `${color}1A`, color }}
-                        className="flex items-center gap-2 rounded-full py-1 pl-3 pr-1 text-xs font-semibold"
+                        className="flex items-center gap-2 rounded-md py-1 pl-3 pr-1 text-xs font-semibold"
                       >
                         <span
                           className="h-2.5 w-2.5 rounded-full"
@@ -386,7 +386,7 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
                           onClick={() => handleDeleteSubject(s)}
                           disabled={isPending}
                           aria-label={`Supprimer ${s.name}`}
-                          className="rounded-full p-1 hover:bg-black/10"
+                          className="rounded-md p-1 hover:bg-black/10"
                         >
                           <X className="h-3 w-3" />
                         </button>
@@ -401,7 +401,7 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
       ) : (
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_260px]">
           {/* Grille */}
-          <div className="overflow-x-auto rounded-2xl border border-border/70 bg-background shadow-sm">
+          <div className="overflow-x-auto rounded-xl border border-border bg-background">
             <table className="w-full min-w-[820px] border-collapse text-left text-sm">
               <thead>
                 <tr className="border-b border-border bg-muted/50 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
@@ -484,8 +484,10 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
                                 handleCellClick(row.id, day);
                               }
                             }}
+                            tabIndex={selectedSubjectId ? 0 : undefined}
+                            aria-label={`${DAY_LABELS[day]}, ${row.startTime}–${row.endTime}, ${cell?.subjectName ?? "vide"}${selectedSubjectId ? ". Appliquer la matière sélectionnée." : ""}`}
                             className={cn(
-                              "px-2 py-2 align-top transition-colors",
+                              "px-2 py-2 align-top transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
                               selectedSubjectId && "cursor-copy",
                               isDragOver && "bg-primary/10",
                             )}
@@ -496,7 +498,7 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
                                   backgroundColor: color,
                                   color: textColorFor(color),
                                 }}
-                                className="group relative flex min-h-[44px] items-center justify-center rounded-2xl px-2 py-2 text-center text-xs font-semibold"
+                                className="group relative flex min-h-[44px] items-center justify-center rounded-md px-2 py-2 text-center text-xs font-semibold"
                               >
                                 {cell.subjectName}
                                 <button
@@ -506,13 +508,13 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
                                     handleCellClear(row.id, day);
                                   }}
                                   aria-label="Retirer la matière"
-                                  className="absolute -right-1.5 -top-1.5 hidden h-5 w-5 items-center justify-center rounded-full bg-black/70 text-white group-hover:flex"
+                                  className="absolute -right-1.5 -top-1.5 hidden h-6 w-6 items-center justify-center rounded-md bg-black/70 text-white group-hover:flex focus-visible:flex focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                                 >
                                   <X className="h-3 w-3" />
                                 </button>
                               </div>
                             ) : (
-                              <div className="flex min-h-[44px] items-center justify-center rounded-2xl border-2 border-dashed border-border text-[11px] text-muted-foreground">
+                              <div className="flex min-h-[44px] items-center justify-center rounded-md border-2 border-dashed border-border text-[11px] text-muted-foreground">
                                 Vide
                               </div>
                             )}
@@ -526,7 +528,7 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
                             onClick={() => handleMoveRow(row.id, "up")}
                             disabled={isPending}
                             aria-label="Monter"
-                            className="rounded-full p-1.5 text-muted-foreground hover:bg-accent hover:text-foreground"
+                            className="rounded-md p-2 text-muted-foreground hover:bg-accent hover:text-foreground"
                           >
                             <ArrowUp className="h-4 w-4" />
                           </button>
@@ -535,7 +537,7 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
                             onClick={() => handleMoveRow(row.id, "down")}
                             disabled={isPending}
                             aria-label="Descendre"
-                            className="rounded-full p-1.5 text-muted-foreground hover:bg-accent hover:text-foreground"
+                            className="rounded-md p-2 text-muted-foreground hover:bg-accent hover:text-foreground"
                           >
                             <ArrowDown className="h-4 w-4" />
                           </button>
@@ -544,7 +546,7 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
                             onClick={() => handleDeleteRow(row.id)}
                             disabled={isPending}
                             aria-label="Supprimer"
-                            className="rounded-full p-1.5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                            className="rounded-md p-2 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
@@ -591,7 +593,7 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
                 type="button"
                 onClick={handleAddRow}
                 disabled={isPending || !newStart.trim() || !newEnd.trim()}
-                className="gap-1.5 text-white"
+                className="gap-1.5 rounded-md bg-primarys2-700 text-white hover:bg-primarys2-800"
               >
                 {isPending ? (
                   <Loader2 className="h-4 w-4 animate-spin" />

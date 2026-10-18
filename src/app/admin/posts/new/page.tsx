@@ -1,4 +1,3 @@
-import { PenSquare } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { PostCreateWizard } from "@/components/admin/post-create-wizard";
 import { requirePostManager } from "@/lib/auth/admin-guard";
@@ -15,7 +14,6 @@ export default async function NewPostPage() {
       <AdminPageHeader
         title="Créer une publication"
         description="Préparez votre contenu étape par étape, puis choisissez de le publier ou de le garder en brouillon."
-        icon={PenSquare}
       />
       <PostCreateWizard />
     </div>

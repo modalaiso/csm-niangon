@@ -191,7 +191,7 @@ export function AdminCommentsTable() {
         <td className="max-w-[280px] px-4 py-3">
           <p className="line-clamp-2 text-foreground">{row.content}</p>
           {row.flaggedKeyword && (
-            <span className="mt-1 inline-block rounded-full bg-rose-100 px-2 py-0.5 text-[10px] font-semibold text-rose-700">
+            <span className="mt-1 inline-block rounded-md bg-rose-100 px-2 py-0.5 text-[10px] font-semibold text-rose-700">
               mot-clé : {row.flaggedKeyword}
             </span>
           )}
@@ -199,7 +199,7 @@ export function AdminCommentsTable() {
         <td className="max-w-[180px] px-4 py-3">
           <Link
             href={`/posts/${row.postId}`}
-            className="line-clamp-2 text-primary hover:underline"
+            className="line-clamp-2 text-primarys2-700 hover:underline"
           >
             {row.postTitle}
           </Link>
@@ -210,10 +210,10 @@ export function AdminCommentsTable() {
         <td className="px-4 py-3">
           <span
             className={cn(
-              "rounded-full px-2 py-1 text-[11px] font-medium",
+              "rounded-md px-2 py-1 text-[11px] font-medium",
               row.isHidden
                 ? "bg-slate-100 text-slate-600"
-                : "bg-primary/10 text-primary",
+                : "bg-primary/10 text-foreground",
             )}
           >
             {row.isHidden ? "Masqué" : "Visible"}
@@ -239,7 +239,7 @@ export function AdminCommentsTable() {
               onClick={() => handleToggleHidden(row)}
               disabled={isPending}
               aria-label={row.isHidden ? "Réafficher" : "Masquer"}
-              className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+              className="flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               {row.isHidden ? (
                 <Eye className="h-4 w-4" />
@@ -252,7 +252,7 @@ export function AdminCommentsTable() {
               onClick={() => handleDelete(row)}
               disabled={isPending}
               aria-label="Supprimer"
-              className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+              className="flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <Trash2 className="h-4 w-4" />
             </button>
@@ -264,7 +264,7 @@ export function AdminCommentsTable() {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col gap-3 rounded-2xl border border-border/70 bg-background p-3 shadow-sm sm:flex-row sm:items-center">
+      <div className="flex flex-col gap-3 rounded-xl border border-border bg-background p-3 sm:flex-row sm:items-center">
         <div className="relative flex-1">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
@@ -292,7 +292,7 @@ export function AdminCommentsTable() {
       </div>
 
       {selected.size > 0 && (
-        <div className="mb-4 flex items-center gap-2 rounded-2xl border border-primary/30 bg-primary/5 px-4 py-3">
+        <div className="mb-4 flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/5 px-4 py-3">
           <span className="text-sm font-medium text-foreground">
             {selected.size} sélectionné{selected.size > 1 ? "s" : ""}
           </span>
@@ -302,7 +302,7 @@ export function AdminCommentsTable() {
             variant="destructive"
             disabled={isPending}
             onClick={handleBulkDelete}
-            className="ml-auto text-white"
+            className="ml-auto bg-red-700 text-white hover:bg-red-800"
           >
             Supprimer la sélection
           </Button>
@@ -311,7 +311,7 @@ export function AdminCommentsTable() {
 
       {error && <p className="mb-3 text-sm text-destructive">{error}</p>}
 
-      <div className="overflow-x-auto rounded-2xl border border-border/70 bg-background shadow-sm">
+      <div className="overflow-x-auto rounded-xl border border-border bg-background">
         <table className="w-full min-w-[900px] text-left text-sm">
           <thead>
             <tr className="border-b border-border bg-muted/50 text-xs font-semibold uppercase tracking-wide text-muted-foreground">

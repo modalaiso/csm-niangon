@@ -118,10 +118,8 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
       {/* Classes */}
-      <div className="rounded-2xl border border-border/70 bg-background p-5 shadow-sm sm:p-6">
-        <h2 className="text-base font-semibold tracking-tight text-foreground">
-          Classes
-        </h2>
+      <div className="rounded-xl border border-border bg-background p-5 sm:p-6">
+        <h2 className="text-base font-semibold text-foreground">Classes</h2>
         <p className="mt-1 text-xs text-muted-foreground">
           Créez une classe, puis modifiez son emploi du temps depuis la liste
           ci-dessous.
@@ -152,7 +150,7 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
             type="button"
             onClick={handleAddClass}
             disabled={isPending || !className.trim()}
-            className="gap-1.5 text-white"
+            className="gap-1.5 rounded-md bg-primarys2-700 text-white hover:bg-primarys2-800"
           >
             <Plus className="h-4 w-4" />
             Ajouter
@@ -184,7 +182,7 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
               <div className="flex flex-shrink-0 items-center gap-2">
                 <Link
                   href={`/admin/schedules/${c.id}`}
-                  className="flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary hover:bg-primary/20"
+                  className="flex min-h-10 items-center gap-1 rounded-md bg-primary/10 px-3 py-1.5 text-xs font-medium text-foreground hover:bg-primary/20"
                 >
                   <CalendarClock className="h-3.5 w-3.5" />
                   Emploi du temps
@@ -194,7 +192,7 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
                   onClick={() => handleDeleteClass(c)}
                   disabled={isPending}
                   aria-label="Supprimer"
-                  className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+                  className="flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>
@@ -205,10 +203,8 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
       </div>
 
       {/* Matières */}
-      <div className="rounded-2xl border border-border/70 bg-background p-5 shadow-sm sm:p-6">
-        <h2 className="text-base font-semibold tracking-tight text-foreground">
-          Matières
-        </h2>
+      <div className="rounded-xl border border-border bg-background p-5 sm:p-6">
+        <h2 className="text-base font-semibold text-foreground">Matières</h2>
         <p className="mt-1 text-xs text-muted-foreground">
           La liste des matières disponibles pour remplir les emplois du temps.
         </p>
@@ -231,7 +227,7 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
             type="button"
             onClick={handleAddSubject}
             disabled={isPending || !subjectName.trim()}
-            className="gap-1.5 text-white"
+            className="gap-1.5 rounded-md bg-primarys2-700 text-white hover:bg-primarys2-800"
           >
             <Plus className="h-4 w-4" />
             Ajouter
@@ -249,7 +245,7 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
           )}
           {subjects.map((s) => (
             <li key={s.id}>
-              <span className="flex items-center gap-2 rounded-full border border-border bg-muted/40 py-1 pl-3 pr-1 text-xs font-medium text-foreground">
+              <span className="flex items-center gap-2 rounded-md border border-border bg-muted/40 py-1 pl-3 pr-1 text-xs font-medium text-foreground">
                 <span
                   className="h-2.5 w-2.5 rounded-full"
                   style={{ backgroundColor: s.color ?? "#94a3b8" }}
@@ -260,7 +256,7 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
                   onClick={() => handleDeleteSubject(s)}
                   disabled={isPending}
                   aria-label={`Supprimer ${s.name}`}
-                  className="rounded-full p-1 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                  className="flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground hover:bg-destructive/10 hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   <Trash2 className="h-3 w-3" />
                 </button>

@@ -1,6 +1,12 @@
 {
   "version": 1,
   "skills": {
+    "design-mobile-apps": {
+      "source": "designed-by-ai/skills",
+      "sourceType": "github",
+      "skillPath": "skills/design-mobile-apps/SKILL.md",
+      "computedHash": "6d6ed68c53ac9f5564aea489ededb387b8cdf29ffa6f78f2a1fa449f86f19e16"
+    },
     "nextjs-turbopack": {
       "source": "registry:affaan-m/nextjs-turbopack",
       "commit_sha": "4130457d674d2180c5af2c5f634f3cae4cbc6c4f",
@@ -70,14 +76,10 @@
       }
     },
     "web-design-guidelines": {
-      "source": "registry:antfu/web-design-guidelines",
-      "commit_sha": "a74f281a27dadc02397bc1a174b0f2c97531b6ae",
-      "digest": "sha256:b78816474bd55ff82499ab58a030a7d01dad9c22b82d3f2627a09c8c638def21",
-      "agents": ["claude-code", "github-copilot"],
-      "mode": {
-        "claude-code": "symlink",
-        "github-copilot": "symlink"
-      }
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/web-design-guidelines/SKILL.md",
+      "computedHash": "a6a44d5498f7e8f68289902f3dedfc6f38ae0cee1e96527c80724cf27f727c2a"
     }
   }
 }

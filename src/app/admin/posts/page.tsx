@@ -1,4 +1,3 @@
-import { FileText, PenSquare } from "lucide-react";
 import Link from "next/link";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { AdminPostsTable } from "@/components/admin/admin-posts-table";
@@ -17,14 +16,13 @@ export default async function AdminPostsPage() {
       <AdminPageHeader
         title="Publications"
         description="Pilotez vos contenus, leur statut de diffusion et leurs performances."
-        icon={FileText}
         action={
-          <Link href="/admin/posts/new">
-            <Button className="h-10 gap-2 rounded-xl px-4 text-white shadow-sm">
-              <PenSquare className="h-4 w-4" />
-              Nouvelle publication
-            </Button>
-          </Link>
+          <Button
+            asChild
+            className="h-10 gap-2 rounded-md bg-primarys2-700 px-4 text-white hover:bg-primarys2-800"
+          >
+            <Link href="/admin/posts/new">Nouvelle publication</Link>
+          </Button>
         }
       />
       <AdminPostsTable />

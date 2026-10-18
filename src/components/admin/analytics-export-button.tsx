@@ -7,7 +7,7 @@ import type { AnalyticsSummary, VisitStats } from "@/app/actions/analytics";
 interface AnalyticsExportButtonProps {
   visits: VisitStats[];
   analytics: AnalyticsSummary;
-  dashboard: DashboardSummary;
+  dashboard: DashboardSummary | null;
 }
 
 function escapeCsv(value: string | number): string {
@@ -28,16 +28,20 @@ export function AnalyticsExportButton({
         visit.label,
         visit.uniqueSessions,
       ]),
-      [
-        "Lectures qualifiées",
-        "30 derniers jours",
-        dashboard.qualifiedViews30Days,
-      ],
-      [
-        "Durée moyenne de lecture",
-        "30 derniers jours",
-        dashboard.averagePostReadSeconds,
-      ],
+      ...(dashboard
+        ? [
+            [
+              "Lectures qualifiées",
+              "30 derniers jours",
+              dashboard.qualifiedViews30Days,
+            ],
+            [
+              "Durée moyenne de lecture",
+              "30 derniers jours",
+              dashboard.averagePostReadSeconds,
+            ],
+          ]
+        : [["Résumé éditorial", "30 derniers jours", "Indisponible"]]),
       [
         "Sessions engagées (30 s+)",
         "30 derniers jours",
@@ -52,7 +56,7 @@ export function AnalyticsExportButton({
       ["Lectures à 90 %", "30 derniers jours", analytics.scrollDepth90],
       ["Recherches", "30 derniers jours", analytics.searches],
       ["Partages", "30 derniers jours", analytics.shares],
-      ...dashboard.topPosts.flatMap((post) => [
+      ...(dashboard?.topPosts ?? []).flatMap((post) => [
         ["Publication populaire", post.title, post.views],
         ["Temps moyen de lecture (s)", post.title, post.averageReadSeconds],
       ]),
@@ -72,7 +76,7 @@ export function AnalyticsExportButton({
     <button
       type="button"
       onClick={exportCsv}
-      className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+      className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
     >
       <Download className="h-4 w-4" />
       Exporter les analyses

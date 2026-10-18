@@ -33,18 +33,11 @@ export function VisitTrendChart(props: Readonly<VisitTrendChartProps>) {
   const linePath = points
     .map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`)
     .join(" ");
-  const areaPath =
-    points.length > 0
-      ? `${linePath} L ${points.at(-1)?.x} ${CHART_HEIGHT - PADDING.bottom} L ${points[0].x} ${CHART_HEIGHT - PADDING.bottom} Z`
-      : "";
   const total = props.data.reduce((sum, point) => sum + point.count, 0);
 
   if (!total) {
     return (
-      <div className="flex h-56 flex-col items-center justify-center gap-2 text-center">
-        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-          <span className="text-lg font-bold">0</span>
-        </div>
+      <div className="flex h-56 items-center justify-center text-center">
         <p className="text-sm text-muted-foreground">
           Aucune vue qualifiée sur cette période.
         </p>
@@ -69,12 +62,6 @@ export function VisitTrendChart(props: Readonly<VisitTrendChartProps>) {
         viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`}
         preserveAspectRatio="none"
       >
-        <defs>
-          <linearGradient id="qualified-view-area" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor="currentColor" stopOpacity="0.2" />
-            <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
-          </linearGradient>
-        </defs>
         {[0, 1, 2, 3].map((step) => {
           const y = PADDING.top + (plotHeight / 3) * step;
           return (
@@ -85,12 +72,10 @@ export function VisitTrendChart(props: Readonly<VisitTrendChartProps>) {
               y1={y}
               y2={y}
               stroke="currentColor"
-              strokeOpacity="0.1"
-              strokeDasharray="4 5"
+              strokeOpacity="0.14"
             />
           );
         })}
-        <path d={areaPath} fill="url(#qualified-view-area)" />
         <path
           d={linePath}
           fill="none"

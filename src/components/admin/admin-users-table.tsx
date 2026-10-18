@@ -44,7 +44,7 @@ const ROLE_BADGES: Record<Role, string> = {
   USER: "bg-slate-100 text-slate-600",
   MODERATOR: "bg-amber-100 text-amber-700",
   WRITER: "bg-blue-100 text-blue-700",
-  ADMIN: "bg-primary/10 text-primary",
+  ADMIN: "bg-primary/10 text-foreground",
 };
 
 function formatDate(date: Date): string {
@@ -216,7 +216,7 @@ export function AdminUsersTable(props: Readonly<AdminUsersTableProps>) {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col gap-3 rounded-2xl border border-border/70 bg-background p-3 shadow-sm sm:flex-row sm:items-center">
+      <div className="flex flex-col gap-3 rounded-xl border border-border bg-background p-3 sm:flex-row sm:items-center">
         <div className="relative flex-1">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
@@ -245,7 +245,7 @@ export function AdminUsersTable(props: Readonly<AdminUsersTableProps>) {
 
       {error && <p className="mb-3 text-sm text-destructive">{error}</p>}
 
-      <div className="overflow-x-auto rounded-2xl border border-border/70 bg-background shadow-sm">
+      <div className="overflow-x-auto rounded-xl border border-border bg-background">
         <table className="w-full min-w-[800px] text-left text-sm">
           <thead>
             <tr className="border-b border-border bg-muted/50 text-xs font-semibold uppercase tracking-wide text-muted-foreground">

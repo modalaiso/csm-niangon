@@ -37,15 +37,15 @@ import {
 import { cn } from "@/lib/utils";
 
 const TYPE_BADGES: Record<string, { label: string; className: string }> = {
-  ACTU: { label: "Actu", className: "bg-blue-600" },
-  ARTICLE: { label: "Article", className: "bg-emerald-500" },
-  INFO: { label: "Info", className: "bg-amber-500" },
-  ANNONCE: { label: "Annonce", className: "bg-rose-500" },
+  ACTU: { label: "Actu", className: "bg-muted text-muted-foreground" },
+  ARTICLE: { label: "Article", className: "bg-muted text-muted-foreground" },
+  INFO: { label: "Info", className: "bg-muted text-muted-foreground" },
+  ANNONCE: { label: "Annonce", className: "bg-muted text-muted-foreground" },
 };
 
 const STATUS_BADGES: Record<string, { label: string; className: string }> = {
   DRAFT: { label: "Brouillon", className: "bg-slate-100 text-slate-600" },
-  PUBLISHED: { label: "Publié", className: "bg-primary/10 text-primary" },
+  PUBLISHED: { label: "Publié", className: "bg-primary/10 text-foreground" },
   ARCHIVED: { label: "Archivé", className: "bg-amber-100 text-amber-700" },
 };
 
@@ -237,13 +237,13 @@ export function AdminPostsTable() {
           <td className="max-w-[260px] px-4 py-3">
             <Link
               href={`/posts/${row.id}`}
-              className="line-clamp-1 font-medium text-foreground hover:underline"
+              className="line-clamp-1 font-medium text-foreground hover:text-primarys2-700 hover:underline"
             >
               {row.title}
             </Link>
             <span
               className={cn(
-                "mt-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold text-white",
+                "mt-1 inline-block rounded-md px-2 py-0.5 text-[10px] font-semibold",
                 typeBadge.className,
               )}
             >
@@ -300,7 +300,7 @@ export function AdminPostsTable() {
               <Link
                 href={`/admin/posts/${row.id}/edit`}
                 aria-label="Modifier"
-                className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                className="flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 <Pencil className="h-4 w-4" />
               </Link>
@@ -309,7 +309,7 @@ export function AdminPostsTable() {
                 onClick={() => handleDelete(row)}
                 disabled={isPending}
                 aria-label="Supprimer"
-                className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+                className="flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 <Trash2 className="h-4 w-4" />
               </button>
@@ -323,7 +323,7 @@ export function AdminPostsTable() {
   return (
     <div className="space-y-4">
       {/* Filtres */}
-      <div className="flex flex-col gap-3 rounded-2xl border border-border/70 bg-background p-3 shadow-sm sm:flex-row sm:items-center">
+      <div className="flex flex-col gap-3 rounded-xl border border-border bg-background p-3 sm:flex-row sm:items-center">
         <div className="relative flex-1">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
@@ -373,7 +373,7 @@ export function AdminPostsTable() {
 
       {/* Barre d'actions groupées */}
       {selected.size > 0 && (
-        <div className="mb-4 flex flex-wrap items-center gap-2 rounded-2xl border border-primary/30 bg-primary/5 px-4 py-3">
+        <div className="mb-4 flex flex-wrap items-center gap-2 rounded-lg border border-primary/30 bg-primary/5 px-4 py-3">
           <span className="text-sm font-medium text-foreground">
             {selected.size} sélectionné{selected.size > 1 ? "s" : ""}
           </span>
@@ -396,7 +396,7 @@ export function AdminPostsTable() {
               variant="destructive"
               disabled={isPending}
               onClick={handleBulkDelete}
-              className="text-white"
+              className="bg-red-700 text-white hover:bg-red-800"
             >
               Supprimer
             </Button>
@@ -407,7 +407,7 @@ export function AdminPostsTable() {
       {error && <p className="mb-3 text-sm text-destructive">{error}</p>}
 
       {/* Table */}
-      <div className="overflow-x-auto rounded-2xl border border-border/70 bg-background shadow-sm">
+      <div className="overflow-x-auto rounded-xl border border-border bg-background">
         <table className="w-full min-w-[900px] text-left text-sm">
           <thead>
             <tr className="border-b border-border bg-muted/50 text-xs font-semibold uppercase tracking-wide text-muted-foreground">

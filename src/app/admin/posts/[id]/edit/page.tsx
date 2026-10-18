@@ -1,4 +1,3 @@
-import { FilePenLine } from "lucide-react";
 import { notFound, redirect } from "next/navigation";
 import { getPostForEdit } from "@/app/actions/admin-posts";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
@@ -30,7 +29,6 @@ export default async function EditPostPage({
       <AdminPageHeader
         title="Modifier la publication"
         description="Les champs sont préremplis avec le contenu actuel. Enregistrez vos changements ou publiez la version mise à jour."
-        icon={FilePenLine}
       />
       <PostCreateWizard mode="edit" initial={result.post} />
     </div>

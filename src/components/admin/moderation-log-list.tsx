@@ -14,7 +14,7 @@ const TYPE_BADGES: Record<string, { label: string; className: string }> = {
     className: "bg-destructive/10 text-destructive",
   },
   FLAGGED: { label: "Signalé", className: "bg-amber-100 text-amber-700" },
-  APPROVED: { label: "Approuvé", className: "bg-primary/10 text-primary" },
+  APPROVED: { label: "Approuvé", className: "bg-primary/10 text-foreground" },
   REJECTED: { label: "Rejeté", className: "bg-slate-100 text-slate-600" },
 };
 
@@ -54,7 +54,7 @@ export function ModerationLogList() {
 
   if (isLoading) {
     return (
-      <div className="rounded-2xl border border-border bg-background p-8 text-center">
+      <div className="rounded-xl border border-border bg-background p-8 text-center">
         <Loader2 className="mx-auto h-5 w-5 animate-spin text-muted-foreground" />
       </div>
     );
@@ -62,7 +62,7 @@ export function ModerationLogList() {
 
   if (error) {
     return (
-      <p className="rounded-2xl border border-border bg-background p-8 text-center text-sm text-destructive">
+      <p className="rounded-xl border border-border bg-background p-8 text-center text-sm text-destructive">
         {error}
       </p>
     );
@@ -70,7 +70,7 @@ export function ModerationLogList() {
 
   if (logs.length === 0) {
     return (
-      <div className="rounded-2xl border border-border bg-background p-8 text-center">
+      <div className="rounded-xl border border-border bg-background p-8 text-center">
         <p className="text-sm text-muted-foreground">
           Aucune action de modération enregistrée.
         </p>
@@ -79,7 +79,7 @@ export function ModerationLogList() {
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-border bg-background">
+    <div className="overflow-hidden rounded-xl border border-border bg-background">
       <ul className="divide-y divide-border">
         {logs.map((log) => {
           const badge = TYPE_BADGES[log.type] ?? {

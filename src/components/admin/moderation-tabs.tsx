@@ -19,7 +19,7 @@ export function ModerationTabs() {
 
   return (
     <div className="space-y-5">
-      <div className="flex w-fit max-w-full items-center gap-1 overflow-x-auto rounded-2xl border border-border/70 bg-background p-1.5 shadow-sm">
+      <div className="flex w-fit max-w-full items-center gap-1 overflow-x-auto rounded-lg border border-border bg-background p-1">
         {TABS.map((tab) => (
           <button
             key={tab.id}
@@ -27,9 +27,9 @@ export function ModerationTabs() {
             aria-pressed={active === tab.id}
             onClick={() => setActive(tab.id)}
             className={cn(
-              "whitespace-nowrap rounded-xl px-4 py-2 text-sm font-medium transition-colors",
+              "min-h-10 whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
               active === tab.id
-                ? "bg-primary text-white shadow-sm"
+                ? "bg-primarys2-700 text-white"
                 : "text-muted-foreground hover:bg-muted hover:text-foreground",
             )}
           >

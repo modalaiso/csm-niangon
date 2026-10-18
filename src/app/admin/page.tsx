@@ -1,24 +1,11 @@
-import {
-  Activity,
-  ArrowRight,
-  BookOpen,
-  Clock3,
-  Eye,
-  FileText,
-  Megaphone,
-  MessageCircle,
-  Search,
-  Share2,
-  ShieldAlert,
-  TrendingUp,
-  Users,
-} from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { getDashboardSummary } from "@/app/actions/admin-dashboard";
 import {
   getAdminAnalyticsDashboard,
   type VisitPeriod,
 } from "@/app/actions/analytics";
+import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { AnalyticsExportButton } from "@/components/admin/analytics-export-button";
 import { VisitTrendChart } from "@/components/admin/visit-trend-chart";
 import { requireDashboardAccess } from "@/lib/auth/admin-guard";
@@ -53,31 +40,18 @@ function MetricCard({
   label,
   value,
   detail,
-  Icon,
-  tone,
 }: Readonly<{
   label: string;
   value: string;
   detail: string;
-  Icon: typeof Eye;
-  tone: string;
 }>) {
   return (
-    <article className="rounded-2xl border border-border/70 bg-background p-5 shadow-sm">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className="text-sm font-medium text-muted-foreground">{label}</p>
-          <p className="mt-2 text-3xl font-bold tracking-tight text-foreground">
-            {value}
-          </p>
-        </div>
-        <span
-          className={`flex h-10 w-10 items-center justify-center rounded-xl ${tone}`}
-        >
-          <Icon className="h-5 w-5" />
-        </span>
-      </div>
-      <p className="mt-3 text-xs text-muted-foreground">{detail}</p>
+    <article className="rounded-lg border border-border bg-background px-4 py-3.5">
+      <p className="text-sm font-medium text-muted-foreground">{label}</p>
+      <p className="mt-1 text-2xl font-semibold tabular-nums tracking-tight text-foreground">
+        {value}
+      </p>
+      <p className="mt-1 text-xs leading-5 text-muted-foreground">{detail}</p>
     </article>
   );
 }
@@ -96,59 +70,34 @@ export default async function AdminDashboardPage() {
   ]);
   const { visitStats, trend, topPages, analytics } = analyticsDashboard;
 
-  const summary =
-    "error" in summaryResult
-      ? {
-          totalPosts: 0,
-          publishedPosts: 0,
-          draftPosts: 0,
-          archivedPosts: 0,
-          pendingComments: 0,
-          totalComments: 0,
-          activeAnnouncements: 0,
-          totalUsers: 0,
-          qualifiedViews30Days: 0,
-          averagePostReadSeconds: 0,
-          topPosts: [],
-        }
-      : summaryResult;
+  const summary = "error" in summaryResult ? null : summaryResult;
   const statsByPeriod = new Map(visitStats.map((stat) => [stat.period, stat]));
   const todayViews = statsByPeriod.get("daily")?.count ?? 0;
   const weeklyVisitors = statsByPeriod.get("weekly")?.uniqueSessions ?? 0;
 
   return (
-    <div className="mx-auto max-w-7xl space-y-7">
-      <header className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-primary/90 p-6 text-white shadow-lg sm:p-8">
-        <div className="pointer-events-none absolute -right-12 -top-24 h-72 w-72 rounded-full bg-white/5 blur-2xl" />
-        <div className="pointer-events-none absolute bottom-[-6rem] right-1/3 h-48 w-48 rounded-full bg-primary/25 blur-3xl" />
-        <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/60">
-              Espace de pilotage · CSM Niangon
-            </p>
-            <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
-              Bonjour, {currentUser.prenom}
-            </h1>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-white/70">
-              Votre activité, l’engagement de la communauté et les contenus qui
-              retiennent vraiment l’attention.
-            </p>
-          </div>
+    <div className="mx-auto max-w-7xl space-y-6">
+      <AdminPageHeader
+        title="Vue d’ensemble"
+        description={`Bonjour ${currentUser.prenom}. Suivez l’audience, les publications et l’activité de la communauté.`}
+        action={
           <AnalyticsExportButton
             visits={visitStats}
             analytics={analytics}
             dashboard={summary}
           />
+        }
+      />
+
+      {summary === null && (
+        <div
+          aria-live="polite"
+          className="rounded-md border border-amber-300/70 bg-amber-50 px-4 py-3 text-sm text-amber-900"
+        >
+          Les indicateurs éditoriaux sont temporairement indisponibles. Les
+          chiffres non chargés ne sont pas remplacés par des zéros.
         </div>
-        <div className="relative mt-7 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-white/10 pt-4 text-xs text-white/70">
-          <span className="inline-flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-emerald-400" />
-            Mesure des vues qualifiées active
-          </span>
-          <span>Une lecture est comptée après 10 s d’activité</span>
-          <span>Durées calculées hors onglets inactifs</span>
-        </div>
-      </header>
+      )}
 
       <section
         aria-label="Indicateurs clés"
@@ -158,34 +107,36 @@ export default async function AdminDashboardPage() {
           label="Vues qualifiées aujourd’hui"
           value={numberFormatter.format(todayViews)}
           detail="Pages consultées au moins 10 secondes"
-          Icon={Eye}
-          tone="bg-sky-500/10 text-sky-600"
         />
         <MetricCard
           label="Visiteurs uniques cette semaine"
           value={numberFormatter.format(weeklyVisitors)}
           detail="Sessions distinctes mesurées"
-          Icon={Users}
-          tone="bg-violet-500/10 text-violet-600"
         />
         <MetricCard
           label="Lectures de publications"
-          value={numberFormatter.format(summary.qualifiedViews30Days)}
-          detail="30 derniers jours · lectures d’au moins 10 s"
-          Icon={BookOpen}
-          tone="bg-emerald-500/10 text-emerald-600"
+          value={
+            summary ? numberFormatter.format(summary.qualifiedViews30Days) : "—"
+          }
+          detail={
+            summary
+              ? "30 derniers jours · lectures d’au moins 10 s"
+              : "Données éditoriales indisponibles"
+          }
         />
         <MetricCard
           label="Temps moyen de lecture"
-          value={formatDuration(summary.averagePostReadSeconds)}
-          detail="Par lecture qualifiée · 30 derniers jours"
-          Icon={Clock3}
-          tone="bg-amber-500/10 text-amber-600"
+          value={summary ? formatDuration(summary.averagePostReadSeconds) : "—"}
+          detail={
+            summary
+              ? "Par lecture qualifiée · 30 derniers jours"
+              : "Données éditoriales indisponibles"
+          }
         />
       </section>
 
       <section className="grid gap-4 xl:grid-cols-[minmax(0,1.7fr)_minmax(280px,0.8fr)]">
-        <div className="min-w-0 rounded-2xl border border-border/70 bg-background p-5 shadow-sm sm:p-6">
+        <div className="min-w-0 rounded-lg border border-border bg-background p-4 sm:p-5">
           <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
             <div>
               <h2 className="font-semibold text-foreground">
@@ -195,21 +146,15 @@ export default async function AdminDashboardPage() {
                 Vues qualifiées par jour · 30 derniers jours
               </p>
             </div>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary">
-              <TrendingUp className="h-3.5 w-3.5" />
-              Lecture active ≥ 10 s
-            </span>
+            <p className="text-xs text-muted-foreground">
+              Seuil de qualification : 10 s d’activité
+            </p>
           </div>
           <VisitTrendChart data={trend} />
         </div>
 
-        <section className="rounded-2xl border border-border/70 bg-background p-5 shadow-sm sm:p-6">
-          <div className="flex items-center gap-2">
-            <Activity className="h-4 w-4 text-primary" />
-            <h2 className="font-semibold text-foreground">
-              Signaux d’engagement
-            </h2>
-          </div>
+        <section className="rounded-lg border border-border bg-background p-4 sm:p-5">
+          <h2 className="font-semibold text-foreground">Engagement</h2>
           <p className="mt-1 text-xs text-muted-foreground">
             Activité mesurée sur les 30 derniers jours
           </p>
@@ -255,7 +200,7 @@ export default async function AdminDashboardPage() {
             </div>
             <div className="h-px bg-border" />
             <div className="grid grid-cols-3 gap-2 text-center">
-              <div className="rounded-xl bg-muted/60 px-2 py-3">
+              <div className="rounded-md bg-muted/60 px-2 py-3">
                 <p className="text-lg font-bold text-foreground">
                   {numberFormatter.format(analytics.scrollDepth90)}
                 </p>
@@ -263,7 +208,7 @@ export default async function AdminDashboardPage() {
                   Lectures à 90 %
                 </p>
               </div>
-              <div className="rounded-xl bg-muted/60 px-2 py-3">
+              <div className="rounded-md bg-muted/60 px-2 py-3">
                 <p className="text-lg font-bold text-foreground">
                   {numberFormatter.format(analytics.searches)}
                 </p>
@@ -271,7 +216,7 @@ export default async function AdminDashboardPage() {
                   Recherches
                 </p>
               </div>
-              <div className="rounded-xl bg-muted/60 px-2 py-3">
+              <div className="rounded-md bg-muted/60 px-2 py-3">
                 <p className="text-lg font-bold text-foreground">
                   {numberFormatter.format(analytics.shares)}
                 </p>
@@ -302,7 +247,7 @@ export default async function AdminDashboardPage() {
             return (
               <article
                 key={period.key}
-                className="rounded-2xl border border-border/70 bg-background p-4 shadow-sm"
+                className="rounded-lg border border-border bg-background px-4 py-3"
               >
                 <p className="text-xs font-medium text-muted-foreground">
                   {period.short}
@@ -323,8 +268,8 @@ export default async function AdminDashboardPage() {
       </section>
 
       <section className="grid gap-4 xl:grid-cols-2">
-        <div className="rounded-2xl border border-border/70 bg-background p-5 shadow-sm sm:p-6">
-          <div className="mb-4 flex items-center justify-between gap-3">
+        <div className="rounded-lg border border-border bg-background p-4 sm:p-5">
+          <div className="mb-4">
             <div>
               <h2 className="font-semibold text-foreground">
                 Pages les plus consultées
@@ -333,10 +278,9 @@ export default async function AdminDashboardPage() {
                 Depuis le début du mois · lecture active ≥ 10 s
               </p>
             </div>
-            <Eye className="h-4 w-4 text-primary" />
           </div>
           {topPages.length === 0 ? (
-            <p className="rounded-xl bg-muted/60 px-4 py-6 text-center text-sm text-muted-foreground">
+            <p className="rounded-md bg-muted/60 px-4 py-6 text-center text-sm text-muted-foreground">
               Pas encore assez de données qualifiées.
             </p>
           ) : (
@@ -347,14 +291,14 @@ export default async function AdminDashboardPage() {
                   className="flex items-center justify-between gap-3 py-3"
                 >
                   <span className="flex min-w-0 items-center gap-3">
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-muted text-xs font-semibold text-muted-foreground">
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-muted text-xs font-semibold text-muted-foreground">
                       {index + 1}
                     </span>
                     {page.path.startsWith("/") &&
                     !page.path.startsWith("//") ? (
                       <Link
                         href={page.path}
-                        className="truncate text-sm font-medium text-foreground hover:text-primary hover:underline"
+                        className="truncate text-sm font-medium text-foreground hover:text-primarys2-700 hover:underline"
                       >
                         {page.path}
                       </Link>
@@ -373,8 +317,8 @@ export default async function AdminDashboardPage() {
           )}
         </div>
 
-        <div className="rounded-2xl border border-border/70 bg-background p-5 shadow-sm sm:p-6">
-          <div className="mb-4 flex items-center justify-between gap-3">
+        <div className="rounded-lg border border-border bg-background p-4 sm:p-5">
+          <div className="mb-4">
             <div>
               <h2 className="font-semibold text-foreground">
                 Publications qui retiennent l’attention
@@ -383,10 +327,13 @@ export default async function AdminDashboardPage() {
                 Classement par lectures qualifiées · 30 derniers jours
               </p>
             </div>
-            <BookOpen className="h-4 w-4 text-primary" />
           </div>
-          {summary.topPosts.length === 0 ? (
-            <p className="rounded-xl bg-muted/60 px-4 py-6 text-center text-sm text-muted-foreground">
+          {!summary ? (
+            <p className="px-3 py-6 text-center text-sm text-muted-foreground">
+              Les données des publications sont temporairement indisponibles.
+            </p>
+          ) : summary.topPosts.length === 0 ? (
+            <p className="rounded-md bg-muted/60 px-4 py-6 text-center text-sm text-muted-foreground">
               Les publications apparaîtront après les premières lectures
               qualifiées.
             </p>
@@ -398,12 +345,12 @@ export default async function AdminDashboardPage() {
                   className="flex items-center justify-between gap-3 py-3"
                 >
                   <span className="flex min-w-0 items-center gap-3">
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-muted text-xs font-semibold text-muted-foreground">
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-muted text-xs font-semibold text-muted-foreground">
                       {index + 1}
                     </span>
                     <Link
                       href={`/posts/${post.id}`}
-                      className="min-w-0 truncate text-sm font-medium text-foreground hover:text-primary hover:underline"
+                      className="min-w-0 truncate text-sm font-medium text-foreground hover:text-primarys2-700 hover:underline"
                     >
                       {post.title}
                     </Link>
@@ -424,132 +371,101 @@ export default async function AdminDashboardPage() {
         </div>
       </section>
 
-      <section>
-        <div className="mb-3">
-          <h2 className="font-semibold text-foreground">Gestion rapide</h2>
+      <section aria-labelledby="admin-shortcuts-heading">
+        <div className="mb-2">
+          <h2
+            id="admin-shortcuts-heading"
+            className="font-semibold text-foreground"
+          >
+            Accès de gestion
+          </h2>
           <p className="mt-1 text-xs text-muted-foreground">
-            Accédez directement aux tâches prioritaires.
+            Ouvrir les outils associés à votre rôle.
           </p>
         </div>
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-x-8 sm:grid-cols-2">
           {canManagePosts && (
             <Link
               href="/admin/posts"
-              className="group rounded-2xl border border-border/70 bg-background p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
+              className="group flex min-h-16 items-center justify-between gap-4 border-b border-border py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
-              <div className="flex items-center justify-between">
-                <FileText className="h-5 w-5 text-primary" />
-                <ArrowRight className="h-4 w-4 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-primary" />
+              <div>
+                <p className="text-sm font-medium text-foreground group-hover:text-primarys2-700">
+                  Publications
+                </p>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  {summary
+                    ? `${numberFormatter.format(summary.publishedPosts)} publiées · ${numberFormatter.format(summary.draftPosts)} brouillons`
+                    : "Gérer les contenus et leur diffusion"}
+                </p>
               </div>
-              <p className="mt-4 text-xl font-bold text-foreground">
-                {numberFormatter.format(summary.publishedPosts)} publiées
-              </p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                {summary.draftPosts} brouillon
-                {summary.draftPosts > 1 ? "s" : ""} · {summary.archivedPosts}{" "}
-                archivée
-                {summary.archivedPosts > 1 ? "s" : ""}
-              </p>
+              <ArrowRight
+                className="h-4 w-4 shrink-0 text-muted-foreground group-hover:text-primarys2-700"
+                aria-hidden="true"
+              />
             </Link>
           )}
           {canModerate && (
             <Link
               href="/admin/moderation"
-              className="group rounded-2xl border border-border/70 bg-background p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
+              className="group flex min-h-16 items-center justify-between gap-4 border-b border-border py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
-              <div className="flex items-center justify-between">
-                <ShieldAlert className="h-5 w-5 text-rose-500" />
-                <ArrowRight className="h-4 w-4 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-primary" />
+              <div>
+                <p className="text-sm font-medium text-foreground group-hover:text-primarys2-700">
+                  Modération
+                </p>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  {summary
+                    ? `${numberFormatter.format(summary.pendingComments)} commentaire${summary.pendingComments === 1 ? "" : "s"} à examiner`
+                    : "Examiner les commentaires signalés"}
+                </p>
               </div>
-              <p className="mt-4 text-xl font-bold text-foreground">
-                {numberFormatter.format(summary.pendingComments)} à traiter
-              </p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Commentaires signalés · {summary.totalComments} commentaires
-              </p>
+              <ArrowRight
+                className="h-4 w-4 shrink-0 text-muted-foreground group-hover:text-primarys2-700"
+                aria-hidden="true"
+              />
             </Link>
           )}
-          {(canManagePosts || isAdmin) && (
+          {canManagePosts && (
             <Link
-              href="/admin/posts"
-              className="group rounded-2xl border border-border/70 bg-background p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
+              href="/admin/schedules"
+              className="group flex min-h-16 items-center justify-between gap-4 border-b border-border py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
-              <div className="flex items-center justify-between">
-                <Megaphone className="h-5 w-5 text-amber-500" />
-                <ArrowRight className="h-4 w-4 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-primary" />
+              <div>
+                <p className="text-sm font-medium text-foreground group-hover:text-primarys2-700">
+                  Emplois du temps
+                </p>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  Organiser les classes et les matières
+                </p>
               </div>
-              <p className="mt-4 text-xl font-bold text-foreground">
-                {numberFormatter.format(summary.activeAnnouncements)} annonce
-                {summary.activeAnnouncements > 1 ? "s" : ""} active
-                {summary.activeAnnouncements > 1 ? "s" : ""}
-              </p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                {isAdmin
-                  ? `${numberFormatter.format(summary.totalUsers)} utilisateurs inscrits`
-                  : "Publications et annonces"}
-              </p>
+              <ArrowRight
+                className="h-4 w-4 shrink-0 text-muted-foreground group-hover:text-primarys2-700"
+                aria-hidden="true"
+              />
             </Link>
           )}
           {isAdmin && (
             <Link
               href="/admin/users"
-              className="group rounded-2xl border border-border/70 bg-background p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
+              className="group flex min-h-16 items-center justify-between gap-4 border-b border-border py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
-              <div className="flex items-center justify-between">
-                <Users className="h-5 w-5 text-violet-500" />
-                <ArrowRight className="h-4 w-4 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-primary" />
+              <div>
+                <p className="text-sm font-medium text-foreground group-hover:text-primarys2-700">
+                  Utilisateurs
+                </p>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  {summary
+                    ? `${numberFormatter.format(summary.totalUsers)} comptes · gérer les rôles`
+                    : "Gérer les rôles et les accès"}
+                </p>
               </div>
-              <p className="mt-4 text-xl font-bold text-foreground">
-                {numberFormatter.format(summary.totalUsers)} utilisateurs
-              </p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Gérer les rôles et les accès
-              </p>
+              <ArrowRight
+                className="h-4 w-4 shrink-0 text-muted-foreground group-hover:text-primarys2-700"
+                aria-hidden="true"
+              />
             </Link>
           )}
-          <div className="rounded-2xl border border-border/70 bg-background p-5 shadow-sm">
-            <div className="flex items-center justify-between">
-              <Search className="h-5 w-5 text-sky-500" />
-              <span className="text-xs font-medium text-muted-foreground">
-                30 jours
-              </span>
-            </div>
-            <p className="mt-4 text-xl font-bold text-foreground">
-              {numberFormatter.format(analytics.searches)} recherches
-            </p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Termes non conservés dans les statistiques
-            </p>
-          </div>
-          <div className="rounded-2xl border border-border/70 bg-background p-5 shadow-sm">
-            <div className="flex items-center justify-between">
-              <Share2 className="h-5 w-5 text-emerald-500" />
-              <span className="text-xs font-medium text-muted-foreground">
-                30 jours
-              </span>
-            </div>
-            <p className="mt-4 text-xl font-bold text-foreground">
-              {numberFormatter.format(analytics.shares)} partages
-            </p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Publications relayées par la communauté
-            </p>
-          </div>
-          <div className="rounded-2xl border border-border/70 bg-background p-5 shadow-sm">
-            <div className="flex items-center justify-between">
-              <MessageCircle className="h-5 w-5 text-indigo-500" />
-              <span className="text-xs font-medium text-muted-foreground">
-                Plateforme
-              </span>
-            </div>
-            <p className="mt-4 text-xl font-bold text-foreground">
-              {numberFormatter.format(summary.totalComments)} commentaires
-            </p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              {numberFormatter.format(summary.pendingComments)} signalés à
-              vérifier
-            </p>
-          </div>
         </div>
       </section>
     </div>

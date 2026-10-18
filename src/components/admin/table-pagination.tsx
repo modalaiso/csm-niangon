@@ -18,7 +18,7 @@ export function TablePagination(props: Readonly<TablePaginationProps>) {
         type="button"
         variant="outline"
         size="icon"
-        className="rounded-full"
+        className="rounded-md"
         disabled={props.page === 1}
         onClick={() => props.onPageChange(Math.max(1, props.page - 1))}
       >
@@ -31,7 +31,7 @@ export function TablePagination(props: Readonly<TablePaginationProps>) {
         type="button"
         variant="outline"
         size="icon"
-        className="rounded-full"
+        className="rounded-md"
         disabled={props.page === props.totalPages}
         onClick={() =>
           props.onPageChange(Math.min(props.totalPages, props.page + 1))

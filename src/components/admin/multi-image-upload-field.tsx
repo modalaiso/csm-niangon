@@ -97,7 +97,7 @@ export function MultiImageUploadField(
           {props.value.map((url, index) => (
             <div
               key={`${url}-${index}`}
-              className="group relative aspect-square overflow-hidden rounded-2xl border border-border bg-muted"
+              className="group relative aspect-square overflow-hidden rounded-lg border border-border bg-muted"
             >
               <img
                 src={url}
@@ -105,7 +105,7 @@ export function MultiImageUploadField(
                 className="h-full w-full object-cover"
               />
               {index === 0 && (
-                <span className="absolute left-1.5 top-1.5 rounded-full bg-primary px-2 py-0.5 text-[10px] font-semibold text-white">
+                <span className="absolute left-1.5 top-1.5 rounded-md bg-primarys2-700 px-2 py-0.5 text-[10px] font-semibold text-white">
                   Miniature
                 </span>
               )}
@@ -113,7 +113,7 @@ export function MultiImageUploadField(
                 type="button"
                 onClick={() => handleRemove(index)}
                 aria-label={`Supprimer l'image ${index + 1}`}
-                className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-black/60 text-white transition-colors hover:bg-destructive"
+                className="absolute right-1.5 top-1.5 flex h-10 w-10 items-center justify-center rounded-md bg-black/60 text-white transition-colors hover:bg-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
                 <X className="h-3.5 w-3.5" />
               </button>
@@ -127,7 +127,7 @@ export function MultiImageUploadField(
           type="button"
           onClick={() => inputRef.current?.click()}
           disabled={isUploading}
-          className="flex w-full flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-border bg-muted/40 py-6 text-muted-foreground transition-colors hover:border-primary/50 hover:text-primary disabled:cursor-not-allowed"
+          className="flex w-full flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-border bg-muted/40 py-6 text-muted-foreground transition-colors hover:border-primary/50 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed"
         >
           <ImagePlus className="h-6 w-6" />
           <span className="text-sm">

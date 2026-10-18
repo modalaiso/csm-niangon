@@ -1,4 +1,3 @@
-import { ShieldAlert } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { ModerationTabs } from "@/components/admin/moderation-tabs";
 import { requireModerator } from "@/lib/auth/admin-guard";
@@ -15,7 +14,6 @@ export default async function AdminModerationPage() {
       <AdminPageHeader
         title="Modération"
         description="Traitez les commentaires signalés, gérez les règles automatiques et consultez l’historique des décisions."
-        icon={ShieldAlert}
       />
       <ModerationTabs />
     </div>

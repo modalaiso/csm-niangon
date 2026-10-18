@@ -27,7 +27,7 @@ export interface DashboardSummary {
 
 type DashboardSummaryResult =
   | DashboardSummary
-  | { error: "auth_required" | "forbidden" };
+  | { error: "auth_required" | "forbidden" | "unavailable" };
 
 /** Résumé de la plateforme pour les cartes KPI de la vue d'ensemble */
 export async function getDashboardSummary(): Promise<DashboardSummaryResult> {
@@ -120,18 +120,6 @@ export async function getDashboardSummary(): Promise<DashboardSummaryResult> {
     };
   } catch (error) {
     console.error("Erreur lors du chargement du résumé dashboard:", error);
-    return {
-      totalPosts: 0,
-      publishedPosts: 0,
-      draftPosts: 0,
-      archivedPosts: 0,
-      pendingComments: 0,
-      totalComments: 0,
-      activeAnnouncements: 0,
-      totalUsers: 0,
-      qualifiedViews30Days: 0,
-      averagePostReadSeconds: 0,
-      topPosts: [],
-    };
+    return { error: "unavailable" };
   }
 }
