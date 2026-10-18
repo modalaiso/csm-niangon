@@ -37,22 +37,15 @@ function SchoolSpaceMenu({ mobile = false }: Readonly<{ mobile?: boolean }>) {
   const menuId = mobile ? "school-space-menu-mobile" : "school-space-menu";
 
   return (
-    <div
-      className={mobile ? "relative" : "group relative"}
-      onMouseEnter={mobile ? undefined : () => setIsOpen(true)}
-      onMouseLeave={mobile ? undefined : () => setIsOpen(false)}
-      onKeyDown={(event) => {
-        if (event.key === "Escape") setIsOpen(false);
-      }}
-    >
+    <div className={mobile ? "relative" : "group relative"}>
       <button
         type="button"
         aria-expanded={isOpen}
         aria-controls={menuId}
-        aria-haspopup="menu"
-        onClick={() =>
-          setIsOpen((open) => (mobile ? !open : true))
-        }
+        onClick={() => setIsOpen((open) => !open)}
+        onKeyDown={(event) => {
+          if (event.key === "Escape") setIsOpen(false);
+        }}
         className={
           mobile
             ? "flex w-full items-center justify-between py-1 text-left text-sm font-medium hover:underline"
@@ -67,42 +60,38 @@ function SchoolSpaceMenu({ mobile = false }: Readonly<{ mobile?: boolean }>) {
           className={`h-3.5 w-3.5 transition-transform ${isOpen ? "rotate-180" : ""}`}
         />
       </button>
-      {isOpen && (
-        <div
-          id={menuId}
-          role="menu"
-          className={
-            mobile
-              ? "mt-2 flex flex-col rounded-lg border border-border bg-background p-1"
-              : "absolute left-0 top-full z-50 mt-2 w-56 overflow-hidden rounded-lg border border-border bg-background py-1 shadow-lg"
-          }
+      <div
+        id={menuId}
+        className={
+          mobile
+            ? `mt-2 flex flex-col rounded-lg border border-border bg-background p-1 ${isOpen ? "" : "hidden"}`
+            : `absolute left-0 top-full z-50 mt-2 w-64 overflow-hidden rounded-lg border border-border bg-background py-1 shadow-lg ${isOpen ? "" : "hidden group-hover:block"}`
+        }
+      >
+        <Link
+          href="/emplois-du-temps"
+          onClick={() => setIsOpen(false)}
+          className="px-3 py-2 text-sm text-foreground hover:bg-accent"
         >
-          <Link
-            href="/emplois-du-temps"
-            role="menuitem"
-            onClick={() => setIsOpen(false)}
-            className="px-3 py-2 text-sm text-foreground hover:bg-accent"
-          >
-            Emplois du temps
-          </Link>
-          <div
-            role="menuitem"
-            aria-disabled="true"
-            className="flex cursor-not-allowed items-center justify-between gap-2 px-3 py-2 text-sm text-muted-foreground"
-          >
-            Calendrier des devoirs
-            <span className="text-[10px]">Bientôt disponible</span>
-          </div>
-          <div
-            role="menuitem"
-            aria-disabled="true"
-            className="flex cursor-not-allowed items-center justify-between gap-2 px-3 py-2 text-sm text-muted-foreground"
-          >
-            Mes notes et moyennes
-            <span className="text-[10px]">Bientôt disponible</span>
-          </div>
-        </div>
-      )}
+          Emplois du temps
+        </Link>
+        <button
+          type="button"
+          disabled
+          className="flex w-full cursor-not-allowed items-center justify-between gap-2 px-3 py-2 text-left text-sm text-muted-foreground"
+        >
+          Calendrier des devoirs
+          <span className="text-[10px]">Bientôt disponible</span>
+        </button>
+        <button
+          type="button"
+          disabled
+          className="flex w-full cursor-not-allowed items-center justify-between gap-2 px-3 py-2 text-left text-sm text-muted-foreground"
+        >
+          Mes notes et moyennes
+          <span className="text-[10px]">Bientôt disponible</span>
+        </button>
+      </div>
     </div>
   );
 }
