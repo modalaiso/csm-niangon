@@ -61,36 +61,40 @@ function SchoolSpaceMenu({ mobile = false }: Readonly<{ mobile?: boolean }>) {
         />
       </button>
       <div
-        id={menuId}
         className={
           mobile
-            ? `mt-2 flex flex-col rounded-lg border border-border bg-background p-1 ${isOpen ? "" : "hidden"}`
-            : `absolute left-0 top-full z-50 mt-2 w-64 overflow-hidden rounded-lg border border-border bg-background py-1 shadow-lg ${isOpen ? "" : "hidden group-hover:block"}`
+            ? isOpen
+              ? "mt-2"
+              : "hidden"
+            : `absolute left-0 top-full z-50 w-64 pt-6 ${isOpen ? "" : "hidden group-hover:block"}`
         }
       >
-        <Link
-          href="/emplois-du-temps"
-          onClick={() => setIsOpen(false)}
-          className="px-3 py-2 text-sm text-foreground hover:bg-accent"
+        <div
+          id={menuId}
+          className="flex flex-col overflow-hidden rounded-lg border border-border bg-background py-4 shadow-lg"
         >
-          Emplois du temps
-        </Link>
-        <button
-          type="button"
-          disabled
-          className="flex w-full cursor-not-allowed items-center justify-between gap-2 px-3 py-2 text-left text-sm text-muted-foreground"
-        >
-          Calendrier des devoirs
-          <span className="text-[10px]">Bientôt disponible</span>
-        </button>
-        <button
-          type="button"
-          disabled
-          className="flex w-full cursor-not-allowed items-center justify-between gap-2 px-3 py-2 text-left text-sm text-muted-foreground"
-        >
-          Mes notes et moyennes
-          <span className="text-[10px]">Bientôt disponible</span>
-        </button>
+          <Link
+            href="/emplois-du-temps"
+            onClick={() => setIsOpen(false)}
+            className="px-3 py-2 text-sm text-foreground hover:bg-accent"
+          >
+            Emplois du temps
+          </Link>
+          <Link
+            href="/emplois-du-temps"
+            onClick={() => setIsOpen(false)}
+            className="px-3 py-2 text-sm text-foreground hover:bg-accent"
+          >
+            Calendriers des devoirs
+          </Link>
+          <Link
+            href="/emplois-du-temps"
+            onClick={() => setIsOpen(false)}
+            className="px-3 py-2 text-sm text-foreground hover:bg-accent"
+          >
+            Mes notes
+          </Link>
+        </div>
       </div>
     </div>
   );
