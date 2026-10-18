@@ -1,7 +1,7 @@
 "use client";
 
 import { ImagePlus, Loader2, X } from "lucide-react";
-import { useRef, useState } from "react";
+import { type ClipboardEvent, type DragEvent, useRef, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 
 interface MultiImageUploadFieldProps {
@@ -19,14 +19,16 @@ export function MultiImageUploadField(
 ) {
   const max = props.max ?? 15;
   const inputRef = useRef<HTMLInputElement>(null);
+  const uploadInProgressRef = useRef(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const remainingSlots = max - props.value.length;
+  const remainingSlots = Math.max(0, max - props.value.length);
 
   const uploadOne = async (file: File): Promise<string | null> => {
     const supabase = createClient();
-    const extension = file.name.split(".").pop() ?? "jpg";
+    const extension = file.name.split(".").pop() || "jpg";
     const path = `${crypto.randomUUID()}.${extension}`;
 
     const { error: uploadError } = await supabase.storage
@@ -42,16 +44,24 @@ export function MultiImageUploadField(
     return data.publicUrl;
   };
 
-  const handleFiles = async (files: FileList | null) => {
-    if (!files || files.length === 0) return;
-    setError(null);
+  const handleFiles = async (files: File[]) => {
+    if (uploadInProgressRef.current || files.length === 0) return;
 
-    const selected = Array.from(files).slice(0, remainingSlots);
-    if (files.length > remainingSlots) {
-      setError(`Vous ne pouvez ajouter que ${max} images maximum au total.`);
+    const images = files.filter((file) => file.type.startsWith("image/"));
+    const messages: string[] = [];
+    if (images.length < files.length) {
+      messages.push("Seuls les fichiers image peuvent être ajoutés.");
     }
+    const selected = images.slice(0, remainingSlots);
+    if (images.length > remainingSlots) {
+      messages.push(
+        `Vous ne pouvez ajouter que ${max} images maximum au total.`,
+      );
+    }
+    setError(messages.length > 0 ? messages.join(" ") : null);
     if (selected.length === 0) return;
 
+    uploadInProgressRef.current = true;
     setIsUploading(true);
     try {
       const uploaded: string[] = [];
@@ -60,18 +70,39 @@ export function MultiImageUploadField(
         if (url) uploaded.push(url);
       }
       if (uploaded.length < selected.length) {
-        setError("Certaines images n'ont pas pu être envoyées. Réessayez.");
+        messages.push(
+          "Certaines images n'ont pas pu être envoyées. Réessayez.",
+        );
       }
       if (uploaded.length > 0) {
         props.onChange([...props.value, ...uploaded]);
       }
+      setError(messages.length > 0 ? messages.join(" ") : null);
     } catch (err) {
       console.error("Erreur lors de l'envoi des images:", err);
       setError("Une erreur inattendue est survenue.");
     } finally {
+      uploadInProgressRef.current = false;
       setIsUploading(false);
       if (inputRef.current) inputRef.current.value = "";
     }
+  };
+
+  const handlePaste = (event: ClipboardEvent<HTMLElement>) => {
+    const files = Array.from(event.clipboardData.items)
+      .filter((item) => item.kind === "file")
+      .map((item) => item.getAsFile())
+      .filter((file): file is File => file !== null);
+    if (files.length > 0) {
+      event.preventDefault();
+      void handleFiles(files);
+    }
+  };
+
+  const handleDrop = (event: DragEvent<HTMLElement>) => {
+    event.preventDefault();
+    setIsDragging(false);
+    void handleFiles(Array.from(event.dataTransfer.files));
   };
 
   const handleRemove = (index: number) => {
@@ -79,14 +110,43 @@ export function MultiImageUploadField(
   };
 
   return (
-    <div>
+    <section
+      aria-label="Zone d’ajout des visuels"
+      aria-describedby="post-image-upload-hint"
+      onPaste={handlePaste}
+      onDragEnter={(event) => {
+        if (Array.from(event.dataTransfer.types).includes("Files")) {
+          event.preventDefault();
+          setIsDragging(true);
+        }
+      }}
+      onDragOver={(event) => {
+        if (Array.from(event.dataTransfer.types).includes("Files")) {
+          event.preventDefault();
+          setIsDragging(true);
+        }
+      }}
+      onDragLeave={(event) => {
+        if (
+          !(event.relatedTarget instanceof Node) ||
+          !event.currentTarget.contains(event.relatedTarget)
+        ) {
+          setIsDragging(false);
+        }
+      }}
+      onDrop={handleDrop}
+      className={`rounded-md ${isDragging ? "bg-primary/5 ring-2 ring-primary" : ""}`}
+    >
       <div className="mb-2 flex items-center justify-between">
         <p className="text-sm font-medium text-foreground">
           Images ({props.value.length}/{max})
         </p>
         {isUploading && (
-          <span className="flex items-center gap-1 text-xs text-muted-foreground">
-            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+          <span
+            className="flex items-center gap-1 text-xs text-muted-foreground"
+            aria-live="polite"
+          >
+            <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
             Envoi en cours...
           </span>
         )}
@@ -101,7 +161,9 @@ export function MultiImageUploadField(
             >
               <img
                 src={url}
-                alt={`Item ${index + 1}`}
+                alt={`Visuel ${index + 1}`}
+                width={320}
+                height={320}
                 className="h-full w-full object-cover"
               />
               {index === 0 && (
@@ -143,13 +205,21 @@ export function MultiImageUploadField(
         accept="image/*"
         multiple
         className="hidden"
-        onChange={(e) => handleFiles(e.target.files)}
+        onChange={(e) => handleFiles(Array.from(e.target.files ?? []))}
       />
 
-      {props.hint && !error && (
-        <p className="mt-1.5 text-xs text-muted-foreground">{props.hint}</p>
+      <p
+        id="post-image-upload-hint"
+        className="mt-1.5 text-xs text-muted-foreground"
+      >
+        {props.hint ??
+          "Déposez vos images ici ou sélectionnez-les. Pour coller une image, cliquez sur « Ajouter des images », puis utilisez Ctrl+V (ou Cmd+V)."}
+      </p>
+      {error && (
+        <p className="mt-1.5 text-xs text-destructive" aria-live="polite">
+          {error}
+        </p>
       )}
-      {error && <p className="mt-1.5 text-xs text-destructive">{error}</p>}
-    </div>
+    </section>
   );
 }

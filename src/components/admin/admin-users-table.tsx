@@ -19,7 +19,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { cn } from "@/lib/utils";
 
 interface AdminUsersTableProps {
   currentUserId: string;
@@ -39,13 +38,6 @@ const ROW_ROLE_OPTIONS: { value: Role; label: string }[] = [
   { value: "WRITER", label: "Rédacteur" },
   { value: "ADMIN", label: "Administrateur" },
 ];
-
-const ROLE_BADGES: Record<Role, string> = {
-  USER: "bg-slate-100 text-slate-600",
-  MODERATOR: "bg-amber-100 text-amber-700",
-  WRITER: "bg-blue-100 text-blue-700",
-  ADMIN: "bg-primary/10 text-foreground",
-};
 
 function formatDate(date: Date): string {
   return new Date(date).toLocaleDateString("fr-FR", {
@@ -173,12 +165,7 @@ export function AdminUsersTable(props: Readonly<AdminUsersTableProps>) {
           <td className="px-4 py-3 text-muted-foreground">{row.classe}</td>
           <td className="px-4 py-3">
             {isSelf ? (
-              <span
-                className={cn(
-                  "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium",
-                  ROLE_BADGES[row.role],
-                )}
-              >
+              <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-2.5 py-1 text-xs font-medium text-foreground">
                 <ShieldCheck className="h-3 w-3" />
                 {ROW_ROLE_OPTIONS.find((o) => o.value === row.role)?.label}
               </span>
@@ -189,16 +176,18 @@ export function AdminUsersTable(props: Readonly<AdminUsersTableProps>) {
                 disabled={isPending}
               >
                 <SelectTrigger
-                  className={cn(
-                    "h-8 w-40 border-0 text-xs font-medium",
-                    ROLE_BADGES[row.role],
-                  )}
+                  aria-label={`Rôle de ${row.prenom} ${row.nom}`}
+                  className="h-8 w-40 rounded-md border border-input bg-background text-xs font-medium text-foreground shadow-none"
                 >
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="rounded-md border-border bg-background text-foreground shadow-md">
                   {ROW_ROLE_OPTIONS.map((o) => (
-                    <SelectItem key={o.value} value={o.value}>
+                    <SelectItem
+                      key={o.value}
+                      value={o.value}
+                      className="rounded-sm focus:bg-primary/10 focus:text-foreground"
+                    >
                       {o.label}
                     </SelectItem>
                   ))}
