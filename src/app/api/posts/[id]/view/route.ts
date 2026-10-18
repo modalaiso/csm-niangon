@@ -9,7 +9,7 @@ import { createClient } from "@/lib/supabase/server";
 
 export async function POST(
   request: Request,
-  context: RouteContext<"/api/posts/[id]/view">,
+  context: { params: Promise<{ id: string }> },
 ) {
   const { id } = await context.params;
   if (!id || id.length > 128) {
