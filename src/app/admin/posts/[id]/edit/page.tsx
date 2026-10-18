@@ -1,5 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import { getPostForEdit } from "@/app/actions/admin-posts";
+import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { PostCreateWizard } from "@/components/admin/post-create-wizard";
 
 export const metadata = {
@@ -24,13 +25,11 @@ export default async function EditPostPage({
   }
 
   return (
-    <div>
-      <h1 className="mb-2 text-center text-2xl font-bold text-foreground sm:text-3xl">
-        Modifier la publication
-      </h1>
-      <p className="mb-8 text-center text-sm text-muted-foreground">
-        Les champs sont préremplis avec le contenu actuel.
-      </p>
+    <div className="mx-auto max-w-7xl">
+      <AdminPageHeader
+        title="Modifier la publication"
+        description="Les champs sont préremplis avec le contenu actuel. Enregistrez vos changements ou publiez la version mise à jour."
+      />
       <PostCreateWizard mode="edit" initial={result.post} />
     </div>
   );

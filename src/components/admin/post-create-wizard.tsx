@@ -215,7 +215,7 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
   };
 
   return (
-    <div className="mx-auto w-full max-w-3xl">
+    <div className="mx-auto w-full max-w-4xl">
       {/* Indicateur d'étapes */}
       <ol className="mb-8 flex items-center justify-between">
         {STEPS.map((s, index) => {
@@ -223,9 +223,9 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
             "border-border bg-background text-muted-foreground";
 
           if (step === s.id) {
-            stepClassName = "border-primary bg-primary text-white";
+            stepClassName = "border-primarys2-700 bg-primarys2-700 text-white";
           } else if (step > s.id) {
-            stepClassName = "border-primary bg-primary/10 text-primary";
+            stepClassName = "border-primary bg-primary/10 text-foreground";
           }
 
           return (
@@ -242,7 +242,9 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
                 <span
                   className={cn(
                     "hidden text-xs font-medium sm:block",
-                    step === s.id ? "text-primary" : "text-muted-foreground",
+                    step === s.id
+                      ? "text-primarys2-700"
+                      : "text-muted-foreground",
                   )}
                 >
                   {s.label}
@@ -261,7 +263,7 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
         })}
       </ol>
 
-      <div className="p-6 sm:p-8">
+      <div className="rounded-xl border border-border bg-background p-5 sm:p-7">
         {/* Étape 1 : type */}
         {step === 1 && (
           <div>
@@ -279,7 +281,7 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
                   type="button"
                   onClick={() => setType(option.value)}
                   className={cn(
-                    "flex items-start gap-3 rounded-2xl border-2 p-4 text-left transition-colors",
+                    "flex items-start gap-3 rounded-lg border-2 p-4 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                     type === option.value
                       ? "border-primary bg-primary/5"
                       : "border-border hover:border-primary/40",
@@ -289,7 +291,7 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
                     className={cn(
                       "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl",
                       type === option.value
-                        ? "bg-primary text-white"
+                        ? "bg-primarys2-700 text-white"
                         : "bg-muted text-muted-foreground",
                     )}
                   >
@@ -339,7 +341,7 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Ex : Finale de la coupe inter-classes remportée par la Terminale C"
               maxLength={120}
-              className="mt-6 w-full rounded-2xl border border-input bg-background px-4 py-3 text-base text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
+              className="mt-6 w-full rounded-md border border-input bg-background px-4 py-3 text-base text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring"
             />
             <p className="mt-2 text-right text-xs text-muted-foreground">
               {title.length}/120
@@ -362,7 +364,7 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
               onChange={(e) => setSummary(e.target.value)}
               placeholder="Résumez votre publication en quelques phrases..."
               rows={5}
-              className="mt-6 w-full resize-y rounded-2xl border border-input bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
+              className="mt-6 w-full resize-y rounded-md border border-input bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring"
             />
             <p className="mt-2 text-right text-xs text-muted-foreground">
               {summary.length} caractères
@@ -465,7 +467,7 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
                 value={tagsInput}
                 onChange={(e) => setTagsInput(e.target.value)}
                 placeholder="sport, coupe, terminale"
-                className="w-full rounded-2xl border border-input bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
+                className="w-full rounded-md border border-input bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring"
               />
             </div>
           </div>
@@ -479,7 +481,7 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
             type="button"
             onClick={goPrev}
             disabled={step === 1 || isPending || isContentImageUploading}
-            className="flex items-center gap-1 rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-40"
+            className="flex min-h-10 items-center gap-1 rounded-md px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40"
           >
             <ChevronLeft className="h-4 w-4" />
             Précédent
@@ -490,7 +492,7 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
               type="button"
               onClick={goNext}
               disabled={!canGoNext()}
-              className="flex items-center gap-1 rounded-full bg-primary px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-40"
+              className="flex min-h-10 items-center gap-1 rounded-md bg-primarys2-700 px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-primarys2-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40"
             >
               Suivant
               <ChevronRight className="h-4 w-4" />
@@ -502,7 +504,7 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
                   type="button"
                   onClick={() => handleSubmit("ARCHIVED")}
                   disabled={isPending}
-                  className="rounded-full border border-input bg-background px-5 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-60"
+                  className="min-h-10 rounded-md border border-input bg-background px-5 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   Archiver
                 </button>
@@ -511,7 +513,7 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
                 type="button"
                 onClick={() => handleSubmit("DRAFT")}
                 disabled={isPending}
-                className="rounded-full border border-input bg-background px-5 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-60"
+                className="min-h-10 rounded-md border border-input bg-background px-5 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 Enregistrer en brouillon
               </button>
@@ -519,7 +521,7 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
                 type="button"
                 onClick={() => handleSubmit("PUBLISHED")}
                 disabled={isPending}
-                className="flex items-center gap-2 rounded-full bg-primary px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
+                className="flex min-h-10 items-center gap-2 rounded-md bg-primarys2-700 px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-primarys2-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
                 {isEdit ? "Enregistrer et publier" : "Publier"}

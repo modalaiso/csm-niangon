@@ -8,11 +8,18 @@ interface ScheduleDocumentProps {
 
 export function ScheduleDocument(props: Readonly<ScheduleDocumentProps>) {
   return (
-    <div className="w-full bg-white p-6 sm:p-8">
+    <div className="rounded-2xl w-full bg-white p-6 sm:p-8">
       <div className="mb-6 flex items-center justify-between gap-4">
-        <img src="/logo.png" alt="Logo" className="h-16 w-16 flex-shrink-0" />
+        <img
+          src="/logo.png"
+          alt="Logo du Collège Saint-Méthodiste de Niangon"
+          className="h-16 w-16 flex-shrink-0 object-contain"
+        />
         <div className="flex-1 text-center">
-          <h1 className="text-2xl font-extrabold uppercase text-slate-900 sm:text-3xl">
+          <p className="text-xs font-semibold uppercase tracking-wider text-slate-600">
+            Cours Secondaire Méthodiste de Niangon
+          </p>
+          <h1 className="mt-1 text-xl font-extrabold uppercase text-slate-900 sm:text-2xl">
             Emploi du temps - {props.schedule.className}
           </h1>
           <p className="mt-1 text-xs font-semibold tracking-wide text-slate-500 sm:text-sm">
@@ -22,7 +29,7 @@ export function ScheduleDocument(props: Readonly<ScheduleDocumentProps>) {
         <div className="h-16 w-16 flex-shrink-0" />
       </div>
 
-      <div className="overflow-hidden">
+      <div className="schedule-grid-document hidden overflow-hidden sm:block">
         <table className="w-full text-xs sm:text-sm">
           <thead>
             <tr>
@@ -63,15 +70,7 @@ export function ScheduleDocument(props: Readonly<ScheduleDocumentProps>) {
                         className="border-2 border-slate-900 px-2 py-2 text-center uppercase text-slate-900"
                       >
                         {cell?.subjectName ? (
-                          <span
-                            style={{
-                              backgroundColor: cell.subjectColor
-                                ? `${cell.subjectColor}26`
-                                : "#f1f5f9",
-                              color: cell.subjectColor ?? "#0f172a",
-                            }}
-                            className="inline-block w-full rounded-lg px-2 py-1.5 font-semibold"
-                          >
+                          <span className="inline-block w-full px-2 py-1.5 font-semibold">
                             {cell.subjectName}
                           </span>
                         ) : (
@@ -85,6 +84,46 @@ export function ScheduleDocument(props: Readonly<ScheduleDocumentProps>) {
             )}
           </tbody>
         </table>
+      </div>
+      <div className="schedule-mobile-document space-y-4 sm:hidden">
+        {DAYS.map((day) => {
+          const dayRows = props.schedule.rows.filter((row) =>
+            row.cells.some(
+              (cell) => cell.day === day && cell.subjectName !== null,
+            ),
+          );
+          return (
+            <section key={day} className="rounded-lg border border-slate-200">
+              <h2 className="border-b border-slate-200 px-3 py-2 text-sm font-bold uppercase text-slate-900">
+                {day}
+              </h2>
+              {dayRows.length === 0 ? (
+                <p className="px-3 py-3 text-xs text-slate-500">
+                  Aucune séance renseignée.
+                </p>
+              ) : (
+                <ol className="divide-y divide-slate-200">
+                  {dayRows.map((row) => {
+                    const cell = row.cells.find((entry) => entry.day === day);
+                    return (
+                      <li
+                        key={row.id}
+                        className="flex items-center gap-3 px-3 py-3"
+                      >
+                        <span className="min-w-24 text-xs font-semibold tabular-nums text-slate-700">
+                          {row.startTime}–{row.endTime}
+                        </span>
+                        <span className="text-sm font-semibold text-slate-900">
+                          {cell?.subjectName}
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ol>
+              )}
+            </section>
+          );
+        })}
       </div>
     </div>
   );

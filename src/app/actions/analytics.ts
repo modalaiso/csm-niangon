@@ -4,6 +4,7 @@ import {
   ANALYTICS_EVENT_NAMES,
   type LogAnalyticsEventInput,
 } from "@/lib/analytics-types";
+import { requireDashboardAccess } from "@/lib/auth/admin-guard";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 
@@ -173,7 +174,7 @@ export interface VisitStats {
 }
 
 /** Nombre de visites (et de sessions uniques) depuis le début de la période donnée */
-export async function getVisitStats(period: VisitPeriod): Promise<VisitStats> {
+async function getVisitStats(period: VisitPeriod): Promise<VisitStats> {
   const start = startOfPeriod(period);
 
   try {
@@ -204,7 +205,7 @@ export async function getVisitStats(period: VisitPeriod): Promise<VisitStats> {
 }
 
 /** Toutes les périodes d'un coup, pour les cartes KPI du dashboard */
-export async function getAllVisitStats(): Promise<VisitStats[]> {
+async function getAllVisitStats(): Promise<VisitStats[]> {
   const periods: VisitPeriod[] = [
     "daily",
     "weekly",
@@ -222,9 +223,7 @@ export interface VisitTrendPoint {
 }
 
 /** Nombre de visites par jour sur les N derniers jours, pour un graphique de tendance */
-export async function getVisitTrend(
-  days: number = 14,
-): Promise<VisitTrendPoint[]> {
+async function getVisitTrend(days: number = 14): Promise<VisitTrendPoint[]> {
   const start = new Date();
   start.setHours(0, 0, 0, 0);
   start.setDate(start.getDate() - (days - 1));
@@ -258,7 +257,7 @@ export async function getVisitTrend(
 }
 
 /** Pages les plus visitées sur la période donnée, pour le dashboard */
-export async function getTopPages(
+async function getTopPages(
   period: VisitPeriod = "weekly",
   limit: number = 10,
 ): Promise<{ path: string; count: number }[]> {
@@ -290,15 +289,15 @@ export interface AnalyticsSummary {
 }
 
 /** Indicateurs d'engagement sur les 30 derniers jours. */
-export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
+async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
   const start = new Date();
   start.setDate(start.getDate() - 30);
 
   try {
-    // Use database-level aggregation for all metrics (not in-memory processing)
+    // Durations are JSON properties, so sum the indexed 30-day slice by session.
     const [
       pageViewSessions,
-      engagementEvents,
+      engagementRecords,
       scrollDepth90,
       searches,
       shares,
@@ -311,14 +310,12 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
           createdAt: { gte: start },
         },
       }),
-      // Aggregate engagement metrics by session
-      prisma.analyticsEvent.groupBy({
-        by: ["sessionId"],
+      prisma.analyticsEvent.findMany({
         where: {
           name: "page_engagement",
           createdAt: { gte: start },
         },
-        _count: true,
+        select: { sessionId: true, properties: true },
       }),
       // Count scroll depth 90 events
       prisma.analyticsEvent.count({
@@ -345,35 +342,34 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
     ]);
 
     const pageViewSessionCount = pageViewSessions.length;
-    const engagedSessionCount = engagementEvents.length;
-
-    // Calculate average engagement time in seconds
-    let averageEngagementSeconds = 0;
-    if (engagementEvents.length > 0) {
-      const engagementRecords = await prisma.analyticsEvent.findMany({
-        where: {
-          name: "page_engagement",
-          createdAt: { gte: start },
-        },
-        select: { properties: true },
-      });
-
-      let totalDurationMs = 0;
-      for (const record of engagementRecords) {
-        const durationMs =
-          record.properties &&
-          typeof record.properties === "object" &&
-          "durationMs" in record.properties &&
-          typeof record.properties.durationMs === "number"
-            ? record.properties.durationMs
-            : 0;
-        totalDurationMs += Math.max(0, Math.min(durationMs, 1_800_000));
-      }
-      averageEngagementSeconds =
-        engagementRecords.length > 0
-          ? Math.round(totalDurationMs / engagementRecords.length / 1000)
+    const durationBySession = new Map<string, number>();
+    for (const record of engagementRecords) {
+      const durationMs =
+        record.properties &&
+        typeof record.properties === "object" &&
+        "durationMs" in record.properties &&
+        typeof record.properties.durationMs === "number"
+          ? record.properties.durationMs
           : 0;
+      const boundedDuration = Math.max(0, Math.min(durationMs, 1_800_000));
+      durationBySession.set(
+        record.sessionId,
+        Math.min(
+          1_800_000,
+          (durationBySession.get(record.sessionId) ?? 0) + boundedDuration,
+        ),
+      );
     }
+    const totalDurationMs = Array.from(durationBySession.values()).reduce(
+      (total, duration) => total + duration,
+      0,
+    );
+    const engagedSessionCount = Array.from(durationBySession.values()).filter(
+      (duration) => duration >= 30_000,
+    ).length;
+    const averageEngagementSeconds = durationBySession.size
+      ? Math.round(totalDurationMs / durationBySession.size / 1000)
+      : 0;
 
     return {
       engagedSessions: engagedSessionCount,
@@ -396,4 +392,17 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
       shares: 0,
     };
   }
+}
+
+/** Toutes les statistiques d'administration, protégées par l'accès dashboard. */
+export async function getAdminAnalyticsDashboard() {
+  await requireDashboardAccess();
+  const [visitStats, trend, topPages, analytics] = await Promise.all([
+    getAllVisitStats(),
+    getVisitTrend(30),
+    getTopPages("monthly", 5),
+    getAnalyticsSummary(),
+  ]);
+
+  return { visitStats, trend, topPages, analytics };
 }

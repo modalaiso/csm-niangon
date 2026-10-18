@@ -1,5 +1,7 @@
+import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { AdminUsersTable } from "@/components/admin/admin-users-table";
 import { requireAdmin } from "@/lib/auth/admin-guard";
+import { prisma } from "@/lib/prisma";
 
 export const metadata = {
   title: "Utilisateurs | Dashboard - CSM Niangon",
@@ -7,17 +9,21 @@ export const metadata = {
 
 export default async function AdminUsersPage() {
   const currentUser = await requireAdmin();
+  const schoolClasses = await prisma.schoolClass.findMany({
+    orderBy: [{ level: "asc" }, { name: "asc" }],
+    select: { id: true, name: true },
+  });
 
   return (
-    <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground">Utilisateurs</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Gérez les rôles de la plateforme. Vous ne pouvez pas modifier votre
-          propre rôle.
-        </p>
-      </div>
-      <AdminUsersTable currentUserId={currentUser.id} />
+    <div className="mx-auto max-w-7xl">
+      <AdminPageHeader
+        title="Utilisateurs"
+        description="Recherchez les membres et attribuez les rôles adaptés. Votre propre rôle reste protégé."
+      />
+      <AdminUsersTable
+        currentUserId={currentUser.id}
+        schoolClasses={schoolClasses}
+      />
     </div>
   );
 }

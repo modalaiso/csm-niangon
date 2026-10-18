@@ -1,7 +1,13 @@
 import Link from "next/link";
 import { SignupForm } from "@/components/forms/signup-form";
+import { prisma } from "@/lib/prisma";
 
-export default function SignupPage() {
+export default async function SignupPage() {
+  const schoolClasses = await prisma.schoolClass.findMany({
+    orderBy: [{ level: "asc" }, { name: "asc" }],
+    select: { id: true, name: true, level: true, schoolYear: true },
+  });
+
   return (
     <div
       className="min-h-screen flex flex-col items-center bg-cover bg-center p-4"
@@ -32,7 +38,7 @@ export default function SignupPage() {
           </div>
         </Link>
       </div>
-      <SignupForm />
+      <SignupForm schoolClasses={schoolClasses} />
     </div>
   );
 }

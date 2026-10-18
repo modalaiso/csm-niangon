@@ -15,12 +15,6 @@ vi.mock("@/lib/viewCount", () => ({
   getPostViewCount: vi.fn().mockResolvedValue(0),
 }));
 
-vi.mock("@/lib/supabase/server", () => ({
-  createClient: async () => ({
-    auth: { getUser: async () => ({ data: { user: null } }) },
-  }),
-}));
-
 const { getPostTagsByType } = await import("@/app/actions/posts");
 const { PostType } = await import("@prisma/client");
 

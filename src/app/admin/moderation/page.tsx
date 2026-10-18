@@ -1,3 +1,4 @@
+import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { ModerationTabs } from "@/components/admin/moderation-tabs";
 import { requireModerator } from "@/lib/auth/admin-guard";
 
@@ -9,14 +10,11 @@ export default async function AdminModerationPage() {
   await requireModerator();
 
   return (
-    <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground">Modération</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Mots-clés surveillés, commentaires en attente de revue, et journal des
-          actions.
-        </p>
-      </div>
+    <div className="mx-auto max-w-7xl">
+      <AdminPageHeader
+        title="Modération"
+        description="Traitez les commentaires signalés, gérez les règles automatiques et consultez l’historique des décisions."
+      />
       <ModerationTabs />
     </div>
   );

@@ -1,13 +1,14 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { logVisit } from "@/app/actions/analytics";
 import {
   captureCampaignParameters,
   getAnalyticsSessionId,
   trackAnalyticsEvent,
 } from "@/lib/analytics-client";
+import { MIN_POST_VIEW_SECONDS } from "@/lib/post-view-tracking";
 
 function detectDevice(): string {
   if (typeof window === "undefined") return "unknown";
@@ -21,18 +22,14 @@ const EXCLUDED_PREFIXES = [
   "/admin-login",
   "/admin-signup",
 ];
+const ENGAGEMENT_REPORT_INTERVAL_SECONDS = 30;
 
 /**
- * Composant invisible monté globalement (layout racine) qui enregistre
- * une visite à chaque changement de route sur les pages publiques.
- * Les pages admin/auth ne sont pas comptabilisées dans les stats de trafic.
+ * Enregistre les pages publiques après 10 secondes de lecture active.
+ * Les périodes où l'onglet est masqué ne sont pas comptées.
  */
 export function VisitTracker() {
   const pathname = usePathname();
-  const lastLoggedPath = useRef<string | null>(null);
-  const pageStartedAt = useRef(0);
-  const maxScrollDepth = useRef(0);
-  const trackedScrollDepths = useRef(new Set<number>());
 
   useEffect(() => {
     if (!pathname) return;
@@ -40,41 +37,80 @@ export function VisitTracker() {
     const isExcluded = EXCLUDED_PREFIXES.some((prefix) =>
       pathname.startsWith(prefix),
     );
-    if (isExcluded || lastLoggedPath.current === pathname) return;
-    lastLoggedPath.current = pathname;
+    if (isExcluded) return;
 
     const sessionId = getAnalyticsSessionId();
     captureCampaignParameters();
-    pageStartedAt.current = Date.now();
-    maxScrollDepth.current = 0;
-    trackedScrollDepths.current = new Set();
+    let activeMilliseconds = 0;
+    let activeSince =
+      document.visibilityState === "visible" ? Date.now() : null;
+    let lastReportedMilliseconds = 0;
+    let isQualified = false;
+    let maxScrollDepth = 0;
+    const trackedScrollDepths = new Set<number>();
 
-    logVisit({
-      path: pathname,
-      sessionId,
-      referrer: document.referrer || null,
-      device: detectDevice(),
-    }).catch((error) => {
-      console.error("Erreur lors du suivi de la visite:", error);
-    });
+    const getActiveMilliseconds = () =>
+      activeMilliseconds +
+      (activeSince === null ? 0 : Math.max(0, Date.now() - activeSince));
 
-    trackAnalyticsEvent("page_view", {
-      title: document.title,
-      referrer: document.referrer || null,
-      viewport: `${window.innerWidth}x${window.innerHeight}`,
-      device: detectDevice(),
-    });
+    const trackScrollThresholds = () => {
+      for (const threshold of [25, 50, 75, 90, 100]) {
+        if (
+          maxScrollDepth >= threshold &&
+          !trackedScrollDepths.has(threshold)
+        ) {
+          trackedScrollDepths.add(threshold);
+          trackAnalyticsEvent("scroll_depth", { depth: threshold });
+        }
+      }
+    };
 
-    const reportEngagement = () => {
-      const now = Date.now();
-      const durationMs = now - pageStartedAt.current;
-      if (durationMs < 1000) return;
-      pageStartedAt.current = now;
+    const qualifyVisit = () => {
+      if (isQualified || getActiveMilliseconds() < MIN_POST_VIEW_SECONDS * 1000)
+        return;
+
+      isQualified = true;
+      void logVisit({
+        path: pathname,
+        sessionId,
+        referrer: document.referrer || null,
+        device: detectDevice(),
+      }).catch((error: unknown) => {
+        console.error("Erreur lors du suivi de la visite:", error);
+      });
+
+      trackAnalyticsEvent("page_view", {
+        title: document.title,
+        referrer: document.referrer || null,
+        viewport: `${window.innerWidth}x${window.innerHeight}`,
+        device: detectDevice(),
+      });
+      trackScrollThresholds();
+    };
+
+    const reportEngagement = (force = false) => {
+      const currentMilliseconds = getActiveMilliseconds();
+      qualifyVisit();
+      if (!isQualified) return;
+
+      const durationMs = Math.floor(
+        currentMilliseconds - lastReportedMilliseconds,
+      );
+      if (
+        durationMs < 1000 ||
+        (!force &&
+          currentMilliseconds - lastReportedMilliseconds <
+            ENGAGEMENT_REPORT_INTERVAL_SECONDS * 1000)
+      ) {
+        return;
+      }
+
+      lastReportedMilliseconds = currentMilliseconds;
       trackAnalyticsEvent(
         "page_engagement",
         {
           durationMs,
-          maxScrollDepth: maxScrollDepth.current,
+          maxScrollDepth,
           visibility: document.visibilityState,
         },
         { keepalive: true },
@@ -89,21 +125,25 @@ export function VisitTracker() {
         100,
         Math.round((window.scrollY / scrollableHeight) * 100),
       );
-      maxScrollDepth.current = Math.max(maxScrollDepth.current, depth);
-
-      for (const threshold of [25, 50, 75, 90, 100]) {
-        if (depth >= threshold && !trackedScrollDepths.current.has(threshold)) {
-          trackedScrollDepths.current.add(threshold);
-          trackAnalyticsEvent("scroll_depth", { depth: threshold });
-        }
-      }
+      maxScrollDepth = Math.max(maxScrollDepth, depth);
+      qualifyVisit();
+      if (isQualified) trackScrollThresholds();
     };
 
     const handleVisibilityChange = () => {
-      if (document.visibilityState === "hidden") reportEngagement();
+      if (document.visibilityState === "hidden") {
+        if (activeSince !== null) {
+          activeMilliseconds += Date.now() - activeSince;
+          activeSince = null;
+        }
+        reportEngagement(true);
+      } else {
+        activeSince = Date.now();
+      }
     };
 
     const handleExternalClick = (event: MouseEvent) => {
+      if (!isQualified) return;
       const target = event.target as HTMLElement;
       const link = target.closest("a");
       if (!link?.href || new URL(link.href).origin === window.location.origin)
@@ -113,15 +153,21 @@ export function VisitTracker() {
       });
     };
 
+    const intervalId = window.setInterval(() => reportEngagement(), 1000);
     window.addEventListener("scroll", reportScrollDepth, { passive: true });
     document.addEventListener("visibilitychange", handleVisibilityChange);
     document.addEventListener("click", handleExternalClick);
 
     return () => {
-      reportEngagement();
+      window.clearInterval(intervalId);
       window.removeEventListener("scroll", reportScrollDepth);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       document.removeEventListener("click", handleExternalClick);
+      if (activeSince !== null) {
+        activeMilliseconds += Date.now() - activeSince;
+        activeSince = null;
+      }
+      reportEngagement(true);
     };
   }, [pathname]);
 

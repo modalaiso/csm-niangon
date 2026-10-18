@@ -414,7 +414,7 @@ export function ContentEditor(props: Readonly<ContentEditorProps>) {
   ];
 
   return (
-    <div className="relative rounded-2xl border border-border bg-background">
+    <div className="relative rounded-lg border border-border bg-background">
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border px-3 py-2">
         <div className="flex flex-wrap items-center gap-1">
           {toolbarButtons.map((button) => (
@@ -426,7 +426,7 @@ export function ContentEditor(props: Readonly<ContentEditorProps>) {
               disabled={mode === "preview" || isUploading}
               title={button.label}
               aria-label={button.label}
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40"
+              className="flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-40"
             >
               <button.icon className="h-4 w-4" aria-hidden="true" />
             </button>
@@ -438,7 +438,7 @@ export function ContentEditor(props: Readonly<ContentEditorProps>) {
             disabled={mode === "preview" || isUploading}
             title="Insérer une image"
             aria-label="Insérer une image"
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40"
+            className="flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-40"
           >
             {isUploading ? (
               <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
@@ -461,14 +461,14 @@ export function ContentEditor(props: Readonly<ContentEditorProps>) {
             }}
           />
         </div>
-        <div className="flex items-center gap-1 rounded-full bg-muted p-1">
+        <div className="flex items-center gap-1 rounded-md bg-muted p-1">
           <button
             type="button"
             onClick={() => setMode("edit")}
             className={cn(
-              "flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium transition-colors",
+              "flex min-h-9 items-center gap-1 rounded-sm px-3 py-1 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
               mode === "edit"
-                ? "bg-background text-foreground shadow-sm"
+                ? "bg-background text-foreground"
                 : "text-muted-foreground",
             )}
           >
@@ -479,9 +479,9 @@ export function ContentEditor(props: Readonly<ContentEditorProps>) {
             type="button"
             onClick={() => setMode("preview")}
             className={cn(
-              "flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium transition-colors",
+              "flex min-h-9 items-center gap-1 rounded-sm px-3 py-1 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
               mode === "preview"
-                ? "bg-background text-foreground shadow-sm"
+                ? "bg-background text-foreground"
                 : "text-muted-foreground",
             )}
           >
@@ -569,7 +569,7 @@ export function ContentEditor(props: Readonly<ContentEditorProps>) {
         </p>
       )}
       {isDragging && (
-        <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center rounded-2xl border-2 border-dashed border-primary bg-background/90 p-6 text-center text-sm font-semibold text-primary">
+        <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center rounded-lg border-2 border-dashed border-primary bg-background/90 p-6 text-center text-sm font-semibold text-primary">
           Déposez vos images pour les insérer dans le texte
         </div>
       )}
@@ -616,7 +616,7 @@ export function ContentEditor(props: Readonly<ContentEditorProps>) {
                 <button
                   type="button"
                   onClick={handleConfirmLink}
-                  className="rounded-lg bg-primary px-3 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                  className="rounded-md bg-primarys2-700 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-primarys2-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 >
                   Ajouter
                 </button>

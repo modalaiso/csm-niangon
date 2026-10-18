@@ -56,7 +56,7 @@ export function ProfileMenu(props: Readonly<ProfileMenuProps>) {
         aria-expanded={isOpen}
         aria-haspopup="menu"
         aria-label="Ouvrir le menu profil"
-        className="flex items-center rounded-full p-1 transition-colors bg-transparent hover:bg-accent"
+        className="flex items-center rounded-full bg-transparent p-1 transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       >
         <Avatar
           username={props.username}
@@ -69,7 +69,7 @@ export function ProfileMenu(props: Readonly<ProfileMenuProps>) {
       {isOpen && (
         <div
           role="menu"
-          className="absolute right-0 top-full z-40 mt-4 w-56 overflow-hidden rounded-2xl border border-border bg-background shadow-sm"
+          className="absolute right-0 top-full z-40 mt-2 w-56 overflow-hidden rounded-lg border border-border bg-background"
         >
           <div className="border-b border-border px-4 py-3">
             <p className="truncate text-sm font-semibold text-foreground">
@@ -86,7 +86,7 @@ export function ProfileMenu(props: Readonly<ProfileMenuProps>) {
             href="/profile"
             role="menuitem"
             onClick={() => setIsOpen(false)}
-            className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground hover:bg-accent"
+            className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
           >
             <UserRound className="h-4 w-4 text-muted-foreground" />
             Mon profil
@@ -96,7 +96,7 @@ export function ProfileMenu(props: Readonly<ProfileMenuProps>) {
             href="/settings"
             role="menuitem"
             onClick={() => setIsOpen(false)}
-            className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground hover:bg-accent"
+            className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
           >
             <Settings className="h-4 w-4 text-muted-foreground" />
             Paramètres
@@ -109,7 +109,7 @@ export function ProfileMenu(props: Readonly<ProfileMenuProps>) {
             role="menuitem"
             onClick={handleLogout}
             disabled={isPending}
-            className="flex w-full items-center gap-2.5 px-4 py-2.5 text-left text-sm text-destructive bg-transparent rounded-none hover:bg-destructive/10 disabled:opacity-60"
+            className="flex w-full items-center gap-2.5 rounded-none bg-transparent px-4 py-2.5 text-left text-sm text-destructive hover:bg-destructive/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring disabled:opacity-60"
           >
             <LogOut className="h-4 w-4" />
             Se déconnecter

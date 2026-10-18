@@ -24,6 +24,7 @@ const signupSchema = z
       .string()
       .min(3, "Le nom d'utilisateur doit contenir au moins 3 caractères"),
     classe: z.string().min(1, "La classe est requise"),
+    schoolClassId: z.string().optional(),
     matricule: z.string().optional(),
     email: z.string().email("Email invalide"),
     password: z
@@ -43,6 +44,12 @@ type SignupFormData = z.infer<typeof signupSchema>;
 
 interface SignupFormProps {
   onSubmit?: (data: SignupFormData) => void;
+  schoolClasses: {
+    id: string;
+    name: string;
+    level: string | null;
+    schoolYear: string;
+  }[];
 }
 
 const CLASS_OPTIONS = [
@@ -61,7 +68,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { signup } from "@/app/actions/auth";
 
-export function SignupForm(_props: Readonly<SignupFormProps>) {
+export function SignupForm(props: Readonly<SignupFormProps>) {
   const [serverError, setServerError] = useState<string | null>(null);
   const router = useRouter();
   const {
@@ -94,6 +101,7 @@ export function SignupForm(_props: Readonly<SignupFormProps>) {
   };
 
   const selectedClass = watch("classe");
+  const selectedSchoolClassId = watch("schoolClassId");
 
   return (
     <div className="w-full max-w-2xl space-y-8 rounded-3xl border border-border bg-background p-8 shadow-lg">
@@ -120,6 +128,37 @@ export function SignupForm(_props: Readonly<SignupFormProps>) {
             {errors.nom && (
               <p className="text-sm text-red-500">{errors.nom.message}</p>
             )}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="schoolClassId">Classe précise associée</Label>
+            <Select
+              value={selectedSchoolClassId || "none"}
+              onValueChange={(value) =>
+                setValue("schoolClassId", value === "none" ? "" : value, {
+                  shouldValidate: true,
+                })
+              }
+            >
+              <SelectTrigger className="bg-background">
+                <SelectValue placeholder="Sélectionner la classe de l'élève" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">Ne pas associer maintenant</SelectItem>
+                {props.schoolClasses.map((schoolClass) => (
+                  <SelectItem key={schoolClass.id} value={schoolClass.id}>
+                    {schoolClass.name} ·{" "}
+                    {schoolClass.level ?? "Niveau non renseigné"} ·{" "}
+                    {schoolClass.schoolYear}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-muted-foreground">
+              Les parents peuvent choisir la classe de leur enfant. Sans
+              association, l'emploi du temps ne sera pas accessible depuis ce
+              compte.
+            </p>
           </div>
 
           <div className="space-y-2">
