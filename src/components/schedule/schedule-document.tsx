@@ -8,7 +8,7 @@ interface ScheduleDocumentProps {
 
 export function ScheduleDocument(props: Readonly<ScheduleDocumentProps>) {
   return (
-    <div className="w-full bg-white p-6 sm:p-8">
+    <div className="rounded-2xl w-full bg-white p-6 sm:p-8">
       <div className="mb-6 flex items-center justify-between gap-4">
         <img
           src="/logo.png"
@@ -19,7 +19,7 @@ export function ScheduleDocument(props: Readonly<ScheduleDocumentProps>) {
           <p className="text-xs font-semibold uppercase tracking-wider text-slate-600">
             Cours Secondaire Méthodiste de Niangon
           </p>
-          <h1 className="mt-1 text-2xl font-extrabold uppercase text-slate-900 sm:text-3xl">
+          <h1 className="mt-1 text-xl font-extrabold uppercase text-slate-900 sm:text-2xl">
             Emploi du temps - {props.schedule.className}
           </h1>
           <p className="mt-1 text-xs font-semibold tracking-wide text-slate-500 sm:text-sm">
