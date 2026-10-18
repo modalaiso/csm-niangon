@@ -41,10 +41,10 @@ export default async function SchedulePage({
 
   return (
     <main className="min-h-screen bg-background">
-      <div className="container max-w-5xl px-4 py-6 sm:py-8">
+      <div className="container max-w-6xl px-4 py-6 sm:py-8">
         <Link
           href="/emplois-du-temps"
-          className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900 hover:underline print:hidden"
+          className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground hover:underline print:hidden"
         >
           <ArrowLeft className="h-4 w-4" />
           Retour

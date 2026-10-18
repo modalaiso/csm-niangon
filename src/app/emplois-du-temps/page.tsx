@@ -55,9 +55,9 @@ export default async function SchedulesPage() {
                     <Link
                       key={c.id}
                       href={`/emplois-du-temps/${c.id}`}
-                      className="flex items-center gap-3 rounded-2xl border border-border bg-white p-4 transition-colors hover:border-primary/40"
+                      className="flex items-center gap-3 rounded-2xl border border-border bg-muted p-4 transition-colors hover:border-primary/40"
                     >
-                      <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                      <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center text-primary">
                         <CalendarClock className="h-5 w-5" />
                       </span>
                       <span>

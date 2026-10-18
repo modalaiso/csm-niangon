@@ -17,7 +17,7 @@ export function ScheduleDocument(props: Readonly<ScheduleDocumentProps>) {
         />
         <div className="flex-1 text-center">
           <p className="text-xs font-semibold uppercase tracking-wider text-slate-600">
-            Collège Saint-Méthodiste de Niangon
+            Cours Secondaire Méthodiste de Niangon
           </p>
           <h1 className="mt-1 text-2xl font-extrabold uppercase text-slate-900 sm:text-3xl">
             Emploi du temps - {props.schedule.className}
@@ -28,12 +28,6 @@ export function ScheduleDocument(props: Readonly<ScheduleDocumentProps>) {
         </div>
         <div className="h-16 w-16 flex-shrink-0" />
       </div>
-      {props.schedule.lastUpdatedAt && (
-        <p className="mb-3 text-right text-[10px] text-slate-500">
-          Mise à jour le{" "}
-          {props.schedule.lastUpdatedAt.toLocaleDateString("fr-FR")}
-        </p>
-      )}
 
       <div className="schedule-grid-document hidden overflow-hidden sm:block">
         <table className="w-full text-xs sm:text-sm">
@@ -76,15 +70,7 @@ export function ScheduleDocument(props: Readonly<ScheduleDocumentProps>) {
                         className="border-2 border-slate-900 px-2 py-2 text-center uppercase text-slate-900"
                       >
                         {cell?.subjectName ? (
-                          <span
-                            style={{
-                              backgroundColor: cell.subjectColor
-                                ? `${cell.subjectColor}26`
-                                : "#f1f5f9",
-                              color: cell.subjectColor ?? "#0f172a",
-                            }}
-                            className="inline-block w-full rounded-lg px-2 py-1.5 font-semibold"
-                          >
+                          <span className="inline-block w-full px-2 py-1.5 font-semibold">
                             {cell.subjectName}
                           </span>
                         ) : (
@@ -127,15 +113,7 @@ export function ScheduleDocument(props: Readonly<ScheduleDocumentProps>) {
                         <span className="min-w-24 text-xs font-semibold tabular-nums text-slate-700">
                           {row.startTime}–{row.endTime}
                         </span>
-                        <span
-                          style={{
-                            backgroundColor: cell?.subjectColor
-                              ? `${cell.subjectColor}1A`
-                              : "#f1f5f9",
-                            color: cell?.subjectColor ?? "#0f172a",
-                          }}
-                          className="rounded px-2 py-1 text-sm font-semibold"
-                        >
+                        <span className="text-sm font-semibold text-slate-900">
                           {cell?.subjectName}
                         </span>
                       </li>
