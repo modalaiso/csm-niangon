@@ -2,9 +2,10 @@
 
 import type { Role } from "@prisma/client";
 import type { User } from "@supabase/supabase-js";
-import { Menu, ShieldUser } from "lucide-react";
+import { ChevronDown, Menu, ShieldUser } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 import { ProfileMenu } from "@/components/nav/profile-menu";
 import { NotificationBell } from "@/components/notifications/notification-bell";
 import { SearchDropdown } from "@/components/search/search-dropdown";
@@ -31,6 +32,81 @@ interface TopNavProps {
   userProfile?: TopNavProfile | null;
 }
 
+function SchoolSpaceMenu({ mobile = false }: Readonly<{ mobile?: boolean }>) {
+  const [isOpen, setIsOpen] = useState(false);
+  const menuId = mobile ? "school-space-menu-mobile" : "school-space-menu";
+
+  return (
+    <div
+      className={mobile ? "relative" : "group relative"}
+      onMouseEnter={mobile ? undefined : () => setIsOpen(true)}
+      onMouseLeave={mobile ? undefined : () => setIsOpen(false)}
+      onKeyDown={(event) => {
+        if (event.key === "Escape") setIsOpen(false);
+      }}
+    >
+      <button
+        type="button"
+        aria-expanded={isOpen}
+        aria-controls={menuId}
+        aria-haspopup="menu"
+        onClick={() =>
+          setIsOpen((open) => (mobile ? !open : true))
+        }
+        className={
+          mobile
+            ? "flex w-full items-center justify-between py-1 text-left text-sm font-medium hover:underline"
+            : `flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary ${
+                isOpen ? "text-primary" : "text-muted-foreground"
+              }`
+        }
+      >
+        Mon espace scolaire
+        <ChevronDown
+          aria-hidden="true"
+          className={`h-3.5 w-3.5 transition-transform ${isOpen ? "rotate-180" : ""}`}
+        />
+      </button>
+      {isOpen && (
+        <div
+          id={menuId}
+          role="menu"
+          className={
+            mobile
+              ? "mt-2 flex flex-col rounded-lg border border-border bg-background p-1"
+              : "absolute left-0 top-full z-50 mt-2 w-56 overflow-hidden rounded-lg border border-border bg-background py-1 shadow-lg"
+          }
+        >
+          <Link
+            href="/emplois-du-temps"
+            role="menuitem"
+            onClick={() => setIsOpen(false)}
+            className="px-3 py-2 text-sm text-foreground hover:bg-accent"
+          >
+            Emplois du temps
+          </Link>
+          <div
+            role="menuitem"
+            aria-disabled="true"
+            className="flex cursor-not-allowed items-center justify-between gap-2 px-3 py-2 text-sm text-muted-foreground"
+          >
+            Calendrier des devoirs
+            <span className="text-[10px]">Bientôt disponible</span>
+          </div>
+          <div
+            role="menuitem"
+            aria-disabled="true"
+            className="flex cursor-not-allowed items-center justify-between gap-2 px-3 py-2 text-sm text-muted-foreground"
+          >
+            Mes notes et moyennes
+            <span className="text-[10px]">Bientôt disponible</span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function TopNav(props: Readonly<TopNavProps>) {
   const pathname = usePathname();
 
@@ -55,8 +131,6 @@ export function TopNav(props: Readonly<TopNavProps>) {
     { href: "/actus", label: "Actualités" },
     { href: "/infos", label: "Infos" },
     { href: "/about", label: "À propos de nous" },
-    /*{ href: "/emplois-du-temps", label: "Emplois du temps" },
-    { href: "/devoirs", label: "Devoirs" },*/
   ];
 
   const navLinksMobile = [
@@ -64,8 +138,6 @@ export function TopNav(props: Readonly<TopNavProps>) {
     { href: "/actus", label: "Actualités" },
     { href: "/articles", label: "Articles" },
     { href: "/infos", label: "Infos" },
-    /*{ href: "/emplois-du-temps", label: "Emplois du temps" },
-    { href: "/devoirs", label: "Devoirs" },*/
     { href: "/about", label: "À propos de nous" },
   ];
 
@@ -103,6 +175,7 @@ export function TopNav(props: Readonly<TopNavProps>) {
                 {link.label}
               </Link>
             ))}
+            {props.user && <SchoolSpaceMenu />}
           </nav>
         </div>
 
@@ -201,6 +274,7 @@ export function TopNav(props: Readonly<TopNavProps>) {
                         {link.label}
                       </Link>
                     ))}
+                    {props.user && <SchoolSpaceMenu mobile />}
                     {isWriterOrAdminOrModerator && (
                       <>
                         <div className="h-px bg-border my-2" />
