@@ -215,7 +215,7 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
   };
 
   return (
-    <div className="mx-auto w-full max-w-3xl">
+    <div className="mx-auto w-full max-w-4xl">
       {/* Indicateur d'étapes */}
       <ol className="mb-8 flex items-center justify-between">
         {STEPS.map((s, index) => {
@@ -261,7 +261,7 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
         })}
       </ol>
 
-      <div className="p-6 sm:p-8">
+      <div className="rounded-3xl border border-border/70 bg-background p-5 shadow-sm sm:p-8">
         {/* Étape 1 : type */}
         {step === 1 && (
           <div>

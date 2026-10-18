@@ -227,7 +227,7 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
   /* --------------------------------- Rendu --------------------------------- */
 
   const subjectPalette = (
-    <div className="rounded-3xl border border-border bg-white p-4">
+    <div className="rounded-2xl border border-border/70 bg-background p-4 shadow-sm">
       <div className="mb-3 flex items-center justify-between">
         <h3 className="text-sm font-semibold text-foreground">
           Matières disponibles
@@ -284,17 +284,17 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
   );
 
   return (
-    <div>
+    <div className="space-y-4">
       {/* Tabs */}
-      <div className="mb-4 flex w-fit items-center gap-1 rounded-full bg-muted p-1">
+      <div className="flex w-fit items-center gap-1 rounded-2xl border border-border/70 bg-background p-1.5 shadow-sm">
         <button
           type="button"
           onClick={() => setTab("grille")}
           className={cn(
             "rounded-full px-4 py-1.5 text-sm font-medium transition-colors",
             tab === "grille"
-              ? "bg-white text-foreground shadow-sm"
-              : "text-muted-foreground",
+              ? "bg-primary text-white shadow-sm"
+              : "text-muted-foreground hover:bg-muted hover:text-foreground",
           )}
         >
           Grille
@@ -305,8 +305,8 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
           className={cn(
             "rounded-full px-4 py-1.5 text-sm font-medium transition-colors",
             tab === "matieres"
-              ? "bg-white text-foreground shadow-sm"
-              : "text-muted-foreground",
+              ? "bg-primary text-white shadow-sm"
+              : "text-muted-foreground hover:bg-muted hover:text-foreground",
           )}
         >
           Matières
@@ -317,8 +317,8 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
 
       {tab === "matieres" ? (
         <div className="space-y-4">
-          <div className="rounded-3xl border border-border bg-white p-5">
-            <h2 className="text-sm font-semibold text-foreground">
+          <div className="rounded-2xl border border-border/70 bg-background p-5 shadow-sm">
+            <h2 className="text-base font-semibold tracking-tight text-foreground">
               Ajouter une matière
             </h2>
             <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -358,8 +358,8 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
             </div>
           </div>
 
-          <div className="rounded-3xl border border-border bg-white p-5">
-            <h2 className="mb-3 text-sm font-semibold text-foreground">
+          <div className="rounded-2xl border border-border/70 bg-background p-5 shadow-sm">
+            <h2 className="mb-3 text-base font-semibold tracking-tight text-foreground">
               Liste des matières
             </h2>
             {subjects.length === 0 ? (
@@ -401,10 +401,10 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
       ) : (
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_260px]">
           {/* Grille */}
-          <div className="overflow-x-auto rounded-3xl border border-border bg-white">
+          <div className="overflow-x-auto rounded-2xl border border-border/70 bg-background shadow-sm">
             <table className="w-full min-w-[820px] border-collapse text-left text-sm">
               <thead>
-                <tr className="border-b border-border text-xs uppercase text-muted-foreground">
+                <tr className="border-b border-border bg-muted/50 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                   <th className="px-3 py-3">Horaires</th>
                   {WEEKDAYS.map((day) => (
                     <th key={day} className="px-3 py-3">

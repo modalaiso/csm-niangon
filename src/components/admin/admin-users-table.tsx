@@ -215,8 +215,8 @@ export function AdminUsersTable(props: Readonly<AdminUsersTableProps>) {
   };
 
   return (
-    <div>
-      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+    <div className="space-y-4">
+      <div className="flex flex-col gap-3 rounded-2xl border border-border/70 bg-background p-3 shadow-sm sm:flex-row sm:items-center">
         <div className="relative flex-1">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
@@ -245,10 +245,10 @@ export function AdminUsersTable(props: Readonly<AdminUsersTableProps>) {
 
       {error && <p className="mb-3 text-sm text-destructive">{error}</p>}
 
-      <div className="overflow-x-auto rounded-2xl border border-border bg-background">
+      <div className="overflow-x-auto rounded-2xl border border-border/70 bg-background shadow-sm">
         <table className="w-full min-w-[800px] text-left text-sm">
           <thead>
-            <tr className="border-b border-border text-xs uppercase text-muted-foreground">
+            <tr className="border-b border-border bg-muted/50 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               <th className="px-4 py-3">Utilisateur</th>
               <th className="px-4 py-3">Email</th>
               <th className="px-4 py-3">Classe</th>

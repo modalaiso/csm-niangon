@@ -118,8 +118,10 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
       {/* Classes */}
-      <div className="rounded-2xl border border-border bg-white p-5">
-        <h2 className="text-sm font-semibold text-foreground">Classes</h2>
+      <div className="rounded-2xl border border-border/70 bg-background p-5 shadow-sm sm:p-6">
+        <h2 className="text-base font-semibold tracking-tight text-foreground">
+          Classes
+        </h2>
         <p className="mt-1 text-xs text-muted-foreground">
           Créez une classe, puis modifiez son emploi du temps depuis la liste
           ci-dessous.
@@ -203,8 +205,10 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
       </div>
 
       {/* Matières */}
-      <div className="rounded-2xl border border-border bg-white p-5">
-        <h2 className="text-sm font-semibold text-foreground">Matières</h2>
+      <div className="rounded-2xl border border-border/70 bg-background p-5 shadow-sm sm:p-6">
+        <h2 className="text-base font-semibold tracking-tight text-foreground">
+          Matières
+        </h2>
         <p className="mt-1 text-xs text-muted-foreground">
           La liste des matières disponibles pour remplir les emplois du temps.
         </p>
