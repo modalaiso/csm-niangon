@@ -71,7 +71,11 @@ function SchoolSpaceMenu({ mobile = false }: Readonly<{ mobile?: boolean }>) {
       >
         <div
           id={menuId}
-          className="flex flex-col overflow-hidden rounded-lg border border-border bg-background py-4 shadow-lg"
+          className={
+            mobile
+              ? "flex flex-col py-1"
+              : "flex flex-col overflow-hidden rounded-lg border border-border bg-background py-4 shadow-lg"
+          }
         >
           <Link
             href="/emplois-du-temps"
