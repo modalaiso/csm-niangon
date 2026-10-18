@@ -8,6 +8,7 @@ import {
   type AdminUserRow,
   listUsers,
   updateUserRole,
+  updateUserSchoolClass,
 } from "@/app/actions/admin-users";
 import { TablePagination } from "@/components/admin/table-pagination";
 import { useAdminList } from "@/components/admin/useAdminList";
@@ -22,6 +23,7 @@ import {
 
 interface AdminUsersTableProps {
   currentUserId: string;
+  schoolClasses: { id: string; name: string }[];
 }
 
 const ROLE_OPTIONS: { value: Role | "ALL"; label: string }[] = [
@@ -119,12 +121,41 @@ export function AdminUsersTable(props: Readonly<AdminUsersTableProps>) {
     });
   };
 
+  const handleSchoolClassChange = (
+    row: AdminUserRow,
+    nextSchoolClassId: string,
+  ) => {
+    const schoolClassId =
+      nextSchoolClassId === "none" ? null : nextSchoolClassId;
+    if (row.schoolClassId === schoolClassId) return;
+
+    const selectedClass = props.schoolClasses.find(
+      (schoolClass) => schoolClass.id === schoolClassId,
+    );
+    const classLabel = selectedClass?.name ?? "aucune classe";
+    if (
+      !window.confirm(`Associer ${row.prenom} ${row.nom} à « ${classLabel} » ?`)
+    ) {
+      return;
+    }
+
+    startTransition(async () => {
+      const result = await updateUserSchoolClass(row.id, schoolClassId);
+      if ("error" in result) {
+        setError("Impossible de modifier l'association à la classe.");
+        return;
+      }
+      setError(null);
+      load();
+    });
+  };
+
   const renderTableBody = () => {
     if (isLoading) {
       return (
         <tr>
           <td
-            colSpan={5}
+            colSpan={6}
             className="px-4 py-10 text-center text-muted-foreground"
           >
             <Loader2 className="mx-auto h-5 w-5 animate-spin" />
@@ -137,7 +168,7 @@ export function AdminUsersTable(props: Readonly<AdminUsersTableProps>) {
       return (
         <tr>
           <td
-            colSpan={5}
+            colSpan={6}
             className="px-4 py-10 text-center text-muted-foreground"
           >
             Aucun utilisateur ne correspond à ces filtres.
@@ -163,6 +194,32 @@ export function AdminUsersTable(props: Readonly<AdminUsersTableProps>) {
           </td>
           <td className="px-4 py-3 text-muted-foreground">{row.email}</td>
           <td className="px-4 py-3 text-muted-foreground">{row.classe}</td>
+          <td className="px-4 py-3">
+            {row.role === "USER" ? (
+              <Select
+                value={row.schoolClassId ?? "none"}
+                onValueChange={(value) => handleSchoolClassChange(row, value)}
+                disabled={isPending}
+              >
+                <SelectTrigger
+                  aria-label={`Classe associée à ${row.prenom} ${row.nom}`}
+                  className="h-9 w-48 rounded-md border border-input bg-background text-xs font-medium text-foreground shadow-none"
+                >
+                  <SelectValue placeholder="Aucune classe" />
+                </SelectTrigger>
+                <SelectContent className="max-h-64">
+                  <SelectItem value="none">Aucune classe associée</SelectItem>
+                  {props.schoolClasses.map((schoolClass) => (
+                    <SelectItem key={schoolClass.id} value={schoolClass.id}>
+                      {schoolClass.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            ) : (
+              <span className="text-muted-foreground">Personnel</span>
+            )}
+          </td>
           <td className="px-4 py-3">
             {isSelf ? (
               <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-2.5 py-1 text-xs font-medium text-foreground">
@@ -241,6 +298,7 @@ export function AdminUsersTable(props: Readonly<AdminUsersTableProps>) {
               <th className="px-4 py-3">Utilisateur</th>
               <th className="px-4 py-3">Email</th>
               <th className="px-4 py-3">Classe</th>
+              <th className="px-4 py-3">Classe associée</th>
               <th className="px-4 py-3">Rôle</th>
               <th className="px-4 py-3">Inscrit le</th>
             </tr>

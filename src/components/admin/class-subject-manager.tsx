@@ -26,6 +26,8 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
   const [className, setClassName] = useState("");
   const [classLevel, setClassLevel] = useState("");
   const [schoolYear, setSchoolYear] = useState("2026-2027");
+  const [levelFilter, setLevelFilter] = useState("all");
+  const [yearFilter, setYearFilter] = useState("all");
   const [classError, setClassError] = useState<string | null>(null);
 
   const [subjectName, setSubjectName] = useState("");
@@ -33,6 +35,21 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
   const [subjectError, setSubjectError] = useState<string | null>(null);
 
   const [isPending, startTransition] = useTransition();
+  const levels = Array.from(
+    new Set(
+      classes
+        .map((classItem) => classItem.level)
+        .filter((level): level is string => level !== null),
+    ),
+  );
+  const schoolYears = Array.from(
+    new Set(classes.map((classItem) => classItem.schoolYear)),
+  );
+  const visibleClasses = classes.filter(
+    (classItem) =>
+      (levelFilter === "all" || classItem.level === levelFilter) &&
+      (yearFilter === "all" || classItem.schoolYear === yearFilter),
+  );
 
   const handleAddClass = () => {
     if (!className.trim()) return;
@@ -55,6 +72,7 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
             name: className.trim(),
             level: classLevel.trim() || null,
             schoolYear,
+            publishedAt: null,
           },
         ].sort((a, b) => a.name.localeCompare(b.name, "fr")),
       );
@@ -160,13 +178,53 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
           <p className="mt-2 text-sm text-destructive">{classError}</p>
         )}
 
+        {classes.length > 0 && (
+          <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <label className="text-xs font-medium text-muted-foreground">
+              Niveau
+              <select
+                value={levelFilter}
+                onChange={(event) => setLevelFilter(event.target.value)}
+                className="mt-1 min-h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <option value="all">Tous les niveaux</option>
+                {levels.map((level) => (
+                  <option key={level} value={level}>
+                    {level}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="text-xs font-medium text-muted-foreground">
+              Année scolaire
+              <select
+                value={yearFilter}
+                onChange={(event) => setYearFilter(event.target.value)}
+                className="mt-1 min-h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <option value="all">Toutes les années</option>
+                {schoolYears.map((year) => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+        )}
+
         <ul className="mt-4 divide-y divide-border">
           {classes.length === 0 && (
             <p className="text-sm text-muted-foreground">
               Aucune classe pour le moment.
             </p>
           )}
-          {classes.map((c) => (
+          {classes.length > 0 && visibleClasses.length === 0 && (
+            <p className="py-3 text-sm text-muted-foreground">
+              Aucune classe ne correspond aux filtres sélectionnés.
+            </p>
+          )}
+          {visibleClasses.map((c) => (
             <li
               key={c.id}
               className="flex items-center justify-between gap-3 py-2.5"
@@ -177,6 +235,15 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
                 </p>
                 <p className="text-xs text-muted-foreground">
                   {c.level ?? "—"} · {c.schoolYear}
+                </p>
+                <p
+                  className={
+                    c.publishedAt
+                      ? "mt-0.5 text-xs font-medium text-primary"
+                      : "mt-0.5 text-xs text-muted-foreground"
+                  }
+                >
+                  {c.publishedAt ? "Publié" : "Brouillon"}
                 </p>
               </div>
               <div className="flex flex-shrink-0 items-center gap-2">

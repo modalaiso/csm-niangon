@@ -18,7 +18,7 @@ export default async function AdminSchedulesPage() {
     <div className="mx-auto max-w-7xl">
       <AdminPageHeader
         title="Emplois du temps"
-        description="Organisez les classes et les matières, puis composez les horaires de chaque classe."
+        description="Assemblez les matières dans les créneaux de chaque classe, puis publiez les plannings terminés."
       />
       <ClassSubjectManager
         initialClasses={classes}

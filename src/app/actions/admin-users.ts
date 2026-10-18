@@ -12,6 +12,8 @@ export interface AdminUserRow {
   prenom: string;
   nom: string;
   classe: string;
+  schoolClassId: string | null;
+  schoolClassName: string | null;
   role: Role;
   createdAt: Date;
 }
@@ -69,6 +71,8 @@ export async function listUsers(
           prenom: true,
           nom: true,
           classe: true,
+          schoolClassId: true,
+          schoolClass: { select: { name: true } },
           role: true,
           createdAt: true,
         },
@@ -76,9 +80,91 @@ export async function listUsers(
       prisma.user.count({ where }),
     ]);
 
-    return { users, total, page, pageSize };
+    return {
+      users: users.map(({ schoolClass, ...user }) => ({
+        ...user,
+        schoolClassName: schoolClass?.name ?? null,
+      })),
+      total,
+      page,
+      pageSize,
+    };
   } catch (error) {
     console.error("Erreur lors du chargement des utilisateurs:", error);
+    return { error: "unknown" };
+  }
+}
+
+type UpdateUserSchoolClassResult =
+  | { success: true }
+  | {
+      error:
+        | "auth_required"
+        | "forbidden"
+        | "invalid"
+        | "not_found"
+        | "unknown";
+    };
+
+/** Associe un compte élève ou parent à une classe — réservé ADMIN. */
+export async function updateUserSchoolClass(
+  userId: string,
+  schoolClassId: string | null,
+): Promise<UpdateUserSchoolClassResult> {
+  const auth = await getAdminAuthContext();
+  if (!auth.ok) return { error: auth.error };
+  if (
+    typeof userId !== "string" ||
+    userId.length === 0 ||
+    userId.length > 128 ||
+    (schoolClassId !== null &&
+      (typeof schoolClassId !== "string" ||
+        schoolClassId.length === 0 ||
+        schoolClassId.length > 128))
+  ) {
+    return { error: "invalid" };
+  }
+
+  try {
+    const result = await prisma.$transaction(async (transaction) => {
+      const target = await transaction.user.findUnique({
+        where: { id: userId },
+        select: { role: true, schoolClassId: true },
+      });
+      if (!target) return { error: "not_found" } as const;
+      if (target.role !== "USER") return { error: "forbidden" } as const;
+
+      if (schoolClassId) {
+        const schoolClass = await transaction.schoolClass.findUnique({
+          where: { id: schoolClassId },
+          select: { id: true },
+        });
+        if (!schoolClass) return { error: "not_found" } as const;
+      }
+
+      await transaction.user.update({
+        where: { id: userId },
+        data: { schoolClassId },
+      });
+      await transaction.auditLog.create({
+        data: {
+          actorId: auth.user.id,
+          actorRole: auth.user.role,
+          action: "UPDATE_USER_SCHOOL_CLASS",
+          targetType: "User",
+          targetId: userId,
+          metadata: { from: target.schoolClassId, to: schoolClassId },
+        },
+      });
+      return { success: true } as const;
+    });
+    if ("error" in result) return result;
+
+    revalidatePath("/admin/users");
+    revalidatePath("/emplois-du-temps");
+    return { success: true };
+  } catch (error) {
+    console.error("Erreur lors de l'association utilisateur-classe:", error);
     return { error: "unknown" };
   }
 }

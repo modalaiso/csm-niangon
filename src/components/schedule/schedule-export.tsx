@@ -19,11 +19,17 @@ export function ScheduleExport(props: Readonly<ScheduleExportProps>) {
     const node = printableRef.current;
     if (!node) return null;
     const { default: html2canvas } = await import("html2canvas");
-    return html2canvas(node, {
-      scale: 2,
-      backgroundColor: "#ffffff",
-      useCORS: true,
-    });
+    node.classList.add("schedule-export-mode");
+    try {
+      return await html2canvas(node, {
+        scale: 2,
+        backgroundColor: "#ffffff",
+        useCORS: true,
+        windowWidth: 1200,
+      });
+    } finally {
+      node.classList.remove("schedule-export-mode");
+    }
   };
 
   const fileBaseName = `emploi-du-temps-${props.schedule.className}`
@@ -59,11 +65,28 @@ export function ScheduleExport(props: Readonly<ScheduleExportProps>) {
       const { jsPDF } = await import("jspdf");
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF({
-        orientation: canvas.width >= canvas.height ? "landscape" : "portrait",
-        unit: "px",
-        format: [canvas.width, canvas.height],
+        orientation: "landscape",
+        unit: "mm",
+        format: "a4",
       });
-      pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
+      const pageWidth = 277;
+      const pageHeight = 190;
+      const scale = Math.min(
+        pageWidth / canvas.width,
+        pageHeight / canvas.height,
+      );
+      const width = canvas.width * scale;
+      const height = canvas.height * scale;
+      pdf.addImage(
+        imgData,
+        "PNG",
+        (297 - width) / 2,
+        (210 - height) / 2,
+        width,
+        height,
+        undefined,
+        "FAST",
+      );
       pdf.save(`${fileBaseName}.pdf`);
     } catch (err) {
       console.error("Erreur lors de l'export en PDF:", err);

@@ -62,28 +62,30 @@ enum NotificationType {
 }
 
 model User {
-  id        String    @id @default(cuid())
-  email     String    @unique
-  nom       String
-  prenom    String
-  username  String    @unique
-  classe    String
-  matricule String?   @unique
-  role      Role      @default(USER)
-  bio       String?
-  avatar    String?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id            String   @id @default(cuid())
+  email         String   @unique
+  nom           String
+  prenom        String
+  username      String   @unique
+  classe        String
+  schoolClassId String?
+  matricule     String?  @unique
+  role          Role     @default(USER)
+  bio           String?
+  avatar        String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-  posts             Post[]
-  comments          Comment[]
-  likes             Like[]
-  commentReactions  CommentReaction[]
-  visitLogs         VisitLog[]
-  analyticsEvents   AnalyticsEvent[]
-  moderationKeywords ModerationKeyword[] @relation("KeywordCreator")
-  moderationLogsAsModerator ModerationLog[] @relation("ModerationModerator")
-  auditLogs         AuditLog[]
+  posts                     Post[]
+  comments                  Comment[]
+  likes                     Like[]
+  commentReactions          CommentReaction[]
+  visitLogs                 VisitLog[]
+  analyticsEvents           AnalyticsEvent[]
+  moderationKeywords        ModerationKeyword[] @relation("KeywordCreator")
+  moderationLogsAsModerator ModerationLog[]     @relation("ModerationModerator")
+  auditLogs                 AuditLog[]
+  schoolClass               SchoolClass?        @relation(fields: [schoolClassId], references: [id], onDelete: SetNull)
 
   notificationsReceived Notification[]     @relation("NotificationRecipient")
   notificationsActed    Notification[]     @relation("NotificationActor")
@@ -92,6 +94,7 @@ model User {
   @@index([email])
   @@index([username])
   @@index([role])
+  @@index([schoolClassId])
 }
 
 model Post {
@@ -299,14 +302,16 @@ model AccessKey {
 /// ------------------------- Emplois du temps -------------------------
 
 model SchoolClass {
-  id         String   @id @default(cuid())
-  name       String   @unique
-  level      String?
-  schoolYear String   @default("2026-2027")
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id          String    @id @default(cuid())
+  name        String    @unique
+  level       String?
+  schoolYear  String    @default("2026-2027")
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
-  rows ScheduleRow[]
+  rows  ScheduleRow[]
+  users User[]
 
   @@index([level])
 }

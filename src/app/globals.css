@@ -23,6 +23,14 @@ input[type="search"]::-webkit-search-decoration {
   color: #fff;
 }
 
+.schedule-export-mode .schedule-grid-document {
+  display: block;
+}
+
+.schedule-export-mode .schedule-mobile-document {
+  display: none;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -126,6 +134,11 @@ input[type="search"]::-webkit-search-decoration {
 
 /* Impression : n'affiche que l'emploi du temps, masque nav/footer/pop-ups */
 @media print {
+  @page {
+    size: A4 landscape;
+    margin: 10mm;
+  }
+
   body * {
     visibility: hidden;
   }
@@ -141,5 +154,23 @@ input[type="search"]::-webkit-search-decoration {
     top: 0;
     width: 100%;
     border: none;
+  }
+
+  #schedule-print-area,
+  #schedule-print-area * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  #schedule-print-area table {
+    page-break-inside: avoid;
+  }
+
+  #schedule-print-area .schedule-grid-document {
+    display: block;
+  }
+
+  #schedule-print-area .schedule-mobile-document {
+    display: none;
   }
 }

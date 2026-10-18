@@ -15,6 +15,7 @@ const signupSchema = z.object({
   prenom: z.string().min(1),
   username: z.string().min(3),
   classe: z.string().min(1),
+  schoolClassId: z.string().optional(),
   email: z.string().email(),
   password: z.string().min(8),
 });
@@ -83,7 +84,19 @@ async function checkPasswordCompromise(password: string): Promise<boolean> {
   }
 }
 
-export async function signup(formData: z.infer<typeof signupSchema>) {
+export async function signup(input: z.infer<typeof signupSchema>) {
+  const parsed = signupSchema.safeParse(input);
+  if (!parsed.success) return { error: "Données d'inscription invalides" };
+  const formData = parsed.data;
+  const schoolClassId = formData.schoolClassId?.trim() || null;
+  if (schoolClassId) {
+    const schoolClass = await prisma.schoolClass.findUnique({
+      where: { id: schoolClassId },
+      select: { id: true },
+    });
+    if (!schoolClass) return { error: "La classe sélectionnée n'existe plus" };
+  }
+
   const supabase = await createClient();
 
   // 0. Check if user already exists in Prisma
@@ -138,6 +151,7 @@ export async function signup(formData: z.infer<typeof signupSchema>) {
         prenom: formData.prenom,
         username: formData.username,
         classe: formData.classe,
+        schoolClassId,
         role: "USER",
       },
     });
