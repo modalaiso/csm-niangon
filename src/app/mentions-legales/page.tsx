@@ -12,20 +12,17 @@ export default function MentionsLegalesPage() {
           1. Éditeur du site
         </h2>
         <p className="text-muted-foreground">
-          Le présent site internet est édité par le Collège Saint-Méthodiste de
-          Niangon (CSM Niangon), établissement scolaire et plateforme de
-          communication institutionnelle.
+          Le présent site internet est édité par une personne physique :
         </p>
         <ul className="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
           <li>
-            <strong>Éditeur</strong> : <i>CSM Niangon</i>
+            <strong>Éditeur</strong> : <i>Mobio Israel</i>
           </li>
           <li>
-            <strong>Adresse</strong> :{" "}
-            <i>Abidjan, Yopougon Niangon, Côte d'Ivoire</i>
+            <strong>Adresse</strong> : <i>Abidjan, Côte d'Ivoire</i>
           </li>
           <li>
-            <strong>Email de contact</strong> : <i>contact@csm-niangon.com</i>
+            <strong>Email de contact</strong> : <i>mobioisrael.pro@gmail.com</i>
           </li>
           <li>
             <strong>Contact protection des données</strong> :{" "}
@@ -33,7 +30,7 @@ export default function MentionsLegalesPage() {
           </li>
           <li>
             <strong>Directeur de la publication</strong> :{" "}
-            <i>Direction du CSM Niangon</i>
+            <i>[Nom du directeur]</i>
           </li>
         </ul>
       </section>
