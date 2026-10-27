@@ -6,38 +6,41 @@ export const metadata = {
 
 export default function MentionsLegalesPage() {
   return (
-    <LegalPageLayout title="Mentions légales" lastUpdated="21 août 2026">
+    <LegalPageLayout title="Mentions légales" lastUpdated="27 octobre 2026">
       <section>
         <h2 className="mb-2 text-lg font-bold text-foreground">
           1. Éditeur du site
         </h2>
         <p className="text-muted-foreground">
-          Le présent site internet est édité par une personne physique :
+          Le présent site internet est édité par le Collège Saint-Méthodiste de
+          Niangon (CSM Niangon), établissement scolaire et plateforme de
+          communication institutionnelle.
         </p>
         <ul className="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
           <li>
-            <strong>Éditeur</strong> : <i>Mobio Israel</i>
+            <strong>Éditeur</strong> : <i>CSM Niangon</i>
           </li>
           <li>
-            <strong>Adresse</strong> : <i>Abidjan, Côte d'Ivoire</i>
+            <strong>Adresse</strong> :{" "}
+            <i>Abidjan, Yopougon Niangon, Côte d'Ivoire</i>
           </li>
           <li>
-            <strong>Email de contact</strong> : <i>[contact@csm-niangon.com]</i>
+            <strong>Email de contact</strong> : <i>contact@csm-niangon.com</i>
           </li>
           <li>
             <strong>Contact protection des données</strong> :{" "}
-            <i>[privacy@...]</i>
+            <i>privacy@csm-niangon.com</i>
           </li>
           <li>
             <strong>Directeur de la publication</strong> :{" "}
-            <i>[Nom du directeur]</i>
+            <i>Direction du CSM Niangon</i>
           </li>
         </ul>
       </section>
 
       <section>
         <h2 className="mb-2 text-lg font-bold text-foreground">
-          2. Hébergement et Services Tiers
+          2. Hébergement et services tiers
         </h2>
         <p className="text-muted-foreground">
           Le site est hébergé et s'appuie sur les infrastructures techniques des
@@ -57,7 +60,8 @@ export default function MentionsLegalesPage() {
           </a>
         </p>
         <p className="mt-3 text-muted-foreground">
-          L'authentification et le stockage des données sont assurés par :
+          L'authentification, la base de données et le stockage de fichiers sont
+          assurés par :
         </p>
         <p className="mt-1 ml-1 text-muted-foreground">
           <strong>Supabase Inc.</strong> Camden, 3500 S Dupont Hwy, États-Unis
@@ -81,19 +85,19 @@ export default function MentionsLegalesPage() {
           L'ensemble des éléments du site (textes, logo, mise en page, éléments
           graphiques, photographies, code source) est protégé par le droit
           d'auteur et demeure la propriété de CSM Niangon ou de ses
-          contributeurs, sauf mention contraire. <br />
-          Toute reproduction ou représentation, totale ou partielle, sans
-          autorisation préalable est interdite.
+          contributeurs, sauf mention contraire. Toute reproduction ou
+          représentation, totale ou partielle, sans autorisation préalable est
+          interdite.
         </p>
       </section>
 
       <section>
         <h2 className="mb-2 text-lg font-bold text-foreground">
-          4. Données personnelles et Confidentialité
+          4. Données personnelles et confidentialité
         </h2>
         <p className="text-muted-foreground">
           Conformément à la législation relative à la protection des données à
-          caractère personnel en Côte d'Ivoire (Loi n° 2013-450) :
+          caractère personnel en Côte d'Ivoire (loi n° 2013-450) :
         </p>
         <ul className="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
           <li>
@@ -102,8 +106,8 @@ export default function MentionsLegalesPage() {
             fonctionnement du site.
           </li>
           <li>
-            Vous disposez d'un droit d'accès, de modification et de suppression
-            de vos données personnelles.
+            Vous disposez d'un droit d'accès, de rectification, de suppression
+            et d'opposition sur vos données personnelles.
           </li>
         </ul>
       </section>
@@ -113,7 +117,7 @@ export default function MentionsLegalesPage() {
           5. Limitation de responsabilité
         </h2>
         <p className="text-muted-foreground">
-          L'Éditeur s'efforce de fournir des informations exactes et de
+          L'éditeur s'efforce de fournir des informations exactes et de
           maintenir le service disponible. Toutefois, il ne saurait être tenu
           responsable des erreurs, omissions, interruptions de service ou
           indisponibilités temporaires.
@@ -122,7 +126,7 @@ export default function MentionsLegalesPage() {
 
       <section>
         <h2 className="mb-2 text-lg font-bold text-foreground">
-          6. Droit applicable et Juridiction compétente
+          6. Droit applicable et juridiction compétente
         </h2>
         <p className="text-muted-foreground">
           Les présentes mentions légales sont soumises au droit ivoirien. En cas

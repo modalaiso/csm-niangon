@@ -22,6 +22,7 @@ Le projet vise à offrir une expérience simple, rapide et sécurisée pour orga
 
 - [À propos](#-à-propos)
 - [Fonctionnalités](#-fonctionnalités)
+- [Informations légales](#-informations-légales)
 - [Stack technique](#-stack-technique)
 - [Prérequis](#-prérequis)
 - [Installation](#-installation)
@@ -51,6 +52,21 @@ Elle est conçue pour être facilement déployable, maintenable et extensible, a
 - Publication structurée avec support des médias et du contenu enrichi
 - Tableau de bord administratif pour une gestion centralisée
 - Intégration avec Supabase et Prisma pour un backend robuste et scalable
+
+---
+
+## 📜 Informations légales
+
+Le projet expose les pages suivantes pour la conformité et la transparence :
+
+- Mentions légales : `/mentions-legales`
+- Conditions Générales d'Utilisation : `/cgu`
+- Politique de confidentialité : `/confidentialite`
+
+Les contacts officiels du site sont les suivants :
+
+- Email général : `contact@csm-niangon.com`
+- Contact protection des données : `privacy@csm-niangon.com`
 
 ---
 
@@ -500,9 +516,11 @@ Merci de respecter les standards de qualité, le style de code existant et la do
 
 - Nom : modalaiso
 - GitHub : [@modalaiso](https://github.com/modalaiso)
+- Email général : [contact@csm-niangon.com](mailto:contact@csm-niangon.com)
+- Contact protection des données : [privacy@csm-niangon.com](mailto:privacy@csm-niangon.com)
 - Site / portfolio : [GitHub profile](https://github.com/modalaiso)
 
-Pour toute question, suggestion ou proposition de collaboration, contactez l’auteur via GitHub ou via le dépôt du projet.
+Pour toute question, suggestion ou proposition de collaboration, contactez l’auteur via GitHub ou par email.
 
 ---
 

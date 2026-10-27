@@ -10,7 +10,7 @@ export default function ConfidentialitePage() {
   return (
     <LegalPageLayout
       title="Politique de confidentialité"
-      lastUpdated="8 septembre 2026"
+      lastUpdated="27 octobre 2026"
     >
       <section>
         <h2 className="mb-2 text-lg font-bold text-foreground">
@@ -20,7 +20,7 @@ export default function ConfidentialitePage() {
           CSM Niangon, Abidjan, Yopougon Niangon, Côte d'Ivoire, est responsable
           du traitement des données à caractère personnel décrites dans la
           présente politique. Pour toute question relative à vos données, vous
-          pouvez nous contacter à l'adresse [privacy@...].
+          pouvez nous contacter à l'adresse privacy@csm-niangon.com.
         </p>
       </section>
 
@@ -158,9 +158,9 @@ export default function ConfidentialitePage() {
         </h2>
         <p className="text-muted-foreground">
           Les données de compte sont conservées tant que votre compte est actif,
-          et supprimées à votre demande (page Profil). Les journaux de
-          navigation utilisés pour la mesure d'audience sont conservés 13 mois
-          maximum.
+          puis supprimées à votre demande ou après clôture du compte. Les
+          journaux de navigation utilisés pour la mesure d'audience sont
+          conservés 13 mois maximum.
         </p>
       </section>
 
@@ -172,8 +172,8 @@ export default function ConfidentialitePage() {
           Le site s'adresse à la communauté scolaire du CSM Niangon, susceptible
           d'inclure des élèves mineurs. Nous invitons les parents et tuteurs à
           accompagner leurs enfants dans l'utilisation du site et à nous
-          contacter à [privacy@...] pour toute demande relative aux données d'un
-          mineur dont ils ont la responsabilité.
+          contacter à privacy@csm-niangon.com pour toute demande relative aux
+          données d'un mineur dont ils ont la responsabilité.
         </p>
       </section>
 
@@ -189,7 +189,7 @@ export default function ConfidentialitePage() {
           <Link href="/profile" className="text-primary hover:underline">
             page de profil
           </Link>
-          , ou en nous contactant à [privacy@...]. En cas de réponse
+          , ou en nous contactant à privacy@csm-niangon.com. En cas de réponse
           insuffisante, vous pouvez saisir l'Autorité de Régulation des
           Télécommunications/TIC de Côte d'Ivoire (ARTCI), autorité de
           protection des données personnelles en Côte d'Ivoire.
