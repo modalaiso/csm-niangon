@@ -153,6 +153,10 @@ ou en production :
 npx prisma migrate deploy
 ```
 
+Les déploiements Vercel exécutent automatiquement cette commande avant le build.
+Configurez `DIRECT_URL` dans les variables d’environnement de Vercel pour
+permettre l’application des migrations.
+
 ### 6. Démarrer le projet
 
 ```bash

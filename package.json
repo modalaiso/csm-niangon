@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "vercel-build": "prisma migrate deploy && npm run build",
     "start": "next start",
     "lint": "biome check",
     "format": "biome format --write",
