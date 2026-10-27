@@ -100,7 +100,7 @@ export function PostGallery(props: Readonly<PostGalleryProps>) {
         onClick={() => goTo(active - 1)}
         aria-label="Image précédente"
         disabled={active === 0}
-        className="absolute left-3 top-1/2 hidden -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-white/80 p-2 shadow-lg backdrop-blur transition-opacity hover:bg-white disabled:pointer-events-none disabled:opacity-0 group-hover:sm:flex"
+        className="absolute left-3 top-1/2 hidden -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-background/50 p-2 shadow-lg backdrop-blur-[3px] transition-opacity hover:bg-background/70 disabled:pointer-events-none disabled:opacity-0 group-hover:sm:flex"
       >
         <ChevronLeft className="h-5 w-5 text-primary" />
       </button>
@@ -109,7 +109,7 @@ export function PostGallery(props: Readonly<PostGalleryProps>) {
         onClick={() => goTo(active + 1)}
         aria-label="Image suivante"
         disabled={active === props.images.length - 1}
-        className="absolute right-3 top-1/2 hidden -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-white/80 p-2 shadow-lg backdrop-blur transition-opacity hover:bg-white disabled:pointer-events-none disabled:opacity-0 group-hover:sm:flex"
+        className="absolute right-3 top-1/2 hidden -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-background/50 p-2 shadow-lg backdrop-blur-[3px] transition-opacity hover:bg-background/70 disabled:pointer-events-none disabled:opacity-0 group-hover:sm:flex"
       >
         <ChevronRight className="h-5 w-5 text-primary" />
       </button>
