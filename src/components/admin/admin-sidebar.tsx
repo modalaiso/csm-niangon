@@ -4,6 +4,7 @@ import type { Role } from "@prisma/client";
 import type { LucideIcon } from "lucide-react";
 import {
   ArrowLeft,
+  Building2,
   CalendarClock,
   FileText,
   LayoutDashboard,
@@ -50,7 +51,10 @@ const NAV_GROUPS = [
   },
   {
     label: "Administration",
-    items: [{ href: "/admin/users", label: "Utilisateurs", Icon: Users }],
+    items: [
+      { href: "/admin/about", label: "Page À propos", Icon: Building2 },
+      { href: "/admin/users", label: "Utilisateurs", Icon: Users },
+    ],
   },
 ] as const;
 
