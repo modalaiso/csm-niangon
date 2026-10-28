@@ -12,10 +12,52 @@ interface HeroCarouselProps {
 // Distance minimale (en px) pour considérer le geste comme un swipe volontaire
 const SWIPE_THRESHOLD = 40;
 
-function isImageDark(image: HTMLImageElement): boolean {
+function getBackgroundColor(): [number, number, number] {
+  const [hue, saturation, lightness] = getComputedStyle(
+    document.documentElement,
+  )
+    .getPropertyValue("--background")
+    .trim()
+    .split(/\s+/)
+    .map((value) => Number.parseFloat(value));
+  const h = (hue % 360) / 360;
+  const s = saturation / 100;
+  const l = lightness / 100;
+  const chroma = (1 - Math.abs(2 * l - 1)) * s;
+  const x = chroma * (1 - Math.abs(((h * 6) % 2) - 1));
+  const match = Math.floor(h * 6);
+  const [red, green, blue] =
+    match === 0
+      ? [chroma, x, 0]
+      : match === 1
+        ? [x, chroma, 0]
+        : match === 2
+          ? [0, chroma, x]
+          : match === 3
+            ? [0, x, chroma]
+            : match === 4
+              ? [x, 0, chroma]
+              : [chroma, 0, x];
+  const offset = l - chroma / 2;
+
+  return [
+    Math.round((red + offset) * 255),
+    Math.round((green + offset) * 255),
+    Math.round((blue + offset) * 255),
+  ];
+}
+
+function isImageDark(
+  image: HTMLImageElement,
+  section: HTMLElement,
+  text: HTMLElement,
+): boolean {
   const canvas = document.createElement("canvas");
-  canvas.width = 16;
-  canvas.height = 16;
+  canvas.width = 128;
+  canvas.height = Math.max(
+    1,
+    Math.round((canvas.width * section.clientHeight) / section.clientWidth),
+  );
 
   const context = canvas.getContext("2d");
   if (!context) {
@@ -25,25 +67,84 @@ function isImageDark(image: HTMLImageElement): boolean {
     return false;
   }
 
-  context.drawImage(image, 0, 0, canvas.width, canvas.height);
+  const scale = Math.max(
+    canvas.width / image.naturalWidth,
+    canvas.height / image.naturalHeight,
+  );
+  const imageWidth = image.naturalWidth * scale;
+  const imageHeight = image.naturalHeight * scale;
+  context.drawImage(
+    image,
+    (canvas.width - imageWidth) / 2,
+    (canvas.height - imageHeight) / 2,
+    imageWidth,
+    imageHeight,
+  );
   const { data } = context.getImageData(0, 0, canvas.width, canvas.height);
+  const sectionBounds = section.getBoundingClientRect();
+  const textBounds = text.getBoundingClientRect();
+  const left = Math.max(
+    0,
+    Math.floor(
+      ((textBounds.left - sectionBounds.left) / sectionBounds.width) *
+        canvas.width,
+    ),
+  );
+  const right = Math.min(
+    canvas.width,
+    Math.ceil(
+      ((textBounds.right - sectionBounds.left) / sectionBounds.width) *
+        canvas.width,
+    ),
+  );
+  const top = Math.max(
+    0,
+    Math.floor(
+      ((textBounds.top - sectionBounds.top) / sectionBounds.height) *
+        canvas.height,
+    ),
+  );
+  const bottom = Math.min(
+    canvas.height,
+    Math.ceil(
+      ((textBounds.bottom - sectionBounds.top) / sectionBounds.height) *
+        canvas.height,
+    ),
+  );
+  const background = getBackgroundColor();
+  const hasHorizontalGradient = window.matchMedia("(min-width: 640px)").matches;
   let luminance = 0;
   let pixels = 0;
 
-  for (let y = 9; y < canvas.height; y++) {
-    for (let x = 0; x < canvas.width; x++) {
+  for (let y = top; y < bottom; y++) {
+    for (let x = left; x < right; x++) {
       const offset = (y * canvas.width + x) * 4;
       const alpha = data[offset + 3] / 255;
-      const red = data[offset] * alpha + 255 * (1 - alpha);
-      const green = data[offset + 1] * alpha + 255 * (1 - alpha);
-      const blue = data[offset + 2] * alpha + 255 * (1 - alpha);
+      const verticalOpacity = Math.max(0, 2 * (y / canvas.height) - 1);
+      const horizontalOpacity = hasHorizontalGradient
+        ? Math.max(0, 1 - 2 * (x / canvas.width))
+        : 0;
+      const overlayOpacity =
+        1 - (1 - verticalOpacity) * (1 - horizontalOpacity);
+      const red =
+        (data[offset] * alpha + background[0] * (1 - alpha)) *
+          (1 - overlayOpacity) +
+        background[0] * overlayOpacity;
+      const green =
+        (data[offset + 1] * alpha + background[1] * (1 - alpha)) *
+          (1 - overlayOpacity) +
+        background[1] * overlayOpacity;
+      const blue =
+        (data[offset + 2] * alpha + background[2] * (1 - alpha)) *
+          (1 - overlayOpacity) +
+        background[2] * overlayOpacity;
 
       luminance += (0.2126 * red + 0.7152 * green + 0.0722 * blue) / 255;
       pixels++;
     }
   }
 
-  return luminance / pixels < 0.45;
+  return pixels > 0 && luminance / pixels < 0.45;
 }
 
 export function HeroCarousel(props: Readonly<HeroCarouselProps>) {
@@ -52,6 +153,8 @@ export function HeroCarousel(props: Readonly<HeroCarouselProps>) {
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
   const touchDeltaX = useRef(0);
+  const sectionRef = useRef<HTMLElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
 
   const current = props.posts[index];
   const currentThumbnail = current?.thumbnail;
@@ -67,7 +170,11 @@ export function HeroCarousel(props: Readonly<HeroCarouselProps>) {
       if (!active) return;
 
       try {
-        setIsDarkImage(isImageDark(image));
+        if (sectionRef.current && textRef.current) {
+          setIsDarkImage(
+            isImageDark(image, sectionRef.current, textRef.current),
+          );
+        }
       } catch (error) {
         console.warn(
           "Impossible d'analyser la luminosité de l'image du carrousel.",
@@ -157,6 +264,7 @@ export function HeroCarousel(props: Readonly<HeroCarouselProps>) {
 
   return (
     <section
+      ref={sectionRef}
       className="relative h-[420px] w-full touch-pan-y overflow-hidden sm:h-[480px] md:h-[560px]"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
@@ -173,20 +281,8 @@ export function HeroCarousel(props: Readonly<HeroCarouselProps>) {
         />
       ))}
 
-      <div
-        className={`absolute inset-0 hidden bg-gradient-to-r sm:flex ${
-          isDarkImage
-            ? "from-black/65 via-black/10 to-transparent"
-            : "from-white/75 via-white/10 to-transparent"
-        }`}
-      />
-      <div
-        className={`absolute inset-0 bg-gradient-to-t ${
-          isDarkImage
-            ? "from-black/75 via-black/20 to-transparent"
-            : "from-white/80 via-white/20 to-transparent"
-        }`}
-      />
+      <div className="absolute inset-0 hidden bg-gradient-to-r from-background via-transparent to-transparent sm:flex" />
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
 
       {props.posts.length > 1 && (
         <>
@@ -210,7 +306,7 @@ export function HeroCarousel(props: Readonly<HeroCarouselProps>) {
       )}
 
       <div className="absolute inset-x-0 bottom-0 z-10 px-8 pb-20 sm:px-20 md:px-28 md:pb-26">
-        <div className="max-w-xl">
+        <div ref={textRef} className="max-w-xl">
           <h1
             className={`text-xl font-extrabold uppercase leading-tight transition-colors duration-500 sm:text-2xl md:text-3xl ${
               isDarkImage ? "text-white" : "text-gray-950"
