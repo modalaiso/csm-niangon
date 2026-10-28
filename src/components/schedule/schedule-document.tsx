@@ -13,7 +13,7 @@ export function ScheduleDocument(props: Readonly<ScheduleDocumentProps>) {
         <img
           src="/logo.png"
           alt="Logo du Collège Saint-Méthodiste de Niangon"
-          className="h-16 w-16 flex-shrink-0 object-contain"
+          className="h-16 w-16 shrink-0 object-contain"
         />
         <div className="flex-1 text-center">
           <p className="text-xs font-semibold uppercase tracking-wider text-slate-600">
@@ -26,7 +26,7 @@ export function ScheduleDocument(props: Readonly<ScheduleDocumentProps>) {
             Année scolaire {props.schedule.schoolYear}
           </p>
         </div>
-        <div className="h-16 w-16 flex-shrink-0" />
+        <div className="h-16 w-16 shrink-0" />
       </div>
 
       <div className="schedule-grid-document hidden overflow-hidden sm:block">

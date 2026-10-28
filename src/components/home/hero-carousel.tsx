@@ -26,18 +26,27 @@ function getBackgroundColor(): [number, number, number] {
   const chroma = (1 - Math.abs(2 * l - 1)) * s;
   const x = chroma * (1 - Math.abs(((h * 6) % 2) - 1));
   const match = Math.floor(h * 6);
-  const [red, green, blue] =
-    match === 0
-      ? [chroma, x, 0]
-      : match === 1
-        ? [x, chroma, 0]
-        : match === 2
-          ? [0, chroma, x]
-          : match === 3
-            ? [0, x, chroma]
-            : match === 4
-              ? [x, 0, chroma]
-              : [chroma, 0, x];
+  let channels: [number, number, number];
+  switch (match) {
+    case 0:
+      channels = [chroma, x, 0];
+      break;
+    case 1:
+      channels = [x, chroma, 0];
+      break;
+    case 2:
+      channels = [0, chroma, x];
+      break;
+    case 3:
+      channels = [0, x, chroma];
+      break;
+    case 4:
+      channels = [x, 0, chroma];
+      break;
+    default:
+      channels = [chroma, 0, x];
+  }
+  const [red, green, blue] = channels;
   const offset = l - chroma / 2;
 
   return [
@@ -208,7 +217,7 @@ export function HeroCarousel(props: Readonly<HeroCarouselProps>) {
   // Aucune publication : pas de post inventé, message d'accueil sobre
   if (props.posts.length === 0) {
     return (
-      <section className="relative flex h-[280px] w-full items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5 px-4 text-center md:h-[380px]">
+      <section className="relative flex h-70 w-full items-center justify-center bg-linear-to-br from-primary/10 to-primary/5 px-4 text-center md:h-95">
         <div>
           <h1 className="text-2xl font-bold text-foreground md:text-3xl">
             CSM Niangon
@@ -265,7 +274,7 @@ export function HeroCarousel(props: Readonly<HeroCarouselProps>) {
   return (
     <section
       ref={sectionRef}
-      className="relative h-[420px] w-full touch-pan-y overflow-hidden sm:h-[480px] md:h-[560px]"
+      className="relative h-105 w-full touch-pan-y overflow-hidden sm:h-120 md:h-140"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
@@ -281,8 +290,8 @@ export function HeroCarousel(props: Readonly<HeroCarouselProps>) {
         />
       ))}
 
-      <div className="absolute inset-0 hidden bg-gradient-to-r from-background via-transparent to-transparent sm:flex" />
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+      <div className="absolute inset-0 hidden bg-linear-to-r from-background via-transparent to-transparent sm:flex" />
+      <div className="absolute inset-0 bg-linear-to-t from-background via-transparent to-transparent" />
 
       {props.posts.length > 1 && (
         <>
