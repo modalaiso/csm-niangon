@@ -78,7 +78,7 @@ function CommentMenu(props: Readonly<CommentMenuProps>) {
   }
 
   return (
-    <div data-comment-menu className="relative flex-shrink-0">
+    <div data-comment-menu className="relative shrink-0">
       <button
         type="button"
         onClick={props.onToggle}
@@ -337,7 +337,7 @@ function CommentItem(props: Readonly<CommentItemProps>) {
         ) : (
           <p
             className={cn(
-              "mt-1 whitespace-pre-wrap break-words text-sm",
+              "mt-1 whitespace-pre-wrap wrap-break-word text-sm",
               isRestrictedView
                 ? "italic text-muted-foreground"
                 : "text-foreground/90",

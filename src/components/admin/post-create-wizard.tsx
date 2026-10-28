@@ -289,7 +289,7 @@ export function PostCreateWizard(props: Readonly<PostCreateWizardProps>) {
                 >
                   <span
                     className={cn(
-                      "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl",
+                      "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl",
                       type === option.value
                         ? "bg-primarys2-700 text-white"
                         : "bg-muted text-muted-foreground",

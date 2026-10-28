@@ -285,7 +285,7 @@ export function SignupForm(props: Readonly<SignupFormProps>) {
             <input
               type="checkbox"
               {...register("acceptTerms")}
-              className="mt-0.5 h-4 w-4 flex-shrink-0 rounded border-input accent-primary"
+              className="mt-0.5 h-4 w-4 shrink-0 rounded border-input accent-primary"
             />
             <span>
               J'accepte les{" "}

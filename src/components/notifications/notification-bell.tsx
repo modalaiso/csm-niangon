@@ -191,7 +191,7 @@ export function NotificationBell() {
                       className="h-8 w-8"
                     />
                   ) : (
-                    <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
                       <Bell className="h-4 w-4" />
                     </span>
                   )}
@@ -209,7 +209,7 @@ export function NotificationBell() {
                     </p>
                   </div>
                   {!n.isRead && (
-                    <span className="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-secondary" />
+                    <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-secondary" />
                   )}
                 </button>
               ))

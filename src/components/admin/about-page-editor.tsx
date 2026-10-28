@@ -152,11 +152,19 @@ export function AboutPageEditor({
     saveAboutPageContent,
     INITIAL_STATE,
   );
+  let statusClassName = "px-2 text-sm text-muted-foreground";
+
+  if (state.status === "success") {
+    statusClassName =
+      "flex items-center gap-2 px-2 text-sm font-medium text-green-700 dark:text-green-400";
+  } else if (state.status === "error") {
+    statusClassName = "px-2 text-sm font-medium text-destructive";
+  }
 
   return (
     <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_17rem]">
       <form action={formAction} className="min-w-0 space-y-5">
-        <div className="overflow-hidden rounded-2xl bg-gradient-to-br from-[#16432f] to-[#276a3a] p-6 text-white shadow-sm sm:p-8">
+        <div className="overflow-hidden rounded-2xl bg-linear-to-br from-[#16432f] to-[#276a3a] p-6 text-white shadow-sm sm:p-8">
           <div className="flex items-start gap-4">
             <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10">
               <BookOpen className="h-5 w-5 text-[#f6c453]" aria-hidden="true" />
@@ -273,22 +281,15 @@ export function AboutPageEditor({
         </EditorSection>
 
         <div className="sticky bottom-3 z-10 flex flex-col gap-3 rounded-2xl border border-border bg-background/95 p-3 shadow-lg shadow-black/10 backdrop-blur sm:flex-row sm:items-center sm:justify-between sm:px-4">
-          <p
-            aria-live="polite"
-            role={state.status === "error" ? "alert" : "status"}
-            className={
-              state.status === "success"
-                ? "flex items-center gap-2 px-2 text-sm font-medium text-green-700 dark:text-green-400"
-                : state.status === "error"
-                  ? "px-2 text-sm font-medium text-destructive"
-                  : "px-2 text-sm text-muted-foreground"
-            }
+          <output
+            aria-live={state.status === "error" ? "assertive" : "polite"}
+            className={statusClassName}
           >
             {state.status === "success" && (
               <Check className="h-4 w-4 shrink-0" aria-hidden="true" />
             )}
             {state.message || "Pensez à enregistrer vos modifications."}
-          </p>
+          </output>
           <Button
             type="submit"
             disabled={isPending}

@@ -46,13 +46,13 @@ function Avatar(props: Readonly<AvatarProps>) {
       <img
         src={props.avatar}
         alt={`${props.prenom} ${props.nom}`}
-        className={`${sizeClasses} flex-shrink-0 rounded-full object-cover`}
+        className={`${sizeClasses} shrink-0 rounded-full object-cover`}
       />
     );
   }
   return (
     <div
-      className={`flex ${sizeClasses} flex-shrink-0 items-center justify-center rounded-full ${textClasses} font-semibold leading-none text-white ${colorForUsername(props.username)}`}
+      className={`flex ${sizeClasses} shrink-0 items-center justify-center rounded-full ${textClasses} font-semibold leading-none text-white ${colorForUsername(props.username)}`}
     >
       {props.username.charAt(0).toUpperCase()}
     </div>

@@ -50,13 +50,13 @@ export function ActuExplorer(props: Readonly<ActuExplorerProps>) {
       filters={
         <>
           {props.availableTags.length > 0 && (
-            <Tag className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
+            <Tag className="h-4 w-4 shrink-0 text-muted-foreground" />
           )}
           <button
             type="button"
             onClick={() => setActiveTag(null)}
             className={cn(
-              "flex-shrink-0 whitespace-nowrap rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors sm:text-sm",
+              "shrink-0 whitespace-nowrap rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors sm:text-sm",
               !activeTag
                 ? "border-primary bg-primary text-white"
                 : "border-border bg-background text-foreground hover:border-primary/40",
@@ -70,7 +70,7 @@ export function ActuExplorer(props: Readonly<ActuExplorerProps>) {
               type="button"
               onClick={() => setActiveTag(tag)}
               className={cn(
-                "flex-shrink-0 whitespace-nowrap rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors sm:text-sm",
+                "shrink-0 whitespace-nowrap rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors sm:text-sm",
                 activeTag === tag
                   ? "border-primary bg-primary text-white"
                   : "border-border bg-background text-foreground hover:border-primary/40",

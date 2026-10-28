@@ -139,7 +139,7 @@ export function TopNav(props: Readonly<TopNavProps>) {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-primary/20 backdrop-blur supports-[backdrop-filter]:bg-background shadow-[0_4px_12px_#0000000a]">
+    <header className="sticky top-0 z-50 w-full border-b border-primary/20 backdrop-blur supports-backdrop-filter:bg-background shadow-[0_4px_12px_#0000000a]">
       <div className="container flex h-14 items-center justify-between px-4">
         {/* Left: Logo */}
         <div className=" items-center inline-block">
@@ -151,7 +151,7 @@ export function TopNav(props: Readonly<TopNavProps>) {
               height={40}
               loading="eager"
             />
-            <span className="text-[.875rem] leading-[1rem] font-semibold font-heading text-primary hidden sm:block">
+            <span className="text-[.875rem] leading-4 font-semibold font-heading text-primary hidden sm:block">
               CSM Niangon
             </span>
           </Link>
@@ -255,7 +255,7 @@ export function TopNav(props: Readonly<TopNavProps>) {
                         height={40}
                         loading="eager"
                       />
-                      <span className="text-[.875rem] leading-[1rem] font-semibold text-primary block">
+                      <span className="text-[.875rem] leading-4 font-semibold text-primary block">
                         CSM <br />
                         Niangon
                       </span>

@@ -234,7 +234,7 @@ export function AdminPostsTable() {
               className="h-4 w-4 rounded border-input accent-primary"
             />
           </td>
-          <td className="max-w-[260px] px-4 py-3">
+          <td className="max-w-65 px-4 py-3">
             <Link
               href={`/posts/${row.id}`}
               className="line-clamp-1 font-medium text-foreground hover:text-primarys2-700 hover:underline"
@@ -408,7 +408,7 @@ export function AdminPostsTable() {
 
       {/* Table */}
       <div className="overflow-x-auto rounded-xl border border-border bg-background">
-        <table className="w-full min-w-[900px] text-left text-sm">
+        <table className="w-full min-w-225 text-left text-sm">
           <thead>
             <tr className="border-b border-border bg-muted/50 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               <th className="px-4 py-3">

@@ -55,7 +55,7 @@ export function PostGallery(props: Readonly<PostGalleryProps>) {
           <img
             src={props.images[0]}
             alt={props.alt}
-            className="max-h-[480px] w-full cursor-pointer object-cover"
+            className="max-h-120 w-full cursor-pointer object-cover"
           />
         </button>
       </div>
@@ -74,7 +74,7 @@ export function PostGallery(props: Readonly<PostGalleryProps>) {
         <div
           ref={scrollRef}
           onScroll={handleScroll}
-          className="flex snap-x rounded-3xl snap-mandatory overflow-x-auto scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="flex snap-x rounded-3xl snap-mandatory overflow-x-auto scroll-smooth [-ms-overflow-style:none] scrollbar-none [&::-webkit-scrollbar]:hidden"
         >
           {props.images.map((src, i) => (
             <button
@@ -82,7 +82,7 @@ export function PostGallery(props: Readonly<PostGalleryProps>) {
               type="button"
               onClick={openFullscreen}
               aria-label="Ouvrir l'image en plein écran"
-              className="h-[280px] w-full flex-shrink-0 snap-center bg-muted focus:outline-none focus:ring-2 focus:ring-primary sm:h-[380px] md:h-[440px]"
+              className="h-70 w-full shrink-0 snap-center bg-muted focus:outline-none focus:ring-2 focus:ring-primary sm:h-95 md:h-110"
             >
               <img
                 src={src}

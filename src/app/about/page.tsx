@@ -43,15 +43,15 @@ export default async function AboutPage() {
         />
         <div
           aria-hidden="true"
-          className="absolute inset-0 z-10 bg-gradient-to-r from-[#0c2e22] via-[#123b2b]/90 to-[#123b2b]/55"
+          className="absolute inset-0 z-10 bg-linear-to-r from-[#0c2e22] via-[#123b2b]/90 to-[#123b2b]/55"
         />
         <div
           aria-hidden="true"
-          className="absolute -right-36 -top-40 z-10 h-[34rem] w-[34rem] rounded-full border border-white/10"
+          className="absolute -right-36 -top-40 z-10 h-136 w-136 rounded-full border border-white/10"
         />
         <div
           aria-hidden="true"
-          className="absolute -right-16 -top-20 z-10 h-[25rem] w-[25rem] rounded-full border border-white/10"
+          className="absolute -right-16 -top-20 z-10 h-100 w-100 rounded-full border border-white/10"
         />
 
         <div className="relative z-20 mx-auto grid max-w-7xl items-center gap-12 px-5 pb-20 pt-16 sm:px-8 sm:pb-24 sm:pt-20 lg:grid-cols-[1.2fr_0.8fr] lg:gap-16 lg:px-10 lg:pb-28 lg:pt-24">
@@ -87,7 +87,7 @@ export default async function AboutPage() {
           <aside className="relative mx-auto w-full max-w-sm lg:ml-auto">
             <div
               aria-hidden="true"
-              className="absolute -inset-4 rotate-3 rounded-[2rem] border border-white/15"
+              className="absolute -inset-4 rotate-3 rounded-4xl border border-white/15"
             />
             <div className="relative overflow-hidden rounded-[1.75rem] bg-[#f8f7ed] p-7 text-[#173c2c] shadow-2xl shadow-black/20 sm:p-9">
               <div className="flex items-start justify-between gap-4">
@@ -113,7 +113,7 @@ export default async function AboutPage() {
                   alt="Emblème du CSM Niangon"
                   width={100}
                   height={100}
-                  className="h-[4.5rem] w-[4.5rem] object-contain"
+                  className="h-18 w-18 object-contain"
                 />
                 <div>
                   <p className="text-sm font-bold uppercase tracking-wide">
@@ -135,7 +135,7 @@ export default async function AboutPage() {
           </aside>
         </div>
 
-        <div className="absolute bottom-0 left-0 right-0 z-30 h-2 bg-gradient-to-r from-[#f6c453] via-[#f6c453] to-[#4c9a53]" />
+        <div className="absolute bottom-0 left-0 right-0 z-30 h-2 bg-linear-to-r from-[#f6c453] via-[#f6c453] to-[#4c9a53]" />
       </section>
 
       <section
@@ -176,7 +176,7 @@ export default async function AboutPage() {
         </div>
 
         <div className="grid gap-5 md:grid-cols-2">
-          <article className="group rounded-[1.5rem] border border-[#e4e9df] bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-lg hover:shadow-[#183b2c]/5 sm:p-9">
+          <article className="group rounded-3xl border border-[#e4e9df] bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-lg hover:shadow-[#183b2c]/5 sm:p-9">
             <div className="flex items-center justify-between">
               <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eaf4e9] text-[#398645]">
                 <Target className="h-6 w-6" aria-hidden="true" />
@@ -196,7 +196,7 @@ export default async function AboutPage() {
             </p>
           </article>
 
-          <article className="group rounded-[1.5rem] border border-[#e4e9df] bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-lg hover:shadow-[#183b2c]/5 sm:p-9">
+          <article className="group rounded-3xl border border-[#e4e9df] bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-lg hover:shadow-[#183b2c]/5 sm:p-9">
             <div className="flex items-center justify-between">
               <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#fff4d9] text-[#b77d12]">
                 <Lightbulb className="h-6 w-6" aria-hidden="true" />
@@ -243,7 +243,7 @@ export default async function AboutPage() {
                 return (
                   <article
                     key={`${index}-${value}`}
-                    className="flex min-h-36 items-start gap-4 rounded-2xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur-sm sm:p-6"
+                    className="flex min-h-36 items-start gap-4 rounded-2xl border border-white/10 bg-white/6 p-5 backdrop-blur-sm sm:p-6"
                   >
                     <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#f6c453]/15 text-[#f6c453]">
                       <Icon className="h-5 w-5" aria-hidden="true" />

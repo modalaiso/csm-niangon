@@ -12,7 +12,7 @@ interface ViewModeToggleProps {
 
 export function ViewModeToggle(props: Readonly<ViewModeToggleProps>) {
   return (
-    <div className="flex flex-shrink-0 items-center gap-1 rounded-full border border-border bg-background p-1">
+    <div className="flex shrink-0 items-center gap-1 rounded-full border border-border bg-background p-1">
       <button
         type="button"
         onClick={() => props.onChange("grid")}

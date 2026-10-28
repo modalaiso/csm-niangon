@@ -292,7 +292,7 @@ export function AdminUsersTable(props: Readonly<AdminUsersTableProps>) {
       {error && <p className="mb-3 text-sm text-destructive">{error}</p>}
 
       <div className="overflow-x-auto rounded-xl border border-border bg-background">
-        <table className="w-full min-w-[800px] text-left text-sm">
+        <table className="w-full min-w-200 text-left text-sm">
           <thead>
             <tr className="border-b border-border bg-muted/50 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               <th className="px-4 py-3">Utilisateur</th>

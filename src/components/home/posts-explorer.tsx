@@ -51,7 +51,7 @@ export function PostsExplorer(props: Readonly<PostsExplorerProps>) {
             aria-controls="post-type-filters"
             aria-label="Afficher les filtres"
             className={cn(
-              "flex-shrink-0 rounded-full p-1.5 transition-colors md:pointer-events-none md:p-0 md:hidden",
+              "shrink-0 rounded-full p-1.5 transition-colors md:pointer-events-none md:p-0 md:hidden",
               isFilterOpen
                 ? "bg-primary/10 text-primary"
                 : "text-muted-foreground",
@@ -84,7 +84,7 @@ export function PostsExplorer(props: Readonly<PostsExplorerProps>) {
                   });
                 }}
                 className={cn(
-                  "flex-shrink-0 whitespace-nowrap rounded-full border px-4 py-2 text-sm font-medium transition-colors",
+                  "shrink-0 whitespace-nowrap rounded-full border px-4 py-2 text-sm font-medium transition-colors",
                   filter === item.value
                     ? "border-primary bg-primary text-white"
                     : "border-border bg-background text-foreground hover:border-primary/40",
@@ -122,7 +122,7 @@ export function PostsExplorer(props: Readonly<PostsExplorerProps>) {
                 href={`/posts/${post.id}`}
                 className="group overflow-hidden rounded-2xl border border-border transition-all hover:border-primary/40 bg-muted/50"
               >
-                <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
+                <div className="relative aspect-4/3 w-full overflow-hidden bg-muted">
                   {post.thumbnail ? (
                     <img
                       src={post.thumbnail}

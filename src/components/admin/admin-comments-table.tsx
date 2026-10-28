@@ -188,7 +188,7 @@ export function AdminCommentsTable() {
             className="h-4 w-4 rounded border-input accent-primary"
           />
         </td>
-        <td className="max-w-[280px] px-4 py-3">
+        <td className="max-w-70 px-4 py-3">
           <p className="line-clamp-2 text-foreground">{row.content}</p>
           {row.flaggedKeyword && (
             <span className="mt-1 inline-block rounded-md bg-rose-100 px-2 py-0.5 text-[10px] font-semibold text-rose-700">
@@ -196,7 +196,7 @@ export function AdminCommentsTable() {
             </span>
           )}
         </td>
-        <td className="max-w-[180px] px-4 py-3">
+        <td className="max-w-45 px-4 py-3">
           <Link
             href={`/posts/${row.postId}`}
             className="line-clamp-2 text-primarys2-700 hover:underline"
@@ -312,7 +312,7 @@ export function AdminCommentsTable() {
       {error && <p className="mb-3 text-sm text-destructive">{error}</p>}
 
       <div className="overflow-x-auto rounded-xl border border-border bg-background">
-        <table className="w-full min-w-[900px] text-left text-sm">
+        <table className="w-full min-w-225 text-left text-sm">
           <thead>
             <tr className="border-b border-border bg-muted/50 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               <th className="px-4 py-3">

@@ -62,7 +62,7 @@ const components: Components = {
       src={src}
       alt={alt ?? ""}
       loading="lazy"
-      className="my-4 max-h-[640px] max-w-full rounded-xl object-contain"
+      className="my-4 max-h-160 max-w-full rounded-xl object-contain"
     />
   ),
   table: ({ children }) => (

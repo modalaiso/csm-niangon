@@ -35,7 +35,7 @@ function PostCard<T extends HomePostCard>(props: Readonly<PostCardProps<T>>) {
         href={`/posts/${props.post.id}`}
         className="group overflow-hidden rounded-2xl border border-border transition-all hover:border-primary/40 bg-muted/50"
       >
-        <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
+        <div className="relative aspect-4/3 w-full overflow-hidden bg-muted">
           {props.post.thumbnail ? (
             <img
               src={props.post.thumbnail}

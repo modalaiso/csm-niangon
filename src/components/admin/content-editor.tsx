@@ -545,11 +545,11 @@ export function ContentEditor(props: Readonly<ContentEditorProps>) {
             }
           }}
           placeholder="Commencez à écrire votre publication ici…"
-          className="min-h-[360px] w-full resize-y rounded-b-2xl bg-background px-4 py-3 text-sm leading-relaxed text-foreground placeholder:text-muted-foreground focus:outline-none"
+          className="min-h-90 w-full resize-y rounded-b-2xl bg-background px-4 py-3 text-sm leading-relaxed text-foreground placeholder:text-muted-foreground focus:outline-none"
           aria-label="Contenu de la publication"
         />
       ) : (
-        <div className="min-h-[360px] px-4 py-3">
+        <div className="min-h-90 px-4 py-3">
           {props.value.trim() ? (
             renderPostContent(props.value)
           ) : (

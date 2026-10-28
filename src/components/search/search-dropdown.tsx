@@ -177,7 +177,7 @@ export function SearchDropdown() {
         <div>
           <div
             id="search-listbox"
-            className="absolute top-full left-[55%] mt-4 w-[71vw] max-w-[24rem] -translate-x-2/3 sm:left-auto sm:right-0 sm:translate-x-0 shadow-sm sm:transform-none sm:w-96 bg-background border border-border rounded-lg z-40 max-h-[400px] overflow-y-auto divide-y divide-border"
+            className="absolute top-full left-[55%] mt-4 w-[71vw] max-w-[24rem] -translate-x-2/3 sm:left-auto sm:right-0 sm:translate-x-0 shadow-sm sm:transform-none sm:w-96 bg-background border border-border rounded-lg z-40 max-h-100 overflow-y-auto divide-y divide-border"
           >
             {isLoading ? (
               <output className="block p-4 text-center text-sm text-muted-foreground">
@@ -202,7 +202,7 @@ export function SearchDropdown() {
                         src={result.thumbnail || "/miniature.png"}
                         alt=""
                         aria-hidden="true"
-                        className="w-20 h-14 object-cover rounded flex-shrink-0"
+                        className="w-20 h-14 object-cover rounded shrink-0"
                       />
                       <div className="flex-1 min-w-0">
                         <h3 className="font-semibold text-base truncate">
