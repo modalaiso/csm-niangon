@@ -12,11 +12,83 @@ interface HeroCarouselProps {
 // Distance minimale (en px) pour considérer le geste comme un swipe volontaire
 const SWIPE_THRESHOLD = 40;
 
+function isImageDark(image: HTMLImageElement): boolean {
+  const canvas = document.createElement("canvas");
+  canvas.width = 16;
+  canvas.height = 16;
+
+  const context = canvas.getContext("2d");
+  if (!context) {
+    console.warn(
+      "Impossible d'analyser la luminosité de l'image du carrousel.",
+    );
+    return false;
+  }
+
+  context.drawImage(image, 0, 0, canvas.width, canvas.height);
+  const { data } = context.getImageData(0, 0, canvas.width, canvas.height);
+  let luminance = 0;
+  let pixels = 0;
+
+  for (let y = 9; y < canvas.height; y++) {
+    for (let x = 0; x < canvas.width; x++) {
+      const offset = (y * canvas.width + x) * 4;
+      const alpha = data[offset + 3] / 255;
+      const red = data[offset] * alpha + 255 * (1 - alpha);
+      const green = data[offset + 1] * alpha + 255 * (1 - alpha);
+      const blue = data[offset + 2] * alpha + 255 * (1 - alpha);
+
+      luminance += (0.2126 * red + 0.7152 * green + 0.0722 * blue) / 255;
+      pixels++;
+    }
+  }
+
+  return luminance / pixels < 0.45;
+}
+
 export function HeroCarousel(props: Readonly<HeroCarouselProps>) {
   const [index, setIndex] = useState(0);
+  const [isDarkImage, setIsDarkImage] = useState(false);
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
   const touchDeltaX = useRef(0);
+
+  const current = props.posts[index];
+  const currentThumbnail = current?.thumbnail;
+
+  useEffect(() => {
+    if (props.posts.length === 0) return;
+
+    let active = true;
+    const image = new Image();
+    image.crossOrigin = "anonymous";
+    setIsDarkImage(false);
+    image.onload = () => {
+      if (!active) return;
+
+      try {
+        setIsDarkImage(isImageDark(image));
+      } catch (error) {
+        console.warn(
+          "Impossible d'analyser la luminosité de l'image du carrousel.",
+          error,
+        );
+      }
+    };
+    image.onerror = (error) => {
+      console.warn(
+        "Impossible de charger l'image pour analyser sa luminosité.",
+        error,
+      );
+    };
+    image.src = currentThumbnail ?? "/miniature.png";
+
+    return () => {
+      active = false;
+      image.onload = null;
+      image.onerror = null;
+    };
+  }, [currentThumbnail, props.posts.length]);
 
   useEffect(() => {
     if (props.posts.length <= 1) return;
@@ -42,7 +114,6 @@ export function HeroCarousel(props: Readonly<HeroCarouselProps>) {
     );
   }
 
-  const current = props.posts[index];
   const goTo = (i: number) =>
     setIndex(
       ((i % props.posts.length) + props.posts.length) % props.posts.length,
@@ -102,9 +173,20 @@ export function HeroCarousel(props: Readonly<HeroCarouselProps>) {
         />
       ))}
 
-      {/* Voile pour la lisibilité du texte, comme sur la maquette */}
-      <div className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-transparent hidden sm:flex" />
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+      <div
+        className={`absolute inset-0 hidden bg-gradient-to-r sm:flex ${
+          isDarkImage
+            ? "from-black/65 via-black/10 to-transparent"
+            : "from-white/75 via-white/10 to-transparent"
+        }`}
+      />
+      <div
+        className={`absolute inset-0 bg-gradient-to-t ${
+          isDarkImage
+            ? "from-black/75 via-black/20 to-transparent"
+            : "from-white/80 via-white/20 to-transparent"
+        }`}
+      />
 
       {props.posts.length > 1 && (
         <>
@@ -129,10 +211,18 @@ export function HeroCarousel(props: Readonly<HeroCarouselProps>) {
 
       <div className="absolute inset-x-0 bottom-0 z-10 px-8 pb-20 sm:px-20 md:px-28 md:pb-26">
         <div className="max-w-xl">
-          <h1 className="hero-carousel-text text-xl font-extrabold uppercase leading-tight text-foreground sm:text-2xl md:text-3xl">
+          <h1
+            className={`text-xl font-extrabold uppercase leading-tight transition-colors duration-500 sm:text-2xl md:text-3xl ${
+              isDarkImage ? "text-white" : "text-gray-950"
+            }`}
+          >
             {current.title}
           </h1>
-          <p className="hero-carousel-text mt-3 line-clamp-3 text-sm text-muted-foreground sm:text-base md:text-sm">
+          <p
+            className={`mt-3 line-clamp-3 text-sm transition-colors duration-500 sm:text-base md:text-sm ${
+              isDarkImage ? "text-white/90" : "text-gray-800"
+            }`}
+          >
             {current.summary}
           </p>
           <Link
