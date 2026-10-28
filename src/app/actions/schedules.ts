@@ -316,6 +316,54 @@ async function findCellConflict(
   return null;
 }
 
+type ScheduleConflictRow = {
+  id: string;
+  startTime: string;
+  endTime: string;
+  cells: { day: Weekday; subject: { name: string } | null }[];
+};
+
+type ParsedScheduleConflictRow = ScheduleConflictRow & {
+  start: number;
+  end: number;
+};
+
+function parseScheduleConflictRow(
+  row: ScheduleConflictRow,
+): ParsedScheduleConflictRow | null {
+  const start = parseScheduleTime(row.startTime);
+  const end = parseScheduleTime(row.endTime);
+  if (start === null || end === null || start >= end) return null;
+  return { ...row, start, end };
+}
+
+function findConflictBetweenScheduleRows(
+  row: ParsedScheduleConflictRow,
+  other: ParsedScheduleConflictRow,
+): SimpleError | null {
+  const sharedDay = row.cells.find((cell) =>
+    other.cells.some((otherCell) => otherCell.day === cell.day),
+  );
+  if (
+    !sharedDay ||
+    !scheduleTimesOverlap(row.start, row.end, other.start, other.end)
+  ) {
+    return null;
+  }
+
+  const otherCell = other.cells.find((cell) => cell.day === sharedDay.day);
+  if (!otherCell?.subject?.name) return null;
+  return {
+    error: "conflict",
+    message: scheduleConflictMessage(
+      sharedDay.day,
+      other.startTime,
+      other.endTime,
+      otherCell.subject.name,
+    ),
+  };
+}
+
 async function findScheduleConflict(
   transaction: Prisma.TransactionClient,
   classId: string,
@@ -336,46 +384,22 @@ async function findScheduleConflict(
     },
   });
 
-  for (const row of rows) {
-    const start = parseScheduleTime(row.startTime);
-    const end = parseScheduleTime(row.endTime);
-    if (start === null || end === null || start >= end) {
-      return {
-        error: "invalid",
-        message: "Le planning contient un créneau horaire invalide.",
-      };
-    }
+  const parsedRows = rows.map(parseScheduleConflictRow);
+  if (parsedRows.includes(null)) {
+    return {
+      error: "invalid",
+      message: "Le planning contient un créneau horaire invalide.",
+    };
+  }
 
-    for (const other of rows) {
+  const validRows = parsedRows.filter(
+    (row): row is ParsedScheduleConflictRow => row !== null,
+  );
+  for (const row of validRows) {
+    for (const other of validRows) {
       if (row.id === other.id) continue;
-      const otherStart = parseScheduleTime(other.startTime);
-      const otherEnd = parseScheduleTime(other.endTime);
-      if (otherStart === null || otherEnd === null || otherStart >= otherEnd) {
-        return {
-          error: "invalid",
-          message: "Le planning contient un créneau horaire invalide.",
-        };
-      }
-
-      const sharedDay = row.cells.find((cell) =>
-        other.cells.some((otherCell) => otherCell.day === cell.day),
-      );
-      if (sharedDay && scheduleTimesOverlap(start, end, otherStart, otherEnd)) {
-        const otherCell = other.cells.find(
-          (cell) => cell.day === sharedDay.day,
-        );
-        if (otherCell?.subject?.name) {
-          return {
-            error: "conflict",
-            message: scheduleConflictMessage(
-              sharedDay.day,
-              other.startTime,
-              other.endTime,
-              otherCell.subject.name,
-            ),
-          };
-        }
-      }
+      const conflict = findConflictBetweenScheduleRows(row, other);
+      if (conflict) return conflict;
     }
   }
 
@@ -824,7 +848,7 @@ export async function setScheduleCell(
     typeof rowId !== "string" ||
     rowId.length === 0 ||
     rowId.length > 128 ||
-    !WEEKDAYS.some((weekday) => weekday === day) ||
+    !WEEKDAYS.includes(day) ||
     (subjectId !== null &&
       (typeof subjectId !== "string" ||
         subjectId.length === 0 ||
@@ -913,8 +937,8 @@ export async function moveScheduleCell(
       (value) =>
         typeof value !== "string" || value.length === 0 || value.length > 128,
     ) ||
-    !WEEKDAYS.some((weekday) => weekday === sourceDay) ||
-    !WEEKDAYS.some((weekday) => weekday === targetDay)
+    !WEEKDAYS.includes(sourceDay) ||
+    !WEEKDAYS.includes(targetDay)
   ) {
     return { error: "invalid" };
   }

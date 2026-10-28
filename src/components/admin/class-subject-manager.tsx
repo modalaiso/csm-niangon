@@ -181,7 +181,7 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
         {classes.length > 0 && (
           <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
             <label className="text-xs font-medium text-muted-foreground">
-              Niveau
+              <span className="block">Niveau</span>
               <select
                 value={levelFilter}
                 onChange={(event) => setLevelFilter(event.target.value)}
@@ -196,7 +196,7 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
               </select>
             </label>
             <label className="text-xs font-medium text-muted-foreground">
-              Année scolaire
+              <span className="block">Année scolaire</span>
               <select
                 value={yearFilter}
                 onChange={(event) => setYearFilter(event.target.value)}
@@ -246,7 +246,7 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
                   {c.publishedAt ? "Publié" : "Brouillon"}
                 </p>
               </div>
-              <div className="flex flex-shrink-0 items-center gap-2">
+              <div className="flex shrink-0 items-center gap-2">
                 <Link
                   href={`/admin/schedules/${c.id}`}
                   className="flex min-h-10 items-center gap-1 rounded-md bg-primary/10 px-3 py-1.5 text-xs font-medium text-foreground hover:bg-primary/20"
@@ -288,7 +288,7 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
             value={subjectColor}
             onChange={(e) => setSubjectColor(e.target.value)}
             aria-label="Couleur de la matière"
-            className="h-10 w-12 flex-shrink-0 cursor-pointer rounded-xl border border-input"
+            className="h-10 w-12 shrink-0 cursor-pointer rounded-xl border border-input"
           />
           <Button
             type="button"

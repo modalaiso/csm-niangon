@@ -74,6 +74,119 @@ function textColorFor(hex: string): string {
   return luminance > 0.6 ? "#0f172a" : "#ffffff";
 }
 
+interface SubjectPaletteProps {
+  subjects: SubjectSummary[];
+  selectedSubjectId: string | null;
+  onSelect: (id: string | null) => void;
+}
+
+function _SubjectPalette({
+  subjects,
+  selectedSubjectId,
+  onSelect,
+}: Readonly<SubjectPaletteProps>) {
+  return (
+    <div className="rounded-xl border border-border bg-background p-4">
+      <div className="mb-3 flex items-center justify-between">
+        <h3 className="text-sm font-semibold text-foreground">
+          Matières disponibles
+        </h3>
+        {selectedSubjectId && (
+          <button
+            type="button"
+            onClick={() => onSelect(null)}
+            className="text-xs font-medium text-muted-foreground hover:text-foreground"
+          >
+            Désélectionner
+          </button>
+        )}
+      </div>
+      <p className="mb-3 text-xs text-muted-foreground">
+        Glissez une matière sur une case de la grille, ou sélectionnez-la puis
+        cliquez sur une case.
+      </p>
+      {subjects.length === 0 ? (
+        <p className="text-sm text-muted-foreground">
+          Aucune matière. Ajoutez-en depuis l'onglet « Matières ».
+        </p>
+      ) : (
+        <div className="flex flex-wrap gap-2">
+          {subjects.map((subject) => {
+            const color = subject.color ?? FALLBACK_COLOR;
+            const isSelected = selectedSubjectId === subject.id;
+            return (
+              <button
+                key={subject.id}
+                type="button"
+                draggable
+                onDragStart={(event) => {
+                  event.dataTransfer.setData("text/subject-id", subject.id);
+                  event.dataTransfer.effectAllowed = "copy";
+                }}
+                onClick={() => onSelect(isSelected ? null : subject.id)}
+                style={{ backgroundColor: color, color: textColorFor(color) }}
+                className={cn(
+                  "flex cursor-grab items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold active:cursor-grabbing focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                  isSelected && "ring-2 ring-primary ring-offset-2",
+                )}
+              >
+                <GripVertical className="h-3.5 w-3.5 opacity-70" />
+                {subject.name}
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+interface PublishStatusProps {
+  publishedAt: Date | null;
+  isPending: boolean;
+  onToggle: () => void;
+}
+
+function PublishStatus({
+  publishedAt,
+  isPending,
+  onToggle,
+}: Readonly<PublishStatusProps>) {
+  let icon = <Eye className="h-4 w-4" />;
+  if (publishedAt) {
+    icon = <EyeOff className="h-4 w-4" />;
+  }
+  if (isPending) {
+    icon = <Loader2 className="h-4 w-4 animate-spin" />;
+  }
+
+  return (
+    <section className="flex flex-col gap-3 rounded-xl border border-border bg-background p-4 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <p className="text-sm font-semibold text-foreground">
+          {publishedAt ? "Planning publié" : "Brouillon"}
+        </p>
+        <p className="mt-0.5 text-xs text-muted-foreground">
+          {publishedAt
+            ? `Visible par les comptes associés à cette classe depuis le ${publishedAt.toLocaleDateString("fr-FR")}.`
+            : "Le planning reste privé jusqu'à sa publication."}
+        </p>
+      </div>
+      <Button
+        type="button"
+        variant={publishedAt ? "outline" : "default"}
+        disabled={isPending}
+        onClick={onToggle}
+        className="w-full gap-2 sm:w-auto"
+      >
+        {icon}
+        {publishedAt ? "Retirer la publication" : "Publier"}
+      </Button>
+    </section>
+  );
+}
+
+// NOSONAR - This stateful editor coordinates the schedule and subject workflows.
 export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
   const [schedule, setSchedule] = useState(props.initialSchedule);
   const [subjects, setSubjects] = useState(props.subjects);
@@ -364,34 +477,11 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
 
   return (
     <div className="space-y-4">
-      <section className="flex flex-col gap-3 rounded-xl border border-border bg-background p-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <p className="text-sm font-semibold text-foreground">
-            {schedule.publishedAt ? "Planning publié" : "Brouillon"}
-          </p>
-          <p className="mt-0.5 text-xs text-muted-foreground">
-            {schedule.publishedAt
-              ? `Visible par les comptes associés à cette classe depuis le ${schedule.publishedAt.toLocaleDateString("fr-FR")}.`
-              : "Le planning reste privé jusqu'à sa publication."}
-          </p>
-        </div>
-        <Button
-          type="button"
-          variant={schedule.publishedAt ? "outline" : "default"}
-          disabled={isPending}
-          onClick={() => handleSetPublished(!schedule.publishedAt)}
-          className="w-full gap-2 sm:w-auto"
-        >
-          {isPending ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : schedule.publishedAt ? (
-            <EyeOff className="h-4 w-4" />
-          ) : (
-            <Eye className="h-4 w-4" />
-          )}
-          {schedule.publishedAt ? "Retirer la publication" : "Publier"}
-        </Button>
-      </section>
+      <PublishStatus
+        publishedAt={schedule.publishedAt}
+        isPending={isPending}
+        onToggle={() => handleSetPublished(!schedule.publishedAt)}
+      />
 
       {/* Tabs */}
       <div className="flex w-fit items-center gap-1 rounded-lg border border-border bg-background p-1">
@@ -456,7 +546,7 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
                     aria-label={`Choisir la couleur ${color}`}
                     style={{ backgroundColor: color }}
                     className={cn(
-                      "h-7 w-7 flex-shrink-0 rounded-full border-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                      "h-7 w-7 shrink-0 rounded-full border-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                       subjectColor === color
                         ? "border-foreground"
                         : "border-transparent",
@@ -702,7 +792,7 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
           <div className="hidden grid-cols-1 gap-4 md:grid lg:grid-cols-[1fr_260px]">
             {/* Grille */}
             <div className="overflow-x-auto rounded-xl border border-border bg-background">
-              <table className="w-full min-w-[820px] border-collapse text-left text-sm">
+              <table className="w-full min-w-205 border-collapse text-left text-sm">
                 <thead>
                   <tr className="border-b border-border bg-muted/50 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                     <th className="px-3 py-3">Horaires</th>
@@ -795,7 +885,7 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
                                   onClick={() => handleCellClick(row.id, day)}
                                   disabled={isPending}
                                   aria-label={`${DAY_LABELS[day]}, ${row.startTime}–${row.endTime}: ${cell?.subjectName ?? "vide"}${selectedSubjectId ? ". Appliquer la matière sélectionnée." : ". Modifier la séance."}`}
-                                  className="flex min-h-[44px] w-full items-center justify-center rounded-md px-2 py-2 text-center text-xs font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+                                  className="flex min-h-11 w-full items-center justify-center rounded-md px-2 py-2 text-center text-xs font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
                                   style={
                                     cell?.subjectName
                                       ? {
@@ -893,7 +983,7 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
                 htmlFor="schedule-target-day"
                 className="text-sm font-medium text-foreground"
               >
-                Jour
+                <span className="block">Jour</span>
                 <select
                   id="schedule-target-day"
                   value={targetDay}
@@ -916,7 +1006,7 @@ export function ScheduleEditor(props: Readonly<ScheduleEditorProps>) {
                 htmlFor="schedule-target-slot"
                 className="text-sm font-medium text-foreground"
               >
-                Créneau
+                <span className="block">Créneau</span>
                 <select
                   id="schedule-target-slot"
                   value={targetRowId}
