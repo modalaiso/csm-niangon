@@ -400,3 +400,9 @@ model NotificationRead {
   @@index([userId])
   @@index([notificationId])
 }
+
+model AboutContent {
+  id        String   @id @default("singleton")
+  data      Json
+  updatedAt DateTime @updatedAt
+}
