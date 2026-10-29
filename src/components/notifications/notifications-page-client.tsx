@@ -145,7 +145,7 @@ export function NotificationsPageClient(
                       prenom={n.actor.prenom}
                     />
                   ) : (
-                    <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
                       <Icon className="h-4 w-4" />
                     </span>
                   )}
@@ -163,7 +163,7 @@ export function NotificationsPageClient(
                     </p>
                   </div>
                   {!n.isRead && (
-                    <span className="mt-1.5 h-2.5 w-2.5 flex-shrink-0 rounded-full bg-secondary" />
+                    <span className="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-secondary" />
                   )}
                 </Link>
               </li>

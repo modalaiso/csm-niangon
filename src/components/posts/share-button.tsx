@@ -183,7 +183,7 @@ export function ShareButton(props: Readonly<ShareButtonProps>) {
       label: "Instagram",
       onClick: handleInstagramShare,
       icon: (
-        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-tr from-amber-400 via-pink-500 to-purple-600">
+        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-linear-to-tr from-amber-400 via-pink-500 to-purple-600">
           <InstagramIcon className="h-7 w-7 text-white" />
         </span>
       ),
@@ -238,7 +238,7 @@ export function ShareButton(props: Readonly<ShareButtonProps>) {
 
           {/* Aperçu du post : type, miniature, titre, description */}
           <div className="mx-5 mt-4 flex items-center gap-3 rounded-2xl border border-border bg-muted/30 p-3">
-            <div className="relative h-14 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-muted">
+            <div className="relative h-14 w-20 shrink-0 overflow-hidden rounded-xl bg-muted">
               {props.thumbnail ? (
                 <img
                   src={props.thumbnail}
@@ -270,7 +270,7 @@ export function ShareButton(props: Readonly<ShareButtonProps>) {
           </div>
 
           {/* Options de partage */}
-          <div className="mt-4 flex gap-4 overflow-x-auto px-5 pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div className="mt-4 flex gap-4 overflow-x-auto px-5 pb-1 [-ms-overflow-style:none] scrollbar-none [&::-webkit-scrollbar]:hidden">
             {options.map((option) => {
               const content = (
                 <>
@@ -288,7 +288,7 @@ export function ShareButton(props: Readonly<ShareButtonProps>) {
                     href={option.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex flex-shrink-0 flex-col items-center"
+                    className="flex shrink-0 flex-col items-center"
                   >
                     {content}
                   </a>
@@ -300,7 +300,7 @@ export function ShareButton(props: Readonly<ShareButtonProps>) {
                   key={option.key}
                   type="button"
                   onClick={option.onClick}
-                  className="flex flex-shrink-0 flex-col items-center"
+                  className="flex shrink-0 flex-col items-center"
                 >
                   {content}
                 </button>
@@ -310,7 +310,7 @@ export function ShareButton(props: Readonly<ShareButtonProps>) {
 
           {/* Lien à copier */}
           <div className="mx-5 mb-5 mt-5 flex items-center gap-2 rounded-full border border-border bg-muted/40 py-2 pl-4 pr-2">
-            <Link2 className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
+            <Link2 className="h-4 w-4 shrink-0 text-muted-foreground" />
             <span className="min-w-0 flex-1 truncate text-sm text-muted-foreground">
               {shareUrl}
             </span>
@@ -318,7 +318,7 @@ export function ShareButton(props: Readonly<ShareButtonProps>) {
               type="button"
               onClick={handleCopy}
               className={cn(
-                "flex flex-shrink-0 items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium text-white transition-colors",
+                "flex shrink-0 items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium text-white transition-colors",
                 copied ? "bg-primary" : "bg-primary hover:bg-primary/90",
               )}
             >

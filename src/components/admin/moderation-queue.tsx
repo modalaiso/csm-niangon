@@ -64,7 +64,7 @@ export function ModerationQueue() {
 
   if (isLoading) {
     return (
-      <div className="rounded-2xl border border-border bg-background p-8 text-center">
+      <div className="rounded-xl border border-border bg-background p-8 text-center">
         <Loader2 className="mx-auto h-5 w-5 animate-spin text-muted-foreground" />
       </div>
     );
@@ -72,7 +72,7 @@ export function ModerationQueue() {
 
   if (error) {
     return (
-      <p className="rounded-2xl border border-border bg-background p-5 text-sm text-destructive">
+      <p className="rounded-xl border border-border bg-background p-5 text-sm text-destructive">
         {error}
       </p>
     );
@@ -80,7 +80,7 @@ export function ModerationQueue() {
 
   if (comments.length === 0) {
     return (
-      <div className="rounded-2xl border border-border bg-background p-8 text-center">
+      <div className="rounded-xl border border-border bg-background p-8 text-center">
         <p className="text-sm font-medium text-muted-foreground">
           Aucun commentaire en attente de revue.
         </p>
@@ -93,12 +93,12 @@ export function ModerationQueue() {
       {comments.map((comment) => (
         <li
           key={comment.id}
-          className="rounded-2xl border border-amber-200 bg-amber-50/40 p-4"
+          className="rounded-xl border border-amber-200 bg-amber-50/40 p-4"
         >
           <div className="flex flex-wrap items-center justify-between gap-2">
             <Link
               href={`/posts/${comment.postId}`}
-              className="text-xs font-medium text-primary hover:underline"
+              className="text-xs font-medium text-primarys2-700 hover:underline"
             >
               {comment.postTitle}
             </Link>
@@ -114,7 +114,7 @@ export function ModerationQueue() {
               Par {comment.author.prenom} {comment.author.nom}
             </span>
             {comment.flaggedKeyword && (
-              <span className="rounded-full bg-amber-200/70 px-2 py-0.5 text-[10px] font-semibold text-amber-800">
+              <span className="rounded-md bg-amber-200/70 px-2 py-0.5 text-[10px] font-semibold text-amber-800">
                 mot-clé : {comment.flaggedKeyword}
               </span>
             )}
@@ -125,7 +125,7 @@ export function ModerationQueue() {
               type="button"
               onClick={() => handleApprove(comment.id)}
               disabled={isPending}
-              className="flex items-center gap-1.5 rounded-full bg-primary px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-primary/90 disabled:opacity-60"
+              className="flex min-h-10 items-center gap-1.5 rounded-md bg-primarys2-700 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-primarys2-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-60"
             >
               <Check className="h-3.5 w-3.5" />
               Approuver
@@ -134,7 +134,7 @@ export function ModerationQueue() {
               type="button"
               onClick={() => handleReject(comment.id)}
               disabled={isPending}
-              className="flex items-center gap-1.5 rounded-full border border-destructive/30 px-3 py-1.5 text-xs font-medium text-destructive transition-colors hover:bg-destructive/10 disabled:opacity-60"
+              className="flex min-h-10 items-center gap-1.5 rounded-md border border-destructive/30 px-3 py-1.5 text-xs font-medium text-destructive transition-colors hover:bg-destructive/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-60"
             >
               <X className="h-3.5 w-3.5" />
               Rejeter

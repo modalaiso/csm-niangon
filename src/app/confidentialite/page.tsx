@@ -10,7 +10,7 @@ export default function ConfidentialitePage() {
   return (
     <LegalPageLayout
       title="Politique de confidentialité"
-      lastUpdated="8 septembre 2026"
+      lastUpdated="27 octobre 2026"
     >
       <section>
         <h2 className="mb-2 text-lg font-bold text-foreground">
@@ -20,7 +20,7 @@ export default function ConfidentialitePage() {
           CSM Niangon, Abidjan, Yopougon Niangon, Côte d'Ivoire, est responsable
           du traitement des données à caractère personnel décrites dans la
           présente politique. Pour toute question relative à vos données, vous
-          pouvez nous contacter à l'adresse [privacy@...].
+          pouvez nous contacter à l'adresse privacy@csm-niangon.com.
         </p>
       </section>
 
@@ -40,9 +40,11 @@ export default function ConfidentialitePage() {
           </li>
           <li>
             <strong>Statistiques de vues</strong> : un compteur de vues par
-            publication est tenu à partir de votre identifiant de compte (si
-            connecté) ou de votre adresse IP (si non connecté), afin d'éviter
-            les doubles comptages.
+            publication est validé après au moins 10 secondes de lecture active.
+            La durée est mesurée sans compter les périodes où l'onglet est
+            inactif. Le comptage utilise votre identifiant de compte (si vous
+            êtes connecté) ou votre adresse IP (sinon) afin d'éviter les doubles
+            comptages.
           </li>
           <li>
             <strong>Mesure d'audience</strong> (uniquement avec votre
@@ -60,7 +62,7 @@ export default function ConfidentialitePage() {
           3. Cookies et traceurs
         </h2>
         <div className="overflow-x-auto">
-          <table className="mt-2 w-full min-w-[500px] border-collapse text-left text-sm">
+          <table className="mt-2 w-full min-w-125 border-collapse text-left text-sm">
             <thead>
               <tr className="border-b border-border text-xs uppercase text-muted-foreground">
                 <th className="py-2 pr-4">Nom</th>
@@ -110,14 +112,14 @@ export default function ConfidentialitePage() {
           </table>
         </div>
         <p className="mt-3 text-muted-foreground">
-          Vous pouvez modifier votre choix à tout moment via le lien «
+          Vous pouvez modifier votre choix à tout moment via le lien «{" "}
           <button
             type="button"
             onClick={openCookiePreferences}
             className="text-primary hover:underline"
           >
             Gérer les cookies
-          </button>
+          </button>{" "}
           » en pied de page.
         </p>
       </section>
@@ -156,9 +158,9 @@ export default function ConfidentialitePage() {
         </h2>
         <p className="text-muted-foreground">
           Les données de compte sont conservées tant que votre compte est actif,
-          et supprimées à votre demande (page Profil). Les journaux de
-          navigation utilisés pour la mesure d'audience sont conservés 13 mois
-          maximum.
+          puis supprimées à votre demande ou après clôture du compte. Les
+          journaux de navigation utilisés pour la mesure d'audience sont
+          conservés 13 mois maximum.
         </p>
       </section>
 
@@ -170,8 +172,8 @@ export default function ConfidentialitePage() {
           Le site s'adresse à la communauté scolaire du CSM Niangon, susceptible
           d'inclure des élèves mineurs. Nous invitons les parents et tuteurs à
           accompagner leurs enfants dans l'utilisation du site et à nous
-          contacter à [privacy@...] pour toute demande relative aux données d'un
-          mineur dont ils ont la responsabilité.
+          contacter à privacy@csm-niangon.com pour toute demande relative aux
+          données d'un mineur dont ils ont la responsabilité.
         </p>
       </section>
 
@@ -187,7 +189,7 @@ export default function ConfidentialitePage() {
           <Link href="/profile" className="text-primary hover:underline">
             page de profil
           </Link>
-          , ou en nous contactant à [privacy@...]. En cas de réponse
+          , ou en nous contactant à privacy@csm-niangon.com. En cas de réponse
           insuffisante, vous pouvez saisir l'Autorité de Régulation des
           Télécommunications/TIC de Côte d'Ivoire (ARTCI), autorité de
           protection des données personnelles en Côte d'Ivoire.

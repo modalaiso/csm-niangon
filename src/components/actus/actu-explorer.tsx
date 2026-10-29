@@ -14,6 +14,17 @@ interface ActuExplorerProps {
 
 export function ActuExplorer(props: Readonly<ActuExplorerProps>) {
   const [activeTag, setActiveTag] = useState<string | null>(null);
+  const renderEmptyMessage = (search: string) => {
+    if (search) {
+      return `Aucune actualité ne correspond à "${search}"`;
+    }
+
+    if (activeTag) {
+      return `Aucune actualité avec le tag ${activeTag}`;
+    }
+
+    return "Aucune actualité pour l'instant";
+  };
 
   return (
     <PostTypeExplorer
@@ -22,18 +33,15 @@ export function ActuExplorer(props: Readonly<ActuExplorerProps>) {
       filterKey={activeTag}
       fetchPosts={(params) => getActuPosts({ ...params, tag: activeTag })}
       searchPlaceholder="Rechercher une actualité..."
-      renderCount={(total) =>
-        total === 0
-          ? "Aucune actualité"
-          : `${total} actualité${total > 1 ? "s" : ""}`
-      }
-      renderEmptyMessage={(search) =>
-        search
-          ? `Aucune actualité ne correspond à "${search}"`
-          : activeTag
-            ? `Aucune actualité avec le tag ${activeTag}`
-            : "Aucune actualité pour l'instant"
-      }
+      renderCount={(total) => {
+        if (total === 0) {
+          return "Aucune actualité";
+        }
+
+        const pluralSuffix = total > 1 ? "s" : "";
+        return `${total} actualité${pluralSuffix}`;
+      }}
+      renderEmptyMessage={renderEmptyMessage}
       emptyStateAction={
         activeTag
           ? {
@@ -50,13 +58,13 @@ export function ActuExplorer(props: Readonly<ActuExplorerProps>) {
       filters={
         <>
           {props.availableTags.length > 0 && (
-            <Tag className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
+            <Tag className="h-4 w-4 shrink-0 text-muted-foreground" />
           )}
           <button
             type="button"
             onClick={() => setActiveTag(null)}
             className={cn(
-              "flex-shrink-0 whitespace-nowrap rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors sm:text-sm",
+              "shrink-0 whitespace-nowrap rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors sm:text-sm",
               !activeTag
                 ? "border-primary bg-primary text-white"
                 : "border-border bg-background text-foreground hover:border-primary/40",
@@ -70,7 +78,7 @@ export function ActuExplorer(props: Readonly<ActuExplorerProps>) {
               type="button"
               onClick={() => setActiveTag(tag)}
               className={cn(
-                "flex-shrink-0 whitespace-nowrap rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors sm:text-sm",
+                "shrink-0 whitespace-nowrap rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors sm:text-sm",
                 activeTag === tag
                   ? "border-primary bg-primary text-white"
                   : "border-border bg-background text-foreground hover:border-primary/40",

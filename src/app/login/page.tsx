@@ -35,7 +35,7 @@ export default function LoginPage() {
               height={50}
               loading="eager"
             />
-            <span className="text-[1rem] leading-[1rem] font-bold text-primary hidden sm:block font-heading">
+            <span className="text-[1rem] leading-4 font-bold text-primary hidden sm:block font-heading">
               CSM Niangon
             </span>
           </div>

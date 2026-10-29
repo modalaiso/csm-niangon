@@ -1,11 +1,11 @@
-function Pulse({ className }: { className: string }) {
+function Pulse({ className }: Readonly<{ className: string }>) {
   return <div className={`animate-pulse rounded-lg bg-muted ${className}`} />;
 }
 
 function PostCardSkeleton() {
   return (
     <div className="overflow-hidden rounded-2xl border border-border bg-muted/50">
-      <Pulse className="aspect-[4/3] w-full rounded-none" />
+      <Pulse className="aspect-4/3 w-full rounded-none" />
       <div className="space-y-3 p-4">
         <Pulse className="h-5 w-4/5" />
         <Pulse className="h-4 w-full" />
@@ -23,7 +23,7 @@ export function DefaultPageLoading() {
       aria-label="Chargement de la page"
       className="min-h-screen bg-background"
     >
-      <section className="relative h-[420px] w-full overflow-hidden bg-muted sm:h-[480px] md:h-[560px]">
+      <section className="relative h-105 w-full overflow-hidden bg-muted sm:h-120 md:h-140">
         <Pulse className="absolute inset-0 h-full w-full rounded-none" />
         <div className="absolute inset-x-0 bottom-0 z-10 px-8 pb-20 sm:px-20 md:px-28 md:pb-26">
           <div className="max-w-xl space-y-4">
@@ -55,7 +55,7 @@ export function DefaultPageLoading() {
   );
 }
 
-export function LegalPageLoading({ label }: { label: string }) {
+export function LegalPageLoading({ label }: Readonly<{ label: string }>) {
   return (
     <main
       aria-busy="true"
@@ -83,10 +83,10 @@ export function LegalPageLoading({ label }: { label: string }) {
 export function AuthPageLoading({
   label,
   variant,
-}: {
+}: Readonly<{
   label: string;
   variant: "login" | "signup";
-}) {
+}>) {
   const fieldCount = variant === "signup" ? 7 : 2;
 
   return (
@@ -96,7 +96,7 @@ export function AuthPageLoading({
       className="flex min-h-screen flex-col items-center bg-background p-4"
     >
       <div className="mb-8 mt-4 flex flex-col items-center gap-2">
-        <Pulse className="h-[50px] w-[75px] rounded-xl" />
+        <Pulse className="h-12.5 w-18.75 rounded-xl" />
         <Pulse className="h-4 w-28" />
       </div>
       <section className="w-full max-w-2xl space-y-8 rounded-3xl border border-border bg-card p-6 shadow-lg sm:p-8">

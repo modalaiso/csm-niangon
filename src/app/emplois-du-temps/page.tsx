@@ -1,6 +1,6 @@
 import { CalendarClock } from "lucide-react";
 import Link from "next/link";
-import { getSchoolClasses } from "@/app/actions/schedules";
+import { getPublishedSchoolClasses } from "@/app/actions/schedules";
 
 export const metadata = {
   title: "Emplois du temps | CSM Niangon",
@@ -8,7 +8,7 @@ export const metadata = {
 };
 
 export default async function SchedulesPage() {
-  const classes = await getSchoolClasses();
+  const classes = await getPublishedSchoolClasses();
 
   const grouped = classes.reduce<Record<string, typeof classes>>((acc, c) => {
     const key = c.level ?? "Autres classes";
@@ -21,7 +21,8 @@ export default async function SchedulesPage() {
       <div className="container px-4 mt-16 pb-6">
         <h1 className="text-2xl font-bold text-foreground">Emplois du temps</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Consultez, imprimez ou téléchargez l'emploi du temps de chaque classe.
+          Consultez le planning publié de votre classe, puis imprimez-le au
+          format A4.
         </p>
       </div>
 
@@ -29,8 +30,18 @@ export default async function SchedulesPage() {
         {classes.length === 0 ? (
           <div className="flex flex-col items-center justify-center rounded-2xl py-16 text-center">
             <p className="text-base font-medium text-muted-foreground">
-              Aucun emploi du temps n'est disponible pour l'instant.
+              Aucun emploi du temps publié n'est rattaché à votre compte.
             </p>
+            <p className="mt-1 max-w-lg text-sm text-muted-foreground">
+              Connectez-vous et demandez à l'administration d'associer votre
+              compte à la classe de l'élève si nécessaire.
+            </p>
+            <Link
+              href="/login"
+              className="mt-3 rounded-md px-3 py-2 text-sm font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              Se connecter
+            </Link>
           </div>
         ) : (
           <div className="space-y-8">
@@ -44,9 +55,9 @@ export default async function SchedulesPage() {
                     <Link
                       key={c.id}
                       href={`/emplois-du-temps/${c.id}`}
-                      className="flex items-center gap-3 rounded-2xl border border-border bg-white p-4 transition-colors hover:border-primary/40"
+                      className="flex items-center gap-3 rounded-2xl border border-border bg-muted p-4 transition-colors hover:border-primary/40"
                     >
-                      <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center text-primary">
                         <CalendarClock className="h-5 w-5" />
                       </span>
                       <span>

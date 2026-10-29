@@ -8,7 +8,7 @@ export default function CGUPage() {
   return (
     <LegalPageLayout
       title="Conditions Générales d'Utilisation"
-      lastUpdated="21 août 2026"
+      lastUpdated="27 octobre 2026"
     >
       <section>
         <h2 className="mb-2 text-lg font-bold text-foreground">1. Objet</h2>
@@ -29,8 +29,9 @@ export default function CGUPage() {
           La consultation des publications est libre. La création d'un compte
           est nécessaire pour aimer, commenter ou personnaliser son profil.
           Certaines fonctionnalités (rédaction, modération, administration) sont
-          réservées aux comptes disposant d'un rôle spécifique (Rédacteur,
-          Modérateur, Administrateur), attribué via une clé d'accès.
+          réservées aux comptes disposant d'un rôle spécifique (rédacteur,
+          modérateur, administrateur), attribué selon les règles internes de la
+          plateforme.
         </p>
       </section>
 
@@ -43,7 +44,7 @@ export default function CGUPage() {
           l'inscription et à garder confidentiels vos identifiants de connexion.
           Vous êtes responsable de toute activité effectuée depuis votre compte.
           Vous pouvez à tout moment supprimer votre compte depuis votre page de
-          profil.
+          profil ou demander sa suppression à l'équipe de modération.
         </p>
       </section>
 
@@ -52,17 +53,17 @@ export default function CGUPage() {
           4. Contenus publiés par les utilisateurs
         </h2>
         <p className="text-muted-foreground">
-          En publiant un commentaire, vous vous engagez à ne pas diffuser de
-          contenu illicite, injurieux, diffamatoire, discriminatoire, ou portant
-          atteinte aux droits d'un tiers. CSM Niangon se réserve le droit de
-          masquer ou supprimer tout contenu contrevenant à ces règles, avec ou
-          sans préavis.
+          En publiant un commentaire ou une contribution, vous vous engagez à ne
+          pas diffuser de contenu illicite, injurieux, diffamatoire,
+          discriminatoire ou portant atteinte aux droits d'un tiers. CSM Niangon
+          se réserve le droit de masquer, modifier ou supprimer tout contenu
+          contrevenant à ces règles, avec ou sans préavis.
         </p>
         <p className="mt-2 text-muted-foreground">
           Certains contenus sont vérifiés automatiquement à la publication au
-          moyen d'une liste de mots-clés surveillés : selon la nature du contenu
-          détecté, un commentaire peut être automatiquement masqué en attente de
-          revue par un modérateur, ou ne pas être publié.
+          moyen d'une liste de mots-clés surveillés. Selon la nature du contenu
+          détecté, un commentaire peut être masqué en attente de revue par un
+          modérateur ou ne pas être publié.
         </p>
       </section>
 
@@ -71,10 +72,10 @@ export default function CGUPage() {
           5. Propriété des contenus
         </h2>
         <p className="text-muted-foreground">
-          Les publications éditoriales (actus, articles, infos, annonces)
-          restent la propriété de CSM Niangon et de leurs auteurs. Les
+          Les publications éditoriales (actualités, articles, informations,
+          annonces) restent la propriété de CSM Niangon et de leurs auteurs. Les
           commentaires restent la propriété de leurs auteurs, qui accordent à
-          CSM Niangon le droit de les afficher sur la plateforme.
+          CSM Niangon le droit de les afficher et les modérer sur la plateforme.
         </p>
       </section>
 
@@ -97,7 +98,7 @@ export default function CGUPage() {
           CSM Niangon peut modifier les présentes CGU à tout moment. Les
           utilisateurs seront informés de toute modification substantielle. La
           poursuite de l'utilisation du site après modification vaut acceptation
-          des nouvelles CGU.
+          de la version mise à jour.
         </p>
       </section>
 
@@ -106,7 +107,9 @@ export default function CGUPage() {
           8. Droit applicable
         </h2>
         <p className="text-muted-foreground">
-          Les présentes CGU sont soumises au droit ivoirien.
+          Les présentes CGU sont soumises au droit ivoirien. Toute contestation
+          éventuelle sera examinée par les tribunaux compétents d'Abidjan, sauf
+          disposition légale contraire.
         </p>
       </section>
     </LegalPageLayout>

@@ -2,9 +2,10 @@
 
 import type { Role } from "@prisma/client";
 import type { User } from "@supabase/supabase-js";
-import { Menu, ShieldUser } from "lucide-react";
+import { ChevronDown, Menu, ShieldUser } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 import { ProfileMenu } from "@/components/nav/profile-menu";
 import { NotificationBell } from "@/components/notifications/notification-bell";
 import { SearchDropdown } from "@/components/search/search-dropdown";
@@ -31,6 +32,78 @@ interface TopNavProps {
   userProfile?: TopNavProfile | null;
 }
 
+function SchoolSpaceMenu({ mobile = false }: Readonly<{ mobile?: boolean }>) {
+  const [isOpen, setIsOpen] = useState(false);
+  const menuId = mobile ? "school-space-menu-mobile" : "school-space-menu";
+  const desktopTextClass = isOpen ? "text-primary" : "text-muted-foreground";
+  let dropdownClass = "absolute left-0 top-full z-50 w-64 pt-6";
+
+  if (mobile) {
+    dropdownClass = isOpen ? "mt-2" : "hidden";
+  } else if (!isOpen) {
+    dropdownClass += " hidden group-hover:block";
+  }
+
+  return (
+    <div className={mobile ? "relative" : "group relative"}>
+      <button
+        type="button"
+        aria-expanded={isOpen}
+        aria-controls={menuId}
+        onClick={() => setIsOpen((open) => !open)}
+        onKeyDown={(event) => {
+          if (event.key === "Escape") setIsOpen(false);
+        }}
+        className={
+          mobile
+            ? "flex w-full items-center justify-between py-1 text-left text-sm font-medium hover:underline"
+            : `flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary ${
+                desktopTextClass
+              }`
+        }
+      >
+        Mon espace scolaire
+        <ChevronDown
+          aria-hidden="true"
+          className={`h-3.5 w-3.5 transition-transform ${isOpen ? "rotate-180" : ""}`}
+        />
+      </button>
+      <div className={dropdownClass}>
+        <div
+          id={menuId}
+          className={
+            mobile
+              ? "flex flex-col py-1"
+              : "flex flex-col overflow-hidden rounded-lg border border-border bg-background py-4 shadow-lg"
+          }
+        >
+          <Link
+            href="/emplois-du-temps"
+            onClick={() => setIsOpen(false)}
+            className="px-3 py-2 text-sm text-foreground hover:bg-accent"
+          >
+            Emplois du temps
+          </Link>
+          <Link
+            href="/emplois-du-temps"
+            onClick={() => setIsOpen(false)}
+            className="px-3 py-2 text-sm text-foreground hover:bg-accent"
+          >
+            Calendriers des devoirs
+          </Link>
+          <Link
+            href="/emplois-du-temps"
+            onClick={() => setIsOpen(false)}
+            className="px-3 py-2 text-sm text-foreground hover:bg-accent"
+          >
+            Mes notes
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function TopNav(props: Readonly<TopNavProps>) {
   const pathname = usePathname();
 
@@ -55,8 +128,6 @@ export function TopNav(props: Readonly<TopNavProps>) {
     { href: "/actus", label: "Actualités" },
     { href: "/infos", label: "Infos" },
     { href: "/about", label: "À propos de nous" },
-    /*{ href: "/emplois-du-temps", label: "Emplois du temps" },
-    { href: "/devoirs", label: "Devoirs" },*/
   ];
 
   const navLinksMobile = [
@@ -64,13 +135,11 @@ export function TopNav(props: Readonly<TopNavProps>) {
     { href: "/actus", label: "Actualités" },
     { href: "/articles", label: "Articles" },
     { href: "/infos", label: "Infos" },
-    /*{ href: "/emplois-du-temps", label: "Emplois du temps" },
-    { href: "/devoirs", label: "Devoirs" },*/
     { href: "/about", label: "À propos de nous" },
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-primary/20 backdrop-blur supports-[backdrop-filter]:bg-background shadow-[0_4px_12px_#0000000a]">
+    <header className="sticky top-0 z-50 w-full border-b border-primary/20 backdrop-blur supports-backdrop-filter:bg-background shadow-[0_4px_12px_#0000000a]">
       <div className="container flex h-14 items-center justify-between px-4">
         {/* Left: Logo */}
         <div className=" items-center inline-block">
@@ -82,7 +151,7 @@ export function TopNav(props: Readonly<TopNavProps>) {
               height={40}
               loading="eager"
             />
-            <span className="text-[.875rem] leading-[1rem] font-semibold font-heading text-primary hidden sm:block">
+            <span className="text-[.875rem] leading-4 font-semibold font-heading text-primary hidden sm:block">
               CSM Niangon
             </span>
           </Link>
@@ -103,6 +172,7 @@ export function TopNav(props: Readonly<TopNavProps>) {
                 {link.label}
               </Link>
             ))}
+            {props.user && <SchoolSpaceMenu />}
           </nav>
         </div>
 
@@ -185,7 +255,7 @@ export function TopNav(props: Readonly<TopNavProps>) {
                         height={40}
                         loading="eager"
                       />
-                      <span className="text-[.875rem] leading-[1rem] font-semibold text-primary block">
+                      <span className="text-[.875rem] leading-4 font-semibold text-primary block">
                         CSM <br />
                         Niangon
                       </span>
@@ -201,6 +271,7 @@ export function TopNav(props: Readonly<TopNavProps>) {
                         {link.label}
                       </Link>
                     ))}
+                    {props.user && <SchoolSpaceMenu mobile />}
                     {isWriterOrAdminOrModerator && (
                       <>
                         <div className="h-px bg-border my-2" />

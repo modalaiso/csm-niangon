@@ -1,9 +1,7 @@
 "use server";
 
 import { PostStatus, PostType, type Prisma } from "@prisma/client";
-import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
-import { createClient } from "@/lib/supabase/server";
 import { getPostViewCount } from "@/lib/viewCount";
 
 export interface HomePostCard {
@@ -147,52 +145,7 @@ export async function getPostById(id: string): Promise<PostDetail | null> {
 
     if (!post) return null;
 
-    // Track les vues : une seule vue par utilisateur/visiteur
-    try {
-      const supabase = await createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      const headersList = await headers();
-      const ipAddress =
-        headersList.get("x-forwarded-for") ||
-        headersList.get("x-real-ip") ||
-        "unknown";
-
-      // Vérifier si cet utilisateur/visiteur a déjà vu ce post
-      const existingView = await prisma.postView.findFirst({
-        where: {
-          postId: post.id,
-          ...(user
-            ? { OR: [{ userId: user.id }, { ipAddress }] }
-            : { ipAddress }),
-        },
-      });
-
-      // Si pas de vue existante, en créer une
-      if (!existingView) {
-        try {
-          await prisma.postView.create({
-            data: {
-              postId: post.id,
-              userId: user?.id || null,
-              ipAddress: user ? null : ipAddress, // Seulement l'IP si pas connecté
-            },
-          });
-        } catch (createError: any) {
-          // Ignorer les erreurs de duplicate key (race condition)
-          if (createError.code !== "P2002") {
-            throw createError;
-          }
-        }
-      }
-    } catch (error) {
-      console.error("Erreur lors du tracking des vues:", error);
-      // Ne pas bloquer l'affichage du post en cas d'erreur
-    }
-
-    // Récupérer le count de vues
+    // Les vues sont enregistrées côté client après une durée de lecture minimale.
     const viewCount = await getPostViewCount(post.id);
 
     // Transformer et retourner le post avec le count de vues

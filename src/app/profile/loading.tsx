@@ -1,4 +1,4 @@
-function Pulse({ className }: { className: string }) {
+function Pulse({ className }: Readonly<{ className: string }>) {
   return <div className={`animate-pulse rounded-lg bg-muted ${className}`} />;
 }
 

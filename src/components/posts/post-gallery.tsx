@@ -55,7 +55,7 @@ export function PostGallery(props: Readonly<PostGalleryProps>) {
           <img
             src={props.images[0]}
             alt={props.alt}
-            className="max-h-[480px] w-full cursor-pointer object-cover"
+            className="max-h-120 w-full cursor-pointer object-cover"
           />
         </button>
       </div>
@@ -74,7 +74,7 @@ export function PostGallery(props: Readonly<PostGalleryProps>) {
         <div
           ref={scrollRef}
           onScroll={handleScroll}
-          className="flex snap-x rounded-3xl snap-mandatory overflow-x-auto scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="flex snap-x rounded-3xl snap-mandatory overflow-x-auto scroll-smooth [-ms-overflow-style:none] scrollbar-none [&::-webkit-scrollbar]:hidden"
         >
           {props.images.map((src, i) => (
             <button
@@ -82,7 +82,7 @@ export function PostGallery(props: Readonly<PostGalleryProps>) {
               type="button"
               onClick={openFullscreen}
               aria-label="Ouvrir l'image en plein écran"
-              className="h-[280px] w-full flex-shrink-0 snap-center bg-muted focus:outline-none focus:ring-2 focus:ring-primary sm:h-[380px] md:h-[440px]"
+              className="h-70 w-full shrink-0 snap-center bg-muted focus:outline-none focus:ring-2 focus:ring-primary sm:h-95 md:h-110"
             >
               <img
                 src={src}
@@ -100,7 +100,7 @@ export function PostGallery(props: Readonly<PostGalleryProps>) {
         onClick={() => goTo(active - 1)}
         aria-label="Image précédente"
         disabled={active === 0}
-        className="absolute left-3 top-1/2 hidden -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-white/80 p-2 shadow-lg backdrop-blur transition-opacity hover:bg-white disabled:pointer-events-none disabled:opacity-0 group-hover:sm:flex"
+        className="absolute left-3 top-1/2 hidden -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-background/50 p-2 shadow-lg backdrop-blur-[3px] transition-all hover:bg-background/70 disabled:pointer-events-none disabled:opacity-0 group-hover:sm:flex"
       >
         <ChevronLeft className="h-5 w-5 text-primary" />
       </button>
@@ -109,7 +109,7 @@ export function PostGallery(props: Readonly<PostGalleryProps>) {
         onClick={() => goTo(active + 1)}
         aria-label="Image suivante"
         disabled={active === props.images.length - 1}
-        className="absolute right-3 top-1/2 hidden -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-white/80 p-2 shadow-lg backdrop-blur transition-opacity hover:bg-white disabled:pointer-events-none disabled:opacity-0 group-hover:sm:flex"
+        className="absolute right-3 top-1/2 hidden -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-background/50 p-2 shadow-lg backdrop-blur-[3px] transition-all hover:bg-background/70 disabled:pointer-events-none disabled:opacity-0 group-hover:sm:flex"
       >
         <ChevronRight className="h-5 w-5 text-primary" />
       </button>

@@ -1,4 +1,4 @@
-import { ArrowLeft, Calendar, Eye } from "lucide-react";
+import { ArrowLeft, Calendar } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPostComments } from "@/app/actions/comments";
@@ -7,6 +7,7 @@ import { getPostById, getRelatedPosts } from "@/app/actions/posts";
 import { CommentSection } from "@/components/posts/comment-section";
 import { LikeButton } from "@/components/posts/like-button";
 import { PostGallery } from "@/components/posts/post-gallery";
+import { PostViewTracker } from "@/components/posts/post-view-tracker";
 import { ShareButton } from "@/components/posts/share-button";
 import { Avatar } from "@/components/ui/avatar";
 import { renderPostContent } from "@/lib/render-post-content";
@@ -142,17 +143,18 @@ export default async function PostPage(props: Readonly<PostPageProps>) {
               </div>
             </div>
 
-            <div className="flex flex-shrink-0 flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+            <div className="flex shrink-0 flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
               {post.publishedAt && (
                 <span className="inline-flex items-center gap-1">
                   <Calendar className="h-3.5 w-3.5" />
                   {formatDate(post.publishedAt)}
                 </span>
               )}
-              <span className="inline-flex items-center gap-1">
-                <Eye className="h-3.5 w-3.5" />
-                {post.views}
-              </span>
+              <PostViewTracker
+                key={post.id}
+                postId={post.id}
+                initialViews={post.views}
+              />
             </div>
           </div>
 
@@ -222,7 +224,7 @@ export default async function PostPage(props: Readonly<PostPageProps>) {
                     href={`/posts/${related.id}`}
                     className="group overflow-hidden rounded-2xl border border-border bg-background transition-all hover:border-primary/40"
                   >
-                    <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
+                    <div className="relative aspect-4/3 w-full overflow-hidden bg-muted">
                       {related.thumbnail ? (
                         <img
                           src={related.thumbnail}

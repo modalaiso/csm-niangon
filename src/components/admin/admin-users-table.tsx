@@ -8,6 +8,7 @@ import {
   type AdminUserRow,
   listUsers,
   updateUserRole,
+  updateUserSchoolClass,
 } from "@/app/actions/admin-users";
 import { TablePagination } from "@/components/admin/table-pagination";
 import { useAdminList } from "@/components/admin/useAdminList";
@@ -19,10 +20,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { cn } from "@/lib/utils";
 
 interface AdminUsersTableProps {
   currentUserId: string;
+  schoolClasses: { id: string; name: string }[];
 }
 
 const ROLE_OPTIONS: { value: Role | "ALL"; label: string }[] = [
@@ -39,13 +40,6 @@ const ROW_ROLE_OPTIONS: { value: Role; label: string }[] = [
   { value: "WRITER", label: "Rédacteur" },
   { value: "ADMIN", label: "Administrateur" },
 ];
-
-const ROLE_BADGES: Record<Role, string> = {
-  USER: "bg-slate-100 text-slate-600",
-  MODERATOR: "bg-amber-100 text-amber-700",
-  WRITER: "bg-blue-100 text-blue-700",
-  ADMIN: "bg-primary/10 text-primary",
-};
 
 function formatDate(date: Date): string {
   return new Date(date).toLocaleDateString("fr-FR", {
@@ -127,12 +121,41 @@ export function AdminUsersTable(props: Readonly<AdminUsersTableProps>) {
     });
   };
 
+  const handleSchoolClassChange = (
+    row: AdminUserRow,
+    nextSchoolClassId: string,
+  ) => {
+    const schoolClassId =
+      nextSchoolClassId === "none" ? null : nextSchoolClassId;
+    if (row.schoolClassId === schoolClassId) return;
+
+    const selectedClass = props.schoolClasses.find(
+      (schoolClass) => schoolClass.id === schoolClassId,
+    );
+    const classLabel = selectedClass?.name ?? "aucune classe";
+    if (
+      !window.confirm(`Associer ${row.prenom} ${row.nom} à « ${classLabel} » ?`)
+    ) {
+      return;
+    }
+
+    startTransition(async () => {
+      const result = await updateUserSchoolClass(row.id, schoolClassId);
+      if ("error" in result) {
+        setError("Impossible de modifier l'association à la classe.");
+        return;
+      }
+      setError(null);
+      load();
+    });
+  };
+
   const renderTableBody = () => {
     if (isLoading) {
       return (
         <tr>
           <td
-            colSpan={5}
+            colSpan={6}
             className="px-4 py-10 text-center text-muted-foreground"
           >
             <Loader2 className="mx-auto h-5 w-5 animate-spin" />
@@ -145,7 +168,7 @@ export function AdminUsersTable(props: Readonly<AdminUsersTableProps>) {
       return (
         <tr>
           <td
-            colSpan={5}
+            colSpan={6}
             className="px-4 py-10 text-center text-muted-foreground"
           >
             Aucun utilisateur ne correspond à ces filtres.
@@ -172,13 +195,34 @@ export function AdminUsersTable(props: Readonly<AdminUsersTableProps>) {
           <td className="px-4 py-3 text-muted-foreground">{row.email}</td>
           <td className="px-4 py-3 text-muted-foreground">{row.classe}</td>
           <td className="px-4 py-3">
-            {isSelf ? (
-              <span
-                className={cn(
-                  "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium",
-                  ROLE_BADGES[row.role],
-                )}
+            {row.role === "USER" ? (
+              <Select
+                value={row.schoolClassId ?? "none"}
+                onValueChange={(value) => handleSchoolClassChange(row, value)}
+                disabled={isPending}
               >
+                <SelectTrigger
+                  aria-label={`Classe associée à ${row.prenom} ${row.nom}`}
+                  className="h-9 w-48 rounded-md border border-input bg-background text-xs font-medium text-foreground shadow-none"
+                >
+                  <SelectValue placeholder="Aucune classe" />
+                </SelectTrigger>
+                <SelectContent className="max-h-64">
+                  <SelectItem value="none">Aucune classe associée</SelectItem>
+                  {props.schoolClasses.map((schoolClass) => (
+                    <SelectItem key={schoolClass.id} value={schoolClass.id}>
+                      {schoolClass.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            ) : (
+              <span className="text-muted-foreground">Personnel</span>
+            )}
+          </td>
+          <td className="px-4 py-3">
+            {isSelf ? (
+              <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-2.5 py-1 text-xs font-medium text-foreground">
                 <ShieldCheck className="h-3 w-3" />
                 {ROW_ROLE_OPTIONS.find((o) => o.value === row.role)?.label}
               </span>
@@ -189,16 +233,18 @@ export function AdminUsersTable(props: Readonly<AdminUsersTableProps>) {
                 disabled={isPending}
               >
                 <SelectTrigger
-                  className={cn(
-                    "h-8 w-40 border-0 text-xs font-medium",
-                    ROLE_BADGES[row.role],
-                  )}
+                  aria-label={`Rôle de ${row.prenom} ${row.nom}`}
+                  className="h-8 w-40 rounded-md border border-input bg-background text-xs font-medium text-foreground shadow-none"
                 >
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="rounded-md border-border bg-background text-foreground shadow-md">
                   {ROW_ROLE_OPTIONS.map((o) => (
-                    <SelectItem key={o.value} value={o.value}>
+                    <SelectItem
+                      key={o.value}
+                      value={o.value}
+                      className="rounded-sm focus:bg-primary/10 focus:text-foreground"
+                    >
                       {o.label}
                     </SelectItem>
                   ))}
@@ -215,8 +261,8 @@ export function AdminUsersTable(props: Readonly<AdminUsersTableProps>) {
   };
 
   return (
-    <div>
-      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+    <div className="space-y-4">
+      <div className="flex flex-col gap-3 rounded-xl border border-border bg-background p-3 sm:flex-row sm:items-center">
         <div className="relative flex-1">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
@@ -245,13 +291,14 @@ export function AdminUsersTable(props: Readonly<AdminUsersTableProps>) {
 
       {error && <p className="mb-3 text-sm text-destructive">{error}</p>}
 
-      <div className="overflow-x-auto rounded-2xl border border-border bg-background">
-        <table className="w-full min-w-[800px] text-left text-sm">
+      <div className="overflow-x-auto rounded-xl border border-border bg-background">
+        <table className="w-full min-w-200 text-left text-sm">
           <thead>
-            <tr className="border-b border-border text-xs uppercase text-muted-foreground">
+            <tr className="border-b border-border bg-muted/50 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               <th className="px-4 py-3">Utilisateur</th>
               <th className="px-4 py-3">Email</th>
               <th className="px-4 py-3">Classe</th>
+              <th className="px-4 py-3">Classe associée</th>
               <th className="px-4 py-3">Rôle</th>
               <th className="px-4 py-3">Inscrit le</th>
             </tr>

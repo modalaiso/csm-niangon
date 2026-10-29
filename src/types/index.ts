@@ -9,6 +9,7 @@ export interface User {
   prenom: string;
   username: string;
   classe: string;
+  schoolClassId?: string | null;
   role: Role;
   bio?: string | null;
   avatar?: string | null;

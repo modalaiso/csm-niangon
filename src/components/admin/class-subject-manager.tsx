@@ -26,6 +26,8 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
   const [className, setClassName] = useState("");
   const [classLevel, setClassLevel] = useState("");
   const [schoolYear, setSchoolYear] = useState("2026-2027");
+  const [levelFilter, setLevelFilter] = useState("all");
+  const [yearFilter, setYearFilter] = useState("all");
   const [classError, setClassError] = useState<string | null>(null);
 
   const [subjectName, setSubjectName] = useState("");
@@ -33,6 +35,21 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
   const [subjectError, setSubjectError] = useState<string | null>(null);
 
   const [isPending, startTransition] = useTransition();
+  const levels = Array.from(
+    new Set(
+      classes
+        .map((classItem) => classItem.level)
+        .filter((level): level is string => level !== null),
+    ),
+  );
+  const schoolYears = Array.from(
+    new Set(classes.map((classItem) => classItem.schoolYear)),
+  );
+  const visibleClasses = classes.filter(
+    (classItem) =>
+      (levelFilter === "all" || classItem.level === levelFilter) &&
+      (yearFilter === "all" || classItem.schoolYear === yearFilter),
+  );
 
   const handleAddClass = () => {
     if (!className.trim()) return;
@@ -55,6 +72,7 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
             name: className.trim(),
             level: classLevel.trim() || null,
             schoolYear,
+            publishedAt: null,
           },
         ].sort((a, b) => a.name.localeCompare(b.name, "fr")),
       );
@@ -118,8 +136,8 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
       {/* Classes */}
-      <div className="rounded-2xl border border-border bg-white p-5">
-        <h2 className="text-sm font-semibold text-foreground">Classes</h2>
+      <div className="rounded-xl border border-border bg-background p-5 sm:p-6">
+        <h2 className="text-base font-semibold text-foreground">Classes</h2>
         <p className="mt-1 text-xs text-muted-foreground">
           Créez une classe, puis modifiez son emploi du temps depuis la liste
           ci-dessous.
@@ -150,7 +168,7 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
             type="button"
             onClick={handleAddClass}
             disabled={isPending || !className.trim()}
-            className="gap-1.5 text-white"
+            className="gap-1.5 rounded-md bg-primarys2-700 text-white hover:bg-primarys2-800"
           >
             <Plus className="h-4 w-4" />
             Ajouter
@@ -160,13 +178,53 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
           <p className="mt-2 text-sm text-destructive">{classError}</p>
         )}
 
+        {classes.length > 0 && (
+          <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <label className="text-xs font-medium text-muted-foreground">
+              <span className="block">Niveau</span>
+              <select
+                value={levelFilter}
+                onChange={(event) => setLevelFilter(event.target.value)}
+                className="mt-1 min-h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <option value="all">Tous les niveaux</option>
+                {levels.map((level) => (
+                  <option key={level} value={level}>
+                    {level}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="text-xs font-medium text-muted-foreground">
+              <span className="block">Année scolaire</span>
+              <select
+                value={yearFilter}
+                onChange={(event) => setYearFilter(event.target.value)}
+                className="mt-1 min-h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <option value="all">Toutes les années</option>
+                {schoolYears.map((year) => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+        )}
+
         <ul className="mt-4 divide-y divide-border">
           {classes.length === 0 && (
             <p className="text-sm text-muted-foreground">
               Aucune classe pour le moment.
             </p>
           )}
-          {classes.map((c) => (
+          {classes.length > 0 && visibleClasses.length === 0 && (
+            <p className="py-3 text-sm text-muted-foreground">
+              Aucune classe ne correspond aux filtres sélectionnés.
+            </p>
+          )}
+          {visibleClasses.map((c) => (
             <li
               key={c.id}
               className="flex items-center justify-between gap-3 py-2.5"
@@ -178,11 +236,20 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
                 <p className="text-xs text-muted-foreground">
                   {c.level ?? "—"} · {c.schoolYear}
                 </p>
+                <p
+                  className={
+                    c.publishedAt
+                      ? "mt-0.5 text-xs font-medium text-primary"
+                      : "mt-0.5 text-xs text-muted-foreground"
+                  }
+                >
+                  {c.publishedAt ? "Publié" : "Brouillon"}
+                </p>
               </div>
-              <div className="flex flex-shrink-0 items-center gap-2">
+              <div className="flex shrink-0 items-center gap-2">
                 <Link
                   href={`/admin/schedules/${c.id}`}
-                  className="flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary hover:bg-primary/20"
+                  className="flex min-h-10 items-center gap-1 rounded-md bg-primary/10 px-3 py-1.5 text-xs font-medium text-foreground hover:bg-primary/20"
                 >
                   <CalendarClock className="h-3.5 w-3.5" />
                   Emploi du temps
@@ -192,7 +259,7 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
                   onClick={() => handleDeleteClass(c)}
                   disabled={isPending}
                   aria-label="Supprimer"
-                  className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+                  className="flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>
@@ -203,8 +270,8 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
       </div>
 
       {/* Matières */}
-      <div className="rounded-2xl border border-border bg-white p-5">
-        <h2 className="text-sm font-semibold text-foreground">Matières</h2>
+      <div className="rounded-xl border border-border bg-background p-5 sm:p-6">
+        <h2 className="text-base font-semibold text-foreground">Matières</h2>
         <p className="mt-1 text-xs text-muted-foreground">
           La liste des matières disponibles pour remplir les emplois du temps.
         </p>
@@ -221,13 +288,13 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
             value={subjectColor}
             onChange={(e) => setSubjectColor(e.target.value)}
             aria-label="Couleur de la matière"
-            className="h-10 w-12 flex-shrink-0 cursor-pointer rounded-xl border border-input"
+            className="h-10 w-12 shrink-0 cursor-pointer rounded-xl border border-input"
           />
           <Button
             type="button"
             onClick={handleAddSubject}
             disabled={isPending || !subjectName.trim()}
-            className="gap-1.5 text-white"
+            className="gap-1.5 rounded-md bg-primarys2-700 text-white hover:bg-primarys2-800"
           >
             <Plus className="h-4 w-4" />
             Ajouter
@@ -245,7 +312,7 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
           )}
           {subjects.map((s) => (
             <li key={s.id}>
-              <span className="flex items-center gap-2 rounded-full border border-border bg-muted/40 py-1 pl-3 pr-1 text-xs font-medium text-foreground">
+              <span className="flex items-center gap-2 rounded-md border border-border bg-muted/40 py-1 pl-3 pr-1 text-xs font-medium text-foreground">
                 <span
                   className="h-2.5 w-2.5 rounded-full"
                   style={{ backgroundColor: s.color ?? "#94a3b8" }}
@@ -256,7 +323,7 @@ export function ClassSubjectManager(props: Readonly<ClassSubjectManagerProps>) {
                   onClick={() => handleDeleteSubject(s)}
                   disabled={isPending}
                   aria-label={`Supprimer ${s.name}`}
-                  className="rounded-full p-1 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                  className="flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground hover:bg-destructive/10 hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   <Trash2 className="h-3 w-3" />
                 </button>

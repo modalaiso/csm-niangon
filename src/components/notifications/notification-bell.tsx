@@ -3,7 +3,13 @@
 import { Bell } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   getMyNotifications,
   getUnreadNotificationCount,
@@ -127,6 +133,63 @@ export function NotificationBell() {
     return null;
   }
 
+  let notificationContent: ReactNode;
+  if (isLoading) {
+    notificationContent = (
+      <p className="px-4 py-8 text-center text-sm text-muted-foreground">
+        Chargement...
+      </p>
+    );
+  } else if (notifications.length === 0) {
+    notificationContent = (
+      <p className="px-4 py-8 text-center text-sm text-muted-foreground">
+        Aucune notification pour l'instant.
+      </p>
+    );
+  } else {
+    notificationContent = notifications.map((n) => (
+      <button
+        key={n.id}
+        type="button"
+        onClick={() => handleItemClick(n)}
+        className={cn(
+          "flex w-full items-start gap-3 border-b border-border px-4 py-3 text-left transition-colors last:border-0 bg-transparent hover:bg-accent/50",
+          !n.isRead && "bg-primary/5",
+        )}
+      >
+        {n.actor ? (
+          <Avatar
+            username={n.actor.username}
+            avatar={n.actor.avatar}
+            nom={n.actor.nom}
+            prenom={n.actor.prenom}
+            className="h-8 w-8"
+          />
+        ) : (
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+            <Bell className="h-4 w-4" />
+          </span>
+        )}
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-medium text-foreground">
+            {n.title}
+          </p>
+          {n.body && (
+            <p className="line-clamp-2 text-xs text-muted-foreground">
+              {n.body}
+            </p>
+          )}
+          <p className="mt-0.5 text-[11px] text-muted-foreground">
+            {formatRelative(n.createdAt)}
+          </p>
+        </div>
+        {!n.isRead && (
+          <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-secondary" />
+        )}
+      </button>
+    ));
+  }
+
   return (
     <div ref={containerRef} className="relative">
       <button
@@ -162,59 +225,7 @@ export function NotificationBell() {
             )}
           </div>
 
-          <div className="max-h-96 overflow-y-auto">
-            {isLoading ? (
-              <p className="px-4 py-8 text-center text-sm text-muted-foreground">
-                Chargement...
-              </p>
-            ) : notifications.length === 0 ? (
-              <p className="px-4 py-8 text-center text-sm text-muted-foreground">
-                Aucune notification pour l'instant.
-              </p>
-            ) : (
-              notifications.map((n) => (
-                <button
-                  key={n.id}
-                  type="button"
-                  onClick={() => handleItemClick(n)}
-                  className={cn(
-                    "flex w-full items-start gap-3 border-b border-border px-4 py-3 text-left transition-colors last:border-0 bg-transparent hover:bg-accent/50",
-                    !n.isRead && "bg-primary/5",
-                  )}
-                >
-                  {n.actor ? (
-                    <Avatar
-                      username={n.actor.username}
-                      avatar={n.actor.avatar}
-                      nom={n.actor.nom}
-                      prenom={n.actor.prenom}
-                      className="h-8 w-8"
-                    />
-                  ) : (
-                    <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-                      <Bell className="h-4 w-4" />
-                    </span>
-                  )}
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium text-foreground">
-                      {n.title}
-                    </p>
-                    {n.body && (
-                      <p className="line-clamp-2 text-xs text-muted-foreground">
-                        {n.body}
-                      </p>
-                    )}
-                    <p className="mt-0.5 text-[11px] text-muted-foreground">
-                      {formatRelative(n.createdAt)}
-                    </p>
-                  </div>
-                  {!n.isRead && (
-                    <span className="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-secondary" />
-                  )}
-                </button>
-              ))
-            )}
-          </div>
+          <div className="max-h-96 overflow-y-auto">{notificationContent}</div>
 
           <Link
             href="/notifications"

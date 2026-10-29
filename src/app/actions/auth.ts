@@ -15,7 +15,8 @@ const signupSchema = z.object({
   prenom: z.string().min(1),
   username: z.string().min(3),
   classe: z.string().min(1),
-  email: z.string().email(),
+  schoolClassId: z.string().optional(),
+  email: z.email(),
   password: z.string().min(8),
 });
 
@@ -29,7 +30,7 @@ const adminSignupSchema = z.object({
   firstName: z.string().min(1),
   username: z.string().min(3),
   role: z.string().min(1),
-  email: z.string().email(),
+  email: z.email(),
   password: z.string().min(8),
   accessKey: z.string().min(1),
 });
@@ -83,7 +84,19 @@ async function checkPasswordCompromise(password: string): Promise<boolean> {
   }
 }
 
-export async function signup(formData: z.infer<typeof signupSchema>) {
+export async function signup(input: z.infer<typeof signupSchema>) {
+  const parsed = signupSchema.safeParse(input);
+  if (!parsed.success) return { error: "Données d'inscription invalides" };
+  const formData = parsed.data;
+  const schoolClassId = formData.schoolClassId?.trim() || null;
+  if (schoolClassId) {
+    const schoolClass = await prisma.schoolClass.findUnique({
+      where: { id: schoolClassId },
+      select: { id: true },
+    });
+    if (!schoolClass) return { error: "La classe sélectionnée n'existe plus" };
+  }
+
   const supabase = await createClient();
 
   // 0. Check if user already exists in Prisma
@@ -138,6 +151,7 @@ export async function signup(formData: z.infer<typeof signupSchema>) {
         prenom: formData.prenom,
         username: formData.username,
         classe: formData.classe,
+        schoolClassId,
         role: "USER",
       },
     });
@@ -172,7 +186,7 @@ export async function login(formData: z.infer<typeof loginSchema>) {
   let email = formData.nameOrEmail;
 
   // Check if input is an email
-  const isEmail = z.string().email().safeParse(email).success;
+  const isEmail = z.email().safeParse(email).success;
 
   if (!isEmail) {
     // Assume it's a username and look up the email
@@ -339,7 +353,7 @@ export async function adminLogin(formData: z.infer<typeof adminLoginSchema>) {
   let email = formData.emailOrUsername;
 
   // Check if input is an email
-  const isEmail = z.string().email().safeParse(email).success;
+  const isEmail = z.email().safeParse(email).success;
 
   if (!isEmail) {
     // Assume it's a username and look up the email

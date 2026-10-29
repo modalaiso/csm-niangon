@@ -6,52 +6,123 @@ interface VisitTrendChartProps {
   data: VisitTrendPoint[];
 }
 
-const CHART_HEIGHT_PX = 160; // équivalent à h-40
-const MIN_BAR_HEIGHT_PX = 3;
+const CHART_WIDTH = 740;
+const CHART_HEIGHT = 220;
+const PADDING = { top: 14, right: 12, bottom: 30, left: 30 };
+
+function formatDate(date: string, options: Intl.DateTimeFormatOptions) {
+  return new Date(`${date}T12:00:00`).toLocaleDateString("fr-FR", options);
+}
 
 export function VisitTrendChart(props: Readonly<VisitTrendChartProps>) {
-  const max = Math.max(1, ...props.data.map((d) => d.count));
+  const max = Math.max(1, ...props.data.map((point) => point.count));
+  const plotHeight = CHART_HEIGHT - PADDING.top - PADDING.bottom;
+  const plotWidth = CHART_WIDTH - PADDING.left - PADDING.right;
+  const points = props.data.map((point, index) => ({
+    ...point,
+    x:
+      PADDING.left +
+      (props.data.length <= 1
+        ? plotWidth / 2
+        : (index / (props.data.length - 1)) * plotWidth),
+    y:
+      PADDING.top +
+      plotHeight -
+      (point.count / max) * Math.max(1, plotHeight - 8),
+  }));
+  const linePath = points
+    .map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`)
+    .join(" ");
+  const total = props.data.reduce((sum, point) => sum + point.count, 0);
 
-  if (props.data.every((d) => d.count === 0)) {
+  if (!total) {
     return (
-      <p className="flex h-40 items-center justify-center text-sm text-muted-foreground">
-        Pas encore de visites enregistrées sur cette période.
-      </p>
+      <div className="flex h-56 items-center justify-center text-center">
+        <p className="text-sm text-muted-foreground">
+          Aucune vue qualifiée sur cette période.
+        </p>
+      </div>
     );
   }
 
   return (
-    <div
-      className="flex items-end gap-1"
-      style={{ height: `${CHART_HEIGHT_PX}px` }}
-    >
-      {props.data.map((point) => {
-        const barHeight = Math.max(
-          MIN_BAR_HEIGHT_PX,
-          Math.round((point.count / max) * CHART_HEIGHT_PX),
-        );
-        const dateLabel = new Date(point.date).toLocaleDateString("fr-FR", {
-          day: "2-digit",
-          month: "2-digit",
-        });
-        return (
-          <div
-            key={point.date}
-            className="group relative flex h-full flex-1 flex-col items-center justify-end"
-          >
-            <span className="pointer-events-none absolute -top-6 hidden rounded-md bg-slate-900 px-1.5 py-0.5 text-[10px] font-medium text-white group-hover:block">
-              {point.count}
-            </span>
-            <div
-              className="w-full rounded-t-md bg-primary/80 transition-colors group-hover:bg-primary"
-              style={{ height: `${barHeight}px` }}
+    <div>
+      <div className="mb-3 flex items-baseline gap-2">
+        <span className="text-2xl font-bold tracking-tight text-foreground">
+          {total.toLocaleString("fr-FR")}
+        </span>
+        <span className="text-xs text-muted-foreground">
+          vues qualifiées sur 30 jours
+        </span>
+      </div>
+      <svg
+        aria-label="Évolution quotidienne des vues qualifiées sur 30 jours"
+        className="h-56 w-full overflow-visible text-primary"
+        role="img"
+        viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`}
+        preserveAspectRatio="none"
+      >
+        {[0, 1, 2, 3].map((step) => {
+          const y = PADDING.top + (plotHeight / 3) * step;
+          return (
+            <line
+              key={step}
+              x1={PADDING.left}
+              x2={CHART_WIDTH - PADDING.right}
+              y1={y}
+              y2={y}
+              stroke="currentColor"
+              strokeOpacity="0.14"
             />
-            <span className="mt-1 text-[9px] text-muted-foreground">
-              {dateLabel}
-            </span>
-          </div>
-        );
-      })}
+          );
+        })}
+        <path
+          d={linePath}
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="3"
+          className="text-primary"
+        />
+        {points.map((point, index) => {
+          const isLabelled =
+            index === 0 ||
+            index === points.length - 1 ||
+            index % Math.max(1, Math.ceil(points.length / 6)) === 0;
+          return (
+            <g key={point.date}>
+              <circle
+                cx={point.x}
+                cy={point.y}
+                r="4"
+                className="fill-background stroke-primary"
+                strokeWidth="2"
+              >
+                <title>
+                  {formatDate(point.date, {
+                    weekday: "short",
+                    day: "numeric",
+                    month: "short",
+                  })}
+                  : {point.count.toLocaleString("fr-FR")} vues qualifiées
+                </title>
+              </circle>
+              {isLabelled && (
+                <text
+                  x={point.x}
+                  y={CHART_HEIGHT - 5}
+                  textAnchor="middle"
+                  className="fill-muted-foreground"
+                  fontSize="10"
+                >
+                  {formatDate(point.date, { day: "2-digit", month: "2-digit" })}
+                </text>
+              )}
+            </g>
+          );
+        })}
+      </svg>
     </div>
   );
 }

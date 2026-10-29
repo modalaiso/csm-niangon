@@ -1,4 +1,4 @@
-function Pulse({ className }: { className: string }) {
+function Pulse({ className }: { readonly className: string }) {
   return <div className={`animate-pulse rounded-lg bg-muted ${className}`} />;
 }
 
@@ -16,10 +16,7 @@ export default function Loading() {
       <div className="container px-3 pb-10 sm:px-4">
         <div className="mb-6 flex gap-2 overflow-hidden">
           {Array.from({ length: 4 }, (_, index) => (
-            <Pulse
-              key={index}
-              className="h-9 w-20 flex-shrink-0 rounded-full"
-            />
+            <Pulse key={index} className="h-9 w-20 shrink-0 rounded-full" />
           ))}
         </div>
         <div className="mb-5 flex items-center justify-between">
@@ -32,7 +29,7 @@ export default function Loading() {
               key={index}
               className="overflow-hidden rounded-2xl border border-border bg-muted/50"
             >
-              <Pulse className="aspect-[4/3] w-full rounded-none" />
+              <Pulse className="aspect-4/3 w-full rounded-none" />
               <div className="space-y-3 p-4">
                 <Pulse className="h-5 w-4/5" />
                 <Pulse className="h-4 w-full" />

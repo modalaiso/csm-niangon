@@ -4,6 +4,7 @@ import type { PostStatus, PostType } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { getPostManagerAuthContext } from "@/lib/auth/admin-guard";
 import { notifyNewPost } from "@/lib/notifications";
+import { MIN_POST_VIEW_SECONDS } from "@/lib/post-view-tracking";
 import {
   captureServerEvent,
   captureServerException,
@@ -26,12 +27,15 @@ function slugify(title: string): string {
 
 async function generateUniqueSlug(title: string): Promise<string> {
   const base = slugify(title) || "post";
+  const existingSlugs = await prisma.post.findMany({
+    where: { slug: { startsWith: base } },
+    select: { slug: true },
+  });
+  const usedSlugs = new Set(existingSlugs.map(({ slug }) => slug));
   let slug = base;
   let counter = 1;
 
-  while (
-    await prisma.post.findUnique({ where: { slug }, select: { id: true } })
-  ) {
+  while (usedSlugs.has(slug)) {
     slug = `${base}-${counter}`;
     counter += 1;
   }
@@ -229,12 +233,19 @@ export async function listAdminPosts(
     const [todayViews, totalViews] = await Promise.all([
       prisma.postView.groupBy({
         by: ["postId"],
-        where: { postId: { in: postIds }, createdAt: { gte: startOfDay } },
+        where: {
+          postId: { in: postIds },
+          createdAt: { gte: startOfDay },
+          durationSeconds: { gte: MIN_POST_VIEW_SECONDS },
+        },
         _count: { postId: true },
       }),
       prisma.postView.groupBy({
         by: ["postId"],
-        where: { postId: { in: postIds } },
+        where: {
+          postId: { in: postIds },
+          durationSeconds: { gte: MIN_POST_VIEW_SECONDS },
+        },
         _count: { postId: true },
       }),
     ]);

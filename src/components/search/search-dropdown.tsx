@@ -2,7 +2,13 @@
 
 import { Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   getRecentPosts,
   type SearchResult,
@@ -49,7 +55,7 @@ export function SearchDropdown() {
         if (!cancelled) setIsLoading(false);
       }
     };
-    load();
+    void load();
     return () => {
       cancelled = true;
     };
@@ -132,6 +138,51 @@ export function SearchDropdown() {
     setSearchQuery("");
   };
 
+  let dropdownContent: ReactNode;
+  if (isLoading) {
+    dropdownContent = (
+      <output className="block p-4 text-center text-sm text-muted-foreground">
+        Chargement...
+      </output>
+    );
+  } else if (results.length === 0) {
+    dropdownContent = (
+      <li className="p-4 text-center text-sm text-muted-foreground">
+        {searchQuery.trim() ? "Aucun résultat trouvé" : "Aucun post disponible"}
+      </li>
+    );
+  } else {
+    dropdownContent = results.map((result) => (
+      <li key={result.id}>
+        <button
+          type="button"
+          onClick={() => handleResultClick(result.id)}
+          className="w-full text-left px-4 py-3 hover:bg-accent/50 transition-colors focus:outline-none focus:bg-accent/50"
+        >
+          <div className="flex items-start gap-3">
+            <img
+              src={result.thumbnail || "/miniature.png"}
+              alt=""
+              aria-hidden="true"
+              className="w-20 h-14 object-cover rounded shrink-0"
+            />
+            <div className="flex-1 min-w-0">
+              <h3 className="font-semibold text-base truncate">
+                {result.title}
+              </h3>
+              {/*<p className="text-xs text-muted-foreground truncate">
+                {result.author.username}
+              </p>*/}
+              <p className="text-xs text-muted-foreground line-clamp-2">
+                {result.summary}
+              </p>
+            </div>
+          </div>
+        </button>
+      </li>
+    ));
+  }
+
   // Render
   return (
     <div ref={containerRef} className="relative flex-1">
@@ -177,49 +228,9 @@ export function SearchDropdown() {
         <div>
           <div
             id="search-listbox"
-            className="absolute top-full left-[55%] mt-4 w-[71vw] max-w-[24rem] -translate-x-2/3 sm:left-auto sm:right-0 sm:translate-x-0 shadow-sm sm:transform-none sm:w-96 bg-background border border-border rounded-lg z-40 max-h-[400px] overflow-y-auto divide-y divide-border"
+            className="absolute top-full left-[55%] mt-4 w-[71vw] max-w-[24rem] -translate-x-2/3 sm:left-auto sm:right-0 sm:translate-x-0 shadow-sm sm:transform-none sm:w-96 bg-background border border-border rounded-lg z-40 max-h-100 overflow-y-auto divide-y divide-border"
           >
-            {isLoading ? (
-              <output className="block p-4 text-center text-sm text-muted-foreground">
-                Chargement...
-              </output>
-            ) : results.length === 0 ? (
-              <li className="p-4 text-center text-sm text-muted-foreground">
-                {searchQuery.trim()
-                  ? "Aucun résultat trouvé"
-                  : "Aucun post disponible"}
-              </li>
-            ) : (
-              results.map((result) => (
-                <li key={result.id}>
-                  <button
-                    type="button"
-                    onClick={() => handleResultClick(result.id)}
-                    className="w-full text-left px-4 py-3 hover:bg-accent/50 transition-colors focus:outline-none focus:bg-accent/50"
-                  >
-                    <div className="flex items-start gap-3">
-                      <img
-                        src={result.thumbnail || "/miniature.png"}
-                        alt=""
-                        aria-hidden="true"
-                        className="w-20 h-14 object-cover rounded flex-shrink-0"
-                      />
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-base truncate">
-                          {result.title}
-                        </h3>
-                        {/*<p className="text-xs text-muted-foreground truncate">
-                          {result.author.username}
-                        </p>*/}
-                        <p className="text-xs text-muted-foreground line-clamp-2">
-                          {result.summary}
-                        </p>
-                      </div>
-                    </div>
-                  </button>
-                </li>
-              ))
-            )}
+            {dropdownContent}
           </div>
         </div>
       )}

@@ -1,7 +1,13 @@
 import Link from "next/link";
 import { SignupForm } from "@/components/forms/signup-form";
+import { prisma } from "@/lib/prisma";
 
-export default function SignupPage() {
+export default async function SignupPage() {
+  const schoolClasses = await prisma.schoolClass.findMany({
+    orderBy: [{ level: "asc" }, { name: "asc" }],
+    select: { id: true, name: true, level: true, schoolYear: true },
+  });
+
   return (
     <div
       className="min-h-screen flex flex-col items-center bg-cover bg-center p-4"
@@ -26,13 +32,13 @@ export default function SignupPage() {
               height={50}
               loading="eager"
             />
-            <span className="text-[1rem] leading-[1rem] hidden sm:block font-heading">
+            <span className="text-[1rem] leading-4 hidden sm:block font-heading">
               CSM Niangon
             </span>
           </div>
         </Link>
       </div>
-      <SignupForm />
+      <SignupForm schoolClasses={schoolClasses} />
     </div>
   );
 }

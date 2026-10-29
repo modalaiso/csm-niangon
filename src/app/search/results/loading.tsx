@@ -1,4 +1,4 @@
-function Pulse({ className }: { className: string }) {
+function Pulse({ className }: { readonly className: string }) {
   return <div className={`animate-pulse rounded-lg bg-muted ${className}`} />;
 }
 
@@ -22,7 +22,7 @@ export default function Loading() {
             key={index}
             className="overflow-hidden rounded-2xl border border-border bg-muted/70"
           >
-            <Pulse className="aspect-[4/3] w-full rounded-none" />
+            <Pulse className="aspect-4/3 w-full rounded-none" />
             <div className="space-y-3 p-4">
               <Pulse className="h-5 w-4/5" />
               <Pulse className="h-4 w-full" />

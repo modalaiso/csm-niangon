@@ -43,9 +43,7 @@ export function InfoBar(props: Readonly<InfoBarProps>) {
     resizeObserver.observe(trackEl);
 
     const step = (timestamp: number) => {
-      if (lastTimeRef.current === null) {
-        lastTimeRef.current = timestamp;
-      }
+      lastTimeRef.current ??= timestamp;
       const deltaSeconds = (timestamp - lastTimeRef.current) / 1000;
       lastTimeRef.current = timestamp;
 
@@ -111,9 +109,9 @@ export function InfoBar(props: Readonly<InfoBarProps>) {
               className="flex items-center gap-2 px-6 text-sm font-medium hover:underline"
             >
               {item.isUrgent ? (
-                <AlertTriangle className="h-4 w-4 flex-shrink-0" />
+                <AlertTriangle className="h-4 w-4 shrink-0" />
               ) : (
-                <Info className="h-4 w-4 flex-shrink-0" />
+                <Info className="h-4 w-4 shrink-0" />
               )}
               {item.title}
             </Link>

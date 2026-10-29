@@ -99,7 +99,7 @@ export function ModerationKeywordsPanel() {
   };
 
   return (
-    <div className="rounded-2xl border border-border bg-background p-5">
+    <div className="rounded-xl border border-border bg-background p-4 sm:p-5">
       <h2 className="text-sm font-semibold text-foreground">
         Mots-clés surveillés
       </h2>
@@ -136,7 +136,7 @@ export function ModerationKeywordsPanel() {
           type="button"
           onClick={handleAdd}
           disabled={isPending || !phrase.trim()}
-          className="gap-1.5 text-white"
+          className="gap-1.5 rounded-md bg-primarys2-700 text-white hover:bg-primarys2-800"
         >
           <Plus className="h-4 w-4" />
           Ajouter
@@ -194,15 +194,15 @@ export function ModerationKeywordsPanel() {
                         : "Revue manuelle"}
                     </span>
                   </div>
-                  <div className="flex flex-shrink-0 items-center gap-2">
+                  <div className="flex shrink-0 items-center gap-2">
                     <button
                       type="button"
                       onClick={() => handleToggle(k)}
                       disabled={isPending}
                       className={cn(
-                        "rounded-full px-3 py-1 text-xs font-medium transition-colors",
+                        "min-h-10 rounded-md px-3 py-1 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                         k.isActive
-                          ? "bg-primary/10 text-primary"
+                          ? "bg-primary/10 text-foreground"
                           : "bg-muted text-muted-foreground",
                       )}
                     >
@@ -213,7 +213,7 @@ export function ModerationKeywordsPanel() {
                       onClick={() => handleDelete(k)}
                       disabled={isPending}
                       aria-label="Supprimer"
-                      className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+                      className="flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
