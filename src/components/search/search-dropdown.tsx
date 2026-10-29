@@ -2,7 +2,13 @@
 
 import { Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   getRecentPosts,
   type SearchResult,
@@ -132,7 +138,7 @@ export function SearchDropdown() {
     setSearchQuery("");
   };
 
-  let dropdownContent;
+  let dropdownContent: ReactNode;
   if (isLoading) {
     dropdownContent = (
       <output className="block p-4 text-center text-sm text-muted-foreground">

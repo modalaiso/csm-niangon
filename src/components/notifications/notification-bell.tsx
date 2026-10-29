@@ -3,7 +3,13 @@
 import { Bell } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   getMyNotifications,
   getUnreadNotificationCount,
@@ -127,7 +133,7 @@ export function NotificationBell() {
     return null;
   }
 
-  let notificationContent;
+  let notificationContent: ReactNode;
   if (isLoading) {
     notificationContent = (
       <p className="px-4 py-8 text-center text-sm text-muted-foreground">
