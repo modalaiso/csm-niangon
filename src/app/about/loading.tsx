@@ -9,7 +9,7 @@ export default function Loading() {
       aria-label="Chargement de la page À propos"
       className="min-h-screen bg-background"
     >
-      <Pulse className="h-[420px] w-full rounded-none md:h-[520px]" />
+      <Pulse className="h-105 w-full rounded-none md:h-130" />
       <Pulse className="h-24 w-full rounded-none" />
       <div className="container grid gap-8 px-4 py-14 md:grid-cols-2">
         <div className="space-y-4">
@@ -19,7 +19,7 @@ export default function Loading() {
           <Pulse className="h-4 w-full" />
           <Pulse className="h-4 w-2/3" />
         </div>
-        <Pulse className="aspect-[4/3] w-full rounded-3xl" />
+        <Pulse className="aspect-4/3 w-full rounded-3xl" />
       </div>
     </main>
   );

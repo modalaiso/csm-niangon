@@ -18,7 +18,8 @@ export default async function AdminAboutPage() {
         <div>
           <h1 className="text-2xl font-bold text-foreground">Page À propos</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Modifiez chaque section de la page publique. Les changements sont visibles dès l'enregistrement.
+            Modifiez chaque section de la page publique. Les changements sont
+            visibles dès l'enregistrement.
           </p>
         </div>
         <Link

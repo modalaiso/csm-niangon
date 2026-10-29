@@ -7,13 +7,19 @@ import { renderPostContent } from "@/lib/render-post-content";
 
 export const metadata = {
   title: "À propos de nous | CSM Niangon",
-  description: "Découvrez le CSM Niangon : notre histoire, nos valeurs et notre équipe.",
+  description:
+    "Découvrez le CSM Niangon : notre histoire, nos valeurs et notre équipe.",
 };
 
 export const revalidate = 300;
 
 function SectionHeading(
-  props: Readonly<{ eyebrow?: string; title: string; light?: boolean; center?: boolean }>,
+  props: Readonly<{
+    eyebrow?: string;
+    title: string;
+    light?: boolean;
+    center?: boolean;
+  }>,
 ) {
   return (
     <div className={props.center ? "text-center" : undefined}>
@@ -92,7 +98,9 @@ export default async function AboutPage() {
                 key={`${stat.label}-${i}`}
                 className="text-center md:border-l md:border-white/25 md:first:border-l-0"
               >
-                <p className="text-3xl font-extrabold sm:text-4xl">{stat.value}</p>
+                <p className="text-3xl font-extrabold sm:text-4xl">
+                  {stat.value}
+                </p>
                 <p className="mt-1 text-xs uppercase tracking-wide text-white/85 sm:text-sm">
                   {stat.label}
                 </p>
@@ -105,7 +113,10 @@ export default async function AboutPage() {
       {/* Présentation */}
       <section className="container grid items-center gap-10 px-4 py-14 md:grid-cols-2 md:py-20">
         <div>
-          <SectionHeading eyebrow={presentation.eyebrow} title={presentation.title} />
+          <SectionHeading
+            eyebrow={presentation.eyebrow}
+            title={presentation.title}
+          />
           <div className="mt-6">{renderPostContent(presentation.body)}</div>
         </div>
         {presentation.image && (
@@ -127,7 +138,12 @@ export default async function AboutPage() {
             className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.15),transparent_45%),radial-gradient(circle_at_80%_80%,rgba(0,0,0,0.25),transparent_50%)]"
           />
           <div className="container px-4">
-            <SectionHeading eyebrow="Nos valeurs" title="Ce qui nous caractérise" light center />
+            <SectionHeading
+              eyebrow="Nos valeurs"
+              title="Ce qui nous caractérise"
+              light
+              center
+            />
             <div className="mx-auto mt-10 grid max-w-5xl gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {about.values.map((value, i) => (
                 <article
@@ -137,7 +153,9 @@ export default async function AboutPage() {
                   <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border-2 border-primary text-primary">
                     <AboutIcon name={value.icon} className="h-6 w-6" />
                   </span>
-                  <h3 className="mt-4 text-lg font-bold text-primary">{value.title}</h3>
+                  <h3 className="mt-4 text-lg font-bold text-primary">
+                    {value.title}
+                  </h3>
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                     {value.description}
                   </p>
@@ -189,13 +207,21 @@ export default async function AboutPage() {
       {about.team.length > 0 && (
         <section className="border-y border-border bg-muted/40 py-14">
           <div className="container px-4">
-            <SectionHeading eyebrow="Notre équipe" title="Responsables d'établissement" center />
+            <SectionHeading
+              eyebrow="Notre équipe"
+              title="Responsables d'établissement"
+              center
+            />
             <ul className="mt-10 grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-6">
               {about.team.map((member, i) => (
                 <li key={`${member.name}-${i}`} className="text-center">
                   <div className="mx-auto h-24 w-24 overflow-hidden rounded-full ring-2 ring-primary/30">
                     {member.photo ? (
-                      <img src={member.photo} alt={member.name} className="h-full w-full object-cover" />
+                      <img
+                        src={member.photo}
+                        alt={member.name}
+                        className="h-full w-full object-cover"
+                      />
                     ) : (
                       <Avatar
                         nom={member.name}
@@ -207,7 +233,9 @@ export default async function AboutPage() {
                       />
                     )}
                   </div>
-                  <p className="mt-3 text-sm font-semibold text-foreground">{member.name}</p>
+                  <p className="mt-3 text-sm font-semibold text-foreground">
+                    {member.name}
+                  </p>
                   <p className="text-xs text-muted-foreground">{member.role}</p>
                 </li>
               ))}
@@ -219,13 +247,22 @@ export default async function AboutPage() {
       {/* Partenaires */}
       {about.partners.length > 0 && (
         <section className="container px-4 py-14">
-          <SectionHeading eyebrow="Nos partenaires" title="Ils nous font confiance" />
+          <SectionHeading
+            eyebrow="Nos partenaires"
+            title="Ils nous font confiance"
+          />
           <ul className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
             {about.partners.map((partner, i) => {
               const inner = partner.logo ? (
-                <img src={partner.logo} alt={partner.name} className="max-h-16 w-auto object-contain" />
+                <img
+                  src={partner.logo}
+                  alt={partner.name}
+                  className="max-h-16 w-auto object-contain"
+                />
               ) : (
-                <span className="text-sm font-semibold text-foreground">{partner.name}</span>
+                <span className="text-sm font-semibold text-foreground">
+                  {partner.name}
+                </span>
               );
               return (
                 <li key={`${partner.name}-${i}`}>
@@ -251,7 +288,10 @@ export default async function AboutPage() {
       )}
 
       {/* Contact & horaires */}
-      <section id="contact" className="border-t border-border bg-muted/40 py-14">
+      <section
+        id="contact"
+        className="border-t border-border bg-muted/40 py-14"
+      >
         <div className="container grid gap-6 px-4 md:grid-cols-2">
           <div className="rounded-3xl border border-border bg-background p-6">
             <SectionHeading title="Nous joindre" />
@@ -265,7 +305,10 @@ export default async function AboutPage() {
               {contact.phone && (
                 <li className="flex items-center gap-3">
                   <Phone className="h-5 w-5 text-primary" />
-                  <a href={`tel:${contact.phone.replace(/\s/g, "")}`} className="text-foreground hover:underline">
+                  <a
+                    href={`tel:${contact.phone.replace(/\s/g, "")}`}
+                    className="text-foreground hover:underline"
+                  >
                     {contact.phone}
                   </a>
                 </li>
@@ -273,7 +316,10 @@ export default async function AboutPage() {
               {contact.email && (
                 <li className="flex items-center gap-3">
                   <Mail className="h-5 w-5 text-primary" />
-                  <a href={`mailto:${contact.email}`} className="text-foreground hover:underline">
+                  <a
+                    href={`mailto:${contact.email}`}
+                    className="text-foreground hover:underline"
+                  >
                     {contact.email}
                   </a>
                 </li>
@@ -297,12 +343,17 @@ export default async function AboutPage() {
               <SectionHeading title="Horaires d'ouverture" />
               <ul className="mt-6 divide-y divide-border text-sm">
                 {about.hours.map((row, i) => (
-                  <li key={`${row.label}-${i}`} className="flex items-center justify-between gap-4 py-3">
+                  <li
+                    key={`${row.label}-${i}`}
+                    className="flex items-center justify-between gap-4 py-3"
+                  >
                     <span className="flex items-center gap-2 text-muted-foreground">
                       <Clock className="h-4 w-4 text-primary" />
                       {row.label}
                     </span>
-                    <span className="font-semibold text-foreground">{row.value}</span>
+                    <span className="font-semibold text-foreground">
+                      {row.value}
+                    </span>
                   </li>
                 ))}
               </ul>

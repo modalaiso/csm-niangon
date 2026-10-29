@@ -131,37 +131,6 @@ export function SignupForm(props: Readonly<SignupFormProps>) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="schoolClassId">Classe précise associée</Label>
-            <Select
-              value={selectedSchoolClassId || "none"}
-              onValueChange={(value) =>
-                setValue("schoolClassId", value === "none" ? "" : value, {
-                  shouldValidate: true,
-                })
-              }
-            >
-              <SelectTrigger className="bg-background">
-                <SelectValue placeholder="Sélectionner la classe de l'élève" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">Ne pas associer maintenant</SelectItem>
-                {props.schoolClasses.map((schoolClass) => (
-                  <SelectItem key={schoolClass.id} value={schoolClass.id}>
-                    {schoolClass.name} ·{" "}
-                    {schoolClass.level ?? "Niveau non renseigné"} ·{" "}
-                    {schoolClass.schoolYear}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <p className="text-xs text-muted-foreground">
-              Les parents peuvent choisir la classe de leur enfant. Sans
-              association, l'emploi du temps ne sera pas accessible depuis ce
-              compte.
-            </p>
-          </div>
-
-          <div className="space-y-2">
             <Label htmlFor="prenom">
               Prénoms <span className="text-red-500">*</span>
             </Label>
@@ -217,6 +186,37 @@ export function SignupForm(props: Readonly<SignupFormProps>) {
           {errors.classe && (
             <p className="text-sm text-red-500">{errors.classe.message}</p>
           )}
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="schoolClassId">Classe précise associée</Label>
+          <Select
+            value={selectedSchoolClassId || "none"}
+            onValueChange={(value) =>
+              setValue("schoolClassId", value === "none" ? "" : value, {
+                shouldValidate: true,
+              })
+            }
+          >
+            <SelectTrigger className="bg-background">
+              <SelectValue placeholder="Sélectionner la classe de l'élève" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">Ne pas associer maintenant</SelectItem>
+              {props.schoolClasses.map((schoolClass) => (
+                <SelectItem key={schoolClass.id} value={schoolClass.id}>
+                  {schoolClass.name} ·{" "}
+                  {schoolClass.level ?? "Niveau non renseigné"} ·{" "}
+                  {schoolClass.schoolYear}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <p className="text-xs text-muted-foreground">
+            Les parents peuvent choisir la classe de leur enfant. Sans
+            association, l'emploi du temps ne sera pas accessible depuis ce
+            compte.
+          </p>
         </div>
 
         <div className="space-y-2">
@@ -281,7 +281,7 @@ export function SignupForm(props: Readonly<SignupFormProps>) {
         </div>
 
         <div className="space-y-1.5">
-          <label className="flex items-start gap-2.5 text-sm text-gray-600">
+          <label className="flex items-start gap-2.5 text-sm text-muted-foreground">
             <input
               type="checkbox"
               {...register("acceptTerms")}

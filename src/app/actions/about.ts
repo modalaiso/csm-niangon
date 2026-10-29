@@ -2,8 +2,8 @@
 
 import type { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
-import { getPostManagerAuthContext } from "@/lib/auth/admin-guard";
 import { type AboutContent, aboutSchema, DEFAULT_ABOUT } from "@/lib/about";
+import { getPostManagerAuthContext } from "@/lib/auth/admin-guard";
 import { prisma } from "@/lib/prisma";
 
 const ID = "singleton";
@@ -54,7 +54,10 @@ export async function saveAboutContent(input: unknown): Promise<SaveResult> {
     revalidatePath("/admin/about");
     return { success: true };
   } catch (error) {
-    console.error("Erreur lors de l'enregistrement de la page À propos:", error);
+    console.error(
+      "Erreur lors de l'enregistrement de la page À propos:",
+      error,
+    );
     return { error: "unknown" };
   }
 }
