@@ -23,7 +23,7 @@ input[type="search"]::-webkit-search-decoration {
 
 ::selection {
   background-color: #42aa4a;
-  color: #fff;
+  color: #000;
 }
 
 .schedule-export-mode .schedule-grid-document {
@@ -92,7 +92,6 @@ input[type="search"]::-webkit-search-decoration {
     --accent: 145 25% 12%;
     --accent-foreground: 140 20% 98%;
 
-    /* --destructive: 0 63% 31%; */
     --destructive-foreground: 140 20% 98%;
 
     --border: 145 20% 15%;
@@ -135,7 +134,6 @@ input[type="search"]::-webkit-search-decoration {
   }
 }
 
-/* Impression : n'affiche que l'emploi du temps, masque nav/footer/pop-ups */
 @media print {
   @page {
     size: A4 landscape;
@@ -149,6 +147,8 @@ input[type="search"]::-webkit-search-decoration {
   #schedule-print-area,
   #schedule-print-area * {
     visibility: visible;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   #schedule-print-area {
@@ -157,12 +157,6 @@ input[type="search"]::-webkit-search-decoration {
     top: 0;
     width: 100%;
     border: none;
-  }
-
-  #schedule-print-area,
-  #schedule-print-area * {
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
   }
 
   #schedule-print-area table {

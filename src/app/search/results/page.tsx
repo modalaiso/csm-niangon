@@ -107,7 +107,7 @@ export default async function SearchResultsPage(
                     href={`/posts/${result.id}`}
                     className="group overflow-hidden rounded-2xl border border-border bg-muted/70 transition-all hover:border-primary/40"
                   >
-                    <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
+                    <div className="relative aspect-4/3 w-full overflow-hidden bg-muted">
                       {result.thumbnail ? (
                         <img
                           src={result.thumbnail}

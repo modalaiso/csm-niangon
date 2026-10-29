@@ -61,9 +61,9 @@ export default async function AboutPage() {
             alt=""
             className="h-full w-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/55 to-black/35" />
+          <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/55 to-black/35" />
         </div>
-        <div className="container flex min-h-[420px] flex-col items-center justify-center px-4 py-20 text-center text-white md:min-h-[520px]">
+        <div className="container flex min-h-105 flex-col items-center justify-center px-4 py-20 text-center text-white md:min-h-130">
           {hero.eyebrow && (
             <span className="rounded-full border border-white/40 bg-white/10 px-4 py-1 text-xs font-semibold uppercase tracking-widest backdrop-blur">
               {hero.eyebrow}
@@ -120,11 +120,11 @@ export default async function AboutPage() {
           <div className="mt-6">{renderPostContent(presentation.body)}</div>
         </div>
         {presentation.image && (
-          <div className="overflow-hidden rounded-[2rem] border-4 border-primary/70 shadow-lg">
+          <div className="overflow-hidden rounded-4xl border-4 border-primary/70 shadow-lg">
             <img
               src={presentation.image}
               alt={presentation.title}
-              className="aspect-[4/3] w-full object-cover"
+              className="aspect-4/3 w-full object-cover"
             />
           </div>
         )}
@@ -175,7 +175,7 @@ export default async function AboutPage() {
                 <img
                   src={director.photo}
                   alt={director.name}
-                  className="h-full max-h-[420px] w-full object-cover md:max-h-none"
+                  className="h-full max-h-105 w-full object-cover md:max-h-none"
                 />
               ) : (
                 <div className="flex h-64 items-center justify-center md:h-full">

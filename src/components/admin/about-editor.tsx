@@ -192,6 +192,10 @@ function ListCard<T>(
     render: (item: T, set: (patch: Partial<T>) => void) => ReactNode;
   }>,
 ) {
+  const nextItemKey = useRef(0);
+  const [itemKeys, setItemKeys] = useState(() =>
+    props.items.map(() => nextItemKey.current++),
+  );
   const setAt = (i: number, patch: Partial<T>) =>
     props.onChange(
       props.items.map((it, idx) => (idx === i ? { ...it, ...patch } : it)),
@@ -206,14 +210,15 @@ function ListCard<T>(
       )}
       {props.items.map((item, i) => (
         <div
-          key={i}
+          key={itemKeys[i]}
           className="relative rounded-2xl border border-border bg-muted/30 p-4"
         >
           <button
             type="button"
-            onClick={() =>
-              props.onChange(props.items.filter((_, idx) => idx !== i))
-            }
+            onClick={() => {
+              setItemKeys((keys) => keys.filter((_, idx) => idx !== i));
+              props.onChange(props.items.filter((_, idx) => idx !== i));
+            }}
             aria-label="Supprimer cet élément"
             className="absolute right-3 top-3 rounded-full p-1.5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
           >
@@ -229,7 +234,10 @@ function ListCard<T>(
           type="button"
           variant="outline"
           size="sm"
-          onClick={() => props.onChange([...props.items, props.empty])}
+          onClick={() => {
+            setItemKeys((keys) => [...keys, nextItemKey.current++]);
+            props.onChange([...props.items, props.empty]);
+          }}
           className="gap-1.5 rounded-full"
         >
           <Plus className="h-4 w-4" />

@@ -16,7 +16,7 @@ const signupSchema = z.object({
   username: z.string().min(3),
   classe: z.string().min(1),
   schoolClassId: z.string().optional(),
-  email: z.string().email(),
+  email: z.email(),
   password: z.string().min(8),
 });
 
@@ -30,7 +30,7 @@ const adminSignupSchema = z.object({
   firstName: z.string().min(1),
   username: z.string().min(3),
   role: z.string().min(1),
-  email: z.string().email(),
+  email: z.email(),
   password: z.string().min(8),
   accessKey: z.string().min(1),
 });
@@ -186,7 +186,7 @@ export async function login(formData: z.infer<typeof loginSchema>) {
   let email = formData.nameOrEmail;
 
   // Check if input is an email
-  const isEmail = z.string().email().safeParse(email).success;
+  const isEmail = z.email().safeParse(email).success;
 
   if (!isEmail) {
     // Assume it's a username and look up the email
@@ -353,7 +353,7 @@ export async function adminLogin(formData: z.infer<typeof adminLoginSchema>) {
   let email = formData.emailOrUsername;
 
   // Check if input is an email
-  const isEmail = z.string().email().safeParse(email).success;
+  const isEmail = z.email().safeParse(email).success;
 
   if (!isEmail) {
     // Assume it's a username and look up the email

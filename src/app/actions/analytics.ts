@@ -78,7 +78,7 @@ function sanitizeEventProperties(
   return Object.fromEntries(
     Object.entries(properties)
       .filter(([key, value]) => {
-        if (!/^[a-zA-Z][a-zA-Z0-9_]{0,39}$/.test(key)) return false;
+        if (!/^[a-zA-Z]\w{0,39}$/.test(key)) return false;
         return (
           value === null ||
           typeof value === "string" ||

@@ -79,13 +79,13 @@ function SidebarLink({
   Icon,
   isActive,
   onNavigate,
-}: {
+}: Readonly<{
   href: string;
   label: string;
   Icon: LucideIcon;
   isActive: boolean;
   onNavigate?: () => void;
-}) {
+}>) {
   return (
     <Link
       href={href}
@@ -143,7 +143,7 @@ export function AdminSidebar(props: Readonly<AdminSidebarProps>) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
-  const mobileMenuRef = useRef<HTMLElement>(null);
+  const mobileMenuRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     if (!isMobileOpen) return;
@@ -242,13 +242,13 @@ export function AdminSidebar(props: Readonly<AdminSidebarProps>) {
             onClick={closeMobileMenu}
             className="absolute inset-0 bg-foreground/35"
           />
-          <aside
+          <dialog
+            open
             id="admin-mobile-menu"
             ref={mobileMenuRef}
-            role="dialog"
             aria-modal="true"
             aria-labelledby="admin-mobile-menu-title"
-            className="absolute inset-y-0 left-0 flex w-[min(19rem,88vw)] flex-col border-r border-border bg-background p-4"
+            className="absolute inset-y-0 left-0 m-0 flex max-h-none max-w-none w-[min(19rem,88vw)] flex-col border-r border-border bg-background p-4"
           >
             <div className="mb-5 flex items-center justify-between border-b border-border pb-4">
               <span
@@ -281,7 +281,7 @@ export function AdminSidebar(props: Readonly<AdminSidebarProps>) {
               <ArrowLeft className="h-4 w-4" aria-hidden="true" />
               Retour au site
             </Link>
-          </aside>
+          </dialog>
         </div>
       )}
     </>

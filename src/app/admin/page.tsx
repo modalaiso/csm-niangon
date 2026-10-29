@@ -71,9 +71,59 @@ export default async function AdminDashboardPage() {
   const { visitStats, trend, topPages, analytics } = analyticsDashboard;
 
   const summary = "error" in summaryResult ? null : summaryResult;
+  const pendingCommentLabel =
+    summary?.pendingComments === 1 ? "commentaire" : "commentaires";
   const statsByPeriod = new Map(visitStats.map((stat) => [stat.period, stat]));
   const todayViews = statsByPeriod.get("daily")?.count ?? 0;
   const weeklyVisitors = statsByPeriod.get("weekly")?.uniqueSessions ?? 0;
+
+  let topPostsContent = (
+    <p className="px-3 py-6 text-center text-sm text-muted-foreground">
+      Les données des publications sont temporairement indisponibles.
+    </p>
+  );
+
+  if (summary) {
+    if (summary.topPosts.length === 0) {
+      topPostsContent = (
+        <p className="rounded-md bg-muted/60 px-4 py-6 text-center text-sm text-muted-foreground">
+          Les publications apparaîtront après les premières lectures qualifiées.
+        </p>
+      );
+    } else {
+      topPostsContent = (
+        <ol className="divide-y divide-border">
+          {summary.topPosts.map((post, index) => (
+            <li
+              key={post.id}
+              className="flex items-center justify-between gap-3 py-3"
+            >
+              <span className="flex min-w-0 items-center gap-3">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-muted text-xs font-semibold text-muted-foreground">
+                  {index + 1}
+                </span>
+                <Link
+                  href={`/posts/${post.id}`}
+                  className="min-w-0 truncate text-sm font-medium text-foreground hover:text-primarys2-700 hover:underline"
+                >
+                  {post.title}
+                </Link>
+              </span>
+              <span className="shrink-0 text-right">
+                <span className="block text-sm font-semibold text-foreground">
+                  {numberFormatter.format(post.views)} lecture
+                  {post.views > 1 ? "s" : ""}
+                </span>
+                <span className="text-[11px] text-muted-foreground">
+                  {formatDuration(post.averageReadSeconds)} en moyenne
+                </span>
+              </span>
+            </li>
+          ))}
+        </ol>
+      );
+    }
+  }
 
   return (
     <div className="mx-auto max-w-7xl space-y-6">
@@ -328,46 +378,7 @@ export default async function AdminDashboardPage() {
               </p>
             </div>
           </div>
-          {!summary ? (
-            <p className="px-3 py-6 text-center text-sm text-muted-foreground">
-              Les données des publications sont temporairement indisponibles.
-            </p>
-          ) : summary.topPosts.length === 0 ? (
-            <p className="rounded-md bg-muted/60 px-4 py-6 text-center text-sm text-muted-foreground">
-              Les publications apparaîtront après les premières lectures
-              qualifiées.
-            </p>
-          ) : (
-            <ol className="divide-y divide-border">
-              {summary.topPosts.map((post, index) => (
-                <li
-                  key={post.id}
-                  className="flex items-center justify-between gap-3 py-3"
-                >
-                  <span className="flex min-w-0 items-center gap-3">
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-muted text-xs font-semibold text-muted-foreground">
-                      {index + 1}
-                    </span>
-                    <Link
-                      href={`/posts/${post.id}`}
-                      className="min-w-0 truncate text-sm font-medium text-foreground hover:text-primarys2-700 hover:underline"
-                    >
-                      {post.title}
-                    </Link>
-                  </span>
-                  <span className="shrink-0 text-right">
-                    <span className="block text-sm font-semibold text-foreground">
-                      {numberFormatter.format(post.views)} lecture
-                      {post.views > 1 ? "s" : ""}
-                    </span>
-                    <span className="text-[11px] text-muted-foreground">
-                      {formatDuration(post.averageReadSeconds)} en moyenne
-                    </span>
-                  </span>
-                </li>
-              ))}
-            </ol>
-          )}
+          {topPostsContent}
         </div>
       </section>
 
@@ -416,7 +427,7 @@ export default async function AdminDashboardPage() {
                 </p>
                 <p className="mt-0.5 text-xs text-muted-foreground">
                   {summary
-                    ? `${numberFormatter.format(summary.pendingComments)} commentaire${summary.pendingComments === 1 ? "" : "s"} à examiner`
+                    ? `${numberFormatter.format(summary.pendingComments)} ${pendingCommentLabel} à examiner`
                     : "Examiner les commentaires signalés"}
                 </p>
               </div>

@@ -15,25 +15,22 @@ const ROLE_LABELS: Record<string, string> = {
   USER: "Utilisateur",
 };
 
+function getAdminPageLabel(pathname: string) {
+  if (pathname.startsWith("/admin/posts/new")) return "Nouvelle publication";
+  if (/^\/admin\/posts\/[^/]+\/edit$/.exec(pathname))
+    return "Modifier une publication";
+  if (pathname.startsWith("/admin/posts")) return "Publications";
+  if (pathname.startsWith("/admin/schedules/")) return "Emploi du temps";
+  if (pathname.startsWith("/admin/schedules")) return "Emplois du temps";
+  if (pathname.startsWith("/admin/comments")) return "Commentaires";
+  if (pathname.startsWith("/admin/moderation")) return "Modération";
+  if (pathname.startsWith("/admin/users")) return "Utilisateurs";
+  return "Vue d’ensemble";
+}
+
 export function AdminTopbar(props: Readonly<AdminTopbarProps>) {
   const pathname = usePathname();
-  const pageLabel = pathname.startsWith("/admin/posts/new")
-    ? "Nouvelle publication"
-    : pathname.match(/^\/admin\/posts\/[^/]+\/edit$/)
-      ? "Modifier une publication"
-      : pathname.startsWith("/admin/posts")
-        ? "Publications"
-        : pathname.startsWith("/admin/schedules/")
-          ? "Emploi du temps"
-          : pathname.startsWith("/admin/schedules")
-            ? "Emplois du temps"
-            : pathname.startsWith("/admin/comments")
-              ? "Commentaires"
-              : pathname.startsWith("/admin/moderation")
-                ? "Modération"
-                : pathname.startsWith("/admin/users")
-                  ? "Utilisateurs"
-                  : "Vue d’ensemble";
+  const pageLabel = getAdminPageLabel(pathname);
 
   return (
     <header className="sticky top-0 z-30 hidden min-h-14 items-center justify-between border-b border-border bg-background px-6 py-2 md:flex">

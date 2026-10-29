@@ -143,7 +143,7 @@ export default async function PostPage(props: Readonly<PostPageProps>) {
               </div>
             </div>
 
-            <div className="flex flex-shrink-0 flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+            <div className="flex shrink-0 flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
               {post.publishedAt && (
                 <span className="inline-flex items-center gap-1">
                   <Calendar className="h-3.5 w-3.5" />
@@ -224,7 +224,7 @@ export default async function PostPage(props: Readonly<PostPageProps>) {
                     href={`/posts/${related.id}`}
                     className="group overflow-hidden rounded-2xl border border-border bg-background transition-all hover:border-primary/40"
                   >
-                    <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
+                    <div className="relative aspect-4/3 w-full overflow-hidden bg-muted">
                       {related.thumbnail ? (
                         <img
                           src={related.thumbnail}

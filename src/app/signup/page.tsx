@@ -32,7 +32,7 @@ export default async function SignupPage() {
               height={50}
               loading="eager"
             />
-            <span className="text-[1rem] leading-[1rem] hidden sm:block font-heading">
+            <span className="text-[1rem] leading-4 hidden sm:block font-heading">
               CSM Niangon
             </span>
           </div>

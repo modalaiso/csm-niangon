@@ -2,7 +2,7 @@ import { AdminSignupForm } from "@/components/forms/admin-signup-form";
 
 export default function AdminSignupPage() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 to-blue-900 p-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-linear-to-br from-gray-900 to-blue-900 p-4">
       {/*<div className="mb-8 text-center">
         <Link
           href="/"

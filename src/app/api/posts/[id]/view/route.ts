@@ -7,20 +7,12 @@ import {
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 
-export async function POST(
-  request: Request,
-  context: { params: Promise<{ id: string }> },
-) {
-  const { id } = await context.params;
-  if (!id || id.length > 128) {
-    return NextResponse.json({ error: "invalid" }, { status: 400 });
-  }
-
+async function getBoundedDuration(request: Request): Promise<number | null> {
   let payload: unknown;
   try {
     payload = await request.json();
   } catch {
-    return NextResponse.json({ error: "invalid" }, { status: 400 });
+    return null;
   }
 
   const durationSeconds =
@@ -34,6 +26,80 @@ export async function POST(
     !Number.isSafeInteger(durationSeconds) ||
     durationSeconds < MIN_POST_VIEW_SECONDS
   ) {
+    return null;
+  }
+  return Math.min(durationSeconds, MAX_POST_VIEW_SECONDS);
+}
+
+function getIpAddress(request: Request): string {
+  const forwardedAddress = request.headers
+    .get("x-forwarded-for")
+    ?.split(",")[0]
+    ?.trim();
+  return (
+    request.headers.get("x-real-ip")?.trim() ||
+    forwardedAddress ||
+    "unknown"
+  ).slice(0, 64);
+}
+
+async function saveView(
+  postId: string,
+  userId: string | undefined,
+  ipAddress: string,
+  durationSeconds: number,
+) {
+  const existingView = await prisma.postView.findFirst({
+    where: userId
+      ? { postId, OR: [{ userId }, { ipAddress }] }
+      : { postId, ipAddress },
+    select: { id: true, durationSeconds: true },
+  });
+
+  if (existingView) {
+    const qualified =
+      existingView.durationSeconds < MIN_POST_VIEW_SECONDS &&
+      durationSeconds >= MIN_POST_VIEW_SECONDS;
+    if (durationSeconds > existingView.durationSeconds) {
+      await prisma.postView.update({
+        where: { id: existingView.id },
+        data: { durationSeconds },
+      });
+    }
+    return { success: true, qualified };
+  }
+
+  await prisma.postView.create({
+    data: {
+      postId,
+      userId: userId ?? null,
+      ipAddress: userId ? null : ipAddress,
+      durationSeconds,
+    },
+  });
+  return { success: true, qualified: true, status: 201 };
+}
+
+function isUniqueConstraintError(error: unknown): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    error.code === "P2002"
+  );
+}
+
+export async function POST(
+  request: Request,
+  context: { params: Promise<{ id: string }> },
+) {
+  const { id } = await context.params;
+  if (!id || id.length > 128) {
+    return NextResponse.json({ error: "invalid" }, { status: 400 });
+  }
+
+  const durationSeconds = await getBoundedDuration(request);
+  if (durationSeconds === null) {
     return NextResponse.json({ error: "invalid" }, { status: 400 });
   }
 
@@ -50,60 +116,16 @@ export async function POST(
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    const forwardedAddress = request.headers
-      .get("x-forwarded-for")
-      ?.split(",")[0]
-      ?.trim();
-    const ipAddress = (
-      request.headers.get("x-real-ip")?.trim() ||
-      forwardedAddress ||
-      "unknown"
-    ).slice(0, 64);
-    const identity = user
-      ? { postId: post.id, userId: user.id }
-      : { postId: post.id, ipAddress };
-    const existingViewWhere = user
-      ? { postId: post.id, OR: [{ userId: user.id }, { ipAddress }] }
-      : { postId: post.id, ipAddress };
-    const boundedDuration = Math.min(durationSeconds, MAX_POST_VIEW_SECONDS);
-
-    const existingView = await prisma.postView.findFirst({
-      where: existingViewWhere,
-      select: { id: true, durationSeconds: true },
-    });
-
-    if (existingView) {
-      const newlyQualified =
-        existingView.durationSeconds < MIN_POST_VIEW_SECONDS &&
-        boundedDuration >= MIN_POST_VIEW_SECONDS;
-      if (boundedDuration > existingView.durationSeconds) {
-        await prisma.postView.update({
-          where: { id: existingView.id },
-          data: { durationSeconds: boundedDuration },
-        });
-      }
-      return NextResponse.json({ success: true, qualified: newlyQualified });
-    }
-
-    await prisma.postView.create({
-      data: {
-        ...identity,
-        userId: user?.id ?? null,
-        ipAddress: user ? null : ipAddress,
-        durationSeconds: boundedDuration,
-      },
-    });
-    return NextResponse.json(
-      { success: true, qualified: true },
-      { status: 201 },
+    const result = await saveView(
+      post.id,
+      user?.id,
+      getIpAddress(request),
+      durationSeconds,
     );
+    const { status, ...body } = result;
+    return NextResponse.json(body, status ? { status } : undefined);
   } catch (error) {
-    if (
-      typeof error === "object" &&
-      error !== null &&
-      "code" in error &&
-      error.code === "P2002"
-    ) {
+    if (isUniqueConstraintError(error)) {
       return NextResponse.json({ success: true, qualified: false });
     }
     console.error(

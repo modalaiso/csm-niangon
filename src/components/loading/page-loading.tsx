@@ -1,4 +1,4 @@
-function Pulse({ className }: { className: string }) {
+function Pulse({ className }: Readonly<{ className: string }>) {
   return <div className={`animate-pulse rounded-lg bg-muted ${className}`} />;
 }
 
@@ -55,7 +55,7 @@ export function DefaultPageLoading() {
   );
 }
 
-export function LegalPageLoading({ label }: { label: string }) {
+export function LegalPageLoading({ label }: Readonly<{ label: string }>) {
   return (
     <main
       aria-busy="true"
@@ -83,10 +83,10 @@ export function LegalPageLoading({ label }: { label: string }) {
 export function AuthPageLoading({
   label,
   variant,
-}: {
+}: Readonly<{
   label: string;
   variant: "login" | "signup";
-}) {
+}>) {
   const fieldCount = variant === "signup" ? 7 : 2;
 
   return (

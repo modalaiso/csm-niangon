@@ -62,7 +62,7 @@ export default function ConfidentialitePage() {
           3. Cookies et traceurs
         </h2>
         <div className="overflow-x-auto">
-          <table className="mt-2 w-full min-w-[500px] border-collapse text-left text-sm">
+          <table className="mt-2 w-full min-w-125 border-collapse text-left text-sm">
             <thead>
               <tr className="border-b border-border text-xs uppercase text-muted-foreground">
                 <th className="py-2 pr-4">Nom</th>
@@ -112,14 +112,14 @@ export default function ConfidentialitePage() {
           </table>
         </div>
         <p className="mt-3 text-muted-foreground">
-          Vous pouvez modifier votre choix à tout moment via le lien «
+          Vous pouvez modifier votre choix à tout moment via le lien «{" "}
           <button
             type="button"
             onClick={openCookiePreferences}
             className="text-primary hover:underline"
           >
             Gérer les cookies
-          </button>
+          </button>{" "}
           » en pied de page.
         </p>
       </section>

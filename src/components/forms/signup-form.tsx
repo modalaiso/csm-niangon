@@ -26,7 +26,7 @@ const signupSchema = z
     classe: z.string().min(1, "La classe est requise"),
     schoolClassId: z.string().optional(),
     matricule: z.string().optional(),
-    email: z.string().email("Email invalide"),
+    email: z.email({ error: "Email invalide" }),
     password: z
       .string()
       .min(8, "Le mot de passe doit contenir au moins 8 caractères"),

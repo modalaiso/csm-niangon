@@ -7,7 +7,7 @@ interface Props {
   reset?: () => void;
 }
 
-export default function GlobalError(props: Props) {
+export default function GlobalError(props: Readonly<Props>) {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground">
       <h1 className="text-4xl font-bold">Erreur</h1>

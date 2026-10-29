@@ -31,11 +31,11 @@ export function CookieConsentBanner() {
   if (!visible) return null;
 
   return (
-    <div
-      role="dialog"
+    <dialog
+      open
       aria-live="polite"
       aria-label="Préférences de cookies"
-      className="fixed inset-x-0 bottom-0 z-60 p-3 sm:bottom-4 sm:left-4 sm:right-auto sm:max-w-md sm:p-0"
+      className="m-0 max-w-none border-0 bg-transparent p-0 text-inherit fixed inset-x-0 bottom-0 z-60 sm:bottom-4 sm:left-4 sm:right-auto sm:max-w-md"
     >
       <div className="rounded-3xl border border-border bg-background p-5 shadow-xl">
         <div className="flex items-start gap-3">
@@ -81,6 +81,6 @@ export function CookieConsentBanner() {
           </Button>
         </div>
       </div>
-    </div>
+    </dialog>
   );
 }

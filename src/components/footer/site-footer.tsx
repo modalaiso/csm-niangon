@@ -1,7 +1,6 @@
 "use client";
 
 import type { Role } from "@prisma/client";
-import { Facebook, Instagram, Youtube } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { openCookiePreferences } from "@/lib/cookie-consent";
@@ -26,13 +25,6 @@ const USEFUL_LINKS = [
   { href: "https://www.men-deco.org/", label: "DECO" },
   { href: "https://mena-desps.org/", label: "DESPS" },
   { href: "https://mendob-ci.org/", label: "DOB" },
-];
-
-// Réseaux sociaux du club — à remplacer par les vraies URLs quand disponibles
-const _SOCIAL_LINKS = [
-  { href: "https://facebook.com", label: "Facebook", Icon: Facebook },
-  { href: "https://instagram.com", label: "Instagram", Icon: Instagram },
-  { href: "https://youtube.com", label: "YouTube", Icon: Youtube },
 ];
 
 const CONTACT = [

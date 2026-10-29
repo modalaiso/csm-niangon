@@ -37,6 +37,13 @@ export function PostsExplorer(props: Readonly<PostsExplorerProps>) {
     return props.posts.filter((post) => post.type === filter);
   }, [props.posts, filter]);
 
+  let emptyMessage: string | null = null;
+  if (props.posts.length === 0) {
+    emptyMessage = "Aucun post pour l'instant";
+  } else if (filteredPosts.length === 0) {
+    emptyMessage = "Aucun post dans cette catégorie pour l'instant";
+  }
+
   return (
     <section className="container px-4 py-8 md:py-12">
       <div className="mb-6 flex items-center justify-between">
@@ -97,16 +104,10 @@ export function PostsExplorer(props: Readonly<PostsExplorerProps>) {
         </div>
       </div>
 
-      {props.posts.length === 0 ? (
+      {emptyMessage ? (
         <div className="flex flex-col items-center justify-center rounded-2xl py-16 text-center">
           <p className="text-base font-medium text-muted-foreground">
-            Aucun post pour l'instant
-          </p>
-        </div>
-      ) : filteredPosts.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-2xl py-16 text-center">
-          <p className="text-base font-medium text-muted-foreground">
-            Aucun post dans cette catégorie pour l'instant
+            {emptyMessage}
           </p>
         </div>
       ) : (

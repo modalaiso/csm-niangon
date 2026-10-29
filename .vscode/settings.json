@@ -3,5 +3,6 @@
   "sonarlint.connectedMode.project": {
     "connectionId": "modalaiso",
     "projectKey": "modalaiso_csm-niangon"
-  }
+  },
+  "python.terminal.useEnvFile": true
 }

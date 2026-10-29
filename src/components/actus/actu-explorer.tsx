@@ -14,6 +14,17 @@ interface ActuExplorerProps {
 
 export function ActuExplorer(props: Readonly<ActuExplorerProps>) {
   const [activeTag, setActiveTag] = useState<string | null>(null);
+  const renderEmptyMessage = (search: string) => {
+    if (search) {
+      return `Aucune actualité ne correspond à "${search}"`;
+    }
+
+    if (activeTag) {
+      return `Aucune actualité avec le tag ${activeTag}`;
+    }
+
+    return "Aucune actualité pour l'instant";
+  };
 
   return (
     <PostTypeExplorer
@@ -22,18 +33,15 @@ export function ActuExplorer(props: Readonly<ActuExplorerProps>) {
       filterKey={activeTag}
       fetchPosts={(params) => getActuPosts({ ...params, tag: activeTag })}
       searchPlaceholder="Rechercher une actualité..."
-      renderCount={(total) =>
-        total === 0
-          ? "Aucune actualité"
-          : `${total} actualité${total > 1 ? "s" : ""}`
-      }
-      renderEmptyMessage={(search) =>
-        search
-          ? `Aucune actualité ne correspond à "${search}"`
-          : activeTag
-            ? `Aucune actualité avec le tag ${activeTag}`
-            : "Aucune actualité pour l'instant"
-      }
+      renderCount={(total) => {
+        if (total === 0) {
+          return "Aucune actualité";
+        }
+
+        const pluralSuffix = total > 1 ? "s" : "";
+        return `${total} actualité${pluralSuffix}`;
+      }}
+      renderEmptyMessage={renderEmptyMessage}
       emptyStateAction={
         activeTag
           ? {

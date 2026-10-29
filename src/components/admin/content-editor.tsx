@@ -303,16 +303,22 @@ export function ContentEditor(props: Readonly<ContentEditorProps>) {
     try {
       const supabase = createClient();
       const uploaded: { alt: string; url: string }[] = [];
-      for (const file of validFiles) {
-        const extension = IMAGE_TYPES[file.type];
-        const path = `content/${crypto.randomUUID()}.${extension}`;
-        const { error: uploadError } = await supabase.storage
-          .from(BUCKET)
-          .upload(path, file, {
-            cacheControl: "3600",
-            contentType: file.type,
-            upsert: false,
-          });
+      const results = await Promise.all(
+        validFiles.map(async (file) => {
+          const extension = IMAGE_TYPES[file.type];
+          const path = `content/${crypto.randomUUID()}.${extension}`;
+          const { error: uploadError } = await supabase.storage
+            .from(BUCKET)
+            .upload(path, file, {
+              cacheControl: "3600",
+              contentType: file.type,
+              upsert: false,
+            });
+          return { file, path, uploadError };
+        }),
+      );
+
+      for (const { file, path, uploadError } of results) {
         if (uploadError) {
           console.error("Erreur upload Supabase:", uploadError);
           warnings.push(`Échec de l'envoi de ${file.name || "une image"}.`);

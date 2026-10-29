@@ -35,6 +35,14 @@ interface TopNavProps {
 function SchoolSpaceMenu({ mobile = false }: Readonly<{ mobile?: boolean }>) {
   const [isOpen, setIsOpen] = useState(false);
   const menuId = mobile ? "school-space-menu-mobile" : "school-space-menu";
+  const desktopTextClass = isOpen ? "text-primary" : "text-muted-foreground";
+  let dropdownClass = "absolute left-0 top-full z-50 w-64 pt-6";
+
+  if (mobile) {
+    dropdownClass = isOpen ? "mt-2" : "hidden";
+  } else if (!isOpen) {
+    dropdownClass += " hidden group-hover:block";
+  }
 
   return (
     <div className={mobile ? "relative" : "group relative"}>
@@ -50,7 +58,7 @@ function SchoolSpaceMenu({ mobile = false }: Readonly<{ mobile?: boolean }>) {
           mobile
             ? "flex w-full items-center justify-between py-1 text-left text-sm font-medium hover:underline"
             : `flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary ${
-                isOpen ? "text-primary" : "text-muted-foreground"
+                desktopTextClass
               }`
         }
       >
@@ -60,15 +68,7 @@ function SchoolSpaceMenu({ mobile = false }: Readonly<{ mobile?: boolean }>) {
           className={`h-3.5 w-3.5 transition-transform ${isOpen ? "rotate-180" : ""}`}
         />
       </button>
-      <div
-        className={
-          mobile
-            ? isOpen
-              ? "mt-2"
-              : "hidden"
-            : `absolute left-0 top-full z-50 w-64 pt-6 ${isOpen ? "" : "hidden group-hover:block"}`
-        }
-      >
+      <div className={dropdownClass}>
         <div
           id={menuId}
           className={

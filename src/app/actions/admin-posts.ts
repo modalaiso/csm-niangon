@@ -27,12 +27,15 @@ function slugify(title: string): string {
 
 async function generateUniqueSlug(title: string): Promise<string> {
   const base = slugify(title) || "post";
+  const existingSlugs = await prisma.post.findMany({
+    where: { slug: { startsWith: base } },
+    select: { slug: true },
+  });
+  const usedSlugs = new Set(existingSlugs.map(({ slug }) => slug));
   let slug = base;
   let counter = 1;
 
-  while (
-    await prisma.post.findUnique({ where: { slug }, select: { id: true } })
-  ) {
+  while (usedSlugs.has(slug)) {
     slug = `${base}-${counter}`;
     counter += 1;
   }

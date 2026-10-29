@@ -43,9 +43,7 @@ export function InfoBar(props: Readonly<InfoBarProps>) {
     resizeObserver.observe(trackEl);
 
     const step = (timestamp: number) => {
-      if (lastTimeRef.current === null) {
-        lastTimeRef.current = timestamp;
-      }
+      lastTimeRef.current ??= timestamp;
       const deltaSeconds = (timestamp - lastTimeRef.current) / 1000;
       lastTimeRef.current = timestamp;
 

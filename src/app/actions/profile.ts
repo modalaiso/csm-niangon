@@ -96,13 +96,19 @@ export async function updateMyProfile(
   const classe = input.classe.trim();
   const matricule = input.matricule.trim();
   const email = input.email.trim().toLowerCase();
+  const emailParts = email.split("@");
+  const emailDomain = emailParts[1] ?? "";
 
   if (
     !nom ||
     !prenom ||
     !classe ||
     !email ||
-    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+    emailParts.length !== 2 ||
+    !emailParts[0] ||
+    !emailDomain.includes(".") ||
+    emailDomain.endsWith(".") ||
+    /\s/.test(email)
   ) {
     return { error: "invalid" };
   }

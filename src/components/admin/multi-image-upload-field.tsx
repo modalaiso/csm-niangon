@@ -64,11 +64,8 @@ export function MultiImageUploadField(
     uploadInProgressRef.current = true;
     setIsUploading(true);
     try {
-      const uploaded: string[] = [];
-      for (const file of selected) {
-        const url = await uploadOne(file);
-        if (url) uploaded.push(url);
-      }
+      const results = await Promise.all(selected.map(uploadOne));
+      const uploaded = results.filter((url): url is string => url !== null);
       if (uploaded.length < selected.length) {
         messages.push(
           "Certaines images n'ont pas pu être envoyées. Réessayez.",
