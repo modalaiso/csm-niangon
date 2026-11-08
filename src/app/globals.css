@@ -3,9 +3,6 @@
 
 body {
   font-family: var(--font-inter);
-  a {
-    text-decoration: none;
-  }
 }
 
 button:not(:disabled):not([aria-disabled="true"]),
